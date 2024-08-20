@@ -19,7 +19,7 @@ export const useTicketContributors = (tickets?: Ticket[]) => {
         lookup.set(ticket.claimant_id, {
           user: ticket.claimant_id,
           count: 1,
-          dates: [new Date(ticket.created_at)],
+          dates: [new Date(ticket.updated_at)],
         });
       } else {
         const contribution = lookup.get(ticket.claimant_id)!;
