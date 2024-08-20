@@ -15,6 +15,7 @@ export const useTicketContributors = (tickets?: Ticket[]) => {
     const lookup: Map<number, TicketContribution> = new Map();
     for (const ticket of tickets) {
       if (!ticket.claimant_id) continue;
+      if (ticket.status !== "approved") continue;
       if (!lookup.has(ticket.claimant_id)) {
         lookup.set(ticket.claimant_id, {
           user: ticket.claimant_id,

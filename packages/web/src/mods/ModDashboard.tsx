@@ -3,28 +3,17 @@ import { LinearProgress, Stack, Typography } from "@mui/material";
 import { Ticket, useTicketsInfinite } from "../api";
 import { TicketLeaderboard } from "./TicketLeaderboard";
 import { useDrain } from "../utils";
+import dayjs from "dayjs";
 
 const getCurrentMonthRange = (): string => {
-  const currentDate = new Date();
+  const now = dayjs();
+  const firstDay = now.startOf("month").format("YYYY-MM-DD");
+  const lastDay = now.endOf("month").format("YYYY-MM-DD");
 
-  const firstDay = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth(),
-    1
-  );
-
-  const lastDay = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth() + 1,
-    0
-  );
-
-  const formatDate = (date: Date) => date.toISOString().split("T")[0];
-
-  return `${formatDate(firstDay)}..${formatDate(lastDay)}`;
+  return `${firstDay}..${lastDay}`;
 };
 
-export const ModDashboard = () => {
+export const ModDashboard: React.FC = () => {
   const {
     data: tickets,
     isLoading,

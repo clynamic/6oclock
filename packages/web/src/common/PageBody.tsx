@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
+import React, { PropsWithChildren } from "react";
 
-export const PageBody = ({ children }: { children: React.ReactNode }) => {
+export const PageBody: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <Box
       sx={{
