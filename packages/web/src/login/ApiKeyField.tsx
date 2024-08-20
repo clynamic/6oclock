@@ -2,13 +2,17 @@ import { Key } from "@mui/icons-material";
 import { TextField, InputAdornment } from "@mui/material";
 import { Control, Controller, FieldErrors } from "react-hook-form";
 import { LoginFormData } from "./type";
+import React from "react";
 
 export interface ApiKeyFieldProps {
-  control: Control<LoginFormData, any>;
+  control: Control<LoginFormData, unknown>;
   errors: FieldErrors<LoginFormData>;
 }
 
-export const ApiKeyField = ({ control, errors }: ApiKeyFieldProps) => {
+export const ApiKeyField: React.FC<ApiKeyFieldProps> = ({
+  control,
+  errors,
+}) => {
   return (
     <Controller
       name="password"

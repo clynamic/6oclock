@@ -815,6 +815,7 @@ components:
           description: The type of ticket (e.g., comment, user, post)
         status:
           type: string
+          enum: [pending, approved, partial]
           description: The current status of the ticket
         created_at:
           type: string

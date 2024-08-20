@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { Page } from "../common/Page";
 import { useAuth } from "../auth";
 import { useNavigate } from "react-router-dom";
+import { checkCredentials } from "../http";
 
 export const LoginPage = () => {
   const navigation = useNavigate();
@@ -49,6 +50,12 @@ export const LoginPage = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     setLoading(true);
+    const valid = await checkCredentials(data);
+    if (!valid) {
+      control.setError("password", { message: "Invalid credentials" });
+      setLoading(false);
+      return;
+    }
     saveCredentials(data);
     setLoading(false);
     navigation(redirect || "/");

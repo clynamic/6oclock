@@ -7,7 +7,7 @@ import { AuthGuard, AuthProvider } from "../auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useMemo } from "react";
 
-export const App = () => {
+export const App: React.FC = () => {
   const queryClient = useMemo(() => new QueryClient(), []);
 
   return (

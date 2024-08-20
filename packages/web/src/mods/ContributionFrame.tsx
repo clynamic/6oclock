@@ -24,12 +24,12 @@ export interface TicketContribution {
   dates: Date[];
 }
 
-export const ContributionFrame = ({
+export const ContributionFrame: React.FC<ContributionFrameProps> = ({
   contribution,
   position,
   user,
   avatar,
-}: ContributionFrameProps) => {
+}) => {
   return (
     <Card>
       <Box p={2}>

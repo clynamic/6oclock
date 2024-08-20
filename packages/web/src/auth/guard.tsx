@@ -29,15 +29,19 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
 
       let redirect = "/login";
       const params = new URLSearchParams();
-      params.append("redirect", path.current);
+      if (path.current !== "/") {
+        params.append("redirect", path.current);
+      }
+      if (params.size > 0) {
+        redirect += `?${params.toString()}`;
+      }
 
       if (credentials) {
         setLoading(true);
 
-        const result = await checkCredentials(credentials);
+        const valid = await checkCredentials(credentials);
 
-        if (!result) {
-          redirect += `?${params.toString()}`;
+        if (!valid) {
           navigate(redirect, { replace: true });
           return;
         }
@@ -47,7 +51,6 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
         setLoading(false);
       } else {
         clearAxiosAuth();
-        redirect += `?${params.toString()}`;
         navigate(redirect, { replace: true });
       }
     };

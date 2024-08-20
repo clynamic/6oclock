@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 
-export const PageHeader = () => {
+export const PageHeader: React.FC = () => {
   return (
     <Box
       sx={{
