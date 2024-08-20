@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { TicketQtype } from "./ticketQtype";
+import type { TicketStatus } from "./ticketStatus";
 
 /**
  * A ticket object representing a user complaint or moderation issue.
@@ -43,7 +44,7 @@ export interface Ticket {
   /** The response to the ticket */
   response: string;
   /** The current status of the ticket */
-  status: string;
+  status: TicketStatus;
   /** The last time the ticket was updated */
   updated_at: Date;
 }

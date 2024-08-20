@@ -7,7 +7,9 @@ export interface TicketLeaderboardProps {
   tickets?: Ticket[];
 }
 
-export const TicketLeaderboard = ({ tickets }: TicketLeaderboardProps) => {
+export const TicketLeaderboard: React.FC<TicketLeaderboardProps> = ({
+  tickets,
+}) => {
   const { data } = useTicketContributors(tickets);
 
   return (

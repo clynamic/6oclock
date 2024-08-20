@@ -1,6 +1,6 @@
 import axios from "axios";
 import { AXIOS_INSTANCE } from "../http";
-import { getUser } from "../api";
+import { user } from "../api";
 
 export interface Credentials {
   username: string;
@@ -13,7 +13,7 @@ export const checkCredentials = async (
   setAxiosAuth(credentials);
 
   try {
-    await getUser(credentials.username);
+    await user(credentials.username);
     return true;
   } catch (error) {
     if (axios.isAxiosError(error)) {

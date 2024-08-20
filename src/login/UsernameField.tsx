@@ -4,11 +4,14 @@ import { Control, FieldErrors, Controller } from "react-hook-form";
 import { LoginFormData } from "./type";
 
 export interface UsernameFieldProps {
-  control: Control<LoginFormData, any>;
+  control: Control<LoginFormData, unknown>;
   errors: FieldErrors<LoginFormData>;
 }
 
-export const UsernameField = ({ control, errors }: UsernameFieldProps) => {
+export const UsernameField: React.FC<UsernameFieldProps> = ({
+  control,
+  errors,
+}) => {
   return (
     <Controller
       name="username"

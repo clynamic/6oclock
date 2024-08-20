@@ -6,7 +6,7 @@ export interface RankingTextProps {
   rank: number;
 }
 
-export const RankingText = ({ children, rank }: RankingTextProps) => {
+export const RankingText: React.FC<RankingTextProps> = ({ children, rank }) => {
   const gradients = [
     "linear-gradient(45deg, #ffd700, #ffec99, #ffd700)", // gold
     "linear-gradient(45deg, #c0c0c0, #e0e0e0, #c0c0c0)", // silver

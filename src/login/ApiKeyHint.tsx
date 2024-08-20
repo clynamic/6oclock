@@ -4,10 +4,10 @@ import { Control, useWatch } from "react-hook-form";
 import { LoginFormData } from "./type";
 
 export interface ApiKeyHintProps {
-  control: Control<LoginFormData, any>;
+  control: Control<LoginFormData, unknown>;
 }
 
-export const ApiKeyHint = ({ control }: ApiKeyHintProps) => {
+export const ApiKeyHint: React.FC<ApiKeyHintProps> = ({ control }) => {
   const username = useWatch({ control, name: "username" });
   const password = useWatch({ control, name: "password" });
   const [showHint, setShowHint] = useState(false);

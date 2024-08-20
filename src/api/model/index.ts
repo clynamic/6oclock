@@ -38,3 +38,4 @@ export * from "./ticketQtype";
 export * from "./user";
 export * from "./userFeedback";
 export * from "./userFeedbackCategory";
+export * from "./ticketStatus";
