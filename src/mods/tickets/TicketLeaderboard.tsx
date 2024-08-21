@@ -1,6 +1,6 @@
 import { Button, Stack } from "@mui/material";
-import { ModLeaderboardFrame } from "./ModLeaderboardFrame";
-import { getModContributors, ModContributions } from "./contributions";
+import { TicketLeaderboardFrame } from "./TicketLeaderboardFrame";
+import { getTicketContributors, TicketContributions } from "./contributions";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { Ticket } from "../../api";
@@ -8,12 +8,14 @@ import { LimitedList } from "../../common";
 import { useDrain, useManyUsers, useManyPosts } from "../../utils";
 import { ArrowForward } from "@mui/icons-material";
 
-export interface ModLeaderboardProps {
+export interface TicketLeaderboardProps {
   tickets?: Ticket[];
 }
 
-export const ModLeaderboard: React.FC<ModLeaderboardProps> = ({ tickets }) => {
-  const contributions = getModContributors(tickets);
+export const TicketLeaderboard: React.FC<TicketLeaderboardProps> = ({
+  tickets,
+}) => {
+  const contributions = getTicketContributors(tickets);
 
   const { data: users } = useDrain(
     useManyUsers(contributions?.map((c) => c.user))
@@ -26,9 +28,10 @@ export const ModLeaderboard: React.FC<ModLeaderboardProps> = ({ tickets }) => {
     )
   );
 
-  const mockContributions: ModContributions[] = useMemo(
+  const mockContributions: TicketContributions[] = useMemo(
     () =>
       Array.from({ length: 5 }, (_, i) => ({
+        position: 5 - i,
         user: i + 1,
         count: 5 - i,
         dates: Array.from({ length: 5 - i }, (_, j) =>
@@ -48,14 +51,13 @@ export const ModLeaderboard: React.FC<ModLeaderboardProps> = ({ tickets }) => {
         </Stack>
       )}
     >
-      {(contributions ?? mockContributions).map((contribution, index) => {
+      {(contributions ?? mockContributions).map((contribution) => {
         const user = users?.find((user) => user.id === contribution.user);
         const avatar = avatars?.find((post) => post.id === user?.avatar_id);
         return (
-          <ModLeaderboardFrame
+          <TicketLeaderboardFrame
             key={contribution.user}
             contribution={contribution}
-            position={index + 1}
             user={user}
             avatar={avatar}
           />

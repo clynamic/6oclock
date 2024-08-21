@@ -1,4 +1,4 @@
 export * from "./charts";
-export * from "./leaderboard";
+export * from "./tickets";
 export * from "./ModDashboard";
 export * from "./reports";
