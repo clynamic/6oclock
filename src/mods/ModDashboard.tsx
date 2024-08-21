@@ -13,11 +13,7 @@ import { Ticket, useTicketsInfinite } from "../api";
 import { getCurrentMonthRange, useDrain } from "../utils";
 import { DashboardGrid, DashboardCard, DashboardLayouts } from "../dashboard";
 import { useMemo, useState } from "react";
-import {
-  defaultModDashboardLayouts,
-  modDashboardCatalog,
-  ModDashboardItemConfig,
-} from "./catalog";
+import { defaultModDashboardLayouts, modDashboardCatalog } from "./catalog";
 
 const useCurrentBreakpoint = () => {
   const theme = useTheme();
@@ -106,8 +102,7 @@ export const ModDashboard: React.FC = () => {
             onLayoutChange={(_, allLayouts) => setLayouts(allLayouts)}
           >
             {currentLayout.map((layout) => {
-              const cardProps: ModDashboardItemConfig =
-                modDashboardCatalog[layout.i];
+              const cardProps = modDashboardCatalog[layout.i];
               if (!cardProps) return null;
               return (
                 <DashboardCard key={layout.i} {...cardProps}>

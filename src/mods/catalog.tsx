@@ -1,5 +1,5 @@
 import { Ticket } from "../api";
-import { DashboardCardProps, DashboardLayouts } from "../dashboard";
+import { DashboardCatalog, DashboardLayouts } from "../dashboard";
 import {
   TicketStatusChart,
   TicketTypeChart,
@@ -13,13 +13,7 @@ export interface ModDashboardItemProps {
   tickets?: Ticket[];
 }
 
-export type ModDashboardItemConfig = Omit<DashboardCardProps, "children"> & {
-  component: React.FC<Partial<ModDashboardItemProps>>;
-};
-
-export type ModDashboardCatalog = Record<string, ModDashboardItemConfig>;
-
-export const modDashboardCatalog: ModDashboardCatalog = {
+export const modDashboardCatalog: DashboardCatalog<ModDashboardItemProps> = {
   leaderboard: {
     component: TicketLeaderboard,
     title: "Leaderboard",
