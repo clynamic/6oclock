@@ -11,7 +11,7 @@ export interface TicketContributors {
 
 export const useTicketContributors = (tickets?: Ticket[]) => {
   const contributions: TicketContribution[] | null = useMemo(() => {
-    if (!tickets) return null;
+    if (tickets == null) return null;
     const lookup: Map<number, TicketContribution> = new Map();
     for (const ticket of tickets) {
       if (!ticket.claimant_id) continue;
@@ -50,7 +50,7 @@ export const useTicketContributors = (tickets?: Ticket[]) => {
     { "search[id]": userIds.join(",") },
     {
       query: {
-        enabled: !!contributions,
+        enabled: contributions != null && contributions.length > 0,
         placeholderData: keepPreviousData,
       },
     }
@@ -70,7 +70,7 @@ export const useTicketContributors = (tickets?: Ticket[]) => {
     { tags: `id:${avatarIds.join(",")}` },
     {
       query: {
-        enabled: !!users,
+        enabled: users != null && users.length > 0,
         placeholderData: keepPreviousData,
       },
     }

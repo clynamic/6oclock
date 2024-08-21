@@ -1,10 +1,18 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { Credentials } from "../http";
 
 interface AuthContextType {
   credentials: Credentials | null;
   saveCredentials: (credentials: Credentials) => void;
   clearCredentials: () => void;
+  session: Session | null;
+  saveSession: (session: Session) => void;
+  clearSession: () => void;
+}
+
+interface Session {
+  date: Date;
+  hash: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,9 +44,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("credentials");
   };
 
+  const [session, setSession] = useState<Session | null>(null);
+
+  const saveSession = (newSession: Session) => {
+    setSession(newSession);
+  };
+
+  const clearSession = () => {
+    setSession(null);
+  };
+
+  useEffect(() => {
+    setSession(null);
+  }, [credentials]);
+
   return (
     <AuthContext.Provider
-      value={{ credentials, saveCredentials, clearCredentials }}
+      value={{
+        credentials,
+        saveCredentials,
+        clearCredentials,
+        session,
+        saveSession,
+        clearSession,
+      }}
     >
       {children}
     </AuthContext.Provider>
