@@ -9,18 +9,18 @@ import {
   Chip,
 } from "@mui/material";
 import { useMemo } from "react";
-import { TicketContributor } from "./contributions";
+import { ModContributions } from "./contributions";
 import { User, Post } from "../../api";
 import { RankingText } from "../../common/RankingText";
 
-export interface TicketLeaderboardFrameProps {
+export interface ModLeaderboardFrameProps {
   position: number;
-  contribution: TicketContributor;
+  contribution: ModContributions;
   user?: User;
   avatar?: Post;
 }
 
-export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
+export const ModLeaderboardFrame: React.FC<ModLeaderboardFrameProps> = ({
   contribution,
   position,
   user,

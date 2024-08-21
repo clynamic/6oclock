@@ -6,7 +6,7 @@ import {
   TicketActivityChart,
   TicketFrontlineChart,
 } from "./charts";
-import { TicketLeaderboard } from "./contributions";
+import { ModLeaderboard } from "./leaderboard";
 import { TicketReporterBoard } from "./reports";
 
 export interface ModDashboardItemProps {
@@ -15,7 +15,7 @@ export interface ModDashboardItemProps {
 
 export const modDashboardCatalog: DashboardCatalog<ModDashboardItemProps> = {
   leaderboard: {
-    component: TicketLeaderboard,
+    component: ModLeaderboard,
     title: "Leaderboard",
     variant: "outlined",
   },
