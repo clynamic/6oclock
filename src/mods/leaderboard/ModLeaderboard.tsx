@@ -1,6 +1,6 @@
 import { Button, Stack } from "@mui/material";
-import { TicketLeaderboardFrame } from "./TicketLeaderboardFrame";
-import { getTicketContributors, TicketContributor } from "./contributions";
+import { ModLeaderboardFrame } from "./ModLeaderboardFrame";
+import { getModContributors, ModContributions } from "./contributions";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { Ticket } from "../../api";
@@ -8,14 +8,12 @@ import { LimitedList } from "../../common";
 import { useDrain, useManyUsers, useManyPosts } from "../../utils";
 import { ArrowForward } from "@mui/icons-material";
 
-export interface TicketLeaderboardProps {
+export interface ModLeaderboardProps {
   tickets?: Ticket[];
 }
 
-export const TicketLeaderboard: React.FC<TicketLeaderboardProps> = ({
-  tickets,
-}) => {
-  const contributions = getTicketContributors(tickets);
+export const ModLeaderboard: React.FC<ModLeaderboardProps> = ({ tickets }) => {
+  const contributions = getModContributors(tickets);
 
   const { data: users } = useDrain(
     useManyUsers(contributions?.map((c) => c.user))
@@ -28,7 +26,7 @@ export const TicketLeaderboard: React.FC<TicketLeaderboardProps> = ({
     )
   );
 
-  const mockContributions: TicketContributor[] = useMemo(
+  const mockContributions: ModContributions[] = useMemo(
     () =>
       Array.from({ length: 5 }, (_, i) => ({
         user: i + 1,
@@ -54,7 +52,7 @@ export const TicketLeaderboard: React.FC<TicketLeaderboardProps> = ({
         const user = users?.find((user) => user.id === contribution.user);
         const avatar = avatars?.find((post) => post.id === user?.avatar_id);
         return (
-          <TicketLeaderboardFrame
+          <ModLeaderboardFrame
             key={contribution.user}
             contribution={contribution}
             position={index + 1}

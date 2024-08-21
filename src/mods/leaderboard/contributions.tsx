@@ -1,16 +1,16 @@
 import { Ticket } from "../../api";
 
-export interface TicketContributor {
+export interface ModContributions {
   user: number;
   count: number;
   dates: Date[];
 }
 
-export const getTicketContributors = (
+export const getModContributors = (
   tickets?: Ticket[]
-): TicketContributor[] | null => {
+): ModContributions[] | null => {
   if (tickets == null) return null;
-  const lookup: Map<number, TicketContributor> = new Map();
+  const lookup: Map<number, ModContributions> = new Map();
   for (const ticket of tickets) {
     if (!ticket.claimant_id) continue;
     if (ticket.status !== "approved") continue;

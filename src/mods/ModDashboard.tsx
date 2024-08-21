@@ -6,31 +6,12 @@ import {
   LinearProgress,
   Snackbar,
   Stack,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import { Ticket, useTicketsInfinite } from "../api";
-import { getCurrentMonthRange, useDrain } from "../utils";
+import { getCurrentMonthRange, useCurrentBreakpoint, useDrain } from "../utils";
 import { DashboardGrid, DashboardCard, DashboardLayouts } from "../dashboard";
 import { useMemo, useState } from "react";
 import { defaultModDashboardLayouts, modDashboardCatalog } from "./catalog";
-
-const useCurrentBreakpoint = () => {
-  const theme = useTheme();
-
-  const breakpoints = theme.breakpoints.keys;
-
-  const currentBreakpoint = breakpoints
-    .map((breakpoint) => ({
-      breakpoint,
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      matches: useMediaQuery(theme.breakpoints.up(breakpoint)),
-    }))
-    .reverse()
-    .find((item) => item.matches)?.breakpoint;
-
-  return currentBreakpoint;
-};
 
 export const ModDashboard: React.FC = () => {
   const [layouts, setLayouts] = useState<DashboardLayouts>(
@@ -60,6 +41,7 @@ export const ModDashboard: React.FC = () => {
         query: {
           refetchOnMount: false,
           staleTime: 5 * 60 * 1000,
+          // TODO: make this pagination part of the generated code
           initialPageParam: 1,
           getNextPageParam: (lastPage, _, i) => {
             if (lastPage.length === 0) return undefined;
