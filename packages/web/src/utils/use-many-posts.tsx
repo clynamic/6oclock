@@ -1,11 +1,18 @@
 import { useCallback, useMemo } from "react";
-import { Post, posts, GetPostsParams, getPostsQueryKey } from "../api";
+import {
+  Post,
+  posts,
+  GetPostsParams,
+  getPostsQueryKey,
+  getPostQueryKey,
+} from "../api";
 import {
   useInfiniteQuery,
   UseInfiniteQueryOptions,
   InfiniteData,
   QueryFunctionContext,
   QueryKey,
+  useQueryClient,
 } from "@tanstack/react-query";
 import { splitIntoBatches } from "./batches";
 
@@ -27,6 +34,8 @@ export const useManyPosts = (
   postIds?: number[],
   config?: UseManyPostsConfig
 ) => {
+  const queryClient = useQueryClient();
+
   const batches = useMemo(
     () =>
       splitIntoBatches(Array.from(new Set(postIds)).sort(), POST_ID_BATCH_SIZE),
@@ -44,12 +53,18 @@ export const useManyPosts = (
     }: QueryFunctionContext<QueryKey, number | undefined>) => {
       const batch = batches[pageParam];
       if (!batch) return [];
-      return await posts({
+      const result = await posts({
         ...config?.params,
         tags: `id:${batch.join(",")}`,
       });
+
+      result.forEach((post: Post) => {
+        queryClient.setQueryData(getPostQueryKey(post.id), post);
+      });
+
+      return result;
     },
-    [batches, config?.params]
+    [batches, config?.params, queryClient]
   );
 
   const queryOptions: UseInfiniteQueryOptions<
