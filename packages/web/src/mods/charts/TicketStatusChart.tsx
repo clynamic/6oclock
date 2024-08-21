@@ -1,14 +1,15 @@
 import { PieChart, PieValueType } from "@mui/x-charts";
-import { Ticket } from "../api";
+import { Ticket } from "../../api";
 import { useMemo } from "react";
-import { Box, Card, Stack, Typography, useTheme } from "@mui/material";
-import { DashboardCard } from "../common";
+import { useTheme } from "@mui/material";
 
-export interface TicketPieChartProps {
+export interface TicketStatusChartProps {
   tickets?: Ticket[];
 }
 
-export const TicketPieChart: React.FC<TicketPieChartProps> = ({ tickets }) => {
+export const TicketStatusChart: React.FC<TicketStatusChartProps> = ({
+  tickets,
+}) => {
   const theme = useTheme();
 
   const data: PieValueType[] = useMemo(() => {
@@ -34,7 +35,9 @@ export const TicketPieChart: React.FC<TicketPieChartProps> = ({ tickets }) => {
           tickets?.filter((ticket) => ticket.status === "approved").length || 0,
         color: theme.palette.secondary.main,
       },
-    ];
+    ]
+      .filter((item) => item.value > 0)
+      .sort((a, b) => b.value - a.value);
   }, [
     theme.palette.primary.main,
     theme.palette.secondary.main,
@@ -49,7 +52,7 @@ export const TicketPieChart: React.FC<TicketPieChartProps> = ({ tickets }) => {
         {
           data: data,
           arcLabel: (item) => `${item.value}`,
-          arcLabelMinAngle: 10,
+          arcLabelMinAngle: 20,
           innerRadius: "30%",
           outerRadius: "90%",
           paddingAngle: 5,
