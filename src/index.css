@@ -2,16 +2,6 @@
 @import url("/node_modules/react-resizable/css/styles.css");
 
 :root {
-  /* Theme Colors */
-  --background: #012e57;
-  --surface: #1f3c67;
-  --surface-highlight: #2b538e;
-  --on-surface: #ffffff;
-  --control: #012e57;
-  --on-control: #ffffff;
-  --link: #b4c7d9;
-  --shadow: 0px 5px 9px rgba(2, 15, 35, 0.2);
-
   /* Defaults */
 
   #root {
@@ -22,7 +12,5 @@
   body {
     height: 100vh;
     height: 100dvh;
-
-    color-scheme: dark;
   }
 }
