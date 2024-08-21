@@ -1,9 +1,9 @@
 import { Box } from "@mui/material";
+import { PropsWithChildren } from "react";
 import { TruncatedList, TruncatedListProps } from "react-truncate-list";
 
-export interface LimitedListProps {
+export interface LimitedListProps extends PropsWithChildren {
   indicator: TruncatedListProps["renderTruncator"];
-  children: React.ReactNode;
 }
 
 export const LimitedList: React.FC<LimitedListProps> = ({

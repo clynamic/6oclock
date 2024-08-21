@@ -1,4 +1,4 @@
-import { CalendarMonth, TrendingUp, Sell } from "@mui/icons-material";
+import { CalendarMonth, Sell } from "@mui/icons-material";
 import {
   Card,
   Box,
@@ -8,24 +8,19 @@ import {
   Typography,
   Chip,
 } from "@mui/material";
-import { User, Post } from "../api";
-import { RankingText } from "./RankingText";
 import { useMemo } from "react";
+import { TicketContributor } from "./contributions";
+import { User, Post } from "../../api";
+import { RankingText } from "../../common/RankingText";
 
-export interface ContributionFrameProps {
+export interface TicketLeaderboardFrameProps {
   position: number;
-  contribution: TicketContribution;
+  contribution: TicketContributor;
   user?: User;
   avatar?: Post;
 }
 
-export interface TicketContribution {
-  user: number;
-  count: number;
-  dates: Date[];
-}
-
-export const ContributionFrame: React.FC<ContributionFrameProps> = ({
+export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
   contribution,
   position,
   user,
@@ -88,7 +83,8 @@ export const ContributionFrame: React.FC<ContributionFrameProps> = ({
                   label={`${dayCount} days`}
                 />
               )}
-              <Chip size="small" label={<TrendingUp />} />
+              {/* TODO: actually calculate trends with previous month's data */}
+              {/* <Chip size="small" label={<TrendingUp />} /> */}
             </Stack>
           </Stack>
         </Stack>
