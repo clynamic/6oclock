@@ -9,20 +9,18 @@ import {
   Chip,
 } from "@mui/material";
 import { useMemo } from "react";
-import { ModContributions } from "./contributions";
+import { TicketContributions } from "./contributions";
 import { User, Post } from "../../api";
 import { RankingText } from "../../common/RankingText";
 
-export interface ModLeaderboardFrameProps {
-  position: number;
-  contribution: ModContributions;
+export interface TicketLeaderboardFrameProps {
+  contribution: TicketContributions;
   user?: User;
   avatar?: Post;
 }
 
-export const ModLeaderboardFrame: React.FC<ModLeaderboardFrameProps> = ({
+export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
   contribution,
-  position,
   user,
   avatar,
 }) => {
@@ -64,7 +62,9 @@ export const ModLeaderboardFrame: React.FC<ModLeaderboardFrameProps> = ({
               <Typography variant="h6">
                 {user ? user?.name : <Skeleton width={120} />}
               </Typography>
-              <RankingText rank={position}>#{position}</RankingText>
+              <RankingText rank={contribution.position}>
+                #{contribution.position}
+              </RankingText>
             </Stack>
             <Stack
               direction="row"
