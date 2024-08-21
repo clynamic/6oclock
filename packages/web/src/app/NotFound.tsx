@@ -1,0 +1,18 @@
+import { Stack, Typography } from "@mui/material";
+import { Page, WindowTitle, PageHeader, PageBody, PageFooter } from "../common";
+
+export const NotFoundPage: React.FC = () => {
+  return (
+    <Page>
+      <WindowTitle subtitle="Not Found" />
+      <PageHeader />
+      <PageBody>
+        <Stack spacing={2} alignItems="center">
+          <Typography variant="h1">404</Typography>
+          <Typography>Nothing here but us chickens. 🐔</Typography>
+        </Stack>
+      </PageBody>
+      <PageFooter />
+    </Page>
+  );
+};

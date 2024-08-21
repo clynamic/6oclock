@@ -1,14 +1,16 @@
 import { useEffect, useMemo, useRef } from "react";
-import { InfiniteData, UseInfiniteQueryResult } from "@tanstack/react-query";
+import {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  UseQueryResult,
+} from "@tanstack/react-query";
 
-interface UseDrainQueryResult<TData> {
+type UseDrainQueryResult<TData> = Omit<
+  UseQueryResult<InfiniteData<TData[], unknown> | undefined, Error | null>,
+  "data"
+> & {
   data: TData[] | undefined;
-  isLoading: boolean;
-  isFetching: boolean;
-  isFetchingNextPage: boolean;
-  isError: boolean;
-  hasNextPage: boolean | undefined;
-}
+};
 
 export function useDrain<TData>(
   queryResult: UseInfiniteQueryResult<
@@ -24,6 +26,7 @@ export function useDrain<TData>(
     isFetching,
     isFetchingNextPage,
     isError,
+    ...rest
   } = queryResult;
 
   const lastFetch = useRef<number>(0);
@@ -44,19 +47,12 @@ export function useDrain<TData>(
     drain();
   }, [hasNextPage, isFetchingNextPage, isError, fetchNextPage, delay]);
 
-  const flatData = useMemo(() => data?.pages.flat() ?? [], [data]);
-
-  const isLoading = useMemo(
-    () => isFetching || isFetchingNextPage,
-    [isFetching, isFetchingNextPage]
-  );
+  const flatData = useMemo(() => data?.pages.flat(), [data]);
 
   return {
+    ...rest,
     data: flatData,
-    isLoading,
     isFetching,
-    isFetchingNextPage,
     isError,
-    hasNextPage,
   };
 }

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { User, Post } from "../api";
 import { RankingText } from "./RankingText";
+import { useMemo } from "react";
 
 export interface ContributionFrameProps {
   position: number;
@@ -30,6 +31,13 @@ export const ContributionFrame: React.FC<ContributionFrameProps> = ({
   user,
   avatar,
 }) => {
+  const dayCount = useMemo(
+    () =>
+      Array.from(new Set(contribution.dates.map((date) => date.toDateString())))
+        .length,
+    [contribution.dates]
+  );
+
   return (
     <Card>
       <Box p={2}>
@@ -51,7 +59,7 @@ export const ContributionFrame: React.FC<ContributionFrameProps> = ({
           ) : (
             <Skeleton variant="rounded" width={64} height={64} />
           )}
-          <Stack spacing={1} sx={{ width: "100%" }}>
+          <Stack spacing={1} sx={{ flexGrow: 1 }}>
             <Stack
               direction="row"
               spacing={1}
@@ -73,17 +81,11 @@ export const ContributionFrame: React.FC<ContributionFrameProps> = ({
                 avatar={<Sell />}
                 label={`${contribution.count} tickets`}
               />
-              {contribution.dates.length > 1 && (
+              {dayCount > 1 && (
                 <Chip
                   size="small"
                   avatar={<CalendarMonth />}
-                  label={`${
-                    Array.from(
-                      new Set(
-                        contribution.dates.map((date) => date.toDateString())
-                      )
-                    ).length
-                  } days`}
+                  label={`${dayCount} days`}
                 />
               )}
               <Chip size="small" label={<TrendingUp />} />
