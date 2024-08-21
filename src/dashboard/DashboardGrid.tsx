@@ -12,6 +12,7 @@ export const DashboardGrid: React.FC<DashboardGridProps> = ({ ...rest }) => {
   return (
     <ResponsiveGridLayout
       draggableHandle=".react-draggable-handle"
+      // TODO: fix this
       // resizeHandle={(handle) => <ResizableHandle direction={handle} />}
       compactType={"horizontal"}
       breakpoints={breakpoints.values}

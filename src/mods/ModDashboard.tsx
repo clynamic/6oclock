@@ -8,10 +8,12 @@ import {
   Stack,
 } from "@mui/material";
 import { Ticket, useTicketsInfinite } from "../api";
-import { TicketLeaderboard } from "./TicketLeaderboard";
 import { getCurrentMonthRange, useDrain } from "../utils";
-import { TicketPieChart } from "./TicketPieChart";
+import { TicketStatusChart } from "./charts/TicketStatusChart";
 import { DashboardGrid, DashboardCard } from "../dashboard";
+import { TicketTypeChart, TicketActivityChart } from "./charts";
+import { TicketLeaderboard } from "./contributions";
+import { TicketReporterBoard } from "./reports";
 
 export const ModDashboard: React.FC = () => {
   const {
@@ -69,22 +71,56 @@ export const ModDashboard: React.FC = () => {
             compactType={"vertical"}
             layouts={{
               lg: [
-                { i: "a", x: 0, y: 0, w: 4, h: 11 },
+                { i: "leaderboard", x: 0, y: 0, w: 4, h: 11 },
                 {
-                  i: "b",
+                  i: "volume",
                   x: 4,
                   y: 0,
                   w: 4,
                   h: 5,
                 },
+                {
+                  i: "type",
+                  x: 4,
+                  y: 5,
+                  w: 4,
+                  h: 6,
+                },
+                {
+                  i: "activity",
+                  x: 0,
+                  y: 11,
+                  w: 8,
+                  h: 5,
+                },
+                {
+                  i: "reporters",
+                  x: 8,
+                  y: 0,
+                  w: 4,
+                  h: 11,
+                },
               ],
             }}
           >
-            <DashboardCard key="a" title="Leaderboard" variant="outlined">
+            <DashboardCard
+              key="leaderboard"
+              title="Leaderboard"
+              variant="outlined"
+            >
               <TicketLeaderboard tickets={tickets} />
             </DashboardCard>
-            <DashboardCard key="b" title="Volume">
-              <TicketPieChart tickets={tickets} />
+            <DashboardCard key="volume" title="Volume">
+              <TicketStatusChart tickets={tickets} />
+            </DashboardCard>
+            <DashboardCard key="type" title="Type">
+              <TicketTypeChart tickets={tickets} />
+            </DashboardCard>
+            <DashboardCard key="activity" title="Activity">
+              <TicketActivityChart tickets={tickets} />
+            </DashboardCard>
+            <DashboardCard key="reporters" title="Reporters" variant="outlined">
+              <TicketReporterBoard tickets={tickets} />
             </DashboardCard>
           </DashboardGrid>
         </Stack>
