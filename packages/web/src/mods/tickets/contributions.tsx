@@ -1,21 +1,23 @@
 import { Ticket } from "../../api";
 
-export interface ModContributions {
+export interface TicketContributions {
+  position: number;
   user: number;
   count: number;
   dates: Date[];
 }
 
-export const getModContributors = (
+export const getTicketContributors = (
   tickets?: Ticket[]
-): ModContributions[] | null => {
+): TicketContributions[] | null => {
   if (tickets == null) return null;
-  const lookup: Map<number, ModContributions> = new Map();
+  const lookup: Map<number, TicketContributions> = new Map();
   for (const ticket of tickets) {
     if (!ticket.claimant_id) continue;
     if (ticket.status !== "approved") continue;
     if (!lookup.has(ticket.claimant_id)) {
       lookup.set(ticket.claimant_id, {
+        position: 0,
         user: ticket.claimant_id,
         count: 1,
         dates: [new Date(ticket.updated_at)],
@@ -28,5 +30,8 @@ export const getModContributors = (
   }
   const result = Array.from(lookup.values());
   result.sort((a, b) => b.count - a.count);
+  result.forEach((contribution, index) => {
+    contribution.position = index + 1;
+  });
   return result;
 };
