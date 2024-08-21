@@ -1,6 +1,15 @@
 import { useTheme } from "@mui/material";
-import { Responsive, ResponsiveProps, WidthProvider } from "react-grid-layout";
+import {
+  Responsive,
+  ResponsiveProps,
+  WidthProvider,
+  Layout,
+  Layouts,
+} from "react-grid-layout";
 import { ResizableHandle } from "./ResizableHandle";
+
+export type DashboardLayout = Layout;
+export type DashboardLayouts = Layouts;
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
