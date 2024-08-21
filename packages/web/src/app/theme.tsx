@@ -19,7 +19,8 @@ export const theme = createTheme({
     mode: "dark",
     background: {
       default: hexagonColors.background,
-      paper: hexagonColors.section,
+      // paper: hexagonColors.section,
+      paper: hexagonColors.foreground,
     },
     primary: {
       main: hexagonColors.primary,

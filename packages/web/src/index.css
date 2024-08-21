@@ -1,3 +1,6 @@
+@import url("/node_modules/react-grid-layout/css/styles.css");
+@import url("/node_modules/react-resizable/css/styles.css");
+
 :root {
   /* Theme Colors */
   --background: #012e57;

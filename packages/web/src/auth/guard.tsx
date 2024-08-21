@@ -1,17 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "./context";
 import { Page, PageBody, PageFooter, PageHeader, WindowTitle } from "../common";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { checkCredentials, setAxiosAuth, clearAxiosAuth } from "../http";
+import dayjs from "dayjs";
 
 export interface AuthGuardProps {
   children?: React.ReactNode;
 }
 
 export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
-  const { credentials } = useAuth();
-  const [loading, setLoading] = useState(true);
+  const { credentials, session, saveSession, clearSession } = useAuth();
+  const hasSession = useMemo(() => !!session, [session]);
 
   const sentinel = useRef(0);
 
@@ -36,29 +37,35 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
         redirect += `?${params.toString()}`;
       }
 
-      if (credentials) {
-        setLoading(true);
-
-        const valid = await checkCredentials(credentials);
-
-        if (!valid) {
-          navigate(redirect, { replace: true });
-          return;
+      if (credentials && session) {
+        if (dayjs(session.date).add(1, "day").isBefore(dayjs())) {
+          clearSession();
         }
+        return;
+      }
 
-        setAxiosAuth(credentials);
-        if (id !== sentinel.current) return;
-        setLoading(false);
-      } else {
+      if (!credentials) {
         clearAxiosAuth();
         navigate(redirect, { replace: true });
+        return;
       }
+
+      const valid = await checkCredentials(credentials);
+
+      if (!valid) {
+        navigate(redirect, { replace: true });
+        return;
+      }
+
+      setAxiosAuth(credentials);
+      saveSession({ date: new Date(), hash: "TODO" });
+      if (id !== sentinel.current) return;
     };
 
     runCheck();
-  }, [credentials, navigate]);
+  }, [credentials, session, navigate, saveSession, clearSession]);
 
-  if (loading) {
+  if (!hasSession) {
     return (
       <Page>
         <WindowTitle subtitle="Authenticating..." />
