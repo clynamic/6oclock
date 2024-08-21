@@ -337,6 +337,18 @@ paths:
           schema:
             type: string
             enum: [included, excluded, only]
+        - name: search[created_at]
+          in: query
+          required: false
+          description: Filter by the creation date of the feedback
+          schema:
+            type: string
+        - name: search[updated_at]
+          in: query
+          required: false
+          description: Filter by the last update date of the feedback
+          schema:
+            type: string
       responses:
         "200":
           description: A list of user feedbacks matching the search criteria
@@ -374,6 +386,270 @@ paths:
                 $ref: "#/components/schemas/UserFeedback"
         "404":
           description: User feedback not found
+        "500":
+          description: Server error
+
+  /post_approvals.json:
+    get:
+      operationId: getPostApprovals
+      tags:
+        - approvals
+      summary: Get a list of post approvals
+      description: Returns a list of post approvals based on search criteria.
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: The page number to retrieve
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: false
+          description: The number of approvals to retrieve per page
+          schema:
+            type: integer
+        - name: search[user_name]
+          in: query
+          required: false
+          description: Filter approvals by approver username
+          schema:
+            type: integer
+        - name: search[post_tags_match]
+          in: query
+          required: false
+          description: Filter approvals by matching post tagss
+          schema:
+            type: integer
+        - name: search[created_at]
+          in: query
+          required: false
+          description: Filter by the creation date of the approval
+          schema:
+            type: string
+        - name: search[updated_at]
+          in: query
+          required: false
+          description: Filter by the last update date of the approval
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of approvals matching the search criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Approval"
+        "400":
+          description: Invalid request parameters
+        "500":
+          description: Server error
+
+  /uploads.json:
+    get:
+      operationId: getUploads
+      tags:
+        - uploads
+      summary: Get a list of uploads
+      description: Returns a list of uploads based on search criteria.
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: The page number to retrieve
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: false
+          description: The number of uploads to retrieve per page
+          schema:
+            type: integer
+        - name: search[uploader_name]
+          in: query
+          required: false
+          description: Filter uploads by uploader's username
+          schema:
+            type: string
+        - name: search[post_tags_match]
+          in: query
+          required: false
+          description: Filter uploads by post tags
+          schema:
+            type: string
+        - name: search[source_matches]
+          in: query
+          required: false
+          description: Filter uploads by source
+          schema:
+            type: string
+        - name: search[status]
+          in: query
+          required: false
+          description: Filter uploads by status
+          schema:
+            type: string
+            enum: [Completed, Processing, Pending, Duplicate, Error]
+        - name: search[created_at]
+          in: query
+          required: false
+          description: Filter by the creation date of the upload
+          schema:
+            type: string
+        - name: search[updated_at]
+          in: query
+          required: false
+          description: Filter by the last update date of the upload
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of uploads matching the search criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Upload"
+        "400":
+          description: Invalid request parameters
+        "500":
+          description: Server error
+
+  /uploads/{id}.json:
+    get:
+      operationId: getUpload
+      tags:
+        - uploads
+      summary: Get an upload by ID
+      description: Returns detailed information about a specific upload identified by its ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique ID of the upload to retrieve
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response containing upload details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Upload"
+        "404":
+          description: Upload not found
+        "500":
+          description: Server error
+
+  /post_flags.json:
+    get:
+      operationId: getPostFlags
+      tags:
+        - post_flags
+      summary: Get a list of post flags
+      description: Returns a list of post flags based on search criteria.
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: The page number to retrieve
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: false
+          description: The number of post flags to retrieve per page
+          schema:
+            type: integer
+        - name: search[reason_matches]
+          in: query
+          required: false
+          description: Filter post flags by matching reason text
+          schema:
+            type: string
+        - name: search[post_tags_match]
+          in: query
+          required: false
+          description: Filter post flags by matching post tags
+          schema:
+            type: string
+        - name: search[post_id]
+          in: query
+          required: false
+          description: Filter post flags by post ID
+          schema:
+            type: integer
+        - name: search[type]
+          in: query
+          required: false
+          description: Filter post flags by type (e.g., flag or deletion)
+          schema:
+            type: string
+            enum: [flag, deletion]
+        - name: search[is_resolved]
+          in: query
+          required: false
+          description: Filter post flags by resolution status
+          schema:
+            type: boolean
+        - name: search[creator_name]
+          in: query
+          required: false
+          description: Filter post flags by the creator's username
+          schema:
+            type: string
+        - name: search[created_at]
+          in: query
+          required: false
+          description: Filter by the creation date of the post flag
+          schema:
+            type: string
+        - name: search[updated_at]
+          in: query
+          required: false
+          description: Filter by the last update date of the post flag
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of post flags matching the search criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PostFlag"
+        "400":
+          description: Invalid request parameters
+        "500":
+          description: Server error
+
+  /post_flags/{id}.json:
+    get:
+      operationId: getPostFlag
+      tags:
+        - post_flags
+      summary: Get a post flag by ID
+      description: Returns detailed information about a specific post flag identified by its ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique ID of the post flag to retrieve
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response containing post flag details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostFlag"
+        "404":
+          description: Post flag not found
         "500":
           description: Server error
 
@@ -887,3 +1163,156 @@ components:
         is_deleted:
           type: boolean
           description: Whether the feedback is deleted
+    Approval:
+      type: object
+      description: A post approval object representing a user's approval of a post.
+      required:
+        - id
+        - user_id
+        - post_id
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: integer
+          description: The unique ID of the approval
+        user_id:
+          type: integer
+          description: The ID of the user who approved the post
+        post_id:
+          type: integer
+          description: The ID of the approved post
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when the approval was created
+        updated_at:
+          type: string
+          format: date-time
+          description: The timestamp when the approval was last updated
+    Upload:
+      type: object
+      description: An upload object representing a user's uploaded content.
+      required:
+        - id
+        - source
+        - rating
+        - uploader_id
+        - status
+        - created_at
+        - updated_at
+        - file_ext
+        - file_size
+        - image_width
+        - image_height
+        - uploader_name
+      properties:
+        id:
+          type: integer
+          description: The unique ID of the upload
+        source:
+          type: string
+          description: The source URL of the upload, if provided
+        rating:
+          type: string
+          description: The rating of the upload (e.g., safe, questionable, explicit)
+          enum: [s, q, e]
+        uploader_id:
+          type: integer
+          description: The ID of the user who uploaded the content
+        tag_string:
+          type: string
+          description: The tags associated with the upload
+        status:
+          type: string
+          description: The current status of the upload
+          enum: [Completed, Processing, Pending, Duplicate, Error]
+        backtrace:
+          type: string
+          nullable: true
+          description: Any backtrace or error details if applicable
+        post_id:
+          type: integer
+          nullable: true
+          description: The ID of the post generated by this upload, if applicable
+        md5_confirmation:
+          type: string
+          nullable: true
+          description: The MD5 confirmation hash for the upload, if applicable
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when the upload was created
+        updated_at:
+          type: string
+          format: date-time
+          description: The timestamp when the upload was last updated
+        parent_id:
+          type: integer
+          nullable: true
+          description: The ID of the parent post, if applicable
+        md5:
+          type: string
+          description: The MD5 hash of the file
+        file_ext:
+          type: string
+          description: The file extension (e.g., jpg, png, webm)
+        file_size:
+          type: integer
+          description: The size of the file in bytes
+        image_width:
+          type: integer
+          description: The width of the uploaded image in pixels
+        image_height:
+          type: integer
+          description: The height of the uploaded image in pixels
+        description:
+          type: string
+          description: A description of the uploaded content
+        uploader_name:
+          type: string
+          description: The username of the uploader
+    PostFlag:
+      type: object
+      description: A post flag object representing a user's flag or deletion request on a post.
+      required:
+        - id
+        - created_at
+        - post_id
+        - reason
+        - creator_id
+        - is_resolved
+        - updated_at
+        - is_deletion
+        - type
+      properties:
+        id:
+          type: integer
+          description: The unique ID of the post flag
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when the post flag was created
+        post_id:
+          type: integer
+          description: The ID of the post that the flag is related to
+        reason:
+          type: string
+          description: The reason for the flag or deletion request
+        creator_id:
+          type: integer
+          description: The ID of the user who created the flag or deletion request
+        is_resolved:
+          type: boolean
+          description: Whether the flag has been resolved
+        updated_at:
+          type: string
+          format: date-time
+          description: The timestamp when the post flag was last updated
+        is_deletion:
+          type: boolean
+          description: Whether the flag is a deletion request
+        type:
+          type: string
+          description: The type of the flag (e.g., flag or deletion)
+          enum: [flag, deletion]
