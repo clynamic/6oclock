@@ -11,7 +11,11 @@ import { Ticket, useTicketsInfinite } from "../api";
 import { getCurrentMonthRange, useDrain } from "../utils";
 import { TicketStatusChart } from "./charts/TicketStatusChart";
 import { DashboardGrid, DashboardCard } from "../dashboard";
-import { TicketTypeChart, TicketActivityChart } from "./charts";
+import {
+  TicketTypeChart,
+  TicketActivityChart,
+  TicketFrontlineChart,
+} from "./charts";
 import { TicketLeaderboard } from "./contributions";
 import { TicketReporterBoard } from "./reports";
 
@@ -90,7 +94,7 @@ export const ModDashboard: React.FC = () => {
                   i: "activity",
                   x: 0,
                   y: 11,
-                  w: 8,
+                  w: 6,
                   h: 5,
                 },
                 {
@@ -99,6 +103,13 @@ export const ModDashboard: React.FC = () => {
                   y: 0,
                   w: 4,
                   h: 11,
+                },
+                {
+                  i: "frontline",
+                  x: 8,
+                  y: 11,
+                  w: 6,
+                  h: 5,
                 },
               ],
             }}
@@ -121,6 +132,9 @@ export const ModDashboard: React.FC = () => {
             </DashboardCard>
             <DashboardCard key="reporters" title="Reporters" variant="outlined">
               <TicketReporterBoard tickets={tickets} />
+            </DashboardCard>
+            <DashboardCard key="frontline" title="Frontline">
+              <TicketFrontlineChart tickets={tickets} />
             </DashboardCard>
           </DashboardGrid>
         </Stack>

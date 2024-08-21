@@ -1,5 +1,11 @@
 import { useCallback, useMemo } from "react";
-import { GetUsersParams, getUsersQueryKey, User, users } from "../api";
+import {
+  getUserQueryKey,
+  GetUsersParams,
+  getUsersQueryKey,
+  User,
+  users,
+} from "../api";
 import {
   useInfiniteQuery,
   UseInfiniteQueryOptions,
@@ -7,6 +13,7 @@ import {
   QueryFunctionContext,
   QueryKey,
   keepPreviousData,
+  useQueryClient,
 } from "@tanstack/react-query";
 import { splitIntoBatches } from "./batches";
 
@@ -28,6 +35,8 @@ export const useManyUsers = (
   userIds?: number[],
   config?: UseManyUsersConfig
 ) => {
+  const queryClient = useQueryClient();
+
   const batches = useMemo(
     () =>
       splitIntoBatches(Array.from(new Set(userIds)).sort(), USER_ID_BATCH_SIZE),
@@ -47,12 +56,18 @@ export const useManyUsers = (
     }: QueryFunctionContext<QueryKey, number | undefined>) => {
       const batch = batches[pageParam];
       if (!batch) return [];
-      return await users({
+      const result = await users({
         ...config?.params,
         "search[id]": batch.join(","),
       });
+
+      result.forEach((user) => {
+        queryClient.setQueryData(getUserQueryKey(user.id.toString()), user);
+      });
+
+      return result;
     },
-    [batches, config?.params]
+    [batches, config?.params, queryClient]
   );
 
   const queryOptions: UseInfiniteQueryOptions<
