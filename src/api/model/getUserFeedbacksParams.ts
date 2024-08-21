@@ -25,4 +25,12 @@ export type GetUserFeedbacksParams = {
    * Filter by deletion status of the feedback
    */
   "search[deleted]"?: GetUserFeedbacksSearchDeleted;
+  /**
+   * Filter by the creation date of the feedback
+   */
+  "search[created_at]"?: string;
+  /**
+   * Filter by the last update date of the feedback
+   */
+  "search[updated_at]"?: string;
 };
