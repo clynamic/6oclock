@@ -6,20 +6,49 @@ import {
   LinearProgress,
   Snackbar,
   Stack,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { Ticket, useTicketsInfinite } from "../api";
 import { getCurrentMonthRange, useDrain } from "../utils";
-import { TicketStatusChart } from "./charts/TicketStatusChart";
-import { DashboardGrid, DashboardCard } from "../dashboard";
+import { DashboardGrid, DashboardCard, DashboardLayouts } from "../dashboard";
+import { useMemo, useState } from "react";
 import {
-  TicketTypeChart,
-  TicketActivityChart,
-  TicketFrontlineChart,
-} from "./charts";
-import { TicketLeaderboard } from "./contributions";
-import { TicketReporterBoard } from "./reports";
+  defaultModDashboardLayouts,
+  modDashboardCatalog,
+  ModDashboardItemConfig,
+} from "./catalog";
+
+const useCurrentBreakpoint = () => {
+  const theme = useTheme();
+
+  const breakpoints = theme.breakpoints.keys;
+
+  const currentBreakpoint = breakpoints
+    .map((breakpoint) => ({
+      breakpoint,
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      matches: useMediaQuery(theme.breakpoints.up(breakpoint)),
+    }))
+    .reverse()
+    .find((item) => item.matches)?.breakpoint;
+
+  return currentBreakpoint;
+};
 
 export const ModDashboard: React.FC = () => {
+  const [layouts, setLayouts] = useState<DashboardLayouts>(
+    defaultModDashboardLayouts
+  );
+  const currentBreakpoint = useCurrentBreakpoint();
+  const currentLayout = useMemo(
+    () =>
+      currentBreakpoint
+        ? (layouts[currentBreakpoint] ?? defaultModDashboardLayouts.lg)
+        : defaultModDashboardLayouts.lg,
+    [currentBreakpoint, layouts]
+  );
+
   const {
     data: tickets,
     isFetching,
@@ -73,69 +102,19 @@ export const ModDashboard: React.FC = () => {
           </Snackbar>
           <DashboardGrid
             compactType={"vertical"}
-            layouts={{
-              lg: [
-                { i: "leaderboard", x: 0, y: 0, w: 4, h: 11 },
-                {
-                  i: "volume",
-                  x: 4,
-                  y: 0,
-                  w: 4,
-                  h: 5,
-                },
-                {
-                  i: "type",
-                  x: 4,
-                  y: 5,
-                  w: 4,
-                  h: 6,
-                },
-                {
-                  i: "activity",
-                  x: 0,
-                  y: 11,
-                  w: 6,
-                  h: 5,
-                },
-                {
-                  i: "reporters",
-                  x: 8,
-                  y: 0,
-                  w: 4,
-                  h: 11,
-                },
-                {
-                  i: "frontline",
-                  x: 8,
-                  y: 11,
-                  w: 6,
-                  h: 5,
-                },
-              ],
-            }}
+            layouts={layouts}
+            onLayoutChange={(_, allLayouts) => setLayouts(allLayouts)}
           >
-            <DashboardCard
-              key="leaderboard"
-              title="Leaderboard"
-              variant="outlined"
-            >
-              <TicketLeaderboard tickets={tickets} />
-            </DashboardCard>
-            <DashboardCard key="volume" title="Volume">
-              <TicketStatusChart tickets={tickets} />
-            </DashboardCard>
-            <DashboardCard key="type" title="Type">
-              <TicketTypeChart tickets={tickets} />
-            </DashboardCard>
-            <DashboardCard key="activity" title="Activity">
-              <TicketActivityChart tickets={tickets} />
-            </DashboardCard>
-            <DashboardCard key="reporters" title="Reporters" variant="outlined">
-              <TicketReporterBoard tickets={tickets} />
-            </DashboardCard>
-            <DashboardCard key="frontline" title="Frontline">
-              <TicketFrontlineChart tickets={tickets} />
-            </DashboardCard>
+            {currentLayout.map((layout) => {
+              const cardProps: ModDashboardItemConfig =
+                modDashboardCatalog[layout.i];
+              if (!cardProps) return null;
+              return (
+                <DashboardCard key={layout.i} {...cardProps}>
+                  {cardProps.component({ tickets })}
+                </DashboardCard>
+              );
+            })}
           </DashboardGrid>
         </Stack>
       </PageBody>
