@@ -1,12 +1,12 @@
-import { Approval, Upload } from "../api";
+import { Approval, PostVersion } from "../api";
 import { DashboardCatalog, DashboardLayouts } from "../dashboard";
 import { ApprovalLeaderboard } from "./approvals";
 import { ApprovalActivityChart } from "./charts";
-import { UploaderBoard } from "./uploads/UploaderBoard";
+import { UploaderBoard } from "./uploads";
 
 export interface JanitorDashboardItemProps {
   approvals?: Approval[];
-  uploads?: Upload[];
+  postVersions?: PostVersion[];
 }
 
 export const janitorDashboardCatalog: DashboardCatalog<JanitorDashboardItemProps> =
@@ -29,8 +29,38 @@ export const janitorDashboardCatalog: DashboardCatalog<JanitorDashboardItemProps
 
 export const defaultJanitorDashboardLayouts: DashboardLayouts = {
   lg: [
-    { i: "approvals", x: 0, y: 0, w: 4, h: 11 },
-    { i: "uploaders", x: 4, y: 0, w: 4, h: 11 },
-    { i: "activity", x: 0, y: 11, w: 8, h: 4 },
+    {
+      i: "approvals",
+      x: 0,
+      y: 0,
+      w: 4,
+      h: 11,
+      minW: 3,
+      maxW: 6,
+      minH: 9,
+      maxH: 20,
+    },
+    {
+      i: "uploaders",
+      x: 4,
+      y: 0,
+      w: 4,
+      h: 11,
+      minW: 2,
+      maxW: 4,
+      minH: 7,
+      maxH: 15,
+    },
+    {
+      i: "activity",
+      x: 0,
+      y: 11,
+      w: 8,
+      h: 4,
+      minW: 4,
+      maxW: undefined,
+      minH: 3,
+      maxH: 9,
+    },
   ],
 };
