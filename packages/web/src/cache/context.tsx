@@ -14,6 +14,11 @@ interface CacheData {
   created_at?: Date;
 }
 
+interface CacheItemId {
+  type: string;
+  id: CacheItemKey;
+}
+
 interface CacheItem<T extends CacheData> {
   type: string;
   updated: Date;
@@ -21,16 +26,12 @@ interface CacheItem<T extends CacheData> {
 }
 
 interface LocalCacheContextType {
-  query: <T extends CacheData>({
-    type,
-    date,
-  }: {
-    type?: string;
-    date?: Date;
-    id?: CacheItemKey;
-  }) => Promise<CacheItem<T>[]>;
+  query: <T extends CacheData>(
+    params: LocalCacheQueryParams
+  ) => Promise<CacheItem<T>[]>;
   store: <T extends CacheData>(items: CacheItem<T>[]) => Promise<boolean>;
-  remove: (type: string, id: CacheItemKey) => Promise<boolean>;
+  remove: (items: CacheItemId[]) => Promise<boolean>;
+  clearStale: (type: string, staleDuration: number) => Promise<void>;
 }
 
 interface LocalCacheProviderProps {
@@ -195,11 +196,7 @@ const store = <T extends CacheData>(
   });
 };
 
-const remove = (
-  db: DBType,
-  type: string,
-  id: CacheItemKey
-): Promise<boolean> => {
+const remove = (db: DBType, items: CacheItemId[]): Promise<boolean> => {
   return new Promise((resolve, reject) => {
     if (!db) {
       reject(new Error("Database is not initialized"));
@@ -208,20 +205,34 @@ const remove = (
 
     const transaction = db.transaction(["cache"], "readwrite");
     const store = transaction.objectStore("cache");
-    const key = getItemKey(type, id);
-    const request = store.delete(key);
+    const requests: IDBRequest<undefined>[] = [];
 
-    request.onsuccess = () => {
-      resolve(true);
+    for (const item of items) {
+      const key = getItemKey(item.type, item.id);
+      const request = store.delete(key);
+      requests.push(request);
+    }
+
+    let success = true;
+
+    transaction.oncomplete = () => {
+      resolve(success);
     };
 
-    request.onerror = (event: Event) => {
+    transaction.onerror = (event: Event) => {
       console.error(
         "Failed to remove item",
-        (event.target as IDBRequest).error
+        (event.target as IDBTransaction).error
       );
-      reject((event.target as IDBRequest).error);
+      success = false;
+      resolve(success);
     };
+
+    for (let i = 0; i < requests.length; i++) {
+      requests[i].onerror = () => {
+        success = false;
+      };
+    }
   });
 };
 
@@ -276,10 +287,10 @@ export const LocalCacheProvider: React.FC<LocalCacheProviderProps> = ({
     }
   };
 
-  const removeFn = async (type: string, id: CacheItemKey): Promise<boolean> => {
+  const removeFn = async (items: CacheItemId[]): Promise<boolean> => {
     if (dbInitialized && dbRef.current) {
       try {
-        return await remove(dbRef.current, type, id);
+        return await remove(dbRef.current, items);
       } catch (error) {
         console.error("Remove function failed", error);
         throw error;
@@ -291,9 +302,42 @@ export const LocalCacheProvider: React.FC<LocalCacheProviderProps> = ({
     }
   };
 
+  const clearStaleFn = async (
+    type: string,
+    staleDuration: number
+  ): Promise<void> => {
+    if (dbInitialized && dbRef.current) {
+      try {
+        const items = await query<CacheData>(dbRef.current, {
+          type,
+          staleDuration,
+        });
+
+        const staleItems = items.map((item) => item.value.id);
+
+        await remove(
+          dbRef.current,
+          staleItems.map((id) => ({ type, id }))
+        );
+      } catch (error) {
+        console.error("Clear stale function failed", error);
+        throw error;
+      }
+    } else {
+      const errorMessage = "Database not initialized or not ready";
+      console.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+  };
+
   return (
     <LocalCacheContext.Provider
-      value={{ query: queryFn, store: storeFn, remove: removeFn }}
+      value={{
+        query: queryFn,
+        store: storeFn,
+        remove: removeFn,
+        clearStale: clearStaleFn,
+      }}
     >
       {children}
     </LocalCacheContext.Provider>

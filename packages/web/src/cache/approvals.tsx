@@ -8,7 +8,7 @@ import {
   GetPostApprovalsParams,
   usePostApprovalsInfinite,
 } from "../api";
-import { useDrain, getCurrentMonthRange } from "../utils";
+import { useDrain, getCurrentMonthRange, DateRange } from "../utils";
 
 const dbType = "approvals";
 
@@ -40,7 +40,6 @@ export const useStoreApprovals = () => {
       await mutate<Approval>(
         approvals.map((approval) => ({
           type: dbType,
-          key: approval.id.toString(),
           value: approval,
           updated: now,
         }))
@@ -49,7 +48,7 @@ export const useStoreApprovals = () => {
   });
 };
 
-export const useCachedApprovals = (dateRange?: { start: Date; end: Date }) => {
+export const useCachedApprovals = (dateRange?: DateRange) => {
   const range = useMemo(() => dateRange ?? getCurrentMonthRange(), [dateRange]);
 
   const { data: cachedApprovals, isLoading: isLoadingCache } = useLoadApprovals(
@@ -59,7 +58,7 @@ export const useCachedApprovals = (dateRange?: { start: Date; end: Date }) => {
     }
   );
 
-  const { mutate: saveApprovals } = useStoreApprovals();
+  const { mutate: storeApprovals } = useStoreApprovals();
 
   const [lastKnownApproval, setLastKnownApproval] = useState<Approval | null>(
     null
@@ -81,6 +80,7 @@ export const useCachedApprovals = (dateRange?: { start: Date; end: Date }) => {
 
   const {
     data: freshApprovals,
+    isLoading: isLoadingFresh,
     isFetching,
     isError,
     refetch,
@@ -91,15 +91,14 @@ export const useCachedApprovals = (dateRange?: { start: Date; end: Date }) => {
         "search[created_at]": `${dayjs(range.start).format(
           "YYYY-MM-DD"
         )}..${dayjs(range.end).format("YYYY-MM-DD")}`,
-        ...(lastKnownApproval && {
-          "search[id]": `<${lastKnownApproval.id}`,
-        }),
+        "search[id]": lastKnownApproval
+          ? `<${lastKnownApproval.id}`
+          : undefined,
       } as GetPostApprovalsParams,
       {
         query: {
           enabled: !isLoadingCache,
-          refetchOnMount: false,
-          staleTime: 60 * 60 * 1000,
+          staleTime: 5 * 60 * 1000,
           initialPageParam: 1,
           getNextPageParam: (lastPage, _, i) => {
             if (lastPage.length === 0) return undefined;
@@ -112,14 +111,14 @@ export const useCachedApprovals = (dateRange?: { start: Date; end: Date }) => {
 
   useEffect(() => {
     if (freshApprovals != null) {
-      const newApprovals = freshApprovals.filter(
-        (approval) =>
-          cachedApprovals == null ||
-          !cachedApprovals.some((a) => a.id === approval.id)
+      const newApprovals = _.differenceBy(
+        freshApprovals,
+        cachedApprovals ?? [],
+        "id"
       );
-      saveApprovals(newApprovals);
+      storeApprovals(newApprovals);
     }
-  }, [cachedApprovals, freshApprovals, saveApprovals]);
+  }, [cachedApprovals, freshApprovals, storeApprovals]);
 
   const approvals = useMemo(() => {
     if (freshApprovals == null && cachedApprovals == null) return undefined;
@@ -128,7 +127,7 @@ export const useCachedApprovals = (dateRange?: { start: Date; end: Date }) => {
 
   return {
     data: approvals,
-    isLoadingCache,
+    isLoading: isLoadingCache || isLoadingFresh,
     isFetching,
     isError,
     refetch,
