@@ -7,12 +7,11 @@ import {
   Snackbar,
   Stack,
 } from "@mui/material";
-import { Ticket, useTicketsInfinite } from "../api";
-import { getCurrentMonthRange, useCurrentBreakpoint, useDrain } from "../utils";
+import { useCurrentBreakpoint } from "../utils";
 import { DashboardGrid, DashboardCard, DashboardLayouts } from "../dashboard";
 import { useMemo, useState } from "react";
 import { defaultModDashboardLayouts, modDashboardCatalog } from "./catalog";
-import dayjs from "dayjs";
+import { useCachedTickets } from "../cache";
 
 export const ModDashboard: React.FC = () => {
   const [layouts, setLayouts] = useState<DashboardLayouts>(
@@ -27,31 +26,7 @@ export const ModDashboard: React.FC = () => {
     [currentBreakpoint, layouts]
   );
 
-  const {
-    data: tickets,
-    isFetching,
-    isError,
-    refetch,
-  } = useDrain<Ticket>(
-    useTicketsInfinite(
-      {
-        limit: 320,
-        "search[created_at]": `${dayjs(getCurrentMonthRange().start).format("YYYY-MM-DD")}..${dayjs(getCurrentMonthRange().end).format("YYYY-MM-DD")}`,
-      },
-      {
-        query: {
-          refetchOnMount: false,
-          staleTime: 5 * 60 * 1000,
-          // TODO: make this pagination part of the generated code
-          initialPageParam: 1,
-          getNextPageParam: (lastPage, _, i) => {
-            if (lastPage.length === 0) return undefined;
-            return (i ?? 1) + 1;
-          },
-        },
-      }
-    )
-  );
+  const { data: tickets, isFetching, isError, refetch } = useCachedTickets();
 
   return (
     <Page>
