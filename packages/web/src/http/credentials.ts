@@ -1,6 +1,7 @@
 import axios from "axios";
-import { AXIOS_INSTANCE } from "../http";
+
 import { user } from "../api";
+import { AXIOS_INSTANCE } from "../http";
 
 export interface Credentials {
   username: string;

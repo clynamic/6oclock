@@ -1,7 +1,8 @@
 import Axios, { AxiosError, AxiosRequestConfig } from "axios";
+
 import { dateDeserializeInterceptor } from "./date";
-import { objectUnpackInterceptor } from "./unpack";
 import { miscFixInterceptors } from "./misc";
+import { objectUnpackInterceptor } from "./unpack";
 
 export const AXIOS_INSTANCE = Axios.create({ baseURL: "https://e621.net" });
 

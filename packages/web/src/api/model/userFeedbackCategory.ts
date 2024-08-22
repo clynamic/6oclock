@@ -12,7 +12,7 @@
 export type UserFeedbackCategory =
   (typeof UserFeedbackCategory)[keyof typeof UserFeedbackCategory];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const UserFeedbackCategory = {
   negative: "negative",
   positive: "positive",

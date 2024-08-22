@@ -1,17 +1,18 @@
 import { CalendarMonth, Sell } from "@mui/icons-material";
 import {
-  Card,
-  Box,
-  Stack,
   Avatar,
-  Skeleton,
-  Typography,
+  Box,
+  Card,
   Chip,
+  Skeleton,
+  Stack,
+  Typography,
 } from "@mui/material";
 import { useMemo } from "react";
-import { TicketContributions } from "./tickets";
-import { User, Post } from "../../api";
+
+import { Post,User } from "../../api";
 import { RankingText } from "../../common/RankingText";
+import { TicketContributions } from "./tickets";
 
 export interface TicketLeaderboardFrameProps {
   contribution: TicketContributions;

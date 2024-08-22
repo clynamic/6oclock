@@ -9,7 +9,7 @@
 export type GetTicketsSearchStatus =
   (typeof GetTicketsSearchStatus)[keyof typeof GetTicketsSearchStatus];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const GetTicketsSearchStatus = {
   pending: "pending",
   pending_unclaimed: "pending_unclaimed",

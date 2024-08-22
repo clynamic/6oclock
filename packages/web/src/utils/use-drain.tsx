@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useRef } from "react";
 import {
   InfiniteData,
   UseInfiniteQueryResult,
   UseQueryResult,
 } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef } from "react";
 
 type UseDrainQueryResult<TData> = Omit<
   UseQueryResult<InfiniteData<TData[], unknown> | undefined, Error | null>,

@@ -1,9 +1,10 @@
+import { useTheme } from "@mui/material";
+import { BarChart, LineChart } from "@mui/x-charts";
 import dayjs from "dayjs";
 import { useMemo } from "react";
+
 import { Approval, PostVersion } from "../../api";
-import { BarChart, LineChart } from "@mui/x-charts";
 import { SeriesChartProps } from "../../utils";
-import { useTheme } from "@mui/material";
 
 export interface ApprovalActivityProps {
   approvals?: Approval[];

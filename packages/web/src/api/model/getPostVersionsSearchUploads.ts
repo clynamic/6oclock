@@ -9,7 +9,7 @@
 export type GetPostVersionsSearchUploads =
   (typeof GetPostVersionsSearchUploads)[keyof typeof GetPostVersionsSearchUploads];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const GetPostVersionsSearchUploads = {
   only: "only",
   included: "included",

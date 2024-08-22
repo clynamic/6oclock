@@ -1,12 +1,13 @@
-import { useMemo } from "react";
-import { Approval } from "../../api";
-import { useDrain, useManyUsers, useManyAvatars } from "../../utils";
-import { getApprovalContributors } from "./approvals";
-import { LimitedList } from "../../common";
-import { ApprovalLeaderboardFrame } from "./ApprovalLeaderboardFrame";
 import { ArrowForward } from "@mui/icons-material";
-import { Stack, Button } from "@mui/material";
+import { Button,Stack } from "@mui/material";
 import dayjs from "dayjs";
+import { useMemo } from "react";
+
+import { Approval } from "../../api";
+import { LimitedList } from "../../common";
+import { useDrain, useManyAvatars,useManyUsers } from "../../utils";
+import { ApprovalLeaderboardFrame } from "./ApprovalLeaderboardFrame";
+import { getApprovalContributors } from "./approvals";
 
 export interface ApprovalLeaderboardProps {
   approvals?: Approval[];

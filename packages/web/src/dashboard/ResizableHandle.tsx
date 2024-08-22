@@ -1,6 +1,7 @@
 import { ArrowDropUp } from "@mui/icons-material";
 import { Box } from "@mui/material";
 import { ReactGridLayoutProps } from "react-grid-layout";
+
 import { createDashboardChild } from "./DashboardChild";
 
 type ExtractResizeHandles<T> = T extends {

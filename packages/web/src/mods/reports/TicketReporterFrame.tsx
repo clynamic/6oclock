@@ -1,4 +1,5 @@
-import { Card, Box, Stack, Avatar, Skeleton, Typography } from "@mui/material";
+import { Avatar, Box, Card, Skeleton, Stack, Typography } from "@mui/material";
+
 import { Post, User } from "../../api";
 import { ReporterSummary } from "./reporters";
 

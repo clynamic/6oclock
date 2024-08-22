@@ -11,7 +11,7 @@
  */
 export type UploadRating = (typeof UploadRating)[keyof typeof UploadRating];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const UploadRating = {
   s: "s",
   q: "q",

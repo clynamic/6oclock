@@ -9,7 +9,7 @@
 export type GetUserFeedbacksJsonSearchCategory =
   (typeof GetUserFeedbacksJsonSearchCategory)[keyof typeof GetUserFeedbacksJsonSearchCategory];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const GetUserFeedbacksJsonSearchCategory = {
   negative: "negative",
   positive: "positive",

@@ -1,12 +1,13 @@
+import { ArrowForward } from "@mui/icons-material";
 import { Button, Stack } from "@mui/material";
+import dayjs from "dayjs";
+import { useMemo } from "react";
+
 import { Ticket } from "../../api";
 import { LimitedList } from "../../common";
+import { useDrain, useManyPosts,useManyUsers } from "../../utils";
 import { getTicketReporters } from "./reporters";
-import { useDrain, useManyUsers, useManyPosts } from "../../utils";
 import { TicketReporterFrame } from "./TicketReporterFrame";
-import { useMemo } from "react";
-import dayjs from "dayjs";
-import { ArrowForward } from "@mui/icons-material";
 
 export interface TicketReporterBoardProps {
   tickets?: Ticket[];

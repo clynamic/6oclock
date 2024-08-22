@@ -5,7 +5,6 @@
  * An API for accessing user information and other resources on e621 and e926.
  * OpenAPI spec version: 1.0.0
  */
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import type {
   DefinedInitialDataOptions,
   DefinedUseInfiniteQueryResult,
@@ -19,9 +18,11 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import type { Approval, GetPostApprovalsParams } from "./model";
-import { makeRequest } from "../http/axios";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+
 import type { ErrorType } from "../http/axios";
+import { makeRequest } from "../http/axios";
+import type { Approval, GetPostApprovalsParams } from "./model";
 
 /**
  * Returns a list of post approvals based on search criteria.

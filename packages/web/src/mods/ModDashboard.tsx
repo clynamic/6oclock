@@ -1,4 +1,3 @@
-import { Page, PageBody, PageFooter, PageHeader, WindowTitle } from "../common";
 import {
   Alert,
   Button,
@@ -7,11 +6,13 @@ import {
   Snackbar,
   Stack,
 } from "@mui/material";
-import { useCurrentBreakpoint } from "../utils";
-import { DashboardGrid, DashboardCard, DashboardLayouts } from "../dashboard";
 import { useMemo, useState } from "react";
-import { defaultModDashboardLayouts, modDashboardCatalog } from "./catalog";
+
 import { useCachedTickets } from "../cache";
+import { Page, PageBody, PageFooter, PageHeader, WindowTitle } from "../common";
+import { DashboardCard, DashboardGrid, DashboardLayouts } from "../dashboard";
+import { useCurrentBreakpoint } from "../utils";
+import { defaultModDashboardLayouts, modDashboardCatalog } from "./catalog";
 
 export const ModDashboard: React.FC = () => {
   const [layouts, setLayouts] = useState<DashboardLayouts>(
