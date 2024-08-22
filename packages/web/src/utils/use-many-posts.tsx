@@ -1,12 +1,5 @@
 import { useCallback, useMemo } from "react";
-import {
-  Post,
-  posts,
-  GetPostsParams,
-  getPostsQueryKey,
-  getPostQueryKey,
-  User,
-} from "../api";
+import { Post, posts, getPostsQueryKey, getPostQueryKey, User } from "../api";
 import {
   useInfiniteQuery,
   UseInfiniteQueryOptions,
@@ -15,19 +8,20 @@ import {
   QueryKey,
   useQueryClient,
 } from "@tanstack/react-query";
-import { splitIntoBatches } from "./batches";
+import _ from "lodash";
 
 const POST_ID_BATCH_SIZE = 40;
 
 export interface UseManyPostsConfig {
-  params?: GetPostsParams;
-  options?: UseInfiniteQueryOptions<
-    Post[],
-    Error | null,
-    InfiniteData<Post[], number | undefined>,
-    Post[],
-    QueryKey,
-    number | undefined
+  query?: Partial<
+    UseInfiniteQueryOptions<
+      Post[],
+      Error | null,
+      InfiniteData<Post[], number | undefined>,
+      Post[],
+      QueryKey,
+      number | undefined
+    >
   >;
 }
 
@@ -37,16 +31,10 @@ export const useManyPosts = (
 ) => {
   const queryClient = useQueryClient();
 
-  const batches = useMemo(
-    () =>
-      splitIntoBatches(Array.from(new Set(postIds)).sort(), POST_ID_BATCH_SIZE),
-    [postIds]
-  );
+  const ids = useMemo(() => Array.from(new Set(postIds)).sort(), [postIds]);
+  const batches = useMemo(() => _.chunk(ids, POST_ID_BATCH_SIZE), [ids]);
 
-  const queryKey = getPostsQueryKey({
-    ...config?.params,
-    tags: `id:${postIds?.join(",")}`,
-  });
+  const params = useMemo(() => ({ tags: `id:${ids?.join(",")}` }), [ids]);
 
   const fetchPostsBatch = useCallback(
     async ({
@@ -54,10 +42,7 @@ export const useManyPosts = (
     }: QueryFunctionContext<QueryKey, number | undefined>) => {
       const batch = batches[pageParam];
       if (!batch) return [];
-      const result = await posts({
-        ...config?.params,
-        tags: `id:${batch.join(",")}`,
-      });
+      const result = await posts(params);
 
       result.forEach((post: Post) => {
         queryClient.setQueryData(getPostQueryKey(post.id), post);
@@ -65,7 +50,7 @@ export const useManyPosts = (
 
       return result;
     },
-    [batches, config?.params, queryClient]
+    [batches, params, queryClient]
   );
 
   const queryOptions: UseInfiniteQueryOptions<
@@ -78,16 +63,16 @@ export const useManyPosts = (
   > = useMemo(
     () => ({
       queryFn: fetchPostsBatch,
-      queryKey,
+      queryKey: getPostsQueryKey(params),
       initialPageParam: 0,
       getNextPageParam: (_, pages) => {
         const nextBatchIndex = pages.length;
         return nextBatchIndex < batches.length ? nextBatchIndex : undefined;
       },
-      enabled: !!postIds && postIds.length > 0,
-      ...config?.options,
+      enabled: ids.length > 0,
+      ...config?.query,
     }),
-    [batches.length, config?.options, fetchPostsBatch, postIds, queryKey]
+    [batches.length, config?.query, fetchPostsBatch, ids.length, params]
   );
 
   return useInfiniteQuery(queryOptions);
