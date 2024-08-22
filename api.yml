@@ -653,6 +653,157 @@ paths:
         "500":
           description: Server error
 
+  /post_versions.json:
+    get:
+      operationId: getPostVersions
+      tags:
+        - post_versions
+      summary: Get a list of post versions
+      description: Returns a list of post versions based on search criteria.
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: The page number for pagination
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: false
+          description: The number of post versions to retrieve per page
+          schema:
+            type: integer
+        - name: search[updater_name]
+          in: query
+          required: false
+          description: Filter post versions by the updater's username
+          schema:
+            type: string
+        - name: search[post_id]
+          in: query
+          required: false
+          description: Filter post versions by post ID
+          schema:
+            type: integer
+        - name: search[reason]
+          in: query
+          required: false
+          description: Filter post versions by the reason for the update
+          schema:
+            type: string
+        - name: search[description]
+          in: query
+          required: false
+          description: Filter post versions by description
+          schema:
+            type: string
+        - name: search[description_changed]
+          in: query
+          required: false
+          description: Filter post versions by whether the description was changed
+          schema:
+            type: boolean
+        - name: search[rating_changed]
+          in: query
+          required: false
+          description: Filter post versions by whether the rating was changed
+          schema:
+            type: string
+            enum: [any, s, q, e]
+        - name: search[rating]
+          in: query
+          required: false
+          description: Filter post versions by rating
+          schema:
+            type: string
+            enum: [s, q, e]
+        - name: search[parent_id]
+          in: query
+          required: false
+          description: Filter post versions by parent post ID
+          schema:
+            type: integer
+        - name: search[parent_id_changed]
+          in: query
+          required: false
+          description: Filter post versions by whether the parent ID was changed
+          schema:
+            type: boolean
+        - name: search[tags]
+          in: query
+          required: false
+          description: Filter post versions by tags
+          schema:
+            type: string
+        - name: search[tags_added]
+          in: query
+          required: false
+          description: Filter post versions by tags added
+          schema:
+            type: string
+        - name: search[tags_removed]
+          in: query
+          required: false
+          description: Filter post versions by tags removed
+          schema:
+            type: string
+        - name: search[locked_tags]
+          in: query
+          required: false
+          description: Filter post versions by locked tags
+          schema:
+            type: string
+        - name: search[locked_tags_added]
+          in: query
+          required: false
+          description: Filter post versions by locked tags added
+          schema:
+            type: string
+        - name: search[locked_tags_removed]
+          in: query
+          required: false
+          description: Filter post versions by locked tags removed
+          schema:
+            type: string
+        - name: search[source_changed]
+          in: query
+          required: false
+          description: Filter post versions by whether the source was changed
+          schema:
+            type: boolean
+        - name: search[uploads]
+          in: query
+          required: false
+          description: Filter post versions by uploads status
+          schema:
+            type: string
+            enum: [only, included, excluded]
+        - name: search[created_at]
+          in: query
+          required: false
+          description: Filter post versions by creation date
+          schema:
+            type: string
+        - name: search[updated_at]
+          in: query
+          required: false
+          description: Filter post versions by last update date
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of post versions matching the search criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PostVersion"
+        "400":
+          description: Invalid request parameters
+        "500":
+          description: Server error
+
 components:
   schemas:
     Post:
@@ -1316,3 +1467,106 @@ components:
           type: string
           description: The type of the flag (e.g., flag or deletion)
           enum: [flag, deletion]
+    PostVersion:
+      type: object
+      description: A version of a post, representing changes made to the post.
+      required:
+        - id
+        - post_id
+        - tags
+        - updater_id
+        - updated_at
+        - rating
+        - parent_id
+        - source
+        - description
+        - version
+        - updater_name
+      properties:
+        id:
+          type: integer
+          description: The unique ID of the post version
+        post_id:
+          type: integer
+          description: The ID of the associated post
+        tags:
+          type: string
+          description: The tags associated with the post version
+        updater_id:
+          type: integer
+          description: The ID of the user who updated the post
+        updated_at:
+          type: string
+          format: date-time
+          description: The timestamp when the post version was updated
+        rating:
+          type: string
+          description: The rating of the post (e.g., safe, questionable, explicit)
+          enum: [s, q, e]
+        parent_id:
+          type: integer
+          nullable: true
+          description: The ID of the parent post, if applicable
+        source:
+          type: string
+          description: The source URL associated with the post version
+        description:
+          type: string
+          description: The description of the post version
+        reason:
+          type: string
+          nullable: true
+          description: The reason for the update, if applicable
+        locked_tags:
+          type: string
+          nullable: true
+          description: The locked tags associated with the post version
+        added_tags:
+          type: array
+          items:
+            type: string
+          description: An array of tags added in this version
+        removed_tags:
+          type: array
+          items:
+            type: string
+          description: An array of tags removed in this version
+        added_locked_tags:
+          type: array
+          items:
+            type: string
+          description: An array of locked tags added in this version
+        removed_locked_tags:
+          type: array
+          items:
+            type: string
+          description: An array of locked tags removed in this version
+        rating_changed:
+          type: boolean
+          description: Whether the rating was changed in this version
+        parent_changed:
+          type: boolean
+          description: Whether the parent ID was changed in this version
+        source_changed:
+          type: boolean
+          description: Whether the source was changed in this version
+        description_changed:
+          type: boolean
+          description: Whether the description was changed in this version
+        version:
+          type: integer
+          description: The version number of the post
+        updater_name:
+          type: string
+          description: The username of the user who updated the post version
+        obsolete_added_tags:
+          type: string
+          nullable: true
+          description: Obsolete tags added in this version
+        obsolete_removed_tags:
+          type: string
+          nullable: true
+          description: Obsolete tags removed in this version
+        unchanged_tags:
+          type: string
+          description: The tags that remained unchanged in this version

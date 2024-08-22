@@ -6,3 +6,4 @@ export * from "./posts";
 export * from "./approvals";
 export * from "./uploads";
 export * from "./post-flags";
+export * from "./post-versions";
