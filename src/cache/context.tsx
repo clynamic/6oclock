@@ -8,12 +8,14 @@ import {
   ReactNode,
   useState,
 } from "react";
+import { DateRange } from "../utils";
 
 export type CacheItemKey = number;
 
 interface CacheData {
   id: CacheItemKey;
   created_at?: Date;
+  updated_at?: Date;
 }
 
 interface CacheItemId {
@@ -56,6 +58,9 @@ const openDatabase = (): Promise<DBType> => {
         store.createIndex("type_created_at", ["type", "value.created_at"], {
           unique: false,
         });
+        store.createIndex("type_updated_at", ["type", "value.updated_at"], {
+          unique: false,
+        });
         store.createIndex("id_index", "value.id");
       }
     };
@@ -77,8 +82,8 @@ const openDatabase = (): Promise<DBType> => {
 
 export interface LocalCacheQueryParams {
   type?: string;
-  startDate?: Date;
-  endDate?: Date;
+  created?: Partial<DateRange>;
+  updated?: Partial<DateRange>;
   staleDuration?: number;
   id?: CacheItemKey;
 }
@@ -97,7 +102,7 @@ const query = <T extends CacheData>(
       return;
     }
 
-    const { type, startDate, endDate, staleDuration, id } = params;
+    const { type, created, updated, staleDuration, id } = params;
     const transaction = db.transaction(["cache"], "readonly");
     const store = transaction.objectStore("cache");
 
@@ -108,13 +113,31 @@ const query = <T extends CacheData>(
       if (id) {
         const idIndex = store.index("id_index");
         cursorRequest = idIndex.openCursor(IDBKeyRange.only(id));
-      } else if (type && startDate && endDate) {
+      } else if (type && created) {
         const typeCreatedAtIndex = store.index("type_created_at");
-        const startDateStr = new Date(startDate!).toISOString();
-        const endDateStr = new Date(endDate!).toISOString();
+        const startDateStr = created.start?.toISOString();
+        const endDateStr = created.end?.toISOString();
 
         cursorRequest = typeCreatedAtIndex.openCursor(
-          IDBKeyRange.bound([type, startDateStr], [type, endDateStr])
+          IDBKeyRange.bound(
+            [type, startDateStr],
+            [type, endDateStr],
+            !!startDateStr,
+            !!endDateStr
+          )
+        );
+      } else if (type && updated) {
+        const typeUpdatedAtIndex = store.index("type_updated_at");
+        const startDateStr = updated.start?.toISOString();
+        const endDateStr = updated.end?.toISOString();
+
+        cursorRequest = typeUpdatedAtIndex.openCursor(
+          IDBKeyRange.bound(
+            [type, startDateStr],
+            [type, endDateStr],
+            !!startDateStr,
+            !!endDateStr
+          )
         );
       } else if (type) {
         const typeIndex = store.index("type_created_at");

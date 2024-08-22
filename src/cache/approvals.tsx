@@ -25,10 +25,7 @@ export const useCachedApprovals = (dateRange?: DateRange) => {
   const range = useMemo(() => dateRange ?? getCurrentMonthRange(), [dateRange]);
 
   const { data: cachedApprovals, isLoading: isLoadingCache } = useLoadApprovals(
-    {
-      startDate: range.start,
-      endDate: range.end,
-    }
+    { created: range }
   );
 
   const { mutate: storeApprovals } = useStoreApprovals();

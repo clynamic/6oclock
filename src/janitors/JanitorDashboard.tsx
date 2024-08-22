@@ -15,7 +15,7 @@ import {
 } from "./catalog";
 import { useState, useMemo } from "react";
 import { defaultModDashboardLayouts } from "../mods/catalog";
-import { useCachedApprovals, useCachedUploads } from "../cache";
+import { useCachedApprovals, useCachedPostVersions } from "../cache";
 
 export const JanitorDashboard: React.FC = () => {
   const [layouts, setLayouts] = useState<DashboardLayouts>(
@@ -38,29 +38,29 @@ export const JanitorDashboard: React.FC = () => {
   } = useCachedApprovals();
 
   const {
-    data: uploads,
-    isFetching: isFetchingUploads,
-    isError: uploadsError,
-    refetch: refetchUploads,
-  } = useCachedUploads();
+    data: postVersions,
+    isFetching: isFetchingPostVersions,
+    isError: postVersionsError,
+    refetch: refetchPostVersions,
+  } = useCachedPostVersions();
 
   const isFetching = useMemo(
-    () => isFetchingApprovals || isFetchingUploads,
-    [isFetchingApprovals, isFetchingUploads]
+    () => isFetchingApprovals || isFetchingPostVersions,
+    [isFetchingApprovals, isFetchingPostVersions]
   );
 
   const isError = useMemo(
-    () => approvalsError || uploadsError,
-    [approvalsError, uploadsError]
+    () => approvalsError || postVersionsError,
+    [approvalsError, postVersionsError]
   );
 
   const errorMessage = useMemo(() => {
     if (!isError) return null;
     const errors = [];
     if (approvalsError) errors.push("approvals");
-    if (uploadsError) errors.push("uploads");
+    if (postVersionsError) errors.push("post versions");
     return "Failed to load " + errors.join(" and ");
-  }, [approvalsError, uploadsError, isError]);
+  }, [approvalsError, postVersionsError, isError]);
 
   return (
     <Page>
@@ -85,7 +85,7 @@ export const JanitorDashboard: React.FC = () => {
                   size="small"
                   onClick={() => {
                     if (approvalsError) refetchApprovals();
-                    if (uploadsError) refetchUploads();
+                    if (postVersionsError) refetchPostVersions();
                   }}
                 >
                   Retry
@@ -105,7 +105,10 @@ export const JanitorDashboard: React.FC = () => {
                 janitorDashboardCatalog[layout.i];
               return (
                 <DashboardCard key={layout.i} {...item}>
-                  <Component approvals={approvals} uploads={uploads} />
+                  <Component
+                    approvals={approvals}
+                    postVersions={postVersions}
+                  />
                 </DashboardCard>
               );
             })}

@@ -1,5 +1,5 @@
 import { Button, Stack } from "@mui/material";
-import { Upload } from "../../api";
+import { PostVersion } from "../../api";
 import { LimitedList } from "../../common";
 import { getUploaders } from "./uploaders";
 import { useDrain, useManyUsers, useManyPosts } from "../../utils";
@@ -9,11 +9,13 @@ import dayjs from "dayjs";
 import { ArrowForward } from "@mui/icons-material";
 
 export interface UploaderBoardProps {
-  uploads?: Upload[];
+  postVersions?: PostVersion[];
 }
 
-export const UploaderBoard: React.FC<UploaderBoardProps> = ({ uploads }) => {
-  const allUploaders = getUploaders(uploads);
+export const UploaderBoard: React.FC<UploaderBoardProps> = ({
+  postVersions,
+}) => {
+  const allUploaders = getUploaders(postVersions);
   const uploaders = useMemo(() => allUploaders?.slice(0, 10), [allUploaders]);
 
   const mockUploaders = Array.from({ length: 5 }, (_, i) => ({

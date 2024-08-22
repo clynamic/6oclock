@@ -20,8 +20,7 @@ export const useCachedUploads = (dateRange?: DateRange) => {
   const range = useMemo(() => dateRange ?? getCurrentMonthRange(), [dateRange]);
 
   const { data: cachedUploads, isLoading: isLoadingCache } = useLoadUploads({
-    startDate: range.start,
-    endDate: range.end,
+    created: range,
   });
 
   const { mutate: storeUploads } = useStoreUploads();

@@ -44,13 +44,27 @@ export const modDashboardCatalog: DashboardCatalog<ModDashboardItemProps> = {
 
 export const defaultModDashboardLayouts: DashboardLayouts = {
   lg: [
-    { i: "tickets", x: 0, y: 0, w: 4, h: 11 },
+    {
+      i: "tickets",
+      x: 0,
+      y: 0,
+      w: 4,
+      h: 11,
+      minW: 3,
+      maxW: 6,
+      minH: 9,
+      maxH: 20,
+    },
     {
       i: "volume",
       x: 4,
       y: 0,
       w: 4,
       h: 5,
+      minW: 3,
+      maxW: 5,
+      minH: 4,
+      maxH: 9,
     },
     {
       i: "type",
@@ -58,6 +72,10 @@ export const defaultModDashboardLayouts: DashboardLayouts = {
       y: 5,
       w: 4,
       h: 6,
+      minW: 3,
+      maxW: 5,
+      minH: 4,
+      maxH: 9,
     },
     {
       i: "activity",
@@ -65,6 +83,10 @@ export const defaultModDashboardLayouts: DashboardLayouts = {
       y: 11,
       w: 6,
       h: 5,
+      minW: 4,
+      maxW: undefined,
+      minH: 3,
+      maxH: 9,
     },
     {
       i: "reporters",
@@ -72,6 +94,10 @@ export const defaultModDashboardLayouts: DashboardLayouts = {
       y: 0,
       w: 4,
       h: 11,
+      minW: 2,
+      maxW: 4,
+      minH: 7,
+      maxH: 15,
     },
     {
       i: "frontline",
@@ -79,6 +105,10 @@ export const defaultModDashboardLayouts: DashboardLayouts = {
       y: 11,
       w: 6,
       h: 5,
+      minW: 4,
+      maxW: undefined,
+      minH: 3,
+      maxH: 9,
     },
   ],
 };

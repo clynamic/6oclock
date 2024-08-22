@@ -1,4 +1,4 @@
-import { Upload } from "../../api";
+import { PostVersion } from "../../api";
 import _ from "lodash";
 
 export interface UploaderSummary {
@@ -7,13 +7,15 @@ export interface UploaderSummary {
   dates: Date[];
 }
 
-export const getUploaders = (uploads?: Upload[]): UploaderSummary[] | null => {
+export const getUploaders = (
+  uploads?: PostVersion[]
+): UploaderSummary[] | null => {
   if (_.isNil(uploads)) return null;
   return _.chain(uploads)
-    .filter((upload) => upload.uploader_id != null)
-    .groupBy("uploader_id")
-    .map((group, uploader_id) => ({
-      user: Number(uploader_id),
+    .filter((upload) => upload.updater_id != null)
+    .groupBy("updater_id")
+    .map((group, updater_id) => ({
+      user: Number(updater_id),
       count: group.length,
       dates: group.map((upload) => new Date(upload.updated_at)),
     }))

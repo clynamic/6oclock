@@ -1,19 +1,19 @@
 import dayjs from "dayjs";
 import { useMemo } from "react";
-import { Approval, Upload } from "../../api";
+import { Approval, PostVersion } from "../../api";
 import { BarChart, LineChart } from "@mui/x-charts";
 import { SeriesChartProps } from "../../utils";
 import { useTheme } from "@mui/material";
 
 export interface ApprovalActivityProps {
   approvals?: Approval[];
-  uploads?: Upload[];
+  postVersions?: PostVersion[];
   variant?: "bars" | "lines";
 }
 
 export const ApprovalActivityChart: React.FC<ApprovalActivityProps> = ({
   approvals,
-  uploads,
+  postVersions: postVerions,
   variant = "bars",
 }) => {
   const theme = useTheme();
@@ -22,8 +22,8 @@ export const ApprovalActivityChart: React.FC<ApprovalActivityProps> = ({
     const createdCounts = new Map<string, number>();
     const closedCounts = new Map<string, number>();
 
-    uploads?.forEach((upload) => {
-      const formattedDate = dayjs(upload.created_at).format("YYYY-MM-DD");
+    postVerions?.forEach((version) => {
+      const formattedDate = dayjs(version.updated_at).format("YYYY-MM-DD");
       createdCounts.set(
         formattedDate,
         (createdCounts.get(formattedDate) || 0) + 1
@@ -47,7 +47,7 @@ export const ApprovalActivityChart: React.FC<ApprovalActivityProps> = ({
         created: createdCounts.get(date) || 0,
         closed: closedCounts.get(date) || 0,
       }));
-  }, [uploads, approvals]);
+  }, [postVerions, approvals]);
 
   const dataset = useMemo(() => xAxisLabelsAndCounts, [xAxisLabelsAndCounts]);
 
