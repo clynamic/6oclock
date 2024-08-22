@@ -1,31 +1,31 @@
-import { Button, Stack } from "@mui/material";
-import { TicketLeaderboardFrame } from "./TicketLeaderboardFrame";
-import { getTicketContributors, TicketContributions } from "./contributions";
-import dayjs from "dayjs";
 import { useMemo } from "react";
-import { Ticket } from "../../api";
-import { LimitedList } from "../../common";
+import { Approval } from "../../api";
 import { useDrain, useManyUsers, useManyAvatars } from "../../utils";
+import { getApprovalContributors } from "./contributions";
+import { LimitedList } from "../../common";
+import { ApprovalLeaderboardFrame } from "./ApprovalLeaderboardFrame";
 import { ArrowForward } from "@mui/icons-material";
+import { Stack, Button } from "@mui/material";
+import dayjs from "dayjs";
 
-export interface TicketLeaderboardProps {
-  tickets?: Ticket[];
+export interface ApprovalLeaderboardProps {
+  approvals?: Approval[];
 }
 
-export const TicketLeaderboard: React.FC<TicketLeaderboardProps> = ({
-  tickets,
+export const ApprovalLeaderboard: React.FC<ApprovalLeaderboardProps> = ({
+  approvals,
 }) => {
-  const contributions = getTicketContributors(tickets);
+  const contributions = getApprovalContributors(approvals);
 
   const { data: users } = useDrain(
     useManyUsers(contributions?.map((c) => c.user))
   );
   const { data: avatars } = useDrain(useManyAvatars(users));
 
-  const mockContributions: TicketContributions[] = useMemo(
+  const mockContributions = useMemo(
     () =>
       Array.from({ length: 5 }, (_, i) => ({
-        position: 5 - i,
+        position: i + 1,
         user: i + 1,
         count: 5 - i,
         dates: Array.from({ length: 5 - i }, (_, j) =>
@@ -49,7 +49,7 @@ export const TicketLeaderboard: React.FC<TicketLeaderboardProps> = ({
         const user = users?.find((user) => user.id === contribution.user);
         const avatar = avatars?.find((post) => post.id === user?.avatar_id);
         return (
-          <TicketLeaderboardFrame
+          <ApprovalLeaderboardFrame
             key={contribution.user}
             contribution={contribution}
             user={user}
