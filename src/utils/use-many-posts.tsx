@@ -5,6 +5,7 @@ import {
   GetPostsParams,
   getPostsQueryKey,
   getPostQueryKey,
+  User,
 } from "../api";
 import {
   useInfiniteQuery,
@@ -90,4 +91,13 @@ export const useManyPosts = (
   );
 
   return useInfiniteQuery(queryOptions);
+};
+
+export const useManyAvatars = (users?: User[], config?: UseManyPostsConfig) => {
+  return useManyPosts(
+    users
+      ?.filter((u) => u.avatar_id != null)
+      .map((u) => u.avatar_id) as number[],
+    config
+  );
 };

@@ -36,6 +36,12 @@ export const PageHeader: React.FC = () => {
     {
       label: "Janitors",
       href: "/janitors",
+      children: [
+        {
+          label: "Dashboard",
+          href: "/janitors",
+        },
+      ],
     },
   ];
 
