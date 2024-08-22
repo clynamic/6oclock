@@ -1,4 +1,3 @@
-import { Page, PageBody, PageFooter, PageHeader, WindowTitle } from "../common";
 import {
   Alert,
   Button,
@@ -7,14 +6,18 @@ import {
   Snackbar,
   Stack,
 } from "@mui/material";
-import { Ticket, useTicketsInfinite } from "../api";
-import { getCurrentMonthRange, useCurrentBreakpoint, useDrain } from "../utils";
-import { DashboardGrid, DashboardCard, DashboardLayouts } from "../dashboard";
-import { useMemo, useState } from "react";
-import { defaultModDashboardLayouts, modDashboardCatalog } from "./catalog";
-import dayjs from "dayjs";
+import { Page, PageBody, PageFooter, PageHeader, WindowTitle } from "../common";
+import { useCurrentBreakpoint } from "../utils";
+import { DashboardCard, DashboardGrid, DashboardLayouts } from "../dashboard";
+import {
+  defaultJanitorDashboardLayouts,
+  janitorDashboardCatalog,
+} from "./catalog";
+import { useState, useMemo } from "react";
+import { defaultModDashboardLayouts } from "../mods/catalog";
+import { useCachedApprovals } from "../cache";
 
-export const ModDashboard: React.FC = () => {
+export const JanitorDashboard: React.FC = () => {
   const [layouts, setLayouts] = useState<DashboardLayouts>(
     defaultModDashboardLayouts
   );
@@ -22,40 +25,21 @@ export const ModDashboard: React.FC = () => {
   const currentLayout = useMemo(
     () =>
       currentBreakpoint
-        ? (layouts[currentBreakpoint] ?? defaultModDashboardLayouts.lg)
+        ? (layouts[currentBreakpoint] ?? defaultJanitorDashboardLayouts.lg)
         : defaultModDashboardLayouts.lg,
     [currentBreakpoint, layouts]
   );
 
   const {
-    data: tickets,
+    data: approvals,
     isFetching,
     isError,
     refetch,
-  } = useDrain<Ticket>(
-    useTicketsInfinite(
-      {
-        limit: 320,
-        "search[created_at]": `${dayjs(getCurrentMonthRange().start).format("YYYY-MM-DD")}..${dayjs(getCurrentMonthRange().end).format("YYYY-MM-DD")}`,
-      },
-      {
-        query: {
-          refetchOnMount: false,
-          staleTime: 5 * 60 * 1000,
-          // TODO: make this pagination part of the generated code
-          initialPageParam: 1,
-          getNextPageParam: (lastPage, _, i) => {
-            if (lastPage.length === 0) return undefined;
-            return (i ?? 1) + 1;
-          },
-        },
-      }
-    )
-  );
+  } = useCachedApprovals();
 
   return (
     <Page>
-      <WindowTitle subtitle="Mods" />
+      <WindowTitle subtitle="Janitors" />
       <PageHeader />
       <PageBody>
         <Stack sx={{ width: "100%", height: "100%" }}>
@@ -82,14 +66,14 @@ export const ModDashboard: React.FC = () => {
           <DashboardGrid
             compactType={"vertical"}
             layouts={layouts}
-            onLayoutChange={(_, allLayouts) => setLayouts(allLayouts)}
+            onLayoutChange={(_, newLayouts) => setLayouts(newLayouts)}
           >
             {currentLayout.map((layout) => {
-              const cardProps = modDashboardCatalog[layout.i];
-              if (!cardProps) return null;
+              const { component: Component, ...item } =
+                janitorDashboardCatalog[layout.i];
               return (
-                <DashboardCard key={layout.i} {...cardProps}>
-                  {cardProps.component({ tickets })}
+                <DashboardCard key={layout.i} {...item}>
+                  <Component approvals={approvals} />
                 </DashboardCard>
               );
             })}

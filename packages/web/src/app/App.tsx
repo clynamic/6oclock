@@ -7,31 +7,34 @@ import { AuthGuard, AuthProvider } from "../auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { NotFoundPage } from "./NotFound";
-import { JanitorsDashboard } from "../janitors/JanitorsDashboard";
+import { JanitorDashboard } from "../janitors/JanitorDashboard";
+import { LocalCacheProvider } from "../cache";
 
 export const App: React.FC = () => {
   const queryClient = useMemo(() => new QueryClient(), []);
 
   return (
     <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
+      <LocalCacheProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
 
-              <Route path="/" element={<AuthGuard />}>
-                <Route path="/" element={<Navigate to="/mods" />} />
-                <Route path="/mods" element={<ModDashboard />} />
-                <Route path="/janitors" element={<JanitorsDashboard />} />
-              </Route>
+                <Route path="/" element={<AuthGuard />}>
+                  <Route path="/" element={<Navigate to="/mods" />} />
+                  <Route path="/mods" element={<ModDashboard />} />
+                  <Route path="/janitors" element={<JanitorDashboard />} />
+                </Route>
 
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </BrowserRouter>
-        </ThemeProvider>
-      </QueryClientProvider>
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </BrowserRouter>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </LocalCacheProvider>
     </AuthProvider>
   );
 };

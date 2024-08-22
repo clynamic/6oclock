@@ -12,12 +12,16 @@ type UseDrainQueryResult<TData> = Omit<
   data: TData[] | undefined;
 };
 
+export interface UseDrainOptions {
+  delay?: number;
+}
+
 export function useDrain<TData>(
   queryResult: UseInfiniteQueryResult<
     InfiniteData<TData[], unknown> | undefined,
     Error | null
   >,
-  delay: number = 1000
+  { delay = 1000 }: UseDrainOptions = {}
 ): UseDrainQueryResult<TData> {
   const {
     data,
