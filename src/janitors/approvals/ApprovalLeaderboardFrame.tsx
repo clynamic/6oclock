@@ -1,5 +1,5 @@
 import { Post, User } from "../../api";
-import { ApprovalContributions } from "./contributions";
+import { ApprovalContributions } from "./approvals";
 import { CalendarMonth, Beenhere } from "@mui/icons-material";
 import {
   Card,

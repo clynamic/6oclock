@@ -1,20 +1,30 @@
-import { Approval } from "../api";
-import { DashboardCatalog } from "../dashboard";
-import { ApprovalLeaderboard } from "./leaderboard";
+import { Approval, Upload } from "../api";
+import { DashboardCatalog, DashboardLayouts } from "../dashboard";
+import { ApprovalLeaderboard } from "./approvals";
+import { UploaderBoard } from "./uploads/UploaderBoard";
 
 export interface JanitorDashboardItemProps {
   approvals?: Approval[];
+  uploads?: Upload[];
 }
 
 export const janitorDashboardCatalog: DashboardCatalog<JanitorDashboardItemProps> =
   {
-    leaderboard: {
+    approvals: {
       component: ApprovalLeaderboard,
       title: "Leaderboard",
       variant: "outlined",
     },
+    uploaders: {
+      component: UploaderBoard,
+      title: "Uploaders",
+      variant: "outlined",
+    },
   };
 
-export const defaultJanitorDashboardLayouts = {
-  lg: [{ i: "leaderboard", x: 0, y: 0, w: 4, h: 11 }],
+export const defaultJanitorDashboardLayouts: DashboardLayouts = {
+  lg: [
+    { i: "approvals", x: 0, y: 0, w: 4, h: 11 },
+    { i: "uploaders", x: 4, y: 0, w: 4, h: 11 },
+  ],
 };

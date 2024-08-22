@@ -11,9 +11,9 @@ export type GetUploadsSearchStatus =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetUploadsSearchStatus = {
-  Completed: "Completed",
-  Processing: "Processing",
-  Pending: "Pending",
-  Duplicate: "Duplicate",
-  Error: "Error",
+  completed: "completed",
+  processing: "processing",
+  pending: "pending",
+  duplicate: "duplicate",
+  error: "error",
 } as const;

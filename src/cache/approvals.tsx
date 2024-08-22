@@ -1,52 +1,25 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { LocalCacheQueryParams, useLocalCache } from "./context";
+import {
+  LocalCacheQueryParams,
+  useLoadLocalCache,
+  useStoreLocalCache,
+} from "./context";
 import { useMemo, useEffect } from "react";
 import dayjs from "dayjs";
-import _ from "lodash";
 import {
   Approval,
   GetPostApprovalsParams,
   usePostApprovalsInfinite,
 } from "../api";
 import { useDrain, getCurrentMonthRange, DateRange } from "../utils";
+import { findLowestId, findUncachedItems, mergeWithCache } from "./helpers";
 
 const dbType = "approvals";
 
 export const useLoadApprovals = (
   params: Omit<LocalCacheQueryParams, "type"> = {}
-) => {
-  const { query } = useLocalCache();
+) => useLoadLocalCache<Approval>(dbType, params);
 
-  return useQuery<Approval[]>({
-    queryKey: [dbType, params],
-    queryFn: async () => {
-      const approvals = await query<Approval>({
-        type: dbType,
-        ...params,
-      });
-
-      return approvals.map((item) => item.value);
-    },
-  });
-};
-
-export const useStoreApprovals = () => {
-  const { store: mutate } = useLocalCache();
-
-  return useMutation({
-    mutationFn: async (approvals: Approval[]) => {
-      const now = new Date();
-
-      await mutate<Approval>(
-        approvals.map((approval) => ({
-          type: dbType,
-          value: approval,
-          updated: now,
-        }))
-      );
-    },
-  });
-};
+export const useStoreApprovals = () => useStoreLocalCache<Approval>(dbType);
 
 export const useCachedApprovals = (dateRange?: DateRange) => {
   const range = useMemo(() => dateRange ?? getCurrentMonthRange(), [dateRange]);
@@ -60,13 +33,10 @@ export const useCachedApprovals = (dateRange?: DateRange) => {
 
   const { mutate: storeApprovals } = useStoreApprovals();
 
-  const lastKnownApproval = useMemo(() => {
-    if (cachedApprovals == null || cachedApprovals.length === 0)
-      return undefined;
-    return cachedApprovals.reduce((prev, current) =>
-      prev.id < current.id ? prev : current
-    );
-  }, [cachedApprovals]);
+  const lastKnownApproval = useMemo(
+    () => findLowestId(cachedApprovals),
+    [cachedApprovals]
+  );
 
   const {
     data: freshApprovals,
@@ -102,19 +72,14 @@ export const useCachedApprovals = (dateRange?: DateRange) => {
 
   useEffect(() => {
     if (freshApprovals != null) {
-      const newApprovals = _.differenceBy(
-        freshApprovals,
-        cachedApprovals ?? [],
-        "id"
-      );
-      storeApprovals(newApprovals);
+      storeApprovals(findUncachedItems(cachedApprovals, freshApprovals));
     }
   }, [cachedApprovals, freshApprovals, storeApprovals]);
 
-  const approvals = useMemo(() => {
-    if (freshApprovals == null && cachedApprovals == null) return undefined;
-    return _.unionBy(freshApprovals ?? [], cachedApprovals ?? [], "id");
-  }, [cachedApprovals, freshApprovals]);
+  const approvals = useMemo(
+    () => mergeWithCache(cachedApprovals, freshApprovals),
+    [cachedApprovals, freshApprovals]
+  );
 
   return {
     data: approvals,
