@@ -1,58 +1,29 @@
-import {
-  InfiniteData,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { InfiniteData, useQueryClient } from "@tanstack/react-query";
 import {
   GetTicketsParams,
   getTicketsQueryKey,
   Ticket,
   useTicketsInfinite,
 } from "../api";
-import { LocalCacheQueryParams, useLocalCache } from "./context";
+import {
+  LocalCacheQueryParams,
+  useLoadLocalCache,
+  useLocalCache,
+  useStoreLocalCache,
+} from "./context";
 import { DateRange, getCurrentMonthRange, useDrain } from "../utils";
 import { useEffect, useMemo } from "react";
 import _ from "lodash";
 import dayjs from "dayjs";
+import { findUncachedItems, mergeWithCache } from "./helpers";
 
 const dbType = "tickets";
 
 export const useLoadTickets = (
   params: Omit<LocalCacheQueryParams, "type"> = {}
-) => {
-  const { query } = useLocalCache();
+) => useLoadLocalCache<Ticket>(dbType, params);
 
-  return useQuery<Ticket[]>({
-    queryKey: [dbType, params],
-    queryFn: async () => {
-      const tickets = await query<Ticket>({
-        type: dbType,
-        ...params,
-      });
-
-      return tickets.map((item) => item.value);
-    },
-  });
-};
-
-export const useStoreTickets = () => {
-  const { store: mutate } = useLocalCache();
-
-  return useMutation({
-    mutationFn: async (tickets: Ticket[]) => {
-      const now = new Date();
-
-      await mutate<Ticket>(
-        tickets.map((ticket) => ({
-          type: dbType,
-          value: ticket,
-          updated: now,
-        }))
-      );
-    },
-  });
-};
+export const useStoreTickets = () => useStoreLocalCache<Ticket>(dbType);
 
 export const useCachedTickets = (dateRange?: DateRange) => {
   const queryClient = useQueryClient();
@@ -109,20 +80,15 @@ export const useCachedTickets = (dateRange?: DateRange) => {
   );
 
   useEffect(() => {
-    if (freshTickets && freshTickets.length > 0) {
-      const newTickets = _.differenceBy(
-        freshTickets,
-        cachedTickets ?? [],
-        "id"
-      );
-      storeTickets(newTickets);
+    if (freshTickets) {
+      storeTickets(findUncachedItems(cachedTickets, freshTickets));
     }
   }, [cachedTickets, freshTickets, storeTickets]);
 
-  const tickets = useMemo(() => {
-    if (cachedTickets == null && freshTickets == null) return [];
-    return _.unionBy(freshTickets ?? [], cachedTickets ?? [], "id");
-  }, [cachedTickets, freshTickets]);
+  const tickets = useMemo(
+    () => mergeWithCache(cachedTickets, freshTickets),
+    [cachedTickets, freshTickets]
+  );
 
   return {
     data: tickets,

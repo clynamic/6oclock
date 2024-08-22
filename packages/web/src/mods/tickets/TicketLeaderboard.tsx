@@ -1,6 +1,6 @@
 import { Button, Stack } from "@mui/material";
 import { TicketLeaderboardFrame } from "./TicketLeaderboardFrame";
-import { getTicketContributors, TicketContributions } from "./contributions";
+import { getTicketContributors, TicketContributions } from "./tickets";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { Ticket } from "../../api";

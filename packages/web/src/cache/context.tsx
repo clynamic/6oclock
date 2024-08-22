@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createContext,
   useContext,
@@ -344,7 +346,6 @@ export const LocalCacheProvider: React.FC<LocalCacheProviderProps> = ({
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useLocalCache = (): LocalCacheContextType => {
   const context = useContext(LocalCacheContext);
   if (!context) {
@@ -354,4 +355,43 @@ export const useLocalCache = (): LocalCacheContextType => {
     throw new Error(errorMessage);
   }
   return context;
+};
+
+export type UseLocalCacheParams = Omit<LocalCacheQueryParams, "type">;
+
+export const useLoadLocalCache = <T extends CacheData>(
+  type: string,
+  params: UseLocalCacheParams | undefined = {}
+) => {
+  const { query } = useLocalCache();
+
+  return useQuery<T[]>({
+    queryKey: [type, params],
+    queryFn: async () => {
+      const items = await query<T>({
+        type,
+        ...params,
+      });
+
+      return items.map((item) => item.value);
+    },
+  });
+};
+
+export const useStoreLocalCache = <T extends CacheData>(type: string) => {
+  const { store } = useLocalCache();
+
+  return useMutation({
+    mutationFn: async (items: T[]) => {
+      const now = new Date();
+
+      await store<T>(
+        items.map((item) => ({
+          type: type,
+          value: item,
+          updated: now,
+        }))
+      );
+    },
+  });
 };

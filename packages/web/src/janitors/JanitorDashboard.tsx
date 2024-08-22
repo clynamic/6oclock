@@ -15,11 +15,11 @@ import {
 } from "./catalog";
 import { useState, useMemo } from "react";
 import { defaultModDashboardLayouts } from "../mods/catalog";
-import { useCachedApprovals } from "../cache";
+import { useCachedApprovals, useCachedUploads } from "../cache";
 
 export const JanitorDashboard: React.FC = () => {
   const [layouts, setLayouts] = useState<DashboardLayouts>(
-    defaultModDashboardLayouts
+    defaultJanitorDashboardLayouts
   );
   const currentBreakpoint = useCurrentBreakpoint();
   const currentLayout = useMemo(
@@ -32,10 +32,35 @@ export const JanitorDashboard: React.FC = () => {
 
   const {
     data: approvals,
-    isFetching,
-    isError,
-    refetch,
+    isFetching: isFetchingApprovals,
+    isError: approvalsError,
+    refetch: refetchApprovals,
   } = useCachedApprovals();
+
+  const {
+    data: uploads,
+    isFetching: isFetchingUploads,
+    isError: uploadsError,
+    refetch: refetchUploads,
+  } = useCachedUploads();
+
+  const isFetching = useMemo(
+    () => isFetchingApprovals || isFetchingUploads,
+    [isFetchingApprovals, isFetchingUploads]
+  );
+
+  const isError = useMemo(
+    () => approvalsError || uploadsError,
+    [approvalsError, uploadsError]
+  );
+
+  const errorMessage = useMemo(() => {
+    if (!isError) return null;
+    const errors = [];
+    if (approvalsError) errors.push("approvals");
+    if (uploadsError) errors.push("uploads");
+    return "Failed to load " + errors.join(" and ");
+  }, [approvalsError, uploadsError, isError]);
 
   return (
     <Page>
@@ -55,12 +80,19 @@ export const JanitorDashboard: React.FC = () => {
             <Alert
               severity="error"
               action={
-                <Button color="inherit" size="small" onClick={() => refetch()}>
+                <Button
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    if (approvalsError) refetchApprovals();
+                    if (uploadsError) refetchUploads();
+                  }}
+                >
                   Retry
                 </Button>
               }
             >
-              Failed to load tickets
+              {errorMessage}
             </Alert>
           </Snackbar>
           <DashboardGrid
@@ -73,7 +105,7 @@ export const JanitorDashboard: React.FC = () => {
                 janitorDashboardCatalog[layout.i];
               return (
                 <DashboardCard key={layout.i} {...item}>
-                  <Component approvals={approvals} />
+                  <Component approvals={approvals} uploads={uploads} />
                 </DashboardCard>
               );
             })}

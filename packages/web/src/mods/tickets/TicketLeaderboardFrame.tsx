@@ -9,7 +9,7 @@ import {
   Chip,
 } from "@mui/material";
 import { useMemo } from "react";
-import { TicketContributions } from "./contributions";
+import { TicketContributions } from "./tickets";
 import { User, Post } from "../../api";
 import { RankingText } from "../../common/RankingText";
 
