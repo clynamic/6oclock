@@ -491,7 +491,7 @@ paths:
           description: Filter uploads by status
           schema:
             type: string
-            enum: [Completed, Processing, Pending, Duplicate, Error]
+            enum: [completed, processing, pending, duplicate, error]
         - name: search[created_at]
           in: query
           required: false
@@ -1226,7 +1226,7 @@ components:
         status:
           type: string
           description: The current status of the upload
-          enum: [Completed, Processing, Pending, Duplicate, Error]
+          enum: [completed, processing, pending, duplicate, error]
         backtrace:
           type: string
           nullable: true

@@ -14,7 +14,7 @@ export interface ModDashboardItemProps {
 }
 
 export const modDashboardCatalog: DashboardCatalog<ModDashboardItemProps> = {
-  leaderboard: {
+  tickets: {
     component: TicketLeaderboard,
     title: "Leaderboard",
     variant: "outlined",
@@ -44,7 +44,7 @@ export const modDashboardCatalog: DashboardCatalog<ModDashboardItemProps> = {
 
 export const defaultModDashboardLayouts: DashboardLayouts = {
   lg: [
-    { i: "leaderboard", x: 0, y: 0, w: 4, h: 11 },
+    { i: "tickets", x: 0, y: 0, w: 4, h: 11 },
     {
       i: "volume",
       x: 4,

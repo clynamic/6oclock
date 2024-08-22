@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Approval } from "../../api";
 import { useDrain, useManyUsers, useManyAvatars } from "../../utils";
-import { getApprovalContributors } from "./contributions";
+import { getApprovalContributors } from "./approvals";
 import { LimitedList } from "../../common";
 import { ApprovalLeaderboardFrame } from "./ApprovalLeaderboardFrame";
 import { ArrowForward } from "@mui/icons-material";

@@ -1,2 +1,2 @@
-export * from "./contributions";
+export * from "./approvals";
 export * from "./ApprovalLeaderboard";
