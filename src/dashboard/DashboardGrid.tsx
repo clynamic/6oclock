@@ -1,11 +1,12 @@
 import { Box, useTheme } from "@mui/material";
 import {
+  Layout,
+  Layouts,
   Responsive,
   ResponsiveProps,
   WidthProvider,
-  Layout,
-  Layouts,
 } from "react-grid-layout";
+
 import { ResizableHandle } from "./ResizableHandle";
 
 export type DashboardLayout = Layout;

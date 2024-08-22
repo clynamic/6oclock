@@ -9,7 +9,7 @@
 export type GetPostVersionsSearchRating =
   (typeof GetPostVersionsSearchRating)[keyof typeof GetPostVersionsSearchRating];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const GetPostVersionsSearchRating = {
   s: "s",
   q: "q",

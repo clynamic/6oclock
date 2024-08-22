@@ -6,16 +6,17 @@ import {
   Snackbar,
   Stack,
 } from "@mui/material";
+import { useMemo,useState } from "react";
+
+import { useCachedApprovals, useCachedPostVersions } from "../cache";
 import { Page, PageBody, PageFooter, PageHeader, WindowTitle } from "../common";
-import { useCurrentBreakpoint } from "../utils";
 import { DashboardCard, DashboardGrid, DashboardLayouts } from "../dashboard";
+import { defaultModDashboardLayouts } from "../mods/catalog";
+import { useCurrentBreakpoint } from "../utils";
 import {
   defaultJanitorDashboardLayouts,
   janitorDashboardCatalog,
 } from "./catalog";
-import { useState, useMemo } from "react";
-import { defaultModDashboardLayouts } from "../mods/catalog";
-import { useCachedApprovals, useCachedPostVersions } from "../cache";
 
 export const JanitorDashboard: React.FC = () => {
   const [layouts, setLayouts] = useState<DashboardLayouts>(

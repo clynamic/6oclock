@@ -9,7 +9,7 @@
 export type GetUsersSearchOrder =
   (typeof GetUsersSearchOrder)[keyof typeof GetUsersSearchOrder];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const GetUsersSearchOrder = {
   date: "date",
   name: "name",

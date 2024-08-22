@@ -12,7 +12,7 @@
 export type PostVersionRating =
   (typeof PostVersionRating)[keyof typeof PostVersionRating];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const PostVersionRating = {
   s: "s",
   q: "q",

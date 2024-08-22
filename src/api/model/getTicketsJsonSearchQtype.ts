@@ -9,7 +9,7 @@
 export type GetTicketsJsonSearchQtype =
   (typeof GetTicketsJsonSearchQtype)[keyof typeof GetTicketsJsonSearchQtype];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const GetTicketsJsonSearchQtype = {
   user: "user",
   comment: "comment",

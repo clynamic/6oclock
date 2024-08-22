@@ -1,7 +1,8 @@
 import { Box, Card, CardProps, Stack, Typography } from "@mui/material";
-import { DraggableHandle } from "./DraggableHandle";
 import { ReactNode } from "react";
+
 import { createDashboardChild } from "./DashboardChild";
+import { DraggableHandle } from "./DraggableHandle";
 
 export type DashboardCardProps = Pick<CardProps, "variant"> & {
   children: ReactNode;

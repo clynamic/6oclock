@@ -9,7 +9,7 @@
 export type GetPostFlagsSearchType =
   (typeof GetPostFlagsSearchType)[keyof typeof GetPostFlagsSearchType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const GetPostFlagsSearchType = {
   flag: "flag",
   deletion: "deletion",

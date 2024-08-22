@@ -1,5 +1,6 @@
-import { Ticket } from "../../api";
 import _ from "lodash";
+
+import { Ticket } from "../../api";
 
 export interface ReporterSummary {
   user: number;

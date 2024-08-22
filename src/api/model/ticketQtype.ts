@@ -11,7 +11,7 @@
  */
 export type TicketQtype = (typeof TicketQtype)[keyof typeof TicketQtype];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const TicketQtype = {
   user: "user",
   comment: "comment",

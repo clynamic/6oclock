@@ -1,17 +1,18 @@
-import { Post, User } from "../../api";
-import { ApprovalContributions } from "./approvals";
-import { CalendarMonth, Beenhere } from "@mui/icons-material";
+import { Beenhere,CalendarMonth } from "@mui/icons-material";
 import {
-  Card,
-  Box,
-  Stack,
   Avatar,
-  Skeleton,
-  Typography,
+  Box,
+  Card,
   Chip,
+  Skeleton,
+  Stack,
+  Typography,
 } from "@mui/material";
 import { useMemo } from "react";
+
+import { Post, User } from "../../api";
 import { RankingText } from "../../common/RankingText";
+import { ApprovalContributions } from "./approvals";
 
 export interface ApprovalLeaderboardFrame {
   contribution: ApprovalContributions;

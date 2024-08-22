@@ -1,7 +1,8 @@
 import { Box, Typography } from "@mui/material";
+import React from "react";
+
 // get app version
 import { version } from "../../package.json";
-import React from "react";
 
 export const PageFooter: React.FC = () => {
   return (

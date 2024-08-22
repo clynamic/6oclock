@@ -9,7 +9,7 @@
 export type GetUserFeedbacksJsonSearchDeleted =
   (typeof GetUserFeedbacksJsonSearchDeleted)[keyof typeof GetUserFeedbacksJsonSearchDeleted];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const GetUserFeedbacksJsonSearchDeleted = {
   included: "included",
   excluded: "excluded",

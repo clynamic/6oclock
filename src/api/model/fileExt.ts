@@ -11,7 +11,7 @@
  */
 export type FileExt = (typeof FileExt)[keyof typeof FileExt];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const FileExt = {
   jpg: "jpg",
   png: "png",

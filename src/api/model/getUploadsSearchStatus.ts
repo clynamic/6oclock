@@ -9,7 +9,7 @@
 export type GetUploadsSearchStatus =
   (typeof GetUploadsSearchStatus)[keyof typeof GetUploadsSearchStatus];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const GetUploadsSearchStatus = {
   completed: "completed",
   processing: "processing",

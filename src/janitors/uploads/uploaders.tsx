@@ -1,5 +1,6 @@
-import { PostVersion } from "../../api";
 import _ from "lodash";
+
+import { PostVersion } from "../../api";
 
 export interface UploaderSummary {
   user: number;
