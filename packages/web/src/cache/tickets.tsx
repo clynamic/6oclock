@@ -38,8 +38,7 @@ export const useCachedTickets = (dateRange?: DateRange) => {
   );
 
   const { data: cachedTickets, isLoading: isLoadingCache } = useLoadTickets({
-    startDate: range.start,
-    endDate: range.end,
+    created: range,
   });
 
   const { mutate: storeTickets } = useStoreTickets();
