@@ -18,9 +18,23 @@ export const TicketLeaderboard: React.FC<TicketLeaderboardProps> = ({
   const contributions = getTicketContributors(tickets);
 
   const { data: users } = useDrain(
-    useManyUsers(contributions?.map((c) => c.user))
+    useManyUsers(
+      contributions?.map((c) => c.user),
+      {
+        query: {
+          staleTime: dayjs().add(30, "minutes").valueOf(),
+        },
+      }
+    )
   );
-  const { data: avatars } = useDrain(useManyAvatars(users));
+
+  const { data: avatars } = useDrain(
+    useManyAvatars(users, {
+      query: {
+        staleTime: dayjs().add(30, "minutes").valueOf(),
+      },
+    })
+  );
 
   const mockContributions: TicketContributions[] = useMemo(
     () =>

@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { LocalCacheQueryParams, useLocalCache } from "./context";
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect } from "react";
 import dayjs from "dayjs";
 import _ from "lodash";
 import {
@@ -60,23 +60,13 @@ export const useCachedApprovals = (dateRange?: DateRange) => {
 
   const { mutate: storeApprovals } = useStoreApprovals();
 
-  const [lastKnownApproval, setLastKnownApproval] = useState<Approval | null>(
-    null
-  );
-
-  useEffect(() => {
-    if (
-      !isLoadingCache &&
-      cachedApprovals != null &&
-      cachedApprovals.length > 0
-    ) {
-      setLastKnownApproval(
-        cachedApprovals.reduce((prev, current) =>
-          prev.id < current.id ? prev : current
-        )
-      );
-    }
-  }, [isLoadingCache, cachedApprovals]);
+  const lastKnownApproval = useMemo(() => {
+    if (cachedApprovals == null || cachedApprovals.length === 0)
+      return undefined;
+    return cachedApprovals.reduce((prev, current) =>
+      prev.id < current.id ? prev : current
+    );
+  }, [cachedApprovals]);
 
   const {
     data: freshApprovals,
@@ -98,7 +88,8 @@ export const useCachedApprovals = (dateRange?: DateRange) => {
       {
         query: {
           enabled: !isLoadingCache,
-          staleTime: 5 * 60 * 1000,
+          refetchOnMount: false,
+          refetchInterval: 5 * 60 * 1000,
           initialPageParam: 1,
           getNextPageParam: (lastPage, _, i) => {
             if (lastPage.length === 0) return undefined;
