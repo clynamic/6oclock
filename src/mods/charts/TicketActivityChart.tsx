@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { Ticket } from "../../api";
 import { useMemo } from "react";
 import { useTheme } from "@mui/material";
+import { SeriesChartProps } from "../../utils";
 
 export interface TicketActivityChartProps {
   tickets?: Ticket[];
@@ -51,50 +52,31 @@ export const TicketActivityChart: React.FC<TicketActivityChartProps> = ({
     });
   }, [tickets, xAxisLabels]);
 
-  // TODO: find some way to unite these. currently suffering from typing issues.
+  const chartProps: SeriesChartProps = {
+    dataset,
+    xAxis: [
+      {
+        scaleType: "band",
+        dataKey: "date",
+      },
+    ],
+    series: [
+      {
+        dataKey: "created",
+        label: "Created",
+        color: theme.palette.primary.main,
+      },
+      {
+        dataKey: "closed",
+        label: "Closed",
+        color: theme.palette.secondary.main,
+      },
+    ],
+  };
+
   return variant === "bars" ? (
-    <BarChart
-      dataset={dataset}
-      xAxis={[
-        {
-          scaleType: "band",
-          dataKey: "date",
-        },
-      ]}
-      series={[
-        {
-          dataKey: "created",
-          label: "Created",
-          color: theme.palette.primary.main,
-        },
-        {
-          dataKey: "closed",
-          label: "Closed",
-          color: theme.palette.secondary.main,
-        },
-      ]}
-    />
+    <BarChart {...chartProps} />
   ) : (
-    <LineChart
-      dataset={dataset}
-      xAxis={[
-        {
-          scaleType: "band",
-          dataKey: "date",
-        },
-      ]}
-      series={[
-        {
-          dataKey: "created",
-          label: "Created",
-          color: theme.palette.primary.main,
-        },
-        {
-          dataKey: "closed",
-          label: "Closed",
-          color: theme.palette.secondary.main,
-        },
-      ]}
-    />
+    <LineChart {...chartProps} />
   );
 };
