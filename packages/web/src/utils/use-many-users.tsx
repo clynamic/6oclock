@@ -1,15 +1,16 @@
-import { useCallback, useMemo } from "react";
-import { getUserQueryKey, getUsersQueryKey, User, users } from "../api";
 import {
-  useInfiniteQuery,
-  UseInfiniteQueryOptions,
   InfiniteData,
+  keepPreviousData,
   QueryFunctionContext,
   QueryKey,
-  keepPreviousData,
+  useInfiniteQuery,
+  UseInfiniteQueryOptions,
   useQueryClient,
 } from "@tanstack/react-query";
 import _ from "lodash";
+import { useCallback, useMemo } from "react";
+
+import { getUserQueryKey, getUsersQueryKey, User, users } from "../api";
 
 const USER_ID_BATCH_SIZE = 100;
 

@@ -9,7 +9,7 @@
 export type GetTicketsSearchQtype =
   (typeof GetTicketsSearchQtype)[keyof typeof GetTicketsSearchQtype];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const GetTicketsSearchQtype = {
   user: "user",
   comment: "comment",

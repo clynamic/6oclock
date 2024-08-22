@@ -11,7 +11,7 @@
  */
 export type PostFlagType = (typeof PostFlagType)[keyof typeof PostFlagType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const PostFlagType = {
   flag: "flag",
   deletion: "deletion",

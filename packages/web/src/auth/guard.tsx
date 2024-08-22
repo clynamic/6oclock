@@ -1,10 +1,11 @@
+import { Box, CircularProgress, Typography } from "@mui/material";
+import dayjs from "dayjs";
 import React, { useEffect, useMemo, useRef } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "./context";
+
 import { Page, PageBody, PageFooter, PageHeader, WindowTitle } from "../common";
-import { Box, CircularProgress, Typography } from "@mui/material";
-import { checkCredentials, setAxiosAuth, clearAxiosAuth } from "../http";
-import dayjs from "dayjs";
+import { checkCredentials, clearAxiosAuth,setAxiosAuth } from "../http";
+import { useAuth } from "./context";
 
 export interface AuthGuardProps {
   children?: React.ReactNode;

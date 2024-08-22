@@ -1,8 +1,9 @@
+import { useTheme } from "@mui/material";
 import { BarChart, LineChart } from "@mui/x-charts";
 import dayjs from "dayjs";
-import { Ticket } from "../../api";
 import { useMemo } from "react";
-import { useTheme } from "@mui/material";
+
+import { Ticket } from "../../api";
 import { SeriesChartProps } from "../../utils";
 
 export interface TicketActivityChartProps {

@@ -1,14 +1,15 @@
-import { useCallback, useMemo } from "react";
-import { Post, posts, getPostsQueryKey, getPostQueryKey, User } from "../api";
 import {
-  useInfiniteQuery,
-  UseInfiniteQueryOptions,
   InfiniteData,
   QueryFunctionContext,
   QueryKey,
+  useInfiniteQuery,
+  UseInfiniteQueryOptions,
   useQueryClient,
 } from "@tanstack/react-query";
 import _ from "lodash";
+import { useCallback, useMemo } from "react";
+
+import { getPostQueryKey, getPostsQueryKey, Post, posts, User } from "../api";
 
 const POST_ID_BATCH_SIZE = 40;
 

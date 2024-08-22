@@ -1,13 +1,13 @@
 import { Ticket } from "../api";
 import { DashboardCatalog, DashboardLayouts } from "../dashboard";
 import {
-  TicketStatusChart,
-  TicketTypeChart,
   TicketActivityChart,
   TicketFrontlineChart,
+  TicketStatusChart,
+  TicketTypeChart,
 } from "./charts";
-import { TicketLeaderboard } from "./tickets";
 import { TicketReporterBoard } from "./reports";
+import { TicketLeaderboard } from "./tickets";
 
 export interface ModDashboardItemProps {
   tickets?: Ticket[];

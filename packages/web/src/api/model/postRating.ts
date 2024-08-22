@@ -11,7 +11,7 @@
  */
 export type PostRating = (typeof PostRating)[keyof typeof PostRating];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const PostRating = {
   s: "s",
   q: "q",

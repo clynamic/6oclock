@@ -1,7 +1,8 @@
-import { PieChart, PieValueType } from "@mui/x-charts";
-import { Ticket } from "../../api";
-import { useMemo } from "react";
 import { useTheme } from "@mui/material";
+import { PieChart, PieValueType } from "@mui/x-charts";
+import { useMemo } from "react";
+
+import { Ticket } from "../../api";
 
 export interface TicketStatusChartProps {
   tickets?: Ticket[];
