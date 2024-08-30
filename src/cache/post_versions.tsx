@@ -1,19 +1,20 @@
 import { GetNextPageParamFunction } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useEffect,useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
-import {
-  GetPostVersionsParams,
-  PostVersion,
-  usePostVersionsInfinite,
-} from "../api";
-import { DateRange,getCurrentMonthRange, useDrain } from "../utils";
+import { PostVersion, usePostVersionsInfinite } from "../api";
+import { DateRange, getCurrentMonthRange, useDrain } from "../utils";
 import {
   useLoadLocalCache,
   UseLocalCacheParams,
   useStoreLocalCache,
 } from "./context";
-import { findLowestId, findUncachedItems, mergeWithCache } from "./helpers";
+import {
+  findHighestId,
+  findLowestId,
+  findUncachedItems,
+  mergeWithCache,
+} from "./helpers";
 
 const dbType = "post_versions";
 
@@ -32,7 +33,7 @@ export const useCachedPostVersions = (dateRange?: DateRange) => {
   const { mutate: storePostVersions } = useStorePostVersions();
 
   const lastKnownPostVersion = useMemo(
-    () => findLowestId(cachedPostVersions),
+    () => findHighestId(cachedPostVersions),
     [cachedPostVersions]
   );
 
@@ -50,18 +51,21 @@ export const useCachedPostVersions = (dateRange?: DateRange) => {
           "YYYY-MM-DD"
         )}..${dayjs(range.end).format("YYYY-MM-DD")}`,
         "search[uploads]": "only", // important part!
-        "search[id]": lastKnownPostVersion
-          ? `<${lastKnownPostVersion.id}`
-          : undefined,
-      } as GetPostVersionsParams,
+      },
       {
         query: {
-          enabled: !isLoadingCache,
+          enabled: false, // !isLoadingCache,
           refetchOnMount: false,
           refetchInterval: 5 * 60 * 1000,
           initialPageParam: 1,
           getNextPageParam: ((lastPage) => {
             if (lastPage.length === 0) return undefined;
+            if (lastKnownPostVersion?.id != null) {
+              const lastId = lastPage[lastPage.length - 1].id;
+              if (lastId <= lastKnownPostVersion.id) return undefined;
+            }
+            const lastDate = lastPage[lastPage.length - 1].updated_at;
+            if (dayjs(lastDate).isBefore(range.start)) return undefined;
             // I dont know why this is necessary, but it is.
             return `b${Math.min(findLowestId(lastPage)!.id, lastKnownPostVersion?.id ?? Infinity)}`;
             // I fucking love lying
