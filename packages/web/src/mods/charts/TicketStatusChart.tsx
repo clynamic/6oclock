@@ -2,49 +2,44 @@ import { useTheme } from "@mui/material";
 import { PieChart, PieValueType } from "@mui/x-charts";
 import { useMemo } from "react";
 
-import { Ticket } from "../../api";
+import { useTicketStatusSummary } from "../../api";
+import { DateRange } from "../../utils";
 
 export interface TicketStatusChartProps {
-  tickets?: Ticket[];
+  range?: DateRange;
 }
 
 export const TicketStatusChart: React.FC<TicketStatusChartProps> = ({
-  tickets,
+  range,
 }) => {
   const theme = useTheme();
+
+  const { data: summary } = useTicketStatusSummary(range);
 
   const data: PieValueType[] = useMemo(() => {
     return [
       {
         id: 0,
         label: "Open",
-        value:
-          tickets?.filter((ticket) => ticket.status === "pending").length || 0,
+        value: summary?.pending || 0,
         color: theme.palette.primary.main,
       },
       {
         id: 1,
         label: "In Progress",
-        value:
-          tickets?.filter((ticket) => ticket.status === "partial").length || 0,
+        value: summary?.partial || 0,
         color: theme.palette.warning.main,
       },
       {
         id: 2,
         label: "Closed",
-        value:
-          tickets?.filter((ticket) => ticket.status === "approved").length || 0,
+        value: summary?.approved || 0,
         color: theme.palette.secondary.main,
       },
     ]
       .filter((item) => item.value > 0)
       .sort((a, b) => b.value - a.value);
-  }, [
-    theme.palette.primary.main,
-    theme.palette.secondary.main,
-    theme.palette.warning.main,
-    tickets,
-  ]);
+  }, [theme, summary]);
 
   return (
     <PieChart

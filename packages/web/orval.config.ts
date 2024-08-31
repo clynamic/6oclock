@@ -3,14 +3,14 @@ import { defineConfig } from "orval";
 export default defineConfig({
   api: {
     input: {
-      target: "./api.yml",
+      target: "./api.json",
     },
     output: {
       workspace: "./src/api",
       mode: "tags",
-      target: "query.ts",
       schemas: "model",
       client: "react-query",
+      clean: true,
       urlEncodeParameters: true,
       prettier: true,
       override: {
@@ -30,7 +30,7 @@ export default defineConfig({
             ...options,
             operationName: options.operationName.replace(
               /^get(.)(.*)/,
-              (_, firstChar, rest) => firstChar.toLowerCase() + rest
+              (_, firstChar, rest) => firstChar.toLowerCase() + rest,
             ),
           };
           // enable infinite query for endpoints with pages

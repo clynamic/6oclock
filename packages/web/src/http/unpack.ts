@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 
 export const objectUnpackInterceptor = (
-  response: AxiosResponse
+  response: AxiosResponse,
 ): AxiosResponse => {
   // if we receive an object with a single key that is an array, unpack it as just the array
   // this helps us overcome a silly API design choice

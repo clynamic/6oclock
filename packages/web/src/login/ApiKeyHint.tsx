@@ -26,7 +26,7 @@ export const ApiKeyHint: React.FC<ApiKeyHintProps> = ({ control }) => {
         Get your API key from{" "}
         <Link
           href={`https://e621.net/users/${encodeURIComponent(
-            username as string
+            username as string,
           )}/api_key`}
           target="_blank"
           rel="noreferrer 

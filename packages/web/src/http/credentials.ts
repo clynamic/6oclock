@@ -1,6 +1,4 @@
-import axios from "axios";
-
-import { user } from "../api";
+import { login } from "../api";
 import { AXIOS_INSTANCE } from "../http";
 
 export interface Credentials {
@@ -8,27 +6,19 @@ export interface Credentials {
   password: string;
 }
 
-export const checkCredentials = async (
+export const getAuthToken = async (
   credentials: Credentials
-): Promise<boolean> => {
-  setAxiosAuth(credentials);
-
-  try {
-    await user(credentials.username);
-    return true;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      return false;
-    }
-    throw error;
-  } finally {
-    clearAxiosAuth();
-  }
+): Promise<string> => {
+  return await login(credentials);
 };
 
-export const setAxiosAuth = (credentials: Credentials) => {
-  AXIOS_INSTANCE.defaults.headers.common["Authorization"] =
-    `Basic ${btoa(`${credentials.username}:${credentials.password}`)}`;
+export const checkAuthToken = async (token: string): Promise<boolean> => {
+  // TODO!
+  return true;
+};
+
+export const setAxiosAuth = (token: string) => {
+  AXIOS_INSTANCE.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 };
 
 export const clearAxiosAuth = () => {

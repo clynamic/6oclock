@@ -1,2 +1,2 @@
 export * from "./ApprovalLeaderboard";
-export * from "./approvals";
+export * from "./ApprovalLeaderboardFrame";

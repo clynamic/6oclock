@@ -1,4 +1,3 @@
-import { Ticket } from "../api";
 import { DashboardCatalog, DashboardLayouts } from "../dashboard";
 import {
   TicketActivityChart,
@@ -9,9 +8,9 @@ import {
 import { TicketReporterBoard } from "./reports";
 import { TicketLeaderboard } from "./tickets";
 
-export interface ModDashboardItemProps {
-  tickets?: Ticket[];
-}
+// TODO: remove this entirely? context provider for extra props?
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface ModDashboardItemProps {}
 
 export const modDashboardCatalog: DashboardCatalog<ModDashboardItemProps> = {
   tickets: {

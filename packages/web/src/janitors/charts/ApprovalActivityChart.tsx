@@ -3,54 +3,49 @@ import { BarChart, LineChart } from "@mui/x-charts";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 
-import { Approval, PostVersion } from "../../api";
-import { SeriesChartProps } from "../../utils";
+import { useApprovalCountSeries } from "../../api";
+import { DateRange, SeriesChartProps } from "../../utils";
 
 export interface ApprovalActivityProps {
-  approvals?: Approval[];
-  postVersions?: PostVersion[];
+  range?: DateRange;
   variant?: "bars" | "lines";
 }
 
 export const ApprovalActivityChart: React.FC<ApprovalActivityProps> = ({
-  approvals,
-  postVersions: postVerions,
+  range,
   variant = "bars",
 }) => {
   const theme = useTheme();
 
-  const xAxisLabelsAndCounts = useMemo(() => {
-    const createdCounts = new Map<string, number>();
-    const closedCounts = new Map<string, number>();
+  const { data: approvedData } = useApprovalCountSeries(range);
 
-    postVerions?.forEach((version) => {
-      const formattedDate = dayjs(version.updated_at).format("YYYY-MM-DD");
-      createdCounts.set(
-        formattedDate,
-        (createdCounts.get(formattedDate) || 0) + 1
-      );
-    });
+  const approvedSeries = useMemo(
+    () =>
+      approvedData?.map((e) => ({
+        ...e,
+        date: dayjs(e.date).format("YYYY-MM-DD"),
+      })),
+    [approvedData]
+  );
 
-    approvals?.forEach((approval) => {
-      const formattedDate = dayjs(approval.created_at).format("YYYY-MM-DD");
-      closedCounts.set(
-        formattedDate,
-        (closedCounts.get(formattedDate) || 0) + 1
-      );
-    });
+  const xAxisLabels = useMemo(() => {
+    return Array.from(
+      new Set([
+        // ...(uploadedSeries?.map((e) => e.date) ?? []),
+        ...(approvedSeries?.map((e) => e.date) ?? []),
+      ])
+    ).sort((a, b) => dayjs(a).unix() - dayjs(b).unix());
+  }, [approvedSeries]);
 
-    const allDates = new Set([...createdCounts.keys(), ...closedCounts.keys()]);
-
-    return Array.from(allDates)
-      .sort((a, b) => dayjs(a).unix() - dayjs(b).unix())
-      .map((date) => ({
+  const dataset = useMemo(() => {
+    return xAxisLabels.map((date) => {
+      return {
         date,
-        created: createdCounts.get(date) || 0,
-        closed: closedCounts.get(date) || 0,
-      }));
-  }, [postVerions, approvals]);
-
-  const dataset = useMemo(() => xAxisLabelsAndCounts, [xAxisLabelsAndCounts]);
+        // uploaded: uploadedSeries?.find((e) => e.date === date)?.count ?? 0,
+        approved: approvedSeries?.find((e) => e.date === date)?.count ?? 0,
+      };
+    });
+  }, [approvedSeries, xAxisLabels]);
 
   const chartProps: SeriesChartProps = {
     dataset,
@@ -61,13 +56,15 @@ export const ApprovalActivityChart: React.FC<ApprovalActivityProps> = ({
       },
     ],
     series: [
+      /*
       {
-        dataKey: "created",
+        dataKey: "uploaded",
         label: "Uploaded",
         color: theme.palette.primary.main,
       },
+      */
       {
-        dataKey: "closed",
+        dataKey: "approved",
         label: "Approved",
         color: theme.palette.success.main,
       },
