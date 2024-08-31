@@ -1,3 +1,4 @@
+export * from "./catalog";
 export * from "./charts";
 export * from "./ModDashboard";
 export * from "./reports";

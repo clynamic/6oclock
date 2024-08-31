@@ -13,5 +13,5 @@ export const DraggableHandle = createDashboardChild(
   },
   {
     className: "react-draggable-handle",
-  }
+  },
 );

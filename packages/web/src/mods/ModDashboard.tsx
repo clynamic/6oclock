@@ -1,14 +1,6 @@
-import {
-  Alert,
-  Button,
-  Fade,
-  LinearProgress,
-  Snackbar,
-  Stack,
-} from "@mui/material";
+import { Stack } from "@mui/material";
 import { useMemo, useState } from "react";
 
-import { useCachedTickets } from "../cache";
 import { Page, PageBody, PageFooter, PageHeader, WindowTitle } from "../common";
 import { DashboardCard, DashboardGrid, DashboardLayouts } from "../dashboard";
 import { useCurrentBreakpoint } from "../utils";
@@ -27,45 +19,23 @@ export const ModDashboard: React.FC = () => {
     [currentBreakpoint, layouts]
   );
 
-  const { data: tickets, isFetching, isError, refetch } = useCachedTickets();
-
   return (
     <Page>
       <WindowTitle subtitle="Mods" />
       <PageHeader />
       <PageBody>
-        <Stack sx={{ width: "100%", height: "100%" }}>
-          <Fade in={isFetching}>
-            <LinearProgress
-              sx={{
-                borderTopLeftRadius: (theme) => theme.shape.borderRadius,
-                borderTopRightRadius: (theme) => theme.shape.borderRadius,
-              }}
-            />
-          </Fade>
-          <Snackbar open={isError}>
-            <Alert
-              severity="error"
-              action={
-                <Button color="inherit" size="small" onClick={() => refetch()}>
-                  Retry
-                </Button>
-              }
-            >
-              Failed to load tickets
-            </Alert>
-          </Snackbar>
+        <Stack sx={{ height: "100%", width: "100%" }}>
           <DashboardGrid
             compactType={"vertical"}
             layouts={layouts}
             onLayoutChange={(_, allLayouts) => setLayouts(allLayouts)}
           >
             {currentLayout.map((layout) => {
-              const cardProps = modDashboardCatalog[layout.i];
-              if (!cardProps) return null;
+              const { component: Component, ...item } =
+                modDashboardCatalog[layout.i];
               return (
-                <DashboardCard key={layout.i} {...cardProps}>
-                  {cardProps.component({ tickets })}
+                <DashboardCard key={layout.i} {...item}>
+                  <Component />
                 </DashboardCard>
               );
             })}

@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth";
 import { PageBody, PageFooter, PageHeader, WindowTitle } from "../common";
 import { Page } from "../common/Page";
-import { checkCredentials } from "../http";
+import { getAuthToken } from "../http";
 import { ApiKeyField } from "./ApiKeyField";
 import { ApiKeyHint } from "./ApiKeyHint";
 import { LoginButton } from "./LoginButton";
@@ -32,7 +32,7 @@ export const LoginPage = () => {
   } = useForm<LoginFormData>();
 
   const [loading, setLoading] = useState(false);
-  const { saveCredentials } = useAuth();
+  const { saveToken } = useAuth();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -51,13 +51,14 @@ export const LoginPage = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     setLoading(true);
-    const valid = await checkCredentials(data);
-    if (!valid) {
+    try {
+      const token = await getAuthToken(data);
+      saveToken(token);
+    } catch {
       control.setError("password", { message: "Invalid credentials" });
       setLoading(false);
       return;
     }
-    saveCredentials(data);
     setLoading(false);
     navigation(redirect || "/");
   };

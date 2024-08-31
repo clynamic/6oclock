@@ -1,11 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-import { Credentials } from "../http";
-
 interface AuthContextType {
-  credentials: Credentials | null;
-  saveCredentials: (credentials: Credentials) => void;
-  clearCredentials: () => void;
+  token: string | null;
+  saveToken: (token: string) => void;
+  clearToken: () => void;
   session: Session | null;
   saveSession: (session: Session) => void;
   clearSession: () => void;
@@ -22,27 +20,28 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useCredentials must be used within a CredentialsProvider");
+    throw new Error("useAuth must be used within a AuthProvider");
   }
   return context;
 };
 
+const storageKey = "auth_token";
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [credentials, setCredentials] = useState<Credentials | null>(() => {
-    const savedCredentials = localStorage.getItem("credentials");
-    return savedCredentials ? JSON.parse(savedCredentials) : null;
+  const [token, setToken] = useState<string | null>(() => {
+    return localStorage.getItem(storageKey);
   });
 
-  const saveCredentials = (newCredentials: Credentials) => {
-    setCredentials(newCredentials);
-    localStorage.setItem("credentials", JSON.stringify(newCredentials));
+  const saveToken = (token: string) => {
+    setToken(token);
+    localStorage.setItem(storageKey, token);
   };
 
-  const clearCredentials = () => {
-    setCredentials(null);
-    localStorage.removeItem("credentials");
+  const clearToken = () => {
+    setToken(null);
+    localStorage.removeItem(storageKey);
   };
 
   const [session, setSession] = useState<Session | null>(null);
@@ -57,14 +56,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     setSession(null);
-  }, [credentials]);
+  }, [token]);
 
   return (
     <AuthContext.Provider
       value={{
-        credentials,
-        saveCredentials,
-        clearCredentials,
+        token,
+        saveToken,
+        clearToken,
         session,
         saveSession,
         clearSession,

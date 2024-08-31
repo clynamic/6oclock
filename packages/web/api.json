@@ -1,0 +1,695 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "operationId": "login",
+        "summary": "Login",
+        "description": "Login with username and api key",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCredentials"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/auth/validate": {
+      "get": {
+        "operationId": "validate",
+        "summary": "Validate",
+        "description": "Validate token",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "When token is valid"
+          },
+          "401": {
+            "description": "When token is invalid"
+          }
+        },
+        "tags": ["Auth"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/approvals/metrics/count/summary": {
+      "get": {
+        "operationId": "getApprovalCountSummary",
+        "summary": "Approval count summary",
+        "description": "Get total approval counts for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApprovalCountSummary"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Approvals"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/approvals/metrics/count/series": {
+      "get": {
+        "operationId": "getApprovalCountSeries",
+        "summary": "Approval count series",
+        "description": "Get a time series of approval counts for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApprovalCountPoint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Approvals"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/approvals/metrics/janitor/summary": {
+      "get": {
+        "operationId": "getJanitorSummary",
+        "summary": "Janitor summary",
+        "description": "Get a summary of the top 20 janitors by approval count for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JanitorSummary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Approvals"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tickets/metrics/status/summary": {
+      "get": {
+        "operationId": "getTicketStatusSummary",
+        "summary": "Ticket status summary",
+        "description": "Get ticket status (pending, approved, partial) counts for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketStatusSummary"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Tickets"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tickets/metrics/type/summary": {
+      "get": {
+        "operationId": "getTicketTypeSummary",
+        "summary": "Ticket type summary",
+        "description": "Get ticket types counts for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketTypeSummary"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Tickets"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tickets/metrics/open/series": {
+      "get": {
+        "operationId": "getTicketOpenSeries",
+        "summary": "Ticket open series",
+        "description": "Get a time series of open tickets for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TicketOpenPoint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Tickets"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tickets/metrics/closed/series": {
+      "get": {
+        "operationId": "getTicketClosedSeries",
+        "summary": "Ticket closed series",
+        "description": "Get a time series of closed tickets for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TicketClosedPoint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Tickets"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tickets/metrics/mod/summary": {
+      "get": {
+        "operationId": "getModSummary",
+        "summary": "Moderator summary",
+        "description": "Get a summary of the top 20 moderators (claimed and handled tickets) for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModSummary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Tickets"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tickets/metrics/reporter/summary": {
+      "get": {
+        "operationId": "getReporterSummary",
+        "summary": "Reporter summary",
+        "description": "Get a summary of the top 20 reporters (submitted tickets) for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReporterSummary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Tickets"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "5-thirty",
+    "description": "backend data aggregate for 6 o'clock",
+    "version": "0.0.1",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "UserCredentials": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "pattern": "/^[a-zA-Z0-9]{24,32}$/"
+          }
+        },
+        "required": ["username", "password"]
+      },
+      "ApprovalCountSummary": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number"
+          }
+        },
+        "required": ["total"]
+      },
+      "ApprovalCountPoint": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": ["date", "count"]
+      },
+      "UserHead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "name", "level"]
+      },
+      "JanitorSummary": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number"
+          },
+          "head": {
+            "$ref": "#/components/schemas/UserHead"
+          },
+          "total": {
+            "type": "number"
+          },
+          "days": {
+            "type": "number"
+          }
+        },
+        "required": ["userId", "total", "days"]
+      },
+      "TicketStatusSummary": {
+        "type": "object",
+        "properties": {
+          "pending": {
+            "type": "number"
+          },
+          "approved": {
+            "type": "number"
+          },
+          "partial": {
+            "type": "number"
+          }
+        },
+        "required": ["pending", "approved", "partial"]
+      },
+      "TicketTypeSummary": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "number"
+          },
+          "comment": {
+            "type": "number"
+          },
+          "forum": {
+            "type": "number"
+          },
+          "blip": {
+            "type": "number"
+          },
+          "wiki": {
+            "type": "number"
+          },
+          "pool": {
+            "type": "number"
+          },
+          "set": {
+            "type": "number"
+          },
+          "post": {
+            "type": "number"
+          },
+          "dmail": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "user",
+          "comment",
+          "forum",
+          "blip",
+          "wiki",
+          "pool",
+          "set",
+          "post",
+          "dmail"
+        ]
+      },
+      "TicketOpenPoint": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": ["date", "count"]
+      },
+      "TicketClosedPoint": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": ["date", "count"]
+      },
+      "ModSummary": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number"
+          },
+          "head": {
+            "$ref": "#/components/schemas/UserHead"
+          },
+          "claimed": {
+            "type": "number"
+          },
+          "handled": {
+            "type": "number"
+          },
+          "days": {
+            "type": "number"
+          }
+        },
+        "required": ["userId", "claimed", "handled", "days"]
+      },
+      "ReporterSummary": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number"
+          },
+          "head": {
+            "$ref": "#/components/schemas/UserHead"
+          },
+          "reported": {
+            "type": "number"
+          },
+          "days": {
+            "type": "number"
+          }
+        },
+        "required": ["userId", "reported", "days"]
+      }
+    }
+  }
+}
