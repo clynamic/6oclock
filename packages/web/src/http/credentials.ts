@@ -1,4 +1,4 @@
-import { login } from "../api";
+import { login, validateToken } from "../api";
 import { AXIOS_INSTANCE } from "../http";
 
 export interface Credentials {
@@ -13,8 +13,7 @@ export const getAuthToken = async (
 };
 
 export const checkAuthToken = async (token: string): Promise<boolean> => {
-  // TODO!
-  return true;
+  return validateToken({ token });
 };
 
 export const setAxiosAuth = (token: string) => {
