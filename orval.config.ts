@@ -9,6 +9,7 @@ export default defineConfig({
       workspace: "./src/api",
       mode: "tags",
       schemas: "model",
+      target: "api.ts",
       client: "react-query",
       clean: true,
       urlEncodeParameters: true,
@@ -30,7 +31,7 @@ export default defineConfig({
             ...options,
             operationName: options.operationName.replace(
               /^get(.)(.*)/,
-              (_, firstChar, rest) => firstChar.toLowerCase() + rest,
+              (_, firstChar, rest) => firstChar.toLowerCase() + rest
             ),
           };
           // enable infinite query for endpoints with pages

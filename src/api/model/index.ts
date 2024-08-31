@@ -24,5 +24,6 @@ export * from "./ticketClosedPoint";
 export * from "./ticketOpenPoint";
 export * from "./ticketStatusSummary";
 export * from "./ticketTypeSummary";
+export * from "./tokenValidation";
 export * from "./userCredentials";
 export * from "./userHead";
