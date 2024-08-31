@@ -15,12 +15,12 @@ export interface DashboardChildProps {
 
 export const createDashboardChild = <P extends object>(
   Component: React.ComponentType<P>,
-  props?: DashboardChildProps
+  props?: DashboardChildProps,
 ) => {
   return forwardRef<HTMLDivElement, P & DashboardChildForwardProps>(
     (
       { className, style, onMouseDown, onMouseUp, onTouchEnd, ...rest },
-      ref
+      ref,
     ) => {
       return (
         <Box
@@ -34,6 +34,6 @@ export const createDashboardChild = <P extends object>(
           <Component {...(rest as P)} />
         </Box>
       );
-    }
+    },
   );
 };

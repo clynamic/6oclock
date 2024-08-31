@@ -30,5 +30,5 @@ export const DashboardCard = createDashboardChild<DashboardCardProps>(
         </Card>
       </Box>
     );
-  }
+  },
 );

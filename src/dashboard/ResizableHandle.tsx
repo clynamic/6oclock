@@ -27,5 +27,5 @@ export const ResizableHandle = createDashboardChild<ResizableHandleProps>(
   },
   {
     className: "react-resizable-handle",
-  }
+  },
 );

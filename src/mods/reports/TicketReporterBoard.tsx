@@ -1,64 +1,43 @@
 import { ArrowForward } from "@mui/icons-material";
 import { Button, Stack } from "@mui/material";
-import dayjs from "dayjs";
-import { useMemo } from "react";
 
-import { Ticket } from "../../api";
+import { useReporterSummary } from "../../api";
 import { LimitedList } from "../../common";
-import { useDrain, useManyPosts,useManyUsers } from "../../utils";
-import { getTicketReporters } from "./reporters";
+import { DateRange } from "../../utils";
 import { TicketReporterFrame } from "./TicketReporterFrame";
 
 export interface TicketReporterBoardProps {
-  tickets?: Ticket[];
+  range?: DateRange;
 }
 
 export const TicketReporterBoard: React.FC<TicketReporterBoardProps> = ({
-  tickets,
+  range,
 }) => {
-  const allReporters = getTicketReporters(tickets);
-  const reporters = useMemo(() => allReporters?.slice(0, 10), [allReporters]);
-
-  const mockReporters = Array.from({ length: 5 }, (_, i) => ({
-    user: i + 1,
-    count: 5 - i,
-    dates: Array.from({ length: 5 - i }, (_, j) =>
-      dayjs().add(j, "day").toDate()
-    ),
-  }));
-
-  const { data: users } = useDrain(useManyUsers(reporters?.map((r) => r.user)));
-  const { data: avatars } = useDrain(
-    useManyPosts(
-      users
-        ?.filter((u) => u.avatar_id != null)
-        .map((u) => u.avatar_id) as number[]
-    )
-  );
+  const { data: reporters } = useReporterSummary(range);
 
   return (
     <LimitedList
       indicator={() => (
         <Stack direction="row" justifyContent="flex-end">
           <Button size="small" endIcon={<ArrowForward />}>
-            See All ({allReporters?.length})
+            See All
           </Button>
         </Stack>
       )}
     >
-      {(reporters ?? mockReporters).map((reporter, index) => {
-        const user = users?.find((user) => user.id === reporter.user);
-        const avatar = avatars?.find((post) => post.id === user?.avatar_id);
-        return (
-          <TicketReporterFrame
-            key={reporter.user}
-            reporter={reporter}
-            position={index + 1}
-            user={user}
-            avatar={avatar}
-          />
-        );
-      })}
+      {reporters
+        ? reporters.map((reporter, index) => {
+            return (
+              <TicketReporterFrame
+                key={reporter.userId}
+                position={index + 1}
+                summary={reporter}
+              />
+            );
+          })
+        : Array.from({ length: 5 }).map((_, index) => (
+            <TicketReporterFrame key={index} position={index + 1} />
+          ))}
     </LimitedList>
   );
 };

@@ -3,55 +3,59 @@ import { BarChart, LineChart } from "@mui/x-charts";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 
-import { Ticket } from "../../api";
-import { SeriesChartProps } from "../../utils";
+import { useTicketClosedSeries, useTicketOpenSeries } from "../../api";
+import { DateRange, SeriesChartProps } from "../../utils";
 
 export interface TicketActivityChartProps {
-  tickets?: Ticket[];
+  range?: DateRange;
   variant?: "bars" | "lines";
 }
 
 export const TicketActivityChart: React.FC<TicketActivityChartProps> = ({
-  tickets,
+  range,
   variant = "bars",
 }) => {
   const theme = useTheme();
 
+  const { data: openData } = useTicketOpenSeries(range);
+  const { data: closedData } = useTicketClosedSeries(range);
+
+  const openSeries = useMemo(
+    () =>
+      openData?.map((e) => ({
+        ...e,
+        date: dayjs(e.date).format("YYYY-MM-DD"),
+      })),
+    [openData]
+  );
+
+  const closedSeries = useMemo(
+    () =>
+      closedData?.map((e) => ({
+        ...e,
+        date: dayjs(e.date).format("YYYY-MM-DD"),
+      })),
+    [closedData]
+  );
+
   const xAxisLabels = useMemo(() => {
-    const creationDates = tickets?.map((ticket) =>
-      dayjs(ticket.created_at).format("YYYY-MM-DD")
-    );
-
-    const closureDates = tickets
-      ?.filter((ticket) => ticket.status === "approved")
-      .map((ticket) => dayjs(ticket.updated_at).format("YYYY-MM-DD"));
-
     return Array.from(
-      new Set([...(creationDates ?? []), ...(closureDates ?? [])])
+      new Set([
+        ...(openSeries?.map((e) => e.date) ?? []),
+        ...(closedSeries?.map((e) => e.date) ?? []),
+      ])
     ).sort((a, b) => dayjs(a).unix() - dayjs(b).unix());
-  }, [tickets]);
+  }, [openSeries, closedSeries]);
 
   const dataset = useMemo(() => {
     return xAxisLabels.map((date) => {
-      const createdCount =
-        tickets?.filter(
-          (ticket) => dayjs(ticket.created_at).format("YYYY-MM-DD") === date
-        ).length ?? 0;
-
-      const closedCount =
-        tickets?.filter(
-          (ticket) =>
-            ticket.status === "approved" &&
-            dayjs(ticket.updated_at).format("YYYY-MM-DD") === date
-        ).length ?? 0;
-
       return {
         date,
-        created: createdCount,
-        closed: closedCount,
+        created: openSeries?.find((e) => e.date === date)?.count ?? 0,
+        closed: closedSeries?.find((e) => e.date === date)?.count ?? 0,
       };
     });
-  }, [tickets, xAxisLabels]);
+  }, [openSeries, closedSeries, xAxisLabels]);
 
   const chartProps: SeriesChartProps = {
     dataset,

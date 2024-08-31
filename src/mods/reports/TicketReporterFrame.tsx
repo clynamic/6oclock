@@ -1,29 +1,24 @@
 import { Avatar, Box, Card, Skeleton, Stack, Typography } from "@mui/material";
 
-import { Post, User } from "../../api";
-import { ReporterSummary } from "./reporters";
+import { ReporterSummary } from "../../api";
 
 export interface TicketReporterFrameProps {
   position: number;
-  reporter: ReporterSummary;
-  user?: User;
-  avatar?: Post;
+  summary?: ReporterSummary;
 }
 
 export const TicketReporterFrame: React.FC<TicketReporterFrameProps> = ({
-  reporter,
-  user,
-  avatar,
+  summary,
 }) => {
   return (
     <Card>
       <Box p={2}>
         <Stack direction="row" spacing={2}>
-          {user ? (
+          {summary?.head ? (
             <Avatar
               variant="circular"
-              alt={`avatar of ${reporter.user}`}
-              src={avatar?.sample.url}
+              alt={`avatar of ${summary.head.name}`}
+              src={summary.head.avatar}
               sx={{
                 width: 48,
                 height: 48,
@@ -31,17 +26,25 @@ export const TicketReporterFrame: React.FC<TicketReporterFrameProps> = ({
                 color: "text.primary",
               }}
             >
-              {user?.name.split("_").map((part) => part[0])}
+              {summary.head?.name.split("_").map((part) => part[0]) ?? "?"}
             </Avatar>
           ) : (
             <Skeleton variant="circular" width={48} height={48} />
           )}
           <Stack sx={{ flexGrow: 1 }}>
             <Typography variant="h6">
-              {user ? user.name : <Skeleton width={120} />}
+              {summary ? (
+                (summary.head?.name ?? `User #${summary.userId}`)
+              ) : (
+                <Skeleton width={120} />
+              )}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {reporter.count} reports
+              {summary ? (
+                `${summary.reported} reports`
+              ) : (
+                <Skeleton width={50} />
+              )}
             </Typography>
           </Stack>
         </Stack>

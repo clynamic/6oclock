@@ -1,4 +1,4 @@
-import { Beenhere,CalendarMonth } from "@mui/icons-material";
+import { Beenhere, CalendarMonth } from "@mui/icons-material";
 import {
   Avatar,
   Box,
@@ -8,39 +8,28 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useMemo } from "react";
 
-import { Post, User } from "../../api";
+import { JanitorSummary } from "../../api";
 import { RankingText } from "../../common/RankingText";
-import { ApprovalContributions } from "./approvals";
 
 export interface ApprovalLeaderboardFrame {
-  contribution: ApprovalContributions;
-  user?: User;
-  avatar?: Post;
+  position: number;
+  summary?: JanitorSummary;
 }
 
 export const ApprovalLeaderboardFrame: React.FC<ApprovalLeaderboardFrame> = ({
-  contribution,
-  user,
-  avatar,
+  position,
+  summary,
 }) => {
-  const dayCount = useMemo(
-    () =>
-      Array.from(new Set(contribution.dates.map((date) => date.toDateString())))
-        .length,
-    [contribution.dates]
-  );
-
   return (
     <Card>
       <Box p={2}>
         <Stack direction="row" spacing={2}>
-          {user ? (
+          {summary?.head ? (
             <Avatar
               variant="rounded"
-              alt={`avatar of ${contribution.user}`}
-              src={avatar?.sample.url}
+              alt={`avatar of ${summary.head.name}`}
+              src={summary.head.avatar}
               sx={{
                 width: 64,
                 height: 64,
@@ -48,7 +37,7 @@ export const ApprovalLeaderboardFrame: React.FC<ApprovalLeaderboardFrame> = ({
                 color: "text.primary",
               }}
             >
-              {user?.name.split("_").map((part) => part[0])}
+              {summary.head?.name.split("_").map((part) => part[0]) ?? "?"}
             </Avatar>
           ) : (
             <Skeleton variant="rounded" width={64} height={64} />
@@ -61,23 +50,31 @@ export const ApprovalLeaderboardFrame: React.FC<ApprovalLeaderboardFrame> = ({
               alignItems="center"
             >
               <Typography variant="h6">
-                {user ? user?.name : <Skeleton width={120} />}
+                {summary ? (
+                  (summary.head?.name ?? `User #${summary.userId}`)
+                ) : (
+                  <Skeleton width={120} />
+                )}
               </Typography>
-              <RankingText rank={contribution.position}>
-                #{contribution.position}
-              </RankingText>
+              <RankingText rank={position}>#{position}</RankingText>
             </Stack>
             <Stack direction="row" spacing={1}>
-              <Chip
-                size="small"
-                avatar={<Beenhere />}
-                label={`${contribution.count} approvals`}
-              />
-              <Chip
-                size="small"
-                avatar={<CalendarMonth />}
-                label={`${dayCount} days`}
-              />
+              {summary ? (
+                <>
+                  <Chip
+                    size="small"
+                    avatar={<Beenhere />}
+                    label={`${summary.total} approvals`}
+                  />
+                  <Chip
+                    size="small"
+                    avatar={<CalendarMonth />}
+                    label={`${summary.days} days`}
+                  />
+                </>
+              ) : (
+                <Skeleton width={100} />
+              )}
             </Stack>
           </Stack>
         </Stack>

@@ -1,7 +1,8 @@
 import { PieChart, PieValueType } from "@mui/x-charts";
 import { useMemo } from "react";
 
-import { Ticket, TicketQtype } from "../../api";
+import { TicketTypeSummary, useTicketTypeSummary } from "../../api";
+import { DateRange } from "../../utils";
 
 export const TicketQtypeColors = {
   user: "#FFCCCB", // Soft pastel pink
@@ -16,29 +17,30 @@ export const TicketQtypeColors = {
 } as const;
 
 export interface TicketTypeChartProps {
-  tickets?: Ticket[];
+  range?: DateRange;
 }
 
-export const TicketTypeChart: React.FC<TicketTypeChartProps> = ({
-  tickets,
-}) => {
+export const TicketTypeChart: React.FC<TicketTypeChartProps> = ({ range }) => {
+  const { data: summary } = useTicketTypeSummary(range);
+
   const emptyQtypes = useMemo(() => {
-    return Object.values(TicketQtype).filter(
-      (qtype) => !tickets?.some((ticket) => ticket.qtype === qtype)
-    );
-  }, [tickets]);
+    return Object.keys(summary || {})
+      .map((qtype) => qtype as keyof TicketTypeSummary)
+      .filter((type) => summary?.[type] === 0);
+  }, [summary]);
 
   const data: PieValueType[] = useMemo(() => {
-    return Object.values(TicketQtype)
-      .filter((qtype) => !emptyQtypes.includes(qtype))
-      .map((qtype, i) => ({
+    return Object.keys(summary || {})
+      .map((type) => type as keyof TicketTypeSummary)
+      .filter((type) => !emptyQtypes.includes(type))
+      .map((type, i) => ({
         id: i,
-        label: qtype,
-        value: tickets?.filter((ticket) => ticket.qtype === qtype).length || 0,
-        color: TicketQtypeColors[qtype],
+        label: type,
+        value: summary?.[type] || 0,
+        color: TicketQtypeColors[type],
       }))
       .sort((a, b) => b.value - a.value);
-  }, [emptyQtypes, tickets]);
+  }, [emptyQtypes, summary]);
 
   return (
     <PieChart

@@ -139,7 +139,7 @@ export const PageHeader: React.FC = () => {
                   const segments = location.pathname.split("/");
                   const entrySegments = entry.href.split("/");
                   return entrySegments.every(
-                    (segment, index) => segments[index] === segment
+                    (segment, index) => segments[index] === segment,
                   );
                 })
                 ?.children?.map((entry) => {
