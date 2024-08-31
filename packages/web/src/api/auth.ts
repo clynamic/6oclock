@@ -5,23 +5,15 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.1
  */
+import { useMutation } from "@tanstack/react-query";
 import type {
-  DefinedInitialDataOptions,
-  DefinedUseQueryResult,
   MutationFunction,
-  QueryFunction,
-  QueryKey,
-  UndefinedInitialDataOptions,
   UseMutationOptions,
   UseMutationResult,
-  UseQueryOptions,
-  UseQueryResult,
 } from "@tanstack/react-query";
-import { useMutation, useQuery } from "@tanstack/react-query";
-
-import type { ErrorType } from "../http/axios";
+import type { TokenValidation, UserCredentials } from "./model";
 import { makeRequest } from "../http/axios";
-import type { UserCredentials } from "./model";
+import type { ErrorType } from "../http/axios";
 
 /**
  * Login with username and api key
@@ -99,101 +91,71 @@ export const useLogin = <
  * Validate token
  * @summary Validate
  */
-export const validate = (signal?: AbortSignal) => {
-  return makeRequest<void>({ url: `/auth/validate`, method: "GET", signal });
+export const validateToken = (tokenValidation: TokenValidation) => {
+  return makeRequest<boolean>({
+    url: `/auth/validate`,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    data: tokenValidation,
+  });
 };
 
-export const getValidateQueryKey = () => {
-  return [`/auth/validate`] as const;
-};
-
-export const getValidateQueryOptions = <
-  TData = Awaited<ReturnType<typeof validate>>,
-  TError = ErrorType<void>,
+export const getValidateTokenMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
 >(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof validate>>, TError, TData>
-  >;
-}) => {
-  const { query: queryOptions } = options ?? {};
-
-  const queryKey = queryOptions?.queryKey ?? getValidateQueryKey();
-
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof validate>>> = ({
-    signal,
-  }) => validate(signal);
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof validate>>,
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof validateToken>>,
     TError,
-    TData
-  > & { queryKey: QueryKey };
+    { data: TokenValidation },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof validateToken>>,
+  TError,
+  { data: TokenValidation },
+  TContext
+> => {
+  const { mutation: mutationOptions } = options ?? {};
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof validateToken>>,
+    { data: TokenValidation }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return validateToken(data);
+  };
+
+  return { mutationFn, ...mutationOptions };
 };
 
-export type ValidateQueryResult = NonNullable<
-  Awaited<ReturnType<typeof validate>>
+export type ValidateTokenMutationResult = NonNullable<
+  Awaited<ReturnType<typeof validateToken>>
 >;
-export type ValidateQueryError = ErrorType<void>;
+export type ValidateTokenMutationBody = TokenValidation;
+export type ValidateTokenMutationError = ErrorType<unknown>;
 
-export function useValidate<
-  TData = Awaited<ReturnType<typeof validate>>,
-  TError = ErrorType<void>,
->(options: {
-  query: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof validate>>, TError, TData>
-  > &
-    Pick<
-      DefinedInitialDataOptions<
-        Awaited<ReturnType<typeof validate>>,
-        TError,
-        TData
-      >,
-      "initialData"
-    >;
-}): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useValidate<
-  TData = Awaited<ReturnType<typeof validate>>,
-  TError = ErrorType<void>,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof validate>>, TError, TData>
-  > &
-    Pick<
-      UndefinedInitialDataOptions<
-        Awaited<ReturnType<typeof validate>>,
-        TError,
-        TData
-      >,
-      "initialData"
-    >;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useValidate<
-  TData = Awaited<ReturnType<typeof validate>>,
-  TError = ErrorType<void>,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof validate>>, TError, TData>
-  >;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey };
 /**
  * @summary Validate
  */
-
-export function useValidate<
-  TData = Awaited<ReturnType<typeof validate>>,
-  TError = ErrorType<void>,
+export const useValidateToken = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
 >(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof validate>>, TError, TData>
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof validateToken>>,
+    TError,
+    { data: TokenValidation },
+    TContext
   >;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getValidateQueryOptions(options);
+}): UseMutationResult<
+  Awaited<ReturnType<typeof validateToken>>,
+  TError,
+  { data: TokenValidation },
+  TContext
+> => {
+  const mutationOptions = getValidateTokenMutationOptions(options);
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
-
-  query.queryKey = queryOptions.queryKey;
-
-  return query;
-}
+  return useMutation(mutationOptions);
+};
