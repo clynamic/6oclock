@@ -14,11 +14,11 @@ export const TicketReporterFrame: React.FC<TicketReporterFrameProps> = ({
     <Card>
       <Box p={2}>
         <Stack direction="row" spacing={2}>
-          {summary?.head ? (
+          {summary ? (
             <Avatar
               variant="circular"
-              alt={`avatar of ${summary.head.name}`}
-              src={summary.head.avatar}
+              alt={`avatar of ${summary.head?.name ?? `User #${summary.userId}`}`}
+              src={summary.head?.avatar}
               sx={{
                 width: 48,
                 height: 48,
