@@ -25,11 +25,11 @@ export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
     <Card>
       <Box p={2}>
         <Stack direction="row" spacing={2}>
-          {summary?.head ? (
+          {summary ? (
             <Avatar
               variant="rounded"
-              alt={`avatar of ${summary.head.name}`}
-              src={summary.head.avatar}
+              alt={`avatar of ${summary.head?.name ?? `User #${summary.userId}`}`}
+              src={summary.head?.avatar}
               sx={{
                 width: 64,
                 height: 64,
