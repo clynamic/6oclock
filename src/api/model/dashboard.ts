@@ -6,7 +6,10 @@
  * OpenAPI spec version: 0.0.1
  */
 
-export type GetJanitorSummaryParams = {
-  startDate?: Date;
-  endDate?: Date;
-};
+export interface Dashboard {
+  config: string;
+  id: string;
+  layout: string;
+  type: string;
+  userId: number;
+}

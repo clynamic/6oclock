@@ -9,12 +9,12 @@ import {
   Typography,
 } from "@mui/material";
 
-import { ModSummary } from "../../api";
+import { TicketerSummary } from "../../api";
 import { RankingText } from "../../common/RankingText";
 
 export interface TicketLeaderboardFrameProps {
   position: number;
-  summary?: ModSummary;
+  summary?: TicketerSummary;
 }
 
 export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({

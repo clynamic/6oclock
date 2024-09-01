@@ -1,7 +1,7 @@
 import { ArrowForward } from "@mui/icons-material";
 import { Button, Stack } from "@mui/material";
 
-import { useModSummary } from "../../api";
+import { useTicketerSummary } from "../../api";
 import { LimitedList } from "../../common";
 import { DateRange } from "../../utils";
 import { TicketLeaderboardFrame } from "./TicketLeaderboardFrame";
@@ -13,7 +13,7 @@ export interface TicketLeaderboardProps {
 export const TicketLeaderboard: React.FC<TicketLeaderboardProps> = ({
   range,
 }) => {
-  const { data: mods } = useModSummary(range);
+  const { data: ticketers } = useTicketerSummary(range);
 
   return (
     <LimitedList
@@ -25,13 +25,13 @@ export const TicketLeaderboard: React.FC<TicketLeaderboardProps> = ({
         </Stack>
       )}
     >
-      {mods
-        ? mods?.map((mod, i) => {
+      {ticketers
+        ? ticketers?.map((ticketer, i) => {
             return (
               <TicketLeaderboardFrame
-                key={mod.userId}
+                key={ticketer.userId}
                 position={i + 1}
-                summary={mod}
+                summary={ticketer}
               />
             );
           })

@@ -1,7 +1,7 @@
 import { ArrowForward } from "@mui/icons-material";
 import { Button, Stack } from "@mui/material";
 
-import { useJanitorSummary } from "../../api";
+import { useApproverSummary } from "../../api";
 import { LimitedList } from "../../common";
 import { DateRange } from "../../utils";
 import { ApprovalLeaderboardFrame } from "./ApprovalLeaderboardFrame";
@@ -13,7 +13,7 @@ export interface ApprovalLeaderboardProps {
 export const ApprovalLeaderboard: React.FC<ApprovalLeaderboardProps> = ({
   range,
 }) => {
-  const { data: janitors } = useJanitorSummary(range);
+  const { data: approvers } = useApproverSummary(range);
 
   return (
     <LimitedList
@@ -25,13 +25,13 @@ export const ApprovalLeaderboard: React.FC<ApprovalLeaderboardProps> = ({
         </Stack>
       )}
     >
-      {janitors
-        ? janitors.map((janitor, i) => {
+      {approvers
+        ? approvers.map((approver, i) => {
             return (
               <ApprovalLeaderboardFrame
-                key={janitor.userId}
+                key={approver.userId}
                 position={i + 1}
-                summary={janitor}
+                summary={approver}
               />
             );
           })

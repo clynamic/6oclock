@@ -5,8 +5,11 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.1
  */
+import type { UserHead } from "./userHead";
 
-export type GetModSummaryParams = {
-  startDate?: Date;
-  endDate?: Date;
-};
+export interface ApproverSummary {
+  days: number;
+  head?: UserHead;
+  total: number;
+  userId: number;
+}

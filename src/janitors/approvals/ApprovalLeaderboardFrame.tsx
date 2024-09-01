@@ -9,12 +9,12 @@ import {
   Typography,
 } from "@mui/material";
 
-import { JanitorSummary } from "../../api";
+import { ApproverSummary } from "../../api";
 import { RankingText } from "../../common/RankingText";
 
 export interface ApprovalLeaderboardFrame {
   position: number;
-  summary?: JanitorSummary;
+  summary?: ApproverSummary;
 }
 
 export const ApprovalLeaderboardFrame: React.FC<ApprovalLeaderboardFrame> = ({

@@ -11,7 +11,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/UserCredentials" }
+              "schema": {
+                "$ref": "#/components/schemas/UserCredentials"
+              }
             }
           }
         },
@@ -19,7 +21,11 @@
           "201": {
             "description": "Token",
             "content": {
-              "application/json": { "schema": { "type": "string" } }
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
@@ -29,14 +35,16 @@
     "/auth/validate": {
       "post": {
         "operationId": "validateToken",
-        "summary": "Validate",
-        "description": "Validate token",
+        "summary": "Validate token",
+        "description": "Validate JWT token",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/TokenValidation" }
+              "schema": {
+                "$ref": "#/components/schemas/TokenValidation"
+              }
             }
           }
         },
@@ -44,11 +52,92 @@
           "201": {
             "description": "Whether the token is valid",
             "content": {
-              "application/json": { "schema": { "type": "boolean" } }
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
             }
           }
         },
         "tags": ["Auth"]
+      }
+    },
+    "/dashboard/{type}": {
+      "get": {
+        "operationId": "DashboardController_get",
+        "summary": "Get dashboard",
+        "description": "Get dashboard by type, for the current user",
+        "parameters": [
+          {
+            "name": "type",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dashboard object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dashboard"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dashboard not found"
+          }
+        },
+        "tags": ["Dashboard"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "DashboardController_update",
+        "summary": "Update dashboard",
+        "description": "Update dashboard by type, for the current user",
+        "parameters": [
+          {
+            "name": "type",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DashboardUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated dashboard object"
+          },
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["Dashboard"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/approvals/metrics/count/summary": {
@@ -61,13 +150,19 @@
             "name": "startDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           },
           {
             "name": "endDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -83,7 +178,11 @@
           }
         },
         "tags": ["Approvals"],
-        "security": [{ "bearer": [] }]
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/approvals/metrics/count/series": {
@@ -96,13 +195,19 @@
             "name": "startDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           },
           {
             "name": "endDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -112,33 +217,45 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/ApprovalCountPoint" }
+                  "items": {
+                    "$ref": "#/components/schemas/ApprovalCountPoint"
+                  }
                 }
               }
             }
           }
         },
         "tags": ["Approvals"],
-        "security": [{ "bearer": [] }]
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
-    "/approvals/metrics/janitor/summary": {
+    "/approvals/metrics/approver/summary": {
       "get": {
-        "operationId": "getJanitorSummary",
-        "summary": "Janitor summary",
-        "description": "Get a summary of the top 20 janitors by approval count for a given date range",
+        "operationId": "getApproverSummary",
+        "summary": "Approver summary",
+        "description": "Get a summary of the top 20 approvers by approval count for a given date range",
         "parameters": [
           {
             "name": "startDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           },
           {
             "name": "endDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -148,14 +265,20 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/JanitorSummary" }
+                  "items": {
+                    "$ref": "#/components/schemas/ApproverSummary"
+                  }
                 }
               }
             }
           }
         },
         "tags": ["Approvals"],
-        "security": [{ "bearer": [] }]
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/tickets/metrics/status/summary": {
@@ -168,13 +291,19 @@
             "name": "startDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           },
           {
             "name": "endDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -182,13 +311,19 @@
             "description": "",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/TicketStatusSummary" }
+                "schema": {
+                  "$ref": "#/components/schemas/TicketStatusSummary"
+                }
               }
             }
           }
         },
         "tags": ["Tickets"],
-        "security": [{ "bearer": [] }]
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/tickets/metrics/type/summary": {
@@ -201,13 +336,19 @@
             "name": "startDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           },
           {
             "name": "endDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -215,13 +356,19 @@
             "description": "",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/TicketTypeSummary" }
+                "schema": {
+                  "$ref": "#/components/schemas/TicketTypeSummary"
+                }
               }
             }
           }
         },
         "tags": ["Tickets"],
-        "security": [{ "bearer": [] }]
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/tickets/metrics/open/series": {
@@ -234,13 +381,19 @@
             "name": "startDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           },
           {
             "name": "endDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -250,14 +403,20 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/TicketOpenPoint" }
+                  "items": {
+                    "$ref": "#/components/schemas/TicketOpenPoint"
+                  }
                 }
               }
             }
           }
         },
         "tags": ["Tickets"],
-        "security": [{ "bearer": [] }]
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/tickets/metrics/closed/series": {
@@ -270,13 +429,19 @@
             "name": "startDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           },
           {
             "name": "endDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -286,33 +451,45 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/TicketClosedPoint" }
+                  "items": {
+                    "$ref": "#/components/schemas/TicketClosedPoint"
+                  }
                 }
               }
             }
           }
         },
         "tags": ["Tickets"],
-        "security": [{ "bearer": [] }]
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
-    "/tickets/metrics/mod/summary": {
+    "/tickets/metrics/ticketer/summary": {
       "get": {
-        "operationId": "getModSummary",
-        "summary": "Moderator summary",
-        "description": "Get a summary of the top 20 moderators (claimed and handled tickets) for a given date range",
+        "operationId": "getTicketerSummary",
+        "summary": "Ticketer summary",
+        "description": "Get a summary of the top 20 ticket handlers (claimed and handled tickets) for a given date range",
         "parameters": [
           {
             "name": "startDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           },
           {
             "name": "endDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -322,14 +499,20 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/ModSummary" }
+                  "items": {
+                    "$ref": "#/components/schemas/TicketerSummary"
+                  }
                 }
               }
             }
           }
         },
         "tags": ["Tickets"],
-        "security": [{ "bearer": [] }]
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/tickets/metrics/reporter/summary": {
@@ -342,13 +525,19 @@
             "name": "startDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           },
           {
             "name": "endDate",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -358,14 +547,20 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/ReporterSummary" }
+                  "items": {
+                    "$ref": "#/components/schemas/ReporterSummary"
+                  }
                 }
               }
             }
           }
         },
         "tags": ["Tickets"],
-        "security": [{ "bearer": [] }]
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     }
   },
@@ -379,76 +574,175 @@
   "servers": [],
   "components": {
     "securitySchemes": {
-      "bearer": { "scheme": "bearer", "bearerFormat": "JWT", "type": "http" }
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
     },
     "schemas": {
       "UserCredentials": {
         "type": "object",
         "properties": {
-          "username": { "type": "string", "minLength": 1 },
-          "password": { "type": "string", "pattern": "/^[a-zA-Z0-9]{24,32}$/" }
+          "username": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "pattern": "/^[a-zA-Z0-9]{24,32}$/"
+          }
         },
         "required": ["username", "password"]
       },
       "TokenValidation": {
         "type": "object",
-        "properties": { "token": { "type": "string" } },
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        },
         "required": ["token"]
+      },
+      "Dashboard": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "number"
+          },
+          "layout": {
+            "type": "string"
+          },
+          "config": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "type", "userId", "layout", "config"]
+      },
+      "DashboardUpdate": {
+        "type": "object",
+        "properties": {
+          "layout": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 1000000
+          },
+          "config": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 1000000
+          }
+        }
       },
       "ApprovalCountSummary": {
         "type": "object",
-        "properties": { "total": { "type": "number" } },
+        "properties": {
+          "total": {
+            "type": "number"
+          }
+        },
         "required": ["total"]
       },
       "ApprovalCountPoint": {
         "type": "object",
         "properties": {
-          "date": { "format": "date-time", "type": "string" },
-          "count": { "type": "number" }
+          "date": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          }
         },
         "required": ["date", "count"]
       },
       "UserHead": {
         "type": "object",
         "properties": {
-          "id": { "type": "number" },
-          "name": { "type": "string" },
-          "avatar": { "type": "string" },
-          "level": { "type": "string" }
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string"
+          }
         },
         "required": ["id", "name", "level"]
       },
-      "JanitorSummary": {
+      "ApproverSummary": {
         "type": "object",
         "properties": {
-          "userId": { "type": "number" },
-          "head": { "$ref": "#/components/schemas/UserHead" },
-          "total": { "type": "number" },
-          "days": { "type": "number" }
+          "userId": {
+            "type": "number"
+          },
+          "head": {
+            "$ref": "#/components/schemas/UserHead"
+          },
+          "total": {
+            "type": "number"
+          },
+          "days": {
+            "type": "number"
+          }
         },
         "required": ["userId", "total", "days"]
       },
       "TicketStatusSummary": {
         "type": "object",
         "properties": {
-          "pending": { "type": "number" },
-          "approved": { "type": "number" },
-          "partial": { "type": "number" }
+          "pending": {
+            "type": "number"
+          },
+          "approved": {
+            "type": "number"
+          },
+          "partial": {
+            "type": "number"
+          }
         },
         "required": ["pending", "approved", "partial"]
       },
       "TicketTypeSummary": {
         "type": "object",
         "properties": {
-          "user": { "type": "number" },
-          "comment": { "type": "number" },
-          "forum": { "type": "number" },
-          "blip": { "type": "number" },
-          "wiki": { "type": "number" },
-          "pool": { "type": "number" },
-          "set": { "type": "number" },
-          "post": { "type": "number" },
-          "dmail": { "type": "number" }
+          "user": {
+            "type": "number"
+          },
+          "comment": {
+            "type": "number"
+          },
+          "forum": {
+            "type": "number"
+          },
+          "blip": {
+            "type": "number"
+          },
+          "wiki": {
+            "type": "number"
+          },
+          "pool": {
+            "type": "number"
+          },
+          "set": {
+            "type": "number"
+          },
+          "post": {
+            "type": "number"
+          },
+          "dmail": {
+            "type": "number"
+          }
         },
         "required": [
           "user",
@@ -465,37 +759,65 @@
       "TicketOpenPoint": {
         "type": "object",
         "properties": {
-          "date": { "format": "date-time", "type": "string" },
-          "count": { "type": "number" }
+          "date": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          }
         },
         "required": ["date", "count"]
       },
       "TicketClosedPoint": {
         "type": "object",
         "properties": {
-          "date": { "format": "date-time", "type": "string" },
-          "count": { "type": "number" }
+          "date": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          }
         },
         "required": ["date", "count"]
       },
-      "ModSummary": {
+      "TicketerSummary": {
         "type": "object",
         "properties": {
-          "userId": { "type": "number" },
-          "head": { "$ref": "#/components/schemas/UserHead" },
-          "claimed": { "type": "number" },
-          "handled": { "type": "number" },
-          "days": { "type": "number" }
+          "userId": {
+            "type": "number"
+          },
+          "head": {
+            "$ref": "#/components/schemas/UserHead"
+          },
+          "claimed": {
+            "type": "number"
+          },
+          "handled": {
+            "type": "number"
+          },
+          "days": {
+            "type": "number"
+          }
         },
         "required": ["userId", "claimed", "handled", "days"]
       },
       "ReporterSummary": {
         "type": "object",
         "properties": {
-          "userId": { "type": "number" },
-          "head": { "$ref": "#/components/schemas/UserHead" },
-          "reported": { "type": "number" },
-          "days": { "type": "number" }
+          "userId": {
+            "type": "number"
+          },
+          "head": {
+            "$ref": "#/components/schemas/UserHead"
+          },
+          "reported": {
+            "type": "number"
+          },
+          "days": {
+            "type": "number"
+          }
         },
         "required": ["userId", "reported", "days"]
       }
