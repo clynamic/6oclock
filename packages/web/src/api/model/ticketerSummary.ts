@@ -7,7 +7,7 @@
  */
 import type { UserHead } from "./userHead";
 
-export interface ModSummary {
+export interface TicketerSummary {
   claimed: number;
   days: number;
   handled: number;

@@ -16,18 +16,18 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 import type {
-  GetModSummaryParams,
   GetReporterSummaryParams,
   GetTicketClosedSeriesParams,
   GetTicketOpenSeriesParams,
   GetTicketStatusSummaryParams,
   GetTicketTypeSummaryParams,
-  ModSummary,
+  GetTicketerSummaryParams,
   ReporterSummary,
   TicketClosedPoint,
   TicketOpenPoint,
   TicketStatusSummary,
   TicketTypeSummary,
+  TicketerSummary,
 } from "./model";
 import { makeRequest } from "../http/axios";
 import type { ErrorType } from "../http/axios";
@@ -638,68 +638,81 @@ export function useTicketClosedSeries<
 }
 
 /**
- * Get a summary of the top 20 moderators (claimed and handled tickets) for a given date range
- * @summary Moderator summary
+ * Get a summary of the top 20 ticket handlers (claimed and handled tickets) for a given date range
+ * @summary Ticketer summary
  */
-export const modSummary = (
-  params?: GetModSummaryParams,
+export const ticketerSummary = (
+  params?: GetTicketerSummaryParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<ModSummary[]>({
-    url: `/tickets/metrics/mod/summary`,
+  return makeRequest<TicketerSummary[]>({
+    url: `/tickets/metrics/ticketer/summary`,
     method: "GET",
     params,
     signal,
   });
 };
 
-export const getModSummaryQueryKey = (params?: GetModSummaryParams) => {
-  return [`/tickets/metrics/mod/summary`, ...(params ? [params] : [])] as const;
+export const getTicketerSummaryQueryKey = (
+  params?: GetTicketerSummaryParams,
+) => {
+  return [
+    `/tickets/metrics/ticketer/summary`,
+    ...(params ? [params] : []),
+  ] as const;
 };
 
-export const getModSummaryQueryOptions = <
-  TData = Awaited<ReturnType<typeof modSummary>>,
+export const getTicketerSummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof ticketerSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetModSummaryParams,
+  params?: GetTicketerSummaryParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof modSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketerSummary>>,
+        TError,
+        TData
+      >
     >;
   },
 ) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getModSummaryQueryKey(params);
+  const queryKey = queryOptions?.queryKey ?? getTicketerSummaryQueryKey(params);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof modSummary>>> = ({
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof ticketerSummary>>> = ({
     signal,
-  }) => modSummary(params, signal);
+  }) => ticketerSummary(params, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof modSummary>>,
+    Awaited<ReturnType<typeof ticketerSummary>>,
     TError,
     TData
   > & { queryKey: QueryKey };
 };
 
-export type ModSummaryQueryResult = NonNullable<
-  Awaited<ReturnType<typeof modSummary>>
+export type TicketerSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof ticketerSummary>>
 >;
-export type ModSummaryQueryError = ErrorType<unknown>;
+export type TicketerSummaryQueryError = ErrorType<unknown>;
 
-export function useModSummary<
-  TData = Awaited<ReturnType<typeof modSummary>>,
+export function useTicketerSummary<
+  TData = Awaited<ReturnType<typeof ticketerSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params: undefined | GetModSummaryParams,
+  params: undefined | GetTicketerSummaryParams,
   options: {
     query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof modSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketerSummary>>,
+        TError,
+        TData
+      >
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof modSummary>>,
+          Awaited<ReturnType<typeof ticketerSummary>>,
           TError,
           TData
         >,
@@ -707,18 +720,22 @@ export function useModSummary<
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useModSummary<
-  TData = Awaited<ReturnType<typeof modSummary>>,
+export function useTicketerSummary<
+  TData = Awaited<ReturnType<typeof ticketerSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetModSummaryParams,
+  params?: GetTicketerSummaryParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof modSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketerSummary>>,
+        TError,
+        TData
+      >
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof modSummary>>,
+          Awaited<ReturnType<typeof ticketerSummary>>,
           TError,
           TData
         >,
@@ -726,33 +743,41 @@ export function useModSummary<
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useModSummary<
-  TData = Awaited<ReturnType<typeof modSummary>>,
+export function useTicketerSummary<
+  TData = Awaited<ReturnType<typeof ticketerSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetModSummaryParams,
+  params?: GetTicketerSummaryParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof modSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketerSummary>>,
+        TError,
+        TData
+      >
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
 /**
- * @summary Moderator summary
+ * @summary Ticketer summary
  */
 
-export function useModSummary<
-  TData = Awaited<ReturnType<typeof modSummary>>,
+export function useTicketerSummary<
+  TData = Awaited<ReturnType<typeof ticketerSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetModSummaryParams,
+  params?: GetTicketerSummaryParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof modSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketerSummary>>,
+        TError,
+        TData
+      >
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getModSummaryQueryOptions(params, options);
+  const queryOptions = getTicketerSummaryQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

@@ -18,10 +18,10 @@ import type {
 import type {
   ApprovalCountPoint,
   ApprovalCountSummary,
+  ApproverSummary,
   GetApprovalCountSeriesParams,
   GetApprovalCountSummaryParams,
-  GetJanitorSummaryParams,
-  JanitorSummary,
+  GetApproverSummaryParams,
 } from "./model";
 import { makeRequest } from "../http/axios";
 import type { ErrorType } from "../http/axios";
@@ -331,71 +331,81 @@ export function useApprovalCountSeries<
 }
 
 /**
- * Get a summary of the top 20 janitors by approval count for a given date range
- * @summary Janitor summary
+ * Get a summary of the top 20 approvers by approval count for a given date range
+ * @summary Approver summary
  */
-export const janitorSummary = (
-  params?: GetJanitorSummaryParams,
+export const approverSummary = (
+  params?: GetApproverSummaryParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<JanitorSummary[]>({
-    url: `/approvals/metrics/janitor/summary`,
+  return makeRequest<ApproverSummary[]>({
+    url: `/approvals/metrics/approver/summary`,
     method: "GET",
     params,
     signal,
   });
 };
 
-export const getJanitorSummaryQueryKey = (params?: GetJanitorSummaryParams) => {
+export const getApproverSummaryQueryKey = (
+  params?: GetApproverSummaryParams,
+) => {
   return [
-    `/approvals/metrics/janitor/summary`,
+    `/approvals/metrics/approver/summary`,
     ...(params ? [params] : []),
   ] as const;
 };
 
-export const getJanitorSummaryQueryOptions = <
-  TData = Awaited<ReturnType<typeof janitorSummary>>,
+export const getApproverSummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof approverSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetJanitorSummaryParams,
+  params?: GetApproverSummaryParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof janitorSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData
+      >
     >;
   },
 ) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getJanitorSummaryQueryKey(params);
+  const queryKey = queryOptions?.queryKey ?? getApproverSummaryQueryKey(params);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof janitorSummary>>> = ({
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof approverSummary>>> = ({
     signal,
-  }) => janitorSummary(params, signal);
+  }) => approverSummary(params, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof janitorSummary>>,
+    Awaited<ReturnType<typeof approverSummary>>,
     TError,
     TData
   > & { queryKey: QueryKey };
 };
 
-export type JanitorSummaryQueryResult = NonNullable<
-  Awaited<ReturnType<typeof janitorSummary>>
+export type ApproverSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof approverSummary>>
 >;
-export type JanitorSummaryQueryError = ErrorType<unknown>;
+export type ApproverSummaryQueryError = ErrorType<unknown>;
 
-export function useJanitorSummary<
-  TData = Awaited<ReturnType<typeof janitorSummary>>,
+export function useApproverSummary<
+  TData = Awaited<ReturnType<typeof approverSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params: undefined | GetJanitorSummaryParams,
+  params: undefined | GetApproverSummaryParams,
   options: {
     query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof janitorSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData
+      >
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof janitorSummary>>,
+          Awaited<ReturnType<typeof approverSummary>>,
           TError,
           TData
         >,
@@ -403,18 +413,22 @@ export function useJanitorSummary<
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useJanitorSummary<
-  TData = Awaited<ReturnType<typeof janitorSummary>>,
+export function useApproverSummary<
+  TData = Awaited<ReturnType<typeof approverSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetJanitorSummaryParams,
+  params?: GetApproverSummaryParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof janitorSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData
+      >
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof janitorSummary>>,
+          Awaited<ReturnType<typeof approverSummary>>,
           TError,
           TData
         >,
@@ -422,33 +436,41 @@ export function useJanitorSummary<
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useJanitorSummary<
-  TData = Awaited<ReturnType<typeof janitorSummary>>,
+export function useApproverSummary<
+  TData = Awaited<ReturnType<typeof approverSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetJanitorSummaryParams,
+  params?: GetApproverSummaryParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof janitorSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData
+      >
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
 /**
- * @summary Janitor summary
+ * @summary Approver summary
  */
 
-export function useJanitorSummary<
-  TData = Awaited<ReturnType<typeof janitorSummary>>,
+export function useApproverSummary<
+  TData = Awaited<ReturnType<typeof approverSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetJanitorSummaryParams,
+  params?: GetApproverSummaryParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof janitorSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData
+      >
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getJanitorSummaryQueryOptions(params, options);
+  const queryOptions = getApproverSummaryQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
