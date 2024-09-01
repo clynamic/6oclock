@@ -88,8 +88,8 @@ export const useLogin = <
   return useMutation(mutationOptions);
 };
 /**
- * Validate token
- * @summary Validate
+ * Validate JWT token
+ * @summary Validate token
  */
 export const validateToken = (tokenValidation: TokenValidation) => {
   return makeRequest<boolean>({
@@ -137,7 +137,7 @@ export type ValidateTokenMutationBody = TokenValidation;
 export type ValidateTokenMutationError = ErrorType<unknown>;
 
 /**
- * @summary Validate
+ * @summary Validate token
  */
 export const useValidateToken = <
   TError = ErrorType<unknown>,
