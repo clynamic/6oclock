@@ -13,12 +13,10 @@ import { ApproverSummary } from "../../api";
 import { RankingText } from "../../common/RankingText";
 
 export interface ApprovalLeaderboardFrame {
-  position: number;
   summary?: ApproverSummary;
 }
 
 export const ApprovalLeaderboardFrame: React.FC<ApprovalLeaderboardFrame> = ({
-  position,
   summary,
 }) => {
   return (
@@ -56,7 +54,11 @@ export const ApprovalLeaderboardFrame: React.FC<ApprovalLeaderboardFrame> = ({
                   <Skeleton width={120} />
                 )}
               </Typography>
-              <RankingText rank={position}>#{position}</RankingText>
+              {summary && (
+                <RankingText rank={summary.position}>
+                  #{summary.position}
+                </RankingText>
+              )}
             </Stack>
             <Stack direction="row" spacing={1}>
               {summary ? (

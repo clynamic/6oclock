@@ -5,16 +5,10 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.1
  */
+import type { DashboardUpdateMeta } from "./dashboardUpdateMeta";
+import type { DashboardPositions } from "./dashboardPositions";
 
 export interface DashboardUpdate {
-  /**
-   * @minLength 0
-   * @maxLength 1000000
-   */
-  config?: string;
-  /**
-   * @minLength 0
-   * @maxLength 1000000
-   */
-  layout?: string;
+  meta?: DashboardUpdateMeta;
+  positions?: DashboardPositions;
 }

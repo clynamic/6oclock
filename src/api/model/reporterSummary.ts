@@ -10,6 +10,6 @@ import type { UserHead } from "./userHead";
 export interface ReporterSummary {
   days: number;
   head?: UserHead;
-  reported: number;
+  total: number;
   userId: number;
 }

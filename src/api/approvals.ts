@@ -5,13 +5,17 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.1
  */
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import type {
   DefinedInitialDataOptions,
+  DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
+  InfiniteData,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseInfiniteQueryOptions,
+  UseInfiniteQueryResult,
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
@@ -354,6 +358,171 @@ export const getApproverSummaryQueryKey = (
     ...(params ? [params] : []),
   ] as const;
 };
+
+export const getApproverSummaryInfiniteQueryOptions = <
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof approverSummary>>,
+    GetApproverSummaryParams["page"]
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApproverSummaryParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData,
+        Awaited<ReturnType<typeof approverSummary>>,
+        QueryKey,
+        GetApproverSummaryParams["page"]
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getApproverSummaryQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof approverSummary>>,
+    QueryKey,
+    GetApproverSummaryParams["page"]
+  > = ({ signal, pageParam }) =>
+    approverSummary({ ...params, page: pageParam || params?.["page"] }, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
+    Awaited<ReturnType<typeof approverSummary>>,
+    TError,
+    TData,
+    Awaited<ReturnType<typeof approverSummary>>,
+    QueryKey,
+    GetApproverSummaryParams["page"]
+  > & { queryKey: QueryKey };
+};
+
+export type ApproverSummaryInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof approverSummary>>
+>;
+export type ApproverSummaryInfiniteQueryError = ErrorType<unknown>;
+
+export function useApproverSummaryInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof approverSummary>>,
+    GetApproverSummaryParams["page"]
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetApproverSummaryParams,
+  options: {
+    query: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData,
+        Awaited<ReturnType<typeof approverSummary>>,
+        QueryKey,
+        GetApproverSummaryParams["page"]
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof approverSummary>>,
+          TError,
+          TData,
+          QueryKey
+        >,
+        "initialData"
+      >;
+  },
+): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useApproverSummaryInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof approverSummary>>,
+    GetApproverSummaryParams["page"]
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApproverSummaryParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData,
+        Awaited<ReturnType<typeof approverSummary>>,
+        QueryKey,
+        GetApproverSummaryParams["page"]
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof approverSummary>>,
+          TError,
+          TData,
+          QueryKey
+        >,
+        "initialData"
+      >;
+  },
+): UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useApproverSummaryInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof approverSummary>>,
+    GetApproverSummaryParams["page"]
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApproverSummaryParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData,
+        Awaited<ReturnType<typeof approverSummary>>,
+        QueryKey,
+        GetApproverSummaryParams["page"]
+      >
+    >;
+  },
+): UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
+/**
+ * @summary Approver summary
+ */
+
+export function useApproverSummaryInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof approverSummary>>,
+    GetApproverSummaryParams["page"]
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApproverSummaryParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData,
+        Awaited<ReturnType<typeof approverSummary>>,
+        QueryKey,
+        GetApproverSummaryParams["page"]
+      >
+    >;
+  },
+): UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getApproverSummaryInfiniteQueryOptions(params, options);
+
+  const query = useInfiniteQuery(queryOptions) as UseInfiniteQueryResult<
+    TData,
+    TError
+  > & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
 
 export const getApproverSummaryQueryOptions = <
   TData = Awaited<ReturnType<typeof approverSummary>>,

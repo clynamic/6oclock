@@ -13,12 +13,10 @@ import { TicketerSummary } from "../../api";
 import { RankingText } from "../../common/RankingText";
 
 export interface TicketLeaderboardFrameProps {
-  position: number;
   summary?: TicketerSummary;
 }
 
 export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
-  position,
   summary,
 }) => {
   return (
@@ -56,7 +54,11 @@ export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
                   <Skeleton width={120} />
                 )}
               </Typography>
-              <RankingText rank={position}>#{position}</RankingText>
+              {summary && (
+                <RankingText rank={summary.position}>
+                  #{summary.position}
+                </RankingText>
+              )}
             </Stack>
             <Stack
               direction="row"
@@ -68,7 +70,7 @@ export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
                   <Chip
                     size="small"
                     avatar={<Sell />}
-                    label={`${summary.claimed} tickets`}
+                    label={`${summary.total} tickets`}
                   />
                   {summary.days > 1 && (
                     <Chip

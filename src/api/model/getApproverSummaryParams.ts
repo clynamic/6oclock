@@ -9,4 +9,12 @@
 export type GetApproverSummaryParams = {
   startDate?: Date;
   endDate?: Date;
+  /**
+   * Page number
+   */
+  page?: number;
+  /**
+   * Page size
+   */
+  limit?: number;
 };

@@ -1,5 +1,5 @@
-export * from "./catalog";
+export * from "./dashboard/catalog";
 export * from "./charts";
-export * from "./ModDashboard";
+export * from "./dashboard/ModDashboard";
 export * from "./reports";
 export * from "./tickets";

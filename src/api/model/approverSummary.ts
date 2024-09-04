@@ -10,6 +10,7 @@ import type { UserHead } from "./userHead";
 export interface ApproverSummary {
   days: number;
   head?: UserHead;
+  position: number;
   total: number;
   userId: number;
 }

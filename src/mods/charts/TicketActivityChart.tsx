@@ -3,8 +3,8 @@ import { BarChart, LineChart } from "@mui/x-charts";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 
-import { useTicketClosedSeries, useTicketOpenSeries } from "../../api";
-import { DateRange, SeriesChartProps } from "../../utils";
+import { useTicketClosedSeries, useTicketCreatedSeries } from "../../api";
+import { DateRange, refetchQueryOptions, SeriesChartProps } from "../../utils";
 
 export interface TicketActivityChartProps {
   range?: DateRange;
@@ -17,8 +17,14 @@ export const TicketActivityChart: React.FC<TicketActivityChartProps> = ({
 }) => {
   const theme = useTheme();
 
-  const { data: openData } = useTicketOpenSeries(range);
-  const { data: closedData } = useTicketClosedSeries(range);
+  const { data: openData } = useTicketCreatedSeries(
+    range,
+    refetchQueryOptions()
+  );
+  const { data: closedData } = useTicketClosedSeries(
+    range,
+    refetchQueryOptions()
+  );
 
   const openSeries = useMemo(
     () =>
@@ -79,9 +85,9 @@ export const TicketActivityChart: React.FC<TicketActivityChartProps> = ({
     ],
   };
 
-  return variant === "bars" ? (
-    <BarChart {...chartProps} />
-  ) : (
-    <LineChart {...chartProps} />
-  );
+  const Chart = useMemo(() => {
+    return variant === "bars" ? BarChart : LineChart;
+  }, [variant]);
+
+  return <Chart {...chartProps} />;
 };
