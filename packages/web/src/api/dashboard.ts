@@ -18,7 +18,7 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import type { Dashboard, DashboardUpdate } from "./model";
+import type { DashboardConfig, DashboardUpdate } from "./model";
 import { makeRequest } from "../http/axios";
 import type { ErrorType } from "../http/axios";
 
@@ -26,75 +26,64 @@ import type { ErrorType } from "../http/axios";
  * Get dashboard by type, for the current user
  * @summary Get dashboard
  */
-export const dashboardControllerGet = (type: string, signal?: AbortSignal) => {
-  return makeRequest<Dashboard>({
+export const dashboard = (type: string, signal?: AbortSignal) => {
+  return makeRequest<DashboardConfig>({
     url: `/dashboard/${encodeURIComponent(String(type))}`,
     method: "GET",
     signal,
   });
 };
 
-export const getDashboardControllerGetQueryKey = (type: string) => {
+export const getDashboardQueryKey = (type: string) => {
   return [`/dashboard/${type}`] as const;
 };
 
-export const getDashboardControllerGetQueryOptions = <
-  TData = Awaited<ReturnType<typeof dashboardControllerGet>>,
+export const getDashboardQueryOptions = <
+  TData = Awaited<ReturnType<typeof dashboard>>,
   TError = ErrorType<void>,
 >(
   type: string,
   options?: {
     query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof dashboardControllerGet>>,
-        TError,
-        TData
-      >
+      UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>
     >;
   },
 ) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ?? getDashboardControllerGetQueryKey(type);
+  const queryKey = queryOptions?.queryKey ?? getDashboardQueryKey(type);
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof dashboardControllerGet>>
-  > = ({ signal }) => dashboardControllerGet(type, signal);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof dashboard>>> = ({
+    signal,
+  }) => dashboard(type, signal);
 
   return {
     queryKey,
     queryFn,
     enabled: !!type,
     ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof dashboardControllerGet>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
+  } as UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData> & {
+    queryKey: QueryKey;
+  };
 };
 
-export type DashboardControllerGetQueryResult = NonNullable<
-  Awaited<ReturnType<typeof dashboardControllerGet>>
+export type DashboardQueryResult = NonNullable<
+  Awaited<ReturnType<typeof dashboard>>
 >;
-export type DashboardControllerGetQueryError = ErrorType<void>;
+export type DashboardQueryError = ErrorType<void>;
 
-export function useDashboardControllerGet<
-  TData = Awaited<ReturnType<typeof dashboardControllerGet>>,
+export function useDashboard<
+  TData = Awaited<ReturnType<typeof dashboard>>,
   TError = ErrorType<void>,
 >(
   type: string,
   options: {
     query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof dashboardControllerGet>>,
-        TError,
-        TData
-      >
+      UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof dashboardControllerGet>>,
+          Awaited<ReturnType<typeof dashboard>>,
           TError,
           TData
         >,
@@ -102,22 +91,18 @@ export function useDashboardControllerGet<
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useDashboardControllerGet<
-  TData = Awaited<ReturnType<typeof dashboardControllerGet>>,
+export function useDashboard<
+  TData = Awaited<ReturnType<typeof dashboard>>,
   TError = ErrorType<void>,
 >(
   type: string,
   options?: {
     query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof dashboardControllerGet>>,
-        TError,
-        TData
-      >
+      UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof dashboardControllerGet>>,
+          Awaited<ReturnType<typeof dashboard>>,
           TError,
           TData
         >,
@@ -125,18 +110,14 @@ export function useDashboardControllerGet<
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useDashboardControllerGet<
-  TData = Awaited<ReturnType<typeof dashboardControllerGet>>,
+export function useDashboard<
+  TData = Awaited<ReturnType<typeof dashboard>>,
   TError = ErrorType<void>,
 >(
   type: string,
   options?: {
     query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof dashboardControllerGet>>,
-        TError,
-        TData
-      >
+      UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -144,22 +125,18 @@ export function useDashboardControllerGet<
  * @summary Get dashboard
  */
 
-export function useDashboardControllerGet<
-  TData = Awaited<ReturnType<typeof dashboardControllerGet>>,
+export function useDashboard<
+  TData = Awaited<ReturnType<typeof dashboard>>,
   TError = ErrorType<void>,
 >(
   type: string,
   options?: {
     query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof dashboardControllerGet>>,
-        TError,
-        TData
-      >
+      UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getDashboardControllerGetQueryOptions(type, options);
+  const queryOptions = getDashboardQueryOptions(type, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
@@ -174,7 +151,7 @@ export function useDashboardControllerGet<
  * Update dashboard by type, for the current user
  * @summary Update dashboard
  */
-export const dashboardControllerUpdate = (
+export const updateDashboard = (
   type: string,
   dashboardUpdate: DashboardUpdate,
 ) => {
@@ -186,18 +163,18 @@ export const dashboardControllerUpdate = (
   });
 };
 
-export const getDashboardControllerUpdateMutationOptions = <
+export const getUpdateDashboardMutationOptions = <
   TError = ErrorType<unknown>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof dashboardControllerUpdate>>,
+    Awaited<ReturnType<typeof updateDashboard>>,
     TError,
     { type: string; data: DashboardUpdate },
     TContext
   >;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof dashboardControllerUpdate>>,
+  Awaited<ReturnType<typeof updateDashboard>>,
   TError,
   { type: string; data: DashboardUpdate },
   TContext
@@ -205,43 +182,43 @@ export const getDashboardControllerUpdateMutationOptions = <
   const { mutation: mutationOptions } = options ?? {};
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof dashboardControllerUpdate>>,
+    Awaited<ReturnType<typeof updateDashboard>>,
     { type: string; data: DashboardUpdate }
   > = (props) => {
     const { type, data } = props ?? {};
 
-    return dashboardControllerUpdate(type, data);
+    return updateDashboard(type, data);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type DashboardControllerUpdateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof dashboardControllerUpdate>>
+export type UpdateDashboardMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateDashboard>>
 >;
-export type DashboardControllerUpdateMutationBody = DashboardUpdate;
-export type DashboardControllerUpdateMutationError = ErrorType<unknown>;
+export type UpdateDashboardMutationBody = DashboardUpdate;
+export type UpdateDashboardMutationError = ErrorType<unknown>;
 
 /**
  * @summary Update dashboard
  */
-export const useDashboardControllerUpdate = <
+export const useUpdateDashboard = <
   TError = ErrorType<unknown>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof dashboardControllerUpdate>>,
+    Awaited<ReturnType<typeof updateDashboard>>,
     TError,
     { type: string; data: DashboardUpdate },
     TContext
   >;
 }): UseMutationResult<
-  Awaited<ReturnType<typeof dashboardControllerUpdate>>,
+  Awaited<ReturnType<typeof updateDashboard>>,
   TError,
   { type: string; data: DashboardUpdate },
   TContext
 > => {
-  const mutationOptions = getDashboardControllerUpdateMutationOptions(options);
+  const mutationOptions = getUpdateDashboardMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

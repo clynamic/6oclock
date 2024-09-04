@@ -2,7 +2,7 @@ import { PieChart, PieValueType } from "@mui/x-charts";
 import { useMemo } from "react";
 
 import { TicketTypeSummary, useTicketTypeSummary } from "../../api";
-import { DateRange } from "../../utils";
+import { DateRange, refetchQueryOptions } from "../../utils";
 
 export const TicketQtypeColors = {
   user: "#FFCCCB", // Soft pastel pink
@@ -21,7 +21,7 @@ export interface TicketTypeChartProps {
 }
 
 export const TicketTypeChart: React.FC<TicketTypeChartProps> = ({ range }) => {
-  const { data: summary } = useTicketTypeSummary(range);
+  const { data: summary } = useTicketTypeSummary(range, refetchQueryOptions());
 
   const emptyQtypes = useMemo(() => {
     return Object.keys(summary || {})

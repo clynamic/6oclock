@@ -8,9 +8,9 @@
 import type { UserHead } from "./userHead";
 
 export interface TicketerSummary {
-  claimed: number;
   days: number;
-  handled: number;
   head?: UserHead;
+  position: number;
+  total: number;
   userId: number;
 }

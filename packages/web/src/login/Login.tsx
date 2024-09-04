@@ -12,9 +12,9 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../auth";
-import { PageBody, PageFooter, PageHeader, WindowTitle } from "../common";
-import { Page } from "../common/Page";
 import { getAuthToken } from "../http";
+import { PageBody, PageFooter, PageHeader, WindowTitle } from "../page";
+import { Page } from "../page/Page";
 import { ApiKeyField } from "./ApiKeyField";
 import { ApiKeyHint } from "./ApiKeyHint";
 import { LoginButton } from "./LoginButton";
