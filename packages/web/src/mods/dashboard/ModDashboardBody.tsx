@@ -1,47 +1,11 @@
+import { HourglassEmpty } from "@mui/icons-material";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { useEffect, useMemo } from "react";
 
-import { DashboardPosition } from "../../api";
-import {
-  DashboardCard,
-  DashboardGrid,
-  DashboardLayouts,
-  useCurrentLayout,
-  useDashboard,
-} from "../../dashboard";
-import { defaultModDashboardPositions, modDashboardCatalog } from "./catalog";
+import { DashboardCard, DashboardGrid, useDashboard } from "../../dashboard";
 
 export const ModDashboardBody = () => {
-  const { config, setConfig, saveConfig, isEditing, isLoading } =
+  const { config, layouts, currentLayout, catalog, setConfig, isLoading } =
     useDashboard();
-
-  const positions = config?.positions ?? defaultModDashboardPositions;
-
-  const layouts = useMemo(
-    () =>
-      Object.entries(positions ?? defaultModDashboardPositions).reduce(
-        (
-          layouts,
-          [screenSize, screenPositions]: [string, DashboardPosition[]]
-        ) => ({
-          ...layouts,
-          [screenSize]: screenPositions?.map((pos) => ({
-            ...pos,
-            ...modDashboardCatalog[pos.i]?.constraints,
-            isResizable: isEditing,
-            isDraggable: isEditing,
-          })),
-        }),
-        {} as DashboardLayouts
-      ),
-    [isEditing, positions]
-  );
-
-  const currentLayout = useCurrentLayout(layouts);
-
-  useEffect(() => {
-    //  saveConfig({ positions: defaultModDashboardPositions, meta: {} });
-  }, [saveConfig]);
 
   if (isLoading) {
     return (
@@ -61,6 +25,27 @@ export const ModDashboardBody = () => {
     );
   }
 
+  if (currentLayout?.length === 0) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%",
+          gap: 2,
+        }}
+      >
+        <HourglassEmpty sx={{ fontSize: 48 }} />
+        <Typography variant="h6">Your dashboard is empty</Typography>
+        <Typography variant="caption">
+          Use the items menu to add components to your dashboard
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <DashboardGrid
       compactType={"vertical"}
@@ -74,7 +59,7 @@ export const ModDashboardBody = () => {
       }}
     >
       {currentLayout?.map((layout) => {
-        const { component: Component, card } = modDashboardCatalog[layout.i];
+        const { component: Component, card } = catalog[layout.i];
         return (
           <DashboardCard key={layout.i} {...card}>
             <Component />
