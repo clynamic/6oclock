@@ -3,7 +3,7 @@ import { Button, Stack } from "@mui/material";
 
 import { useReporterSummary } from "../../api";
 import { LimitedList } from "../../common";
-import { DateRange } from "../../utils";
+import { DateRange, refetchQueryOptions } from "../../utils";
 import { TicketReporterFrame } from "./TicketReporterFrame";
 
 export interface TicketReporterBoardProps {
@@ -13,7 +13,7 @@ export interface TicketReporterBoardProps {
 export const TicketReporterBoard: React.FC<TicketReporterBoardProps> = ({
   range,
 }) => {
-  const { data: reporters } = useReporterSummary(range);
+  const { data: reporters } = useReporterSummary(range, refetchQueryOptions());
 
   return (
     <LimitedList

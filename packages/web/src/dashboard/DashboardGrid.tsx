@@ -7,7 +7,7 @@ import {
   WidthProvider,
 } from "react-grid-layout";
 
-import { ResizableHandle } from "./ResizableHandle";
+import { useDashboard } from "./DashboardContext";
 
 export type DashboardLayout = Layout;
 export type DashboardLayouts = Layouts;
@@ -18,6 +18,7 @@ export type DashboardGridProps = ResponsiveProps;
 
 export const DashboardGrid: React.FC<DashboardGridProps> = ({ ...rest }) => {
   const { breakpoints } = useTheme();
+  const { isEditing } = useDashboard();
 
   return (
     <Box
@@ -30,6 +31,7 @@ export const DashboardGrid: React.FC<DashboardGridProps> = ({ ...rest }) => {
     >
       <ResponsiveGridLayout
         draggableHandle=".react-draggable-handle"
+        resizeHandles={isEditing ? ["se", "sw", "ne", "nw"] : []}
         // TODO: fix this
         // resizeHandle={(handle) => <ResizableHandle direction={handle} />}
         compactType={"horizontal"}

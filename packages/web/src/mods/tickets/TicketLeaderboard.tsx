@@ -1,9 +1,10 @@
 import { ArrowForward } from "@mui/icons-material";
 import { Button, Stack } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 import { useTicketerSummary } from "../../api";
 import { LimitedList } from "../../common";
-import { DateRange } from "../../utils";
+import { DateRange, refetchQueryOptions } from "../../utils";
 import { TicketLeaderboardFrame } from "./TicketLeaderboardFrame";
 
 export interface TicketLeaderboardProps {
@@ -13,30 +14,41 @@ export interface TicketLeaderboardProps {
 export const TicketLeaderboard: React.FC<TicketLeaderboardProps> = ({
   range,
 }) => {
-  const { data: ticketers } = useTicketerSummary(range);
+  const navigate = useNavigate();
+
+  const { data: ticketers } = useTicketerSummary(
+    {
+      ...range,
+      limit: 10,
+    },
+    refetchQueryOptions()
+  );
 
   return (
     <LimitedList
       indicator={() => (
         <Stack direction="row" justifyContent="flex-end">
-          <Button size="small" endIcon={<ArrowForward />}>
+          <Button
+            size="small"
+            endIcon={<ArrowForward />}
+            onClick={() => navigate("/mods/tickets")}
+          >
             See All
           </Button>
         </Stack>
       )}
     >
       {ticketers
-        ? ticketers?.map((ticketer, i) => {
+        ? ticketers?.map((ticketer) => {
             return (
               <TicketLeaderboardFrame
                 key={ticketer.userId}
-                position={i + 1}
                 summary={ticketer}
               />
             );
           })
         : Array.from({ length: 5 }).map((_, i) => (
-            <TicketLeaderboardFrame key={i} position={i + 1} />
+            <TicketLeaderboardFrame key={i} />
           ))}
     </LimitedList>
   );

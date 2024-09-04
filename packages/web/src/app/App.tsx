@@ -4,9 +4,10 @@ import { useMemo } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { AuthGuard, AuthProvider } from "../auth";
-import { JanitorDashboard } from "../janitors/JanitorDashboard";
+import { JanitorDashboard } from "../janitors/dashboard/JanitorDashboard";
 import { LoginPage } from "../login";
-import { ModDashboard } from "../mods";
+import { ModDashboardPage } from "../mods";
+import { TicketerPage } from "../mods/tickets/TicketsPage";
 import { NotFoundPage } from "./NotFound";
 import { theme } from "./theme";
 
@@ -24,7 +25,8 @@ export const App: React.FC = () => {
 
               <Route path="/" element={<AuthGuard />}>
                 <Route path="/" element={<Navigate to="/mods" />} />
-                <Route path="/mods" element={<ModDashboard />} />
+                <Route path="/mods" element={<ModDashboardPage />} />
+                <Route path="/mods/tickets" element={<TicketerPage />} />
                 <Route path="/janitors" element={<JanitorDashboard />} />
               </Route>
 

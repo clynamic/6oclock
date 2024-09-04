@@ -3,8 +3,8 @@ import dayjs from "dayjs";
 import React, { useEffect, useMemo, useRef } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
-import { Page, PageBody, PageFooter, PageHeader, WindowTitle } from "../common";
 import { checkAuthToken, clearAxiosAuth, setAxiosAuth } from "../http";
+import { Page, PageBody, PageFooter, PageHeader, WindowTitle } from "../page";
 import { useAuth } from "./context";
 
 export interface AuthGuardProps {

@@ -26,17 +26,16 @@ export const ApprovalLeaderboard: React.FC<ApprovalLeaderboardProps> = ({
       )}
     >
       {approvers
-        ? approvers.map((approver, i) => {
+        ? approvers.map((approver) => {
             return (
               <ApprovalLeaderboardFrame
                 key={approver.userId}
-                position={i + 1}
                 summary={approver}
               />
             );
           })
         : Array.from({ length: 5 }).map((_, i) => (
-            <ApprovalLeaderboardFrame key={i} position={i + 1} />
+            <ApprovalLeaderboardFrame key={i} />
           ))}
     </LimitedList>
   );

@@ -1,6 +1,6 @@
-import { DashboardCatalog, DashboardLayouts } from "../dashboard";
-import { ApprovalLeaderboard } from "./approvals";
-import { ApprovalActivityChart } from "./charts";
+import { DashboardCatalog, DashboardLayouts } from "../../dashboard";
+import { ApprovalLeaderboard } from "../approvals";
+import { ApprovalActivityChart } from "../charts";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface JanitorDashboardItemProps {}

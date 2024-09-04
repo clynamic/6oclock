@@ -13,7 +13,11 @@ export const getAuthToken = async (
 };
 
 export const checkAuthToken = async (token: string): Promise<boolean> => {
-  return validateToken({ token });
+  try {
+    return await validateToken({ token });
+  } catch {
+    return false;
+  }
 };
 
 export const setAxiosAuth = (token: string) => {

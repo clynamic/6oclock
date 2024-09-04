@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { useMemo } from "react";
 
 import { useTicketOpenSeries } from "../../api";
-import { DateRange } from "../../utils";
+import { DateRange, refetchQueryOptions } from "../../utils";
 
 export interface TicketFrontlineChartProps {
   range?: DateRange;
@@ -15,7 +15,7 @@ export const TicketFrontlineChart: React.FC<TicketFrontlineChartProps> = ({
 }) => {
   const theme = useTheme();
 
-  const { data: series } = useTicketOpenSeries(range);
+  const { data: series } = useTicketOpenSeries(range, refetchQueryOptions());
 
   const data = useMemo(
     () =>
@@ -23,7 +23,7 @@ export const TicketFrontlineChart: React.FC<TicketFrontlineChartProps> = ({
         date: dayjs(e.date).format("YYYY-MM-DD"),
         count: e.count,
       })) ?? [],
-    [series],
+    [series]
   );
 
   return (

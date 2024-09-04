@@ -6,10 +6,10 @@
  * OpenAPI spec version: 0.0.1
  */
 
-export interface Dashboard {
-  config: string;
-  id: string;
-  layout: string;
-  type: string;
-  userId: number;
+export interface DashboardPosition {
+  h: number;
+  i: string;
+  w: number;
+  x: number;
+  y: number;
 }
