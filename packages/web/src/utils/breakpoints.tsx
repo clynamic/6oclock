@@ -1,6 +1,6 @@
-import { useMediaQuery, useTheme } from "@mui/material";
+import { Breakpoint, useMediaQuery, useTheme } from "@mui/material";
 
-export const useCurrentBreakpoint = () => {
+export const useCurrentBreakpoint = (): Breakpoint => {
   const theme = useTheme();
 
   const breakpoints = theme.breakpoints.keys;
@@ -14,5 +14,5 @@ export const useCurrentBreakpoint = () => {
     .reverse()
     .find((item) => item.matches)?.breakpoint;
 
-  return currentBreakpoint;
+  return currentBreakpoint!;
 };
