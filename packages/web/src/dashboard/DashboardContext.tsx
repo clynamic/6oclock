@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { Breakpoint, useTheme } from "@mui/material";
+import { AxiosError } from "axios";
 import React, {
   createContext,
   useCallback,
@@ -19,7 +20,11 @@ import {
 import { useCurrentBreakpoint } from "../utils";
 import { useCurrentLayout } from "./current-layout";
 import { DashboardLayout, DashboardLayouts } from "./DashboardGrid";
-import { buildCatalogLayout, DashboardCatalog } from "./DashboardItem";
+import {
+  buildCatalogLayout,
+  buildCatalogLayouts,
+  DashboardCatalog,
+} from "./DashboardItem";
 
 interface DashboardContextType {
   config?: DashboardConfig;
@@ -51,7 +56,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
   type,
   catalog,
 }) => {
-  const { data, isLoading, isError, error } = useRemoteDashboard(type);
+  const { data, isLoading, isError, error, refetch } = useRemoteDashboard(type);
   const { mutateAsync } = useUpdateDashboard();
 
   const [config, setConfig] = useState<DashboardConfig | undefined>(data);
@@ -71,6 +76,18 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
     },
     [mutateAsync, type]
   );
+
+  useEffect(() => {
+    if (
+      error &&
+      error instanceof AxiosError &&
+      error.response?.status === 404
+    ) {
+      saveConfig({
+        positions: buildCatalogLayouts(catalog),
+      }).then(() => refetch());
+    }
+  }, [catalog, error, refetch, saveConfig]);
 
   const {
     breakpoints: { keys: breakpoints },

@@ -2,7 +2,9 @@ import { Breakpoint } from "@mui/material";
 
 import { DashboardPosition } from "../api";
 import { DashboardCardProps } from "./DashboardCard";
-import { DashboardLayout } from "./DashboardGrid";
+import { DashboardLayout, DashboardLayouts } from "./DashboardGrid";
+
+export const breakpoints: Breakpoint[] = ["xs", "sm", "md", "lg", "xl"];
 
 export interface DashboardConstraints {
   minW?: number;
@@ -14,18 +16,28 @@ export interface DashboardConstraints {
   isResizable?: boolean;
 }
 
-export type DashboardItemDefaultLayout = Record<
-  string,
-  Omit<DashboardPosition, "i"> & DashboardConstraints
->;
+export type DashboardItemLayout = Omit<DashboardPosition, "i"> &
+  DashboardConstraints;
+
+export type DashboardItemLayouts = Record<string, DashboardItemLayout>;
 
 export type DashboardItemConfig = {
-  defaultLayout: DashboardItemDefaultLayout;
+  defaultLayout: DashboardItemLayouts;
   card?: Omit<DashboardCardProps, "children">;
   component: React.FC;
 };
 
 export type DashboardCatalog = Record<string, DashboardItemConfig>;
+
+export const createSimpleLayout = (
+  base: DashboardItemLayout,
+  overrides?: Partial<DashboardItemLayouts>
+) => {
+  return breakpoints.reduce((acc, breakpoint) => {
+    acc[breakpoint] = { ...base, ...overrides?.[breakpoint] };
+    return acc;
+  }, {} as DashboardItemLayouts);
+};
 
 export const buildCatalogLayout = (
   catalog: DashboardCatalog,
@@ -36,4 +48,13 @@ export const buildCatalogLayout = (
     if (!layout) return acc;
     return [...acc, { i: key, ...layout }];
   }, [] as DashboardLayout[]);
+};
+
+export const buildCatalogLayouts = (
+  catalog: DashboardCatalog
+): DashboardLayouts => {
+  return breakpoints.reduce((layouts, breakpoint) => {
+    layouts[breakpoint] = buildCatalogLayout(catalog, breakpoint);
+    return layouts;
+  }, {} as DashboardLayouts);
 };

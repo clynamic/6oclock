@@ -1,27 +1,11 @@
-import { DashboardCatalog, DashboardLayouts } from "../../dashboard";
+import { createSimpleLayout, DashboardCatalog } from "../../dashboard";
 import { ApprovalLeaderboard } from "../approvals";
 import { ApprovalActivityChart } from "../charts";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface JanitorDashboardItemProps {}
-
-export const janitorDashboardCatalog: DashboardCatalog<JanitorDashboardItemProps> =
-  {
-    approvals: {
-      component: ApprovalLeaderboard,
-      title: "Leaderboard",
-      variant: "outlined",
-    },
-    activity: {
-      component: ApprovalActivityChart,
-      title: "Activity",
-    },
-  };
-
-export const defaultJanitorDashboardLayouts: DashboardLayouts = {
-  lg: [
-    {
-      i: "approvals",
+export const janitorDashboardCatalog: DashboardCatalog = {
+  approvals: {
+    component: ApprovalLeaderboard,
+    defaultLayout: createSimpleLayout({
       x: 0,
       y: 0,
       w: 4,
@@ -30,17 +14,23 @@ export const defaultJanitorDashboardLayouts: DashboardLayouts = {
       maxW: 6,
       minH: 9,
       maxH: 20,
+    }),
+    card: {
+      title: "Leaderboard",
+      variant: "outlined",
     },
-    {
-      i: "activity",
+  },
+  activity: {
+    component: ApprovalActivityChart,
+    defaultLayout: createSimpleLayout({
       x: 0,
       y: 11,
       w: 8,
       h: 4,
       minW: 4,
-      maxW: undefined,
       minH: 3,
       maxH: 9,
-    },
-  ],
+    }),
+    card: { title: "Activity" },
+  },
 };

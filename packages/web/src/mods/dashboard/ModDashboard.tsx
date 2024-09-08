@@ -1,11 +1,20 @@
 import { Stack } from "@mui/material";
 
 import { DashboardConfigType } from "../../api";
-import { DashboardProvider } from "../../dashboard";
-import { Page, PageBody, PageFooter, WindowTitle } from "../../page";
+import { DashboardBody, DashboardProvider } from "../../dashboard";
+import { DashboardEditHeader } from "../../dashboard/DashboardEditHeader";
+import {
+  Page,
+  PageBody,
+  PageFooter,
+  PageHeader,
+  WindowTitle,
+} from "../../page";
 import { modDashboardCatalog } from "./catalog";
-import { ModDashboardBody } from "./ModDashboardBody";
-import { ModDashboardHeader } from "./ModDashboardHeader";
+
+const ModDashboardHeader = () => {
+  return <PageHeader actions={[<DashboardEditHeader />]} />;
+};
 
 export const ModDashboardPage: React.FC = () => {
   return (
@@ -18,7 +27,7 @@ export const ModDashboardPage: React.FC = () => {
         <ModDashboardHeader />
         <PageBody>
           <Stack sx={{ height: "100%", width: "100%" }}>
-            <ModDashboardBody />
+            <DashboardBody />
           </Stack>
         </PageBody>
         <PageFooter />
