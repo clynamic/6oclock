@@ -1,10 +1,10 @@
 import { Stack } from "@mui/material";
-import { useMemo, useState } from "react";
 
+import { DashboardConfigType } from "../../api";
 import {
-  DashboardCard,
-  DashboardGrid,
-  DashboardLayouts,
+  DashboardBody,
+  DashboardEditHeader,
+  DashboardProvider,
 } from "../../dashboard";
 import {
   Page,
@@ -13,49 +13,28 @@ import {
   PageHeader,
   WindowTitle,
 } from "../../page";
-import { useCurrentBreakpoint } from "../../utils";
-import {
-  defaultJanitorDashboardLayouts,
-  janitorDashboardCatalog,
-} from "./catalog";
+import { janitorDashboardCatalog } from "./catalog";
+
+const JanitorDashboardHeader = () => {
+  return <PageHeader actions={[<DashboardEditHeader />]} />;
+};
 
 export const JanitorDashboard: React.FC = () => {
-  const [layouts, setLayouts] = useState<DashboardLayouts>(
-    defaultJanitorDashboardLayouts
-  );
-  const currentBreakpoint = useCurrentBreakpoint();
-  const currentLayout = useMemo(
-    () =>
-      currentBreakpoint
-        ? (layouts[currentBreakpoint] ?? defaultJanitorDashboardLayouts.lg)
-        : defaultJanitorDashboardLayouts.lg,
-    [currentBreakpoint, layouts]
-  );
-
   return (
-    <Page>
-      <WindowTitle subtitle="Janitors" />
-      <PageHeader />
-      <PageBody>
-        <Stack sx={{ height: "100%", width: "100%" }}>
-          <DashboardGrid
-            compactType={"vertical"}
-            layouts={layouts}
-            onLayoutChange={(_, newLayouts) => setLayouts(newLayouts)}
-          >
-            {currentLayout.map((layout) => {
-              const { component: Component, ...item } =
-                janitorDashboardCatalog[layout.i];
-              return (
-                <DashboardCard key={layout.i} {...item}>
-                  <Component />
-                </DashboardCard>
-              );
-            })}
-          </DashboardGrid>
-        </Stack>
-      </PageBody>
-      <PageFooter />
-    </Page>
+    <DashboardProvider
+      type={DashboardConfigType.janitor}
+      catalog={janitorDashboardCatalog}
+    >
+      <Page>
+        <WindowTitle subtitle="Janitors" />
+        <JanitorDashboardHeader />
+        <PageBody>
+          <Stack sx={{ height: "100%", width: "100%" }}>
+            <DashboardBody />
+          </Stack>
+        </PageBody>
+        <PageFooter />
+      </Page>
+    </DashboardProvider>
   );
 };
