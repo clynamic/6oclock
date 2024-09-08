@@ -9,18 +9,18 @@ export interface DashboardChildForwardProps {
   onTouchEnd?: (event: React.TouchEvent<HTMLDivElement>) => void;
 }
 
-export interface DashboardChildProps {
+export interface DashboardChildCreateProps {
   className?: string;
 }
 
 export const createDashboardChild = <P extends object>(
   Component: React.ComponentType<P>,
-  props?: DashboardChildProps,
+  props?: DashboardChildCreateProps
 ) => {
   return forwardRef<HTMLDivElement, P & DashboardChildForwardProps>(
     (
       { className, style, onMouseDown, onMouseUp, onTouchEnd, ...rest },
-      ref,
+      ref
     ) => {
       return (
         <Box
@@ -34,6 +34,6 @@ export const createDashboardChild = <P extends object>(
           <Component {...(rest as P)} />
         </Box>
       );
-    },
+    }
   );
 };
