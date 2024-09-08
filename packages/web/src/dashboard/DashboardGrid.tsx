@@ -1,4 +1,5 @@
 import { Box, useTheme } from "@mui/material";
+import { Ref } from "react";
 import {
   Layout,
   Layouts,
@@ -8,6 +9,7 @@ import {
 } from "react-grid-layout";
 
 import { useDashboard } from "./DashboardContext";
+import { HandleDirection, ResizableHandle } from "./ResizableHandle";
 
 export type DashboardLayout = Layout;
 export type DashboardLayouts = Layouts;
@@ -31,9 +33,15 @@ export const DashboardGrid: React.FC<DashboardGridProps> = ({ ...rest }) => {
     >
       <ResponsiveGridLayout
         draggableHandle=".react-draggable-handle"
+        draggableCancel=".react-draggable-cancel"
         resizeHandles={isEditing ? ["se", "sw", "ne", "nw"] : []}
-        // TODO: fix this
-        // resizeHandle={(handle) => <ResizableHandle direction={handle} />}
+        resizeHandle={
+          ((handle: HandleDirection, ref: Ref<HTMLDivElement>) => (
+            <ResizableHandle resizeHandle={handle} ref={ref} />
+            // for some reason, the @types/react-grid-layout package does not recognize the ref prop
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          )) as any
+        }
         compactType={"horizontal"}
         breakpoints={breakpoints.values}
         cols={{ xl: 16, lg: 12, md: 9, sm: 6, xs: 4 }}
