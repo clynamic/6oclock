@@ -19,6 +19,22 @@ export const Page: React.FC<PropsWithChildren> = ({ children }) => {
         },
         backgroundColor: "background.default",
         backgroundImage: 'url("/assets/hex-tile.png")',
+        overflow: "hidden",
+        overflowY: "auto",
+
+        "&::-webkit-scrollbar": {
+          width: 8,
+        },
+        "&::-webkit-scrollbar-track": {
+          background: "transparent",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          background: (theme) => theme.palette.secondary.main,
+          borderRadius: 6,
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          background: (theme) => theme.palette.secondary.dark,
+        },
       }}
     >
       {children}
