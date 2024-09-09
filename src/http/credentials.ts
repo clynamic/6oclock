@@ -12,11 +12,16 @@ export const getAuthToken = async (
   return await login(credentials);
 };
 
-export const checkAuthToken = async (token: string): Promise<boolean> => {
+export type AuthTokenCheckResult = "valid" | "invalid" | "error";
+
+export const checkAuthToken = async (
+  token: string
+): Promise<AuthTokenCheckResult> => {
   try {
-    return await validateToken({ token });
+    const result = await validateToken({ token });
+    return result ? "valid" : "invalid";
   } catch {
-    return false;
+    return "error";
   }
 };
 
