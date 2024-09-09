@@ -10,7 +10,6 @@ import type { DashboardPositions } from "./dashboardPositions";
 import type { DashboardConfigType } from "./dashboardConfigType";
 
 export interface DashboardConfig {
-  id: string;
   meta: DashboardConfigMeta;
   positions: DashboardPositions;
   type: DashboardConfigType;
