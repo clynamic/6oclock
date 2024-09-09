@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "build": "tsc -b && vite build --mode production",
     "lint": "eslint . --fix",
     "format": "prettier --write .",
-    "preview": "vite preview",
     "generate": "orval"
   },
   "dependencies": {
