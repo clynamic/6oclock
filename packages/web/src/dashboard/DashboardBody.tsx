@@ -88,6 +88,7 @@ export const DashboardBody = () => {
       }}
     >
       {currentLayout?.map((layout) => {
+        if (catalog[layout.i] === undefined) return null;
         const { component: Component, card } = catalog[layout.i];
         return (
           <DashboardCard key={layout.i} {...card}>
