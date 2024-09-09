@@ -2,13 +2,13 @@ import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
-import { useTicketerSummaryInfinite } from "../../api";
+import { useReporterSummaryInfinite } from "../../api";
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../../page";
-import { TicketLeaderboardFrame } from "./TicketLeaderboardFrame";
+import { TicketReporterFrame } from "./TicketReporterFrame";
 
-export const TicketerPage: React.FC = () => {
+export const TicketReporterPage: React.FC = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useTicketerSummaryInfinite(undefined, {
+    useReporterSummaryInfinite(undefined, {
       query: {
         refetchInterval: 1000 * 60 * 5,
         initialPageParam: 1,
@@ -31,16 +31,14 @@ export const TicketerPage: React.FC = () => {
 
   return (
     <Page>
-      <PageTitle subtitle="Ticketers" />
+      <PageTitle subtitle="Reporters" />
       <PageHeader />
       <PageBody>
         <Box sx={{ width: "100%", maxWidth: 600, margin: "auto", p: 2 }}>
           <Stack sx={{ height: "100%", width: "100%", gap: 1 }}>
             {data?.pages
               .flat()
-              .map((item, i) => (
-                <TicketLeaderboardFrame key={i} summary={item} />
-              ))}
+              .map((item, i) => <TicketReporterFrame key={i} summary={item} />)}
           </Stack>
           <div ref={ref} style={{ height: 1 }} />
           {isFetchingNextPage && (
