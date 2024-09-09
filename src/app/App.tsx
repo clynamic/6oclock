@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { AuthGuard, AuthProvider } from "../auth";
 import { HomePage } from "../home";
-import { JanitorDashboard } from "../janitors";
+import { ApproverPage, JanitorDashboard } from "../janitors";
 import { LoginPage } from "../login";
 import { ModDashboardPage, TicketerPage, TicketReporterPage } from "../mods";
 import { NotFoundPage } from "./NotFound";
@@ -30,6 +30,7 @@ export const App: React.FC = () => {
                 <Route path="/mods/tickets" element={<TicketerPage />} />
                 <Route path="/mods/reports" element={<TicketReporterPage />} />
                 <Route path="/janitors" element={<JanitorDashboard />} />
+                <Route path="/janitors/approvals" element={<ApproverPage />} />
               </Route>
 
               <Route path="*" element={<NotFoundPage />} />
