@@ -1,5 +1,6 @@
 {
   "name": "6oclock",
+  "description": "e6 staff dashboard",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -54,5 +55,9 @@
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
+  },
+  "engines": {
+    "node": ">=20",
+    "npm": "please-use-yarn"
   }
 }
