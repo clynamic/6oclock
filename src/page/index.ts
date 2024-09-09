@@ -4,4 +4,3 @@ export * from "./Page";
 export * from "./PageBody";
 export * from "./PageFooter";
 export * from "./PageTitle";
-export * from "./UserHeaderItem";
