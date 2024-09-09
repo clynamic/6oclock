@@ -14,7 +14,7 @@ e6 staff dashboard
 git clone https://github.com/clynamic/6oclock.git
 ```
 
-4. Set up the [API](https://github.com/clynamic/5-thirty)  
+4. Set up the [Backend](https://github.com/clynamic/5-thirty)  
    Follow the instructions in the README
 
 5. Install dependencies
