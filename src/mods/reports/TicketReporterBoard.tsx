@@ -1,5 +1,6 @@
 import { ArrowForward } from "@mui/icons-material";
 import { Button, Stack } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 import { useReporterSummary } from "../../api";
 import { LimitedList } from "../../common";
@@ -13,30 +14,38 @@ export interface TicketReporterBoardProps {
 export const TicketReporterBoard: React.FC<TicketReporterBoardProps> = ({
   range,
 }) => {
-  const { data: reporters } = useReporterSummary(range, refetchQueryOptions());
+  const navigate = useNavigate();
+
+  const { data: reporters } = useReporterSummary(
+    {
+      ...range,
+      limit: 10,
+    },
+    refetchQueryOptions()
+  );
 
   return (
     <LimitedList
       indicator={() => (
         <Stack direction="row" justifyContent="flex-end">
-          <Button size="small" endIcon={<ArrowForward />}>
+          <Button
+            size="small"
+            endIcon={<ArrowForward />}
+            onClick={() => navigate("/mods/reports")}
+          >
             See All
           </Button>
         </Stack>
       )}
     >
       {reporters
-        ? reporters.map((reporter, index) => {
+        ? reporters.map((reporter) => {
             return (
-              <TicketReporterFrame
-                key={reporter.userId}
-                position={index + 1}
-                summary={reporter}
-              />
+              <TicketReporterFrame key={reporter.userId} summary={reporter} />
             );
           })
         : Array.from({ length: 5 }).map((_, index) => (
-            <TicketReporterFrame key={index} position={index + 1} />
+            <TicketReporterFrame key={index} />
           ))}
     </LimitedList>
   );

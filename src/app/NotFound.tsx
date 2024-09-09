@@ -1,11 +1,11 @@
 import { Stack, Typography } from "@mui/material";
 
-import { Page, PageBody, PageFooter, PageHeader, WindowTitle } from "../page";
+import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../page";
 
 export const NotFoundPage: React.FC = () => {
   return (
     <Page>
-      <WindowTitle subtitle="Not Found" />
+      <PageTitle subtitle="Not Found" />
       <PageHeader />
       <PageBody>
         <Stack spacing={2} alignItems="center">

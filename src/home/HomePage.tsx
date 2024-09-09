@@ -9,14 +9,14 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-import { Page, PageBody, PageFooter, PageHeader, WindowTitle } from "../page";
+import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../page";
 
 export const HomePage = () => {
   const navigate = useNavigate();
 
   return (
     <Page>
-      <WindowTitle subtitle="Home" />
+      <PageTitle subtitle="Home" />
       <PageHeader />
       <PageBody>
         <Stack direction="column" spacing={2}>

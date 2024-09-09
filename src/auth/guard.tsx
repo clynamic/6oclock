@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { checkAuthToken, clearAxiosAuth, setAxiosAuth } from "../http";
-import { Page, PageBody, PageFooter, PageHeader, WindowTitle } from "../page";
+import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../page";
 import { useAuth } from "./context";
 
 export interface AuthGuardProps {
@@ -69,7 +69,7 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   if (!hasSession) {
     return (
       <Page>
-        <WindowTitle subtitle="Authenticating..." />
+        <PageTitle subtitle="Authenticating..." />
         <PageHeader />
         <PageBody>
           <Box

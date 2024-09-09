@@ -3,7 +3,6 @@ import { Avatar, Card, Skeleton, Stack, Typography } from "@mui/material";
 import { ReporterSummary } from "../../api";
 
 export interface TicketReporterFrameProps {
-  position: number;
   summary?: ReporterSummary;
 }
 

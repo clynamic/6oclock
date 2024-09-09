@@ -5,10 +5,7 @@ export interface WindowTitleProps {
   subtitle?: string;
 }
 
-export const WindowTitle: React.FC<WindowTitleProps> = ({
-  title,
-  subtitle,
-}) => {
+export const PageTitle: React.FC<WindowTitleProps> = ({ title, subtitle }) => {
   useEffect(() => {
     document.title = title ? `${title}` : `6 o'clock - ${subtitle}`;
   }, [subtitle, title]);

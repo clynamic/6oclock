@@ -24,6 +24,10 @@ export const navigationEntries: NavNode[] = [
         label: "Tickets",
         href: "/mods/tickets",
       },
+      {
+        label: "Reports",
+        href: "/mods/reports",
+      },
     ],
   },
   {

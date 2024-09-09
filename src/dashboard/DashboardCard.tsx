@@ -40,6 +40,7 @@ export const DashboardCard = createDashboardChild<DashboardCardProps>(
               width: "100%",
 
               "& > *:not(.react-resizable-handle)": {
+                transition: "opacity 0.2s",
                 opacity: isEditing ? 0.5 : 1,
               },
             }}
