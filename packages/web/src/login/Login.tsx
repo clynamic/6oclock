@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../auth";
 import { getAuthToken } from "../http";
-import { PageBody, PageFooter, PageHeader, WindowTitle } from "../page";
+import { PageBody, PageFooter, PageHeader, PageTitle } from "../page";
 import { Page } from "../page/Page";
 import { ApiKeyField } from "./ApiKeyField";
 import { ApiKeyHint } from "./ApiKeyHint";
@@ -65,7 +65,7 @@ export const LoginPage = () => {
 
   return (
     <Page>
-      <WindowTitle subtitle="Punch in!" />
+      <PageTitle subtitle="Punch in!" />
       <PageHeader />
       <PageBody>
         <Container

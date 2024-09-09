@@ -5,10 +5,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { AuthGuard, AuthProvider } from "../auth";
 import { HomePage } from "../home";
-import { JanitorDashboard } from "../janitors/dashboard/JanitorDashboard";
+import { JanitorDashboard } from "../janitors";
 import { LoginPage } from "../login";
-import { ModDashboardPage } from "../mods";
-import { TicketerPage } from "../mods/tickets/TicketsPage";
+import { ModDashboardPage, TicketerPage, TicketReporterPage } from "../mods";
 import { NotFoundPage } from "./NotFound";
 import { theme } from "./theme";
 
@@ -28,6 +27,7 @@ export const App: React.FC = () => {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/mods" element={<ModDashboardPage />} />
                 <Route path="/mods/tickets" element={<TicketerPage />} />
+                <Route path="/mods/reports" element={<TicketReporterPage />} />
                 <Route path="/janitors" element={<JanitorDashboard />} />
               </Route>
 
