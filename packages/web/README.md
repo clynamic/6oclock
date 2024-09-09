@@ -15,7 +15,7 @@ git clone https://github.com/clynamic/6oclock.git
 ```
 
 4. Set up the [API](https://github.com/clynamic/5-thirty)  
-   Follow the instructions in the README to set up the API
+   Follow the instructions in the README
 
 5. Install dependencies
 
@@ -34,6 +34,7 @@ yarn dev
 
 - [Vite](https://vitejs.dev/) - fast frontend build tool
 - [TypeScript](https://www.typescriptlang.org/) - javascript with types
+- [Yarn](https://yarnpkg.com/) - package manager
 - [ESLint](https://eslint.org/) - linting
 - [Prettier](https://prettier.io/) - code formatting
 - [React](https://reactjs.org/) - frontend library
