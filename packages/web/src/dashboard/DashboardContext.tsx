@@ -56,7 +56,19 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
   type,
   catalog,
 }) => {
-  const { data, isLoading, isError, error, refetch } = useRemoteDashboard(type);
+  const { data, isLoading, isError, error, refetch } = useRemoteDashboard(
+    type,
+    {
+      query: {
+        retry: (failureCount, error) => {
+          if (error instanceof AxiosError && error.response?.status === 404) {
+            return false;
+          }
+          return failureCount < 3;
+        },
+      },
+    }
+  );
   const { mutateAsync } = useUpdateDashboard();
 
   const [config, setConfig] = useState<DashboardConfig | undefined>(data);
