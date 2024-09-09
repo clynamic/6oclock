@@ -873,9 +873,6 @@
       "DashboardConfig": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
           "type": {
             "type": "string",
             "enum": ["moderator", "janitor"]
@@ -890,7 +887,7 @@
             "type": "object"
           }
         },
-        "required": ["id", "type", "userId", "positions", "meta"]
+        "required": ["type", "userId", "positions", "meta"]
       },
       "DashboardUpdate": {
         "type": "object",
