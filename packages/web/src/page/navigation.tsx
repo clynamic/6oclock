@@ -38,6 +38,10 @@ export const navigationEntries: NavNode[] = [
         label: "Dashboard",
         href: "/janitors",
       },
+      {
+        label: "Approvals",
+        href: "/janitors/approvals",
+      },
     ],
   },
 ];

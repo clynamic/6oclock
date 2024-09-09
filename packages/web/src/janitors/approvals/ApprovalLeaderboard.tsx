@@ -1,9 +1,10 @@
 import { ArrowForward } from "@mui/icons-material";
 import { Button, Stack } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 import { useApproverSummary } from "../../api";
 import { LimitedList } from "../../common";
-import { DateRange } from "../../utils";
+import { DateRange, refetchQueryOptions } from "../../utils";
 import { ApprovalLeaderboardFrame } from "./ApprovalLeaderboardFrame";
 
 export interface ApprovalLeaderboardProps {
@@ -13,13 +14,25 @@ export interface ApprovalLeaderboardProps {
 export const ApprovalLeaderboard: React.FC<ApprovalLeaderboardProps> = ({
   range,
 }) => {
-  const { data: approvers } = useApproverSummary(range);
+  const navigate = useNavigate();
+
+  const { data: approvers } = useApproverSummary(
+    {
+      ...range,
+      limit: 10,
+    },
+    refetchQueryOptions()
+  );
 
   return (
     <LimitedList
       indicator={() => (
         <Stack direction="row" justifyContent="flex-end">
-          <Button size="small" endIcon={<ArrowForward />}>
+          <Button
+            size="small"
+            endIcon={<ArrowForward />}
+            onClick={() => navigate("/janitors/approvals")}
+          >
             See All
           </Button>
         </Stack>
