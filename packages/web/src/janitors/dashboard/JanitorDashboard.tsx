@@ -1,4 +1,6 @@
-import { Stack } from "@mui/material";
+import { Construction } from "@mui/icons-material";
+import { Alert, Stack } from "@mui/material";
+import { useState } from "react";
 
 import { DashboardConfigType } from "../../api";
 import {
@@ -14,6 +16,8 @@ const JanitorDashboardHeader = () => {
 };
 
 export const JanitorDashboard: React.FC = () => {
+  const [showWarning, setShowWarning] = useState(true);
+
   return (
     <DashboardProvider
       type={DashboardConfigType.janitor}
@@ -25,6 +29,16 @@ export const JanitorDashboard: React.FC = () => {
         <PageBody>
           <Stack sx={{ height: "100%", width: "100%" }}>
             <DashboardBody />
+            {showWarning && (
+              <Alert
+                severity="warning"
+                icon={<Construction />}
+                sx={{ m: 2 }}
+                onClose={() => setShowWarning(false)}
+              >
+                Something missing? We're still working on this page.
+              </Alert>
+            )}
           </Stack>
         </PageBody>
         <PageFooter />
