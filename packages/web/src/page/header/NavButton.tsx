@@ -6,6 +6,7 @@ import {
   ListItemText,
   MenuItem,
   MenuItemProps,
+  Typography,
 } from "@mui/material";
 
 import { usePageHeaderContext } from "./PageHeaderContext";
@@ -61,7 +62,9 @@ export const NavButton: React.FC<NavButtonProps> = (props) => {
           borderBottomRightRadius: 0,
         }}
         {...props}
-      />
+      >
+        <Typography>{props.children}</Typography>
+      </Button>
     );
   }
 
