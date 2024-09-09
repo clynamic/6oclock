@@ -1,4 +1,5 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
+import { MD5 } from "crypto-js";
 import dayjs from "dayjs";
 import React, { useEffect, useMemo, useRef } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -39,7 +40,10 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       }
 
       if (token && session) {
-        if (dayjs(session.date).add(1, "day").isBefore(dayjs())) {
+        const expired = dayjs(session.date).add(1, "hour").isBefore(dayjs());
+        const hash = MD5(token).toString();
+        const valid = hash === session.hash;
+        if (expired || !valid) {
           clearSession();
         }
         return;
@@ -51,16 +55,22 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
         return;
       }
 
-      const valid = await checkAuthToken(token);
+      const checkResult = await checkAuthToken(token);
 
-      if (!valid) {
+      if (id !== sentinel.current) return;
+
+      if (checkResult === "invalid") {
         navigate(redirect, { replace: true });
         return;
       }
 
+      if (checkResult === "error") {
+        navigate("/unreachable", { replace: true });
+        return;
+      }
+
       setAxiosAuth(token);
-      saveSession({ date: new Date(), hash: "TODO" });
-      if (id !== sentinel.current) return;
+      saveSession({ date: new Date(), hash: MD5(token).toString() });
     };
 
     runCheck();
