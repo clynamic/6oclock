@@ -2,9 +2,9 @@ import Axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 import { dateDeserializeInterceptor } from "./date";
 
-export const AXIOS_INSTANCE = Axios.create({
-  baseURL: "http://localhost:3000",
-});
+const baseURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+export const AXIOS_INSTANCE = Axios.create({ baseURL });
 
 AXIOS_INSTANCE.interceptors.response.use(dateDeserializeInterceptor);
 
