@@ -16,7 +16,7 @@ export const janitorDashboardCatalog: DashboardCatalog = {
       maxH: 20,
     }),
     card: {
-      title: "Leaderboard",
+      title: "Approvals",
       variant: "outlined",
     },
   },
