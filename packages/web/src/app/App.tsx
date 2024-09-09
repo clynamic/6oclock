@@ -10,6 +10,7 @@ import { LoginPage } from "../login";
 import { ModDashboardPage, TicketerPage, TicketReporterPage } from "../mods";
 import { NotFoundPage } from "./NotFound";
 import { theme } from "./theme";
+import { UnreachablePage } from "./Unreachable";
 
 export const App: React.FC = () => {
   const queryClient = useMemo(() => new QueryClient(), []);
@@ -32,6 +33,7 @@ export const App: React.FC = () => {
               </Route>
 
               <Route path="*" element={<NotFoundPage />} />
+              <Route path="/unreachable" element={<UnreachablePage />} />
             </Routes>
           </BrowserRouter>
         </ThemeProvider>
