@@ -18,7 +18,7 @@ export const Page: React.FC<PropsWithChildren> = ({ children }) => {
           sm: 2,
         },
         backgroundColor: "background.default",
-        backgroundImage: 'url("/assets/hex-tile.png")',
+        backgroundImage: `url("/assets/hex-tile.png")`,
         overflow: "hidden",
         overflowY: "auto",
 
