@@ -11,7 +11,7 @@ export const PageBody: React.FC<PropsWithChildren> = ({ children }) => {
         alignItems: "center",
         borderRadius: 1,
         backgroundColor: "background.paper",
-        backgroundImage: 'url("/assets/hex-texture.png")',
+        backgroundImage: `url("/assets/hex-texture.png")`,
         backgroundRepeat: "repeat-x",
         backgroundPosition: "top left",
       }}
