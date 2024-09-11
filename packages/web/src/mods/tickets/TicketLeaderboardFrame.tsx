@@ -1,15 +1,8 @@
 import { CalendarMonth, Sell } from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  Card,
-  Chip,
-  Skeleton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Card, Chip, Skeleton, Stack } from "@mui/material";
 
 import { TicketerSummary } from "../../api";
+import { UsernameText } from "../../common";
 import { RankingText } from "../../common/RankingText";
 
 export interface TicketLeaderboardFrameProps {
@@ -47,13 +40,7 @@ export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
               justifyContent="space-between"
               alignItems="center"
             >
-              <Typography variant="h6">
-                {summary ? (
-                  (summary.head?.name ?? `User #${summary.userId}`)
-                ) : (
-                  <Skeleton width={120} />
-                )}
-              </Typography>
+              <UsernameText user={summary?.head} />
               {summary && (
                 <RankingText rank={summary.position}>
                   #{summary.position}
