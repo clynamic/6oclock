@@ -3,14 +3,14 @@ import { UseInfiniteQueryResult } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
-export interface LoadMoreProps {
+export interface LoadMoreHintProps {
   query: Pick<
     UseInfiniteQueryResult<unknown, unknown>,
     "fetchNextPage" | "hasNextPage" | "isFetchingNextPage"
   >;
 }
 
-export const LoadMore: React.FC<LoadMoreProps> = ({
+export const LoadMoreHint: React.FC<LoadMoreHintProps> = ({
   query: { fetchNextPage, hasNextPage, isFetchingNextPage },
 }) => {
   const { ref, inView } = useInView();
