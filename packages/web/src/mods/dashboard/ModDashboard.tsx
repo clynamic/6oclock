@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 
 import { DashboardConfigType } from "../../api";
-import { DashboardBody, DashboardProvider } from "../../dashboard";
+import { DashboardBody, RemoteDashboardProvider } from "../../dashboard";
 import { DashboardEditHeader } from "../../dashboard/DashboardEditHeader";
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../../page";
 import { modDashboardCatalog } from "./catalog";
@@ -12,7 +12,7 @@ const ModDashboardHeader = () => {
 
 export const ModDashboardPage: React.FC = () => {
   return (
-    <DashboardProvider
+    <RemoteDashboardProvider
       type={DashboardConfigType.moderator}
       catalog={modDashboardCatalog}
     >
@@ -26,6 +26,6 @@ export const ModDashboardPage: React.FC = () => {
         </PageBody>
         <PageFooter />
       </Page>
-    </DashboardProvider>
+    </RemoteDashboardProvider>
   );
 };
