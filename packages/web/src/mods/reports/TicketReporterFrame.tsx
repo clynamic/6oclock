@@ -1,6 +1,7 @@
 import { Avatar, Card, Skeleton, Stack, Typography } from "@mui/material";
 
 import { ReporterSummary } from "../../api";
+import { UsernameText } from "../../common";
 
 export interface TicketReporterFrameProps {
   summary?: ReporterSummary;
@@ -37,19 +38,7 @@ export const TicketReporterFrame: React.FC<TicketReporterFrameProps> = ({
           <Skeleton variant="circular" width={48} height={48} />
         )}
         <Stack sx={{ flex: 1, minWidth: 0 }}>
-          <Typography
-            variant="h6"
-            noWrap
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-            overflow={"hidden"}
-          >
-            {summary ? (
-              (summary.head?.name ?? `User #${summary.userId}`)
-            ) : (
-              <Skeleton width={120} />
-            )}
-          </Typography>
+          <UsernameText user={summary} />
           <Typography variant="body2" color="text.secondary">
             {summary ? `${summary.total} reports` : <Skeleton width={50} />}
           </Typography>
