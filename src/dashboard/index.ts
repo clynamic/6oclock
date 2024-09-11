@@ -7,4 +7,5 @@ export * from "./DashboardEditHeader";
 export * from "./DashboardGrid";
 export * from "./DashboardItem";
 export * from "./DraggableHandle";
+export * from "./RemoteDashboardContext";
 export * from "./ResizableHandle";

@@ -6,7 +6,7 @@ import { DashboardConfigType } from "../../api";
 import {
   DashboardBody,
   DashboardEditHeader,
-  DashboardProvider,
+  RemoteDashboardProvider,
 } from "../../dashboard";
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../../page";
 import { janitorDashboardCatalog } from "./catalog";
@@ -19,7 +19,7 @@ export const JanitorDashboard: React.FC = () => {
   const [showWarning, setShowWarning] = useState(true);
 
   return (
-    <DashboardProvider
+    <RemoteDashboardProvider
       type={DashboardConfigType.janitor}
       catalog={janitorDashboardCatalog}
     >
@@ -43,6 +43,6 @@ export const JanitorDashboard: React.FC = () => {
         </PageBody>
         <PageFooter />
       </Page>
-    </DashboardProvider>
+    </RemoteDashboardProvider>
   );
 };

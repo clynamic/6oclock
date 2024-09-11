@@ -1,6 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
 import { Breakpoint, useTheme } from "@mui/material";
-import { AxiosError } from "axios";
 import React, {
   createContext,
   useCallback,
@@ -10,21 +9,11 @@ import React, {
   useState,
 } from "react";
 
-import {
-  DashboardConfig,
-  DashboardConfigType,
-  DashboardUpdate,
-  useDashboard as useRemoteDashboard,
-  useUpdateDashboard,
-} from "../api";
+import { DashboardConfig, DashboardUpdate } from "../api";
 import { useCurrentBreakpoint } from "../utils";
 import { useCurrentLayout } from "./current-layout";
 import { DashboardLayout, DashboardLayouts } from "./DashboardGrid";
-import {
-  buildCatalogLayout,
-  buildCatalogLayouts,
-  DashboardCatalog,
-} from "./DashboardItem";
+import { buildCatalogLayout, DashboardCatalog } from "./DashboardItem";
 
 interface DashboardContextType {
   config?: DashboardConfig;
@@ -36,7 +25,7 @@ interface DashboardContextType {
   isError?: boolean;
   error?: unknown;
   setConfig: (config: DashboardConfig) => void;
-  saveConfig: (update: DashboardUpdate) => void;
+  saveConfig: (update: DashboardUpdate) => Promise<void>;
   isEditing: boolean;
   setIsEditing: (isEditing: boolean) => void;
 }
@@ -46,31 +35,24 @@ const DashboardContext = createContext<DashboardContextType | undefined>(
 );
 
 export interface DashboardProviderProps {
-  type: DashboardConfigType;
+  data?: DashboardConfig;
+  updateData?: (data: DashboardUpdate) => Promise<void>;
+  isLoading?: boolean;
+  isError?: boolean;
+  error?: unknown;
   catalog: DashboardCatalog;
   children: React.ReactNode;
 }
 
 export const DashboardProvider: React.FC<DashboardProviderProps> = ({
+  data,
+  updateData,
+  isLoading,
+  isError,
+  error,
   children,
-  type,
   catalog,
 }) => {
-  const { data, isLoading, isError, error, refetch } = useRemoteDashboard(
-    type,
-    {
-      query: {
-        retry: (failureCount, error) => {
-          if (error instanceof AxiosError && error.response?.status === 404) {
-            return false;
-          }
-          return failureCount < 3;
-        },
-      },
-    }
-  );
-  const { mutateAsync } = useUpdateDashboard();
-
   const [config, setConfig] = useState<DashboardConfig | undefined>(data);
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -81,25 +63,17 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
 
   const saveConfig = useCallback(
     async (update: DashboardUpdate) => {
-      await mutateAsync({
-        type,
-        data: update,
-      });
+      if (updateData) {
+        updateData(update);
+      } else if (config) {
+        setConfig({
+          ...config,
+          ...update,
+        });
+      }
     },
-    [mutateAsync, type]
+    [config, updateData]
   );
-
-  useEffect(() => {
-    if (
-      error &&
-      error instanceof AxiosError &&
-      error.response?.status === 404
-    ) {
-      saveConfig({
-        positions: buildCatalogLayouts(catalog),
-      }).then(() => refetch());
-    }
-  }, [catalog, error, refetch, saveConfig]);
 
   const {
     breakpoints: { keys: breakpoints },
