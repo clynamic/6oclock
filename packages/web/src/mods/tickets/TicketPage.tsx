@@ -1,7 +1,7 @@
 import { Box, Stack } from "@mui/material";
 
 import { useTicketerSummaryInfinite } from "../../api";
-import { LoadMore } from "../../common";
+import { LoadMoreHint } from "../../common";
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../../page";
 import { TicketLeaderboardFrame } from "./TicketLeaderboardFrame";
 
@@ -32,7 +32,7 @@ export const TicketerPage: React.FC = () => {
                 <TicketLeaderboardFrame key={i} summary={item} />
               ))}
           </Stack>
-          <LoadMore query={query} />
+          <LoadMoreHint query={query} />
         </Box>
       </PageBody>
       <PageFooter />

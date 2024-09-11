@@ -3,7 +3,7 @@ import { Button, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import { useReporterSummary } from "../../api";
-import { LimitedList } from "../../common";
+import { LimitedList, NoDataHint } from "../../common";
 import { DateRange, refetchQueryOptions } from "../../utils";
 import { TicketReporterFrame } from "./TicketReporterFrame";
 
@@ -23,6 +23,8 @@ export const TicketReporterBoard: React.FC<TicketReporterBoardProps> = ({
     },
     refetchQueryOptions()
   );
+
+  if (reporters?.length === 0) return <NoDataHint />;
 
   return (
     <LimitedList

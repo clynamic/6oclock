@@ -42,6 +42,11 @@ export const TicketFrontlineChart: React.FC<TicketFrontlineChartProps> = ({
           color: theme.palette.primary.main,
         },
       ]}
+      slotProps={{
+        noDataOverlay: {
+          message: "No data",
+        },
+      }}
     />
   );
 };

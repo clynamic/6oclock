@@ -3,7 +3,7 @@ import { Button, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import { useTicketerSummary } from "../../api";
-import { LimitedList } from "../../common";
+import { LimitedList, NoDataHint } from "../../common";
 import { DateRange, refetchQueryOptions } from "../../utils";
 import { TicketLeaderboardFrame } from "./TicketLeaderboardFrame";
 
@@ -23,6 +23,8 @@ export const TicketLeaderboard: React.FC<TicketLeaderboardProps> = ({
     },
     refetchQueryOptions()
   );
+
+  if (ticketers?.length === 0) return <NoDataHint />;
 
   return (
     <LimitedList

@@ -83,6 +83,11 @@ export const TicketActivityChart: React.FC<TicketActivityChartProps> = ({
         color: theme.palette.secondary.main,
       },
     ],
+    slotProps: {
+      noDataOverlay: {
+        message: "No data",
+      },
+    },
   };
 
   const Chart = useMemo(() => {
