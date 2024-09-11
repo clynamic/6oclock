@@ -29,6 +29,8 @@ export const HomePage = () => {
               xs: 2,
               sm: 6,
             }}
+            justifyContent="center"
+            alignItems="center"
           >
             <ThemeProvider<Theme>
               theme={(theme) => ({
