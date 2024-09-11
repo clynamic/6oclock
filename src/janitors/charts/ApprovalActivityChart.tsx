@@ -69,6 +69,11 @@ export const ApprovalActivityChart: React.FC<ApprovalActivityProps> = ({
         color: theme.palette.success.main,
       },
     ],
+    slotProps: {
+      noDataOverlay: {
+        message: "No data",
+      },
+    },
   };
 
   return variant === "bars" ? (

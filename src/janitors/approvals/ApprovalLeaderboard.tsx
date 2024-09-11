@@ -3,7 +3,7 @@ import { Button, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import { useApproverSummary } from "../../api";
-import { LimitedList } from "../../common";
+import { LimitedList, NoDataHint } from "../../common";
 import { DateRange, refetchQueryOptions } from "../../utils";
 import { ApprovalLeaderboardFrame } from "./ApprovalLeaderboardFrame";
 
@@ -23,6 +23,8 @@ export const ApprovalLeaderboard: React.FC<ApprovalLeaderboardProps> = ({
     },
     refetchQueryOptions()
   );
+
+  if (approvers?.length === 0) return <NoDataHint />;
 
   return (
     <LimitedList

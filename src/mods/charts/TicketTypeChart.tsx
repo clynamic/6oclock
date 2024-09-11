@@ -58,6 +58,11 @@ export const TicketTypeChart: React.FC<TicketTypeChartProps> = ({ range }) => {
           cy: "50%",
         },
       ]}
+      slotProps={{
+        noDataOverlay: {
+          message: "No data",
+        },
+      }}
     />
   );
 };

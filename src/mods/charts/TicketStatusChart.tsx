@@ -60,6 +60,11 @@ export const TicketStatusChart: React.FC<TicketStatusChartProps> = ({
           cy: "50%",
         },
       ]}
+      slotProps={{
+        noDataOverlay: {
+          message: "No data",
+        },
+      }}
     />
   );
 };
