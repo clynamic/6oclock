@@ -3,21 +3,29 @@ import { Box, Stack } from "@mui/material";
 import { useApproverSummaryInfinite } from "../../api";
 import { LoadMoreHint } from "../../common";
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../../page";
+import { useChartDateRange } from "../../utils";
 import { ApprovalLeaderboardFrame } from "./ApprovalLeaderboardFrame";
 
 export const ApproverPage: React.FC = () => {
-  const { data, ...query } = useApproverSummaryInfinite(undefined, {
-    query: {
-      refetchInterval: 1000 * 60 * 5,
-      initialPageParam: 1,
-      getNextPageParam: (lastPage, _, i) => {
-        if (lastPage.length === 0) {
-          return undefined;
-        }
-        return (i ?? 1) + 1;
-      },
+  const range = useChartDateRange();
+
+  const { data, ...query } = useApproverSummaryInfinite(
+    {
+      ...range,
     },
-  });
+    {
+      query: {
+        refetchInterval: 1000 * 60 * 5,
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, _, i) => {
+          if (lastPage.length === 0) {
+            return undefined;
+          }
+          return (i ?? 1) + 1;
+        },
+      },
+    }
+  );
 
   return (
     <Page>

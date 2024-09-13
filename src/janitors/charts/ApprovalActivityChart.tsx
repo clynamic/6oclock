@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { useMemo } from "react";
 
 import { useApprovalCountSeries } from "../../api";
-import { DateRange, SeriesChartProps } from "../../utils";
+import { DateRange, SeriesChartProps, useChartDateRange } from "../../utils";
 
 export interface ApprovalActivityProps {
   range?: DateRange;
@@ -12,10 +12,10 @@ export interface ApprovalActivityProps {
 }
 
 export const ApprovalActivityChart: React.FC<ApprovalActivityProps> = ({
-  range,
   variant = "bars",
 }) => {
   const theme = useTheme();
+  const range = useChartDateRange();
 
   const { data: approvedData } = useApprovalCountSeries(range);
 

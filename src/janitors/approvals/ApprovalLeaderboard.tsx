@@ -4,17 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 import { useApproverSummary } from "../../api";
 import { LimitedList, NoDataHint } from "../../common";
-import { DateRange, refetchQueryOptions } from "../../utils";
+import { refetchQueryOptions, useChartDateRange } from "../../utils";
 import { ApprovalLeaderboardFrame } from "./ApprovalLeaderboardFrame";
 
-export interface ApprovalLeaderboardProps {
-  range?: DateRange;
-}
-
-export const ApprovalLeaderboard: React.FC<ApprovalLeaderboardProps> = ({
-  range,
-}) => {
+export const ApprovalLeaderboard: React.FC = () => {
   const navigate = useNavigate();
+  const range = useChartDateRange();
 
   const { data: approvers } = useApproverSummary(
     {

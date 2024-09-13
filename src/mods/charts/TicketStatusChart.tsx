@@ -3,16 +3,11 @@ import { PieChart, PieValueType } from "@mui/x-charts";
 import { useMemo } from "react";
 
 import { useTicketStatusSummary } from "../../api";
-import { DateRange, refetchQueryOptions } from "../../utils";
+import { refetchQueryOptions, useChartDateRange } from "../../utils";
 
-export interface TicketStatusChartProps {
-  range?: DateRange;
-}
-
-export const TicketStatusChart: React.FC<TicketStatusChartProps> = ({
-  range,
-}) => {
+export const TicketStatusChart: React.FC = () => {
   const theme = useTheme();
+  const range = useChartDateRange();
 
   const { data: summary } = useTicketStatusSummary(
     range,
