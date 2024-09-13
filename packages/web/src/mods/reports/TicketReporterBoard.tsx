@@ -4,17 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 import { useReporterSummary } from "../../api";
 import { LimitedList, NoDataHint } from "../../common";
-import { DateRange, refetchQueryOptions } from "../../utils";
+import { refetchQueryOptions, useChartDateRange } from "../../utils";
 import { TicketReporterFrame } from "./TicketReporterFrame";
 
-export interface TicketReporterBoardProps {
-  range?: DateRange;
-}
-
-export const TicketReporterBoard: React.FC<TicketReporterBoardProps> = ({
-  range,
-}) => {
+export const TicketReporterBoard: React.FC = () => {
   const navigate = useNavigate();
+  const range = useChartDateRange();
 
   const { data: reporters } = useReporterSummary(
     {

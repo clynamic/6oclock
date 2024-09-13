@@ -8,6 +8,7 @@ import { HomePage } from "../home";
 import { ApproverPage, JanitorDashboard } from "../janitors";
 import { LoginPage } from "../login";
 import { ModDashboardPage, TicketerPage, TicketReporterPage } from "../mods";
+import { ChartDateProvider } from "../utils";
 import { NotFoundPage } from "./NotFound";
 import { theme } from "./theme";
 import { UnreachablePage } from "./Unreachable";
@@ -19,24 +20,32 @@ export const App: React.FC = () => {
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
+          <ChartDateProvider>
+            <CssBaseline />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
 
-              <Route path="/" element={<AuthGuard />}>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/mods" element={<ModDashboardPage />} />
-                <Route path="/mods/tickets" element={<TicketerPage />} />
-                <Route path="/mods/reports" element={<TicketReporterPage />} />
-                <Route path="/janitors" element={<JanitorDashboard />} />
-                <Route path="/janitors/approvals" element={<ApproverPage />} />
-              </Route>
+                <Route path="/" element={<AuthGuard />}>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/mods" element={<ModDashboardPage />} />
+                  <Route path="/mods/tickets" element={<TicketerPage />} />
+                  <Route
+                    path="/mods/reports"
+                    element={<TicketReporterPage />}
+                  />
+                  <Route path="/janitors" element={<JanitorDashboard />} />
+                  <Route
+                    path="/janitors/approvals"
+                    element={<ApproverPage />}
+                  />
+                </Route>
 
-              <Route path="*" element={<NotFoundPage />} />
-              <Route path="/unreachable" element={<UnreachablePage />} />
-            </Routes>
-          </BrowserRouter>
+                <Route path="*" element={<NotFoundPage />} />
+                <Route path="/unreachable" element={<UnreachablePage />} />
+              </Routes>
+            </BrowserRouter>
+          </ChartDateProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </AuthProvider>
