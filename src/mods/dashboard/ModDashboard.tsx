@@ -6,10 +6,6 @@ import { DashboardEditHeader } from "../../dashboard/DashboardEditHeader";
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../../page";
 import { modDashboardCatalog } from "./catalog";
 
-const ModDashboardHeader = () => {
-  return <PageHeader actions={[<DashboardEditHeader />]} />;
-};
-
 export const ModDashboardPage: React.FC = () => {
   return (
     <RemoteDashboardProvider
@@ -18,7 +14,7 @@ export const ModDashboardPage: React.FC = () => {
     >
       <Page>
         <PageTitle subtitle="Mods" />
-        <ModDashboardHeader />
+        <PageHeader actions={[<DashboardEditHeader />]} />
         <PageBody>
           <Stack sx={{ height: "100%", width: "100%" }}>
             <DashboardBody />

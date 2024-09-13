@@ -36,12 +36,12 @@ export const DashboardEditHeader: React.FC = () => {
             {(popupState) => (
               <>
                 <NavButton
-                  endIcon={<Category />}
                   {...bindTrigger(popupState)}
                   onClick={(e) => {
                     e.preventDefault();
                     popupState.open(e);
                   }}
+                  endIcon={<Category />}
                 >
                   Items
                 </NavButton>
@@ -126,6 +126,7 @@ export const DashboardEditHeader: React.FC = () => {
           </PopupState>
           <NavDivider />
           <NavButton
+            key="cancel-edit"
             endIcon={<Cancel />}
             onClick={() => {
               if (previousConfig) {
@@ -138,6 +139,7 @@ export const DashboardEditHeader: React.FC = () => {
             Cancel
           </NavButton>
           <NavButton
+            key="save-edit"
             color="primary"
             endIcon={<Save />}
             onClick={() => {
@@ -155,6 +157,7 @@ export const DashboardEditHeader: React.FC = () => {
         <>
           <NavSpacer />
           <NavButton
+            key="edit-dashboard"
             endIcon={<Edit />}
             onClick={() => {
               setPreviousConfig(config);
