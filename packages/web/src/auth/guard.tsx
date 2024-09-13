@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import React, { useEffect, useMemo, useRef } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
-import { checkAuthToken, clearAxiosAuth, setAxiosAuth } from "../http";
+import { checkAuthToken } from "../http";
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../page";
 import { useAuth } from "./context";
 
@@ -13,7 +13,7 @@ export interface AuthGuardProps {
 }
 
 export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
-  const { token, session, saveSession, clearSession } = useAuth();
+  const { token, clearToken, session, saveSession, clearSession } = useAuth();
   const hasSession = useMemo(() => !!session, [session]);
 
   const sentinel = useRef(0);
@@ -50,7 +50,6 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       }
 
       if (!token) {
-        clearAxiosAuth();
         navigate(redirect, { replace: true });
         return;
       }
@@ -60,6 +59,7 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       if (id !== sentinel.current) return;
 
       if (checkResult === "invalid") {
+        clearToken();
         navigate(redirect, { replace: true });
         return;
       }
@@ -69,12 +69,11 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
         return;
       }
 
-      setAxiosAuth(token);
       saveSession({ date: new Date(), hash: MD5(token).toString() });
     };
 
     runCheck();
-  }, [clearSession, navigate, saveSession, session, token]);
+  }, [clearSession, clearToken, navigate, saveSession, session, token]);
 
   if (!hasSession) {
     return (

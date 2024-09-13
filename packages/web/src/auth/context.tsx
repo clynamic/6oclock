@@ -1,9 +1,19 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+
+import { clearAxiosAuth, setAxiosAuth } from "../http";
+
+export interface AuthPayload {
+  userId: number;
+  username: string;
+  level: string;
+}
 
 interface AuthContextType {
   token: string | null;
   saveToken: (token: string) => void;
   clearToken: () => void;
+  payload: AuthPayload | null;
   session: Session | null;
   saveSession: (session: Session) => void;
   clearSession: () => void;
@@ -44,6 +54,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem(storageKey);
   };
 
+  useEffect(() => {
+    if (token) {
+      setAxiosAuth(token);
+    } else {
+      clearAxiosAuth();
+    }
+  }, [token]);
+
   const [session, setSession] = useState<Session | null>(null);
 
   const saveSession = (newSession: Session) => {
@@ -58,12 +76,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setSession(null);
   }, [token]);
 
+  const payload = useMemo(() => {
+    if (!token) {
+      return null;
+    }
+    return jwtDecode<AuthPayload>(token);
+  }, [token]);
+
   return (
     <AuthContext.Provider
       value={{
         token,
         saveToken,
         clearToken,
+        payload,
         session,
         saveSession,
         clearSession,

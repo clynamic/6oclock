@@ -24,6 +24,7 @@
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
     "framer-motion": "^11.3.28",
+    "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "material-ui-popup-state": "^5.3.1",
     "openapi-types": "^12.1.3",

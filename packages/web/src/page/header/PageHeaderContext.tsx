@@ -4,16 +4,15 @@ import React, { createContext, ReactNode, useContext, useMemo } from "react";
 import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
 
 import { useCurrentBreakpoint } from "../../utils";
-import { NavAction, NavNode, SubNavNode } from "../navigation";
+import { NavAction, NavNode, NavTopLink, SubNavNode } from "../navigation";
 
 export type PageHeaderLayout = "small" | "wide";
 
 export interface PageHeaderContextValue {
   navigation: NavNode[];
   navigate: NavigateFunction;
-  currentNavNode?: NavNode;
-  currentSubNavNodes?: SubNavNode[];
-  actions?: NavAction[];
+  currentLink?: NavTopLink;
+  currentSubLinks?: SubNavNode[];
   layout: PageHeaderLayout;
   popupState?: PopupState;
 }
@@ -41,26 +40,29 @@ export const PageHeaderProvider: React.FC<PageHeaderProviderProps> = ({
   const location = useLocation();
   const navigate = useNavigate();
 
-  const currentNavNode = useMemo(() => {
-    const entry = navigation.find((nav) =>
-      location.pathname.startsWith(nav.href)
-    );
+  const currentLink = useMemo(() => {
+    const entry = navigation.find((entry): entry is NavTopLink => {
+      if (entry instanceof Object && "href" in entry) {
+        const segments = location.pathname.split("/");
+        return entry.href
+          .split("/")
+          .every((segment, index) => segments[index] === segment);
+      }
+      return false;
+    });
     return entry;
   }, [location.pathname, navigation]);
 
-  const currentSubNavNodes = useMemo(() => {
+  const currentSubLinks = useMemo(() => {
     let result: SubNavNode[] | undefined;
-    const segments = location.pathname.split("/");
-    const entry = navigation.find((entry) =>
-      entry.href
-        .split("/")
-        .every((segment, index) => segments[index] === segment)
-    );
-    if (entry) {
-      result = entry.children;
+    if (currentLink) {
+      result = currentLink.children;
+    }
+    if (actions) {
+      result = result ? [...result, ...actions] : actions;
     }
     return result;
-  }, [location.pathname, navigation]);
+  }, [actions, currentLink]);
 
   return (
     <PageHeaderContext.Provider
@@ -68,9 +70,8 @@ export const PageHeaderProvider: React.FC<PageHeaderProviderProps> = ({
         layout,
         navigation,
         navigate,
-        currentNavNode,
-        currentSubNavNodes,
-        actions,
+        currentLink,
+        currentSubLinks,
         popupState,
       }}
     >
