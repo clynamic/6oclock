@@ -4,22 +4,30 @@ import { useInView } from "react-intersection-observer";
 
 import { useReporterSummaryInfinite } from "../../api";
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../../page";
+import { useChartDateRange } from "../../utils";
 import { TicketReporterFrame } from "./TicketReporterFrame";
 
 export const TicketReporterPage: React.FC = () => {
+  const range = useChartDateRange();
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useReporterSummaryInfinite(undefined, {
-      query: {
-        refetchInterval: 1000 * 60 * 5,
-        initialPageParam: 1,
-        getNextPageParam: (lastPage, _, i) => {
-          if (lastPage.length === 0) {
-            return undefined;
-          }
-          return (i ?? 1) + 1;
-        },
+    useReporterSummaryInfinite(
+      {
+        ...range,
       },
-    });
+      {
+        query: {
+          refetchInterval: 1000 * 60 * 5,
+          initialPageParam: 1,
+          getNextPageParam: (lastPage, _, i) => {
+            if (lastPage.length === 0) {
+              return undefined;
+            }
+            return (i ?? 1) + 1;
+          },
+        },
+      }
+    );
 
   const { ref, inView } = useInView();
 

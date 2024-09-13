@@ -4,17 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 import { useTicketerSummary } from "../../api";
 import { LimitedList, NoDataHint } from "../../common";
-import { DateRange, refetchQueryOptions } from "../../utils";
+import { refetchQueryOptions, useChartDateRange } from "../../utils";
 import { TicketLeaderboardFrame } from "./TicketLeaderboardFrame";
 
-export interface TicketLeaderboardProps {
-  range?: DateRange;
-}
-
-export const TicketLeaderboard: React.FC<TicketLeaderboardProps> = ({
-  range,
-}) => {
+export const TicketLeaderboard: React.FC = () => {
   const navigate = useNavigate();
+  const range = useChartDateRange();
 
   const { data: ticketers } = useTicketerSummary(
     {

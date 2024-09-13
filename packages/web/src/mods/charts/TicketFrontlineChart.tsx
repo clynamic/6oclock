@@ -4,16 +4,11 @@ import dayjs from "dayjs";
 import { useMemo } from "react";
 
 import { useTicketOpenSeries } from "../../api";
-import { DateRange, refetchQueryOptions } from "../../utils";
+import { refetchQueryOptions, useChartDateRange } from "../../utils";
 
-export interface TicketFrontlineChartProps {
-  range?: DateRange;
-}
-
-export const TicketFrontlineChart: React.FC<TicketFrontlineChartProps> = ({
-  range,
-}) => {
+export const TicketFrontlineChart: React.FC = () => {
   const theme = useTheme();
+  const range = useChartDateRange();
 
   const { data: series } = useTicketOpenSeries(range, refetchQueryOptions());
 
