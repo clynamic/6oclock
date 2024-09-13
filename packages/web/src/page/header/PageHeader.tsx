@@ -14,9 +14,10 @@ import {
   Typography,
 } from "@mui/material";
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
+import { Fragment } from "react/jsx-runtime";
 
 import { AppLogo } from "../../common";
-import { NavAction, navigationEntries } from "../navigation";
+import { NavAction, useNavigationEntries } from "../navigation";
 import { PageHeaderProvider, usePageHeaderContext } from "./PageHeaderContext";
 
 export interface PageHeaderProps {
@@ -24,6 +25,8 @@ export interface PageHeaderProps {
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ actions }) => {
+  const navigationEntries = useNavigationEntries();
+
   return (
     <PageHeaderProvider navigation={navigationEntries} actions={actions}>
       <PageHeaderBar />
@@ -33,14 +36,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ actions }) => {
 
 const PageHeaderBar: React.FC = () => {
   const pageHeaderContext = usePageHeaderContext();
-  const {
-    layout,
-    navigation,
-    navigate,
-    currentNavNode,
-    currentSubNavNodes,
-    actions,
-  } = pageHeaderContext;
+  const { layout, navigation, navigate, currentLink, currentSubLinks } =
+    pageHeaderContext;
 
   if (layout === "small") {
     return (
@@ -86,9 +83,7 @@ const PageHeaderBar: React.FC = () => {
                       width: "100%",
                     }}
                   >
-                    <Typography variant="h6">
-                      {currentNavNode?.label}
-                    </Typography>
+                    <Typography variant="h6">{currentLink?.label}</Typography>
                     <MenuIcon />
                   </Stack>
                 </Button>
@@ -118,38 +113,46 @@ const PageHeaderBar: React.FC = () => {
                   horizontal: "center",
                 }}
               >
-                {navigation.map((entry) => (
-                  <MenuItem
-                    key={`nav-${entry.href}`}
-                    sx={{
-                      width: "100%",
-                    }}
-                    onClick={() => {
-                      navigate(entry.href);
-                      popupState.close();
-                    }}
-                  >
-                    {entry.label}
-                  </MenuItem>
-                ))}
-                {currentSubNavNodes && currentSubNavNodes.length > 0 && (
+                {navigation.map((entry, i) => {
+                  if (entry instanceof Object && "href" in entry) {
+                    return (
+                      <MenuItem
+                        key={`nav-${entry.href}`}
+                        sx={{
+                          width: "100%",
+                        }}
+                        onClick={() => {
+                          navigate(entry.href);
+                          popupState.close();
+                        }}
+                      >
+                        {entry.label}
+                      </MenuItem>
+                    );
+                  }
+                  return <Fragment key={`nav-action-${i}`}>{entry}</Fragment>;
+                })}
+                {currentSubLinks && currentSubLinks.length > 0 && (
                   <Divider orientation="horizontal" variant="middle" />
                 )}
-                {currentSubNavNodes?.map((entry) => (
-                  <MenuItem
-                    key={`subnav-${entry.href}`}
-                    onClick={() => {
-                      navigate(entry.href!);
-                      popupState.close();
-                    }}
-                  >
-                    <ListItemText>{entry.label}</ListItemText>
-                  </MenuItem>
-                ))}
-                {actions && actions.length > 0 && (
-                  <Divider orientation="horizontal" variant="middle" />
-                )}
-                {...(actions && actions.length > 0 && actions) || []}
+                {currentSubLinks?.map((entry) => {
+                  if (entry instanceof Object && "href" in entry) {
+                    return (
+                      <MenuItem
+                        key={`subnav-${entry.href}`}
+                        onClick={() => {
+                          navigate(entry.href!);
+                          popupState.close();
+                        }}
+                      >
+                        <ListItemText>{entry.label}</ListItemText>
+                      </MenuItem>
+                    );
+                  }
+                  return (
+                    <Fragment key={`subnav-action-${entry}`}>{entry}</Fragment>
+                  );
+                })}
               </Menu>
             </AppBar>
           </PageHeaderProvider>
@@ -221,22 +224,25 @@ const PageHeaderBar: React.FC = () => {
                     },
                   })}
                 >
-                  {navigation.map((entry) => {
-                    const selected = entry === currentNavNode;
-                    return (
-                      <Button
-                        key={`nav-${entry.href}`}
-                        color={"secondary"}
-                        sx={{
-                          backgroundColor: selected
-                            ? "background.paper"
-                            : undefined,
-                        }}
-                        onClick={() => navigate(entry.href)}
-                      >
-                        <Typography>{entry.label}</Typography>
-                      </Button>
-                    );
+                  {navigation.map((entry, i) => {
+                    const selected = entry === currentLink;
+                    if (entry instanceof Object && "href" in entry) {
+                      return (
+                        <Button
+                          key={`nav-${entry.href}`}
+                          color={"secondary"}
+                          sx={{
+                            backgroundColor: selected
+                              ? "background.paper"
+                              : undefined,
+                          }}
+                          onClick={() => navigate(entry.href)}
+                        >
+                          <Typography>{entry.label}</Typography>
+                        </Button>
+                      );
+                    }
+                    return <Fragment key={`nav-action-${i}`}>{entry}</Fragment>;
                   })}
                 </ThemeProvider>
               </Stack>
@@ -250,9 +256,9 @@ const PageHeaderBar: React.FC = () => {
                   paddingRight: 2,
                 }}
               >
-                {currentSubNavNodes?.map(
-                  (entry) =>
-                    entry.href && (
+                {currentSubLinks?.map((entry, i) => {
+                  if (entry instanceof Object && "href" in entry) {
+                    return (
                       <Button
                         variant="text"
                         size="small"
@@ -267,15 +273,19 @@ const PageHeaderBar: React.FC = () => {
                       >
                         <Typography>{entry.label}</Typography>
                       </Button>
-                    )
-                ) || (
+                    );
+                  }
+                  return (
+                    <Fragment key={`subnav-action-${i}`}>{entry}</Fragment>
+                  );
+                }) || (
                   <Box
+                    key="empty-subnav"
                     sx={{
                       height: (theme) => theme.spacing(3.4),
                     }}
                   />
                 )}
-                {...actions || []}
               </Stack>
             </Stack>
           </Stack>
