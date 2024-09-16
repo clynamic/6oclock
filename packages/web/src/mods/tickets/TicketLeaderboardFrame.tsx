@@ -9,12 +9,12 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-import { TicketerSummary } from "../../api";
+import { TicketHandlerSummary } from "../../api";
 import { UserAvatar, UsernameText } from "../../common";
 import { RankingText } from "../../common/RankingText";
 
 export interface TicketLeaderboardFrameProps {
-  summary?: TicketerSummary;
+  summary?: TicketHandlerSummary;
 }
 
 export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({

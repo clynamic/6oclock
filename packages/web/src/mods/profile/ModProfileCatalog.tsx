@@ -1,6 +1,6 @@
 import { UserCard } from "../../common";
 import { createSimpleLayout, DashboardCatalog } from "../../dashboard";
-import { TicketHandlerChart } from "../charts";
+import { TicketHandlerActivityChart, TicketHandlerChart } from "../charts";
 
 export const modProfileCatalog: DashboardCatalog = {
   userHead: {
@@ -24,7 +24,6 @@ export const modProfileCatalog: DashboardCatalog = {
         xl: { w: 5, h: 2, x: 0, y: 0 },
       }
     ),
-    card: { variant: "outlined" },
     component: UserCard,
   },
   ticketsClosed: {
@@ -50,5 +49,29 @@ export const modProfileCatalog: DashboardCatalog = {
     ),
     card: { title: "Closed" },
     component: TicketHandlerChart,
+  },
+  ticketActivity: {
+    name: "Ticket Activity",
+    defaultLayout: createSimpleLayout(
+      {
+        x: 0,
+        y: 7,
+        w: 5,
+        h: 5,
+        minW: 2,
+        maxW: 5,
+        minH: 2,
+        maxH: 5,
+      },
+      {
+        xs: { w: 4, h: 5, x: 0, y: 7 },
+        sm: { w: 4, h: 5, x: 0, y: 7 },
+        md: { w: 5, h: 5, x: 0, y: 7 },
+        lg: { w: 5, h: 5, x: 0, y: 7 },
+        xl: { w: 5, h: 5, x: 0, y: 7 },
+      }
+    ),
+    card: { title: "Activity" },
+    component: TicketHandlerActivityChart,
   },
 };

@@ -6,7 +6,7 @@
  * OpenAPI spec version: 0.0.1
  */
 
-export type GetTicketClosedSeriesForTicketerParams = {
-  startDate?: Date;
-  endDate?: Date;
-};
+export interface TicketActivityPoint {
+  count: number;
+  date: Date;
+}

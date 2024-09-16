@@ -6,15 +6,7 @@
  * OpenAPI spec version: 0.0.1
  */
 
-export type GetTicketerSummaryParams = {
+export type GetTicketClosedSeriesForHandlerParams = {
   startDate?: Date;
   endDate?: Date;
-  /**
-   * Page number
-   */
-  page?: number;
-  /**
-   * Page size
-   */
-  limit?: number;
 };
