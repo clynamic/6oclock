@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext } from "react";
+import { createContext, PropsWithChildren, useContext } from "react";
 
 export type NavNode = NavTopLink | NavAction;
 
@@ -20,16 +20,15 @@ export type NavAction = React.ReactNode;
 
 const NavigationEntryContext = createContext<NavNode[] | undefined>(undefined);
 
-export interface NavigationEntryProviderProps {
-  navigation: NavNode[];
-  children: React.ReactNode;
+export interface NavigationEntryProviderProps extends PropsWithChildren {
+  entries: NavNode[];
 }
 
 export const NavigationEntryProvider: React.FC<
   NavigationEntryProviderProps
-> = ({ navigation, children }) => {
+> = ({ entries, children }) => {
   return (
-    <NavigationEntryContext.Provider value={navigation}>
+    <NavigationEntryContext.Provider value={entries}>
       {children}
     </NavigationEntryContext.Provider>
   );

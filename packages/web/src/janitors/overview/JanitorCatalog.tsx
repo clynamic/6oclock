@@ -4,6 +4,7 @@ import { ApprovalActivityChart } from "../charts";
 
 export const janitorDashboardCatalog: DashboardCatalog = {
   approvals: {
+    name: "Approval Leaderboard",
     component: ApprovalLeaderboard,
     defaultLayout: createSimpleLayout(
       {
@@ -30,6 +31,7 @@ export const janitorDashboardCatalog: DashboardCatalog = {
     },
   },
   activity: {
+    name: "Approval Activity",
     component: ApprovalActivityChart,
     defaultLayout: createSimpleLayout(
       {

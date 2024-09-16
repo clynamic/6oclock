@@ -1,5 +1,5 @@
 import { ErrorOutline, HourglassEmpty } from "@mui/icons-material";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 
 import { DashboardCard } from "./DashboardCard";
 import { useDashboard } from "./DashboardContext";
@@ -18,19 +18,18 @@ export const DashboardBody = () => {
 
   if (isLoading) {
     return (
-      <Box
+      <Stack
+        direction="column"
+        gap={2}
         sx={{
-          display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           height: "100%",
-          gap: 2,
         }}
       >
         <CircularProgress />
         <Typography variant="h6">Loading dashboard...</Typography>
-      </Box>
+      </Stack>
     );
   }
 
