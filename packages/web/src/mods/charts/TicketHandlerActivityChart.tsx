@@ -1,26 +1,20 @@
 import { useTheme } from "@mui/material";
-import { BarChart, LineChart } from "@mui/x-charts";
+import { BarChart } from "@mui/x-charts";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 
-import { useTicketClosedSeriesForHandler } from "../../api";
+import { useTicketActivitySummaryForHandler } from "../../api";
 import {
   refetchQueryOptions,
   SeriesChartProps,
   useChartParamsValue,
 } from "../../utils";
 
-export interface TicketHandlerChartProps {
-  variant?: "bars" | "lines";
-}
-
-export const TicketHandlerChart: React.FC<TicketHandlerChartProps> = ({
-  variant = "bars",
-}) => {
+export const TicketHandlerActivityChart: React.FC = () => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data } = useTicketClosedSeriesForHandler(
+  const { data } = useTicketActivitySummaryForHandler(
     userId ?? 0,
     range,
     refetchQueryOptions({
@@ -32,7 +26,7 @@ export const TicketHandlerChart: React.FC<TicketHandlerChartProps> = ({
     () =>
       data?.map((e) => ({
         ...e,
-        date: dayjs(e.date).format("YYYY-MM-DD"),
+        date: dayjs(e.date).format("HH:00"),
       })),
     [data]
   );
@@ -74,9 +68,5 @@ export const TicketHandlerChart: React.FC<TicketHandlerChartProps> = ({
     },
   };
 
-  const Chart = useMemo(() => {
-    return variant === "bars" ? BarChart : LineChart;
-  }, [variant]);
-
-  return <Chart {...chartProps} />;
+  return <BarChart {...chartProps} />;
 };

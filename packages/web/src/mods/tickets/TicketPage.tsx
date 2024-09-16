@@ -1,6 +1,6 @@
 import { Box, Stack } from "@mui/material";
 
-import { useTicketerSummaryInfinite } from "../../api";
+import { useHandlerSummaryInfinite } from "../../api";
 import { LoadMoreHint } from "../../common";
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../../page";
 import { useChartDateRange } from "../../utils";
@@ -9,7 +9,7 @@ import { TicketLeaderboardFrame } from "./TicketLeaderboardFrame";
 export const TicketerPage: React.FC = () => {
   const range = useChartDateRange();
 
-  const { data, ...query } = useTicketerSummaryInfinite(
+  const { data, ...query } = useHandlerSummaryInfinite(
     {
       ...range,
     },

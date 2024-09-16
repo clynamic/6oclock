@@ -7,10 +7,9 @@
  */
 import type { UserHead } from "./userHead";
 
-export interface TicketerSummary {
+export interface TicketReporterSummary {
   days: number;
   head?: UserHead;
-  position: number;
   total: number;
   userId: number;
 }
