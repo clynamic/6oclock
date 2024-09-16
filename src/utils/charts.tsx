@@ -1,56 +1,76 @@
 /* eslint-disable react-refresh/only-export-components */
 import { BarChart, LineChart } from "@mui/x-charts";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import { DateRange, getCurrentMonthRange } from "./months";
 
 export type SeriesChartProps = Parameters<typeof BarChart>[0] &
   Parameters<typeof LineChart>[0];
 
-interface ChartDateContextValue {
+export interface ChartParams {
   range: DateRange;
-  setRange?: (range: DateRange) => void;
+  userId?: number;
 }
 
-const ChartDateContext = createContext<ChartDateContextValue>({
-  range: getCurrentMonthRange(),
-});
-
-export interface ChartDateProviderProps {
-  range?: DateRange;
-  children: React.ReactNode;
+interface ChartParamsContextValue {
+  params: ChartParams;
+  setParams: (params: ChartParams) => void;
 }
 
-export const ChartDateProvider: React.FC<ChartDateProviderProps> = ({
-  range,
+const ChartParamsContext = createContext<ChartParamsContextValue | undefined>(
+  undefined
+);
+
+export type ChartParamsProviderProps = PropsWithChildren & {
+  params?: Partial<ChartParams>;
+};
+
+export const ChartParamsProvider: React.FC<ChartParamsProviderProps> = ({
+  params,
   children,
 }) => {
-  const [value, setValue] = useState(range ?? getCurrentMonthRange());
+  const [value, setValue] = useState<ChartParams>({
+    range: getCurrentMonthRange(),
+    ...params,
+  });
 
   useEffect(() => {
-    if (range) {
-      setValue(range);
-    } else {
-      setValue(getCurrentMonthRange());
-    }
-  }, [range]);
+    setValue({
+      range: getCurrentMonthRange(),
+      ...params,
+    });
+  }, [params]);
 
   return (
-    <ChartDateContext.Provider
+    <ChartParamsContext.Provider
       value={{
-        range: value,
-        setRange: setValue,
+        params: value,
+        setParams: setValue,
       }}
     >
       {children}
-    </ChartDateContext.Provider>
+    </ChartParamsContext.Provider>
   );
 };
 
-export const useChartDate = (): ChartDateContextValue => {
-  return useContext(ChartDateContext);
+export const useChartParams = (): ChartParamsContextValue => {
+  const context = useContext(ChartParamsContext);
+  if (!context) {
+    throw new Error("useChartDate must be used within a ChartDateProvider");
+  }
+  return context;
+};
+
+export const useChartParamsValue = (): ChartParams => {
+  return useChartParams().params;
 };
 
 export const useChartDateRange = (): DateRange => {
-  return useChartDate().range;
+  return useChartParams().params.range;
 };

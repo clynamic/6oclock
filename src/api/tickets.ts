@@ -23,10 +23,13 @@ import type {
   GetReporterSummaryParams,
   GetTicketAgeSeriesParams,
   GetTicketAgeSummaryParams,
+  GetTicketClosedSeriesForTicketerParams,
   GetTicketClosedSeriesParams,
+  GetTicketCreatedSeriesForReporterParams,
   GetTicketCreatedSeriesParams,
   GetTicketOpenSeriesParams,
   GetTicketStatusSummaryParams,
+  GetTicketTypeSummaryForTicketerParams,
   GetTicketTypeSummaryParams,
   GetTicketerSummaryParams,
   ReporterSummary,
@@ -347,6 +350,175 @@ export function useTicketTypeSummary<
 }
 
 /**
+ * Get ticket types counts for a given date range for a specific ticketer
+ * @summary Ticket type summary for a ticketer
+ */
+export const ticketTypeSummaryForTicketer = (
+  claimantId: number,
+  params?: GetTicketTypeSummaryForTicketerParams,
+  signal?: AbortSignal,
+) => {
+  return makeRequest<TicketTypeSummary>({
+    url: `/tickets/metrics/type/summary/claimed/${encodeURIComponent(String(claimantId))}`,
+    method: "GET",
+    params,
+    signal,
+  });
+};
+
+export const getTicketTypeSummaryForTicketerQueryKey = (
+  claimantId: number,
+  params?: GetTicketTypeSummaryForTicketerParams,
+) => {
+  return [
+    `/tickets/metrics/type/summary/claimed/${claimantId}`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getTicketTypeSummaryForTicketerQueryOptions = <
+  TData = Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>,
+  TError = ErrorType<unknown>,
+>(
+  claimantId: number,
+  params?: GetTicketTypeSummaryForTicketerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getTicketTypeSummaryForTicketerQueryKey(claimantId, params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>
+  > = ({ signal }) => ticketTypeSummaryForTicketer(claimantId, params, signal);
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!claimantId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type TicketTypeSummaryForTicketerQueryResult = NonNullable<
+  Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>
+>;
+export type TicketTypeSummaryForTicketerQueryError = ErrorType<unknown>;
+
+export function useTicketTypeSummaryForTicketer<
+  TData = Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>,
+  TError = ErrorType<unknown>,
+>(
+  claimantId: number,
+  params: undefined | GetTicketTypeSummaryForTicketerParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>,
+          TError,
+          TData
+        >,
+        "initialData"
+      >;
+  },
+): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useTicketTypeSummaryForTicketer<
+  TData = Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>,
+  TError = ErrorType<unknown>,
+>(
+  claimantId: number,
+  params?: GetTicketTypeSummaryForTicketerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>,
+          TError,
+          TData
+        >,
+        "initialData"
+      >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useTicketTypeSummaryForTicketer<
+  TData = Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>,
+  TError = ErrorType<unknown>,
+>(
+  claimantId: number,
+  params?: GetTicketTypeSummaryForTicketerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+/**
+ * @summary Ticket type summary for a ticketer
+ */
+
+export function useTicketTypeSummaryForTicketer<
+  TData = Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>,
+  TError = ErrorType<unknown>,
+>(
+  claimantId: number,
+  params?: GetTicketTypeSummaryForTicketerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketTypeSummaryForTicketer>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getTicketTypeSummaryForTicketerQueryOptions(
+    claimantId,
+    params,
+    options,
+  );
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
  * Get a time series of open tickets for a given date range
  * @summary Ticket open series
  */
@@ -648,6 +820,175 @@ export function useTicketCreatedSeries<
 }
 
 /**
+ * Get a time series of created tickets for a given date range for a specific reporter
+ * @summary Ticket created series for a reporter
+ */
+export const ticketCreatedSeriesForReporter = (
+  repoterId: number,
+  params?: GetTicketCreatedSeriesForReporterParams,
+  signal?: AbortSignal,
+) => {
+  return makeRequest<TicketCreatedPoint[]>({
+    url: `/tickets/metrics/created/series/${encodeURIComponent(String(repoterId))}`,
+    method: "GET",
+    params,
+    signal,
+  });
+};
+
+export const getTicketCreatedSeriesForReporterQueryKey = (
+  repoterId: number,
+  params?: GetTicketCreatedSeriesForReporterParams,
+) => {
+  return [
+    `/tickets/metrics/created/series/${repoterId}`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getTicketCreatedSeriesForReporterQueryOptions = <
+  TData = Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+  TError = ErrorType<unknown>,
+>(
+  repoterId: number,
+  params?: GetTicketCreatedSeriesForReporterParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getTicketCreatedSeriesForReporterQueryKey(repoterId, params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>
+  > = ({ signal }) => ticketCreatedSeriesForReporter(repoterId, params, signal);
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!repoterId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type TicketCreatedSeriesForReporterQueryResult = NonNullable<
+  Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>
+>;
+export type TicketCreatedSeriesForReporterQueryError = ErrorType<unknown>;
+
+export function useTicketCreatedSeriesForReporter<
+  TData = Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+  TError = ErrorType<unknown>,
+>(
+  repoterId: number,
+  params: undefined | GetTicketCreatedSeriesForReporterParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+          TError,
+          TData
+        >,
+        "initialData"
+      >;
+  },
+): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useTicketCreatedSeriesForReporter<
+  TData = Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+  TError = ErrorType<unknown>,
+>(
+  repoterId: number,
+  params?: GetTicketCreatedSeriesForReporterParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+          TError,
+          TData
+        >,
+        "initialData"
+      >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useTicketCreatedSeriesForReporter<
+  TData = Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+  TError = ErrorType<unknown>,
+>(
+  repoterId: number,
+  params?: GetTicketCreatedSeriesForReporterParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+/**
+ * @summary Ticket created series for a reporter
+ */
+
+export function useTicketCreatedSeriesForReporter<
+  TData = Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+  TError = ErrorType<unknown>,
+>(
+  repoterId: number,
+  params?: GetTicketCreatedSeriesForReporterParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getTicketCreatedSeriesForReporterQueryOptions(
+    repoterId,
+    params,
+    options,
+  );
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
  * Get a time series of closed tickets for a given date range
  * @summary Ticket closed series
  */
@@ -789,6 +1130,175 @@ export function useTicketClosedSeries<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getTicketClosedSeriesQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * Get a time series of closed tickets for a given date range for a specific ticketer
+ * @summary Ticket closed series for a ticketer
+ */
+export const ticketClosedSeriesForTicketer = (
+  handlerId: number,
+  params?: GetTicketClosedSeriesForTicketerParams,
+  signal?: AbortSignal,
+) => {
+  return makeRequest<TicketClosedPoint[]>({
+    url: `/tickets/metrics/closed/series/${encodeURIComponent(String(handlerId))}`,
+    method: "GET",
+    params,
+    signal,
+  });
+};
+
+export const getTicketClosedSeriesForTicketerQueryKey = (
+  handlerId: number,
+  params?: GetTicketClosedSeriesForTicketerParams,
+) => {
+  return [
+    `/tickets/metrics/closed/series/${handlerId}`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getTicketClosedSeriesForTicketerQueryOptions = <
+  TData = Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>,
+  TError = ErrorType<unknown>,
+>(
+  handlerId: number,
+  params?: GetTicketClosedSeriesForTicketerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getTicketClosedSeriesForTicketerQueryKey(handlerId, params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>
+  > = ({ signal }) => ticketClosedSeriesForTicketer(handlerId, params, signal);
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!handlerId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type TicketClosedSeriesForTicketerQueryResult = NonNullable<
+  Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>
+>;
+export type TicketClosedSeriesForTicketerQueryError = ErrorType<unknown>;
+
+export function useTicketClosedSeriesForTicketer<
+  TData = Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>,
+  TError = ErrorType<unknown>,
+>(
+  handlerId: number,
+  params: undefined | GetTicketClosedSeriesForTicketerParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>,
+          TError,
+          TData
+        >,
+        "initialData"
+      >;
+  },
+): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useTicketClosedSeriesForTicketer<
+  TData = Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>,
+  TError = ErrorType<unknown>,
+>(
+  handlerId: number,
+  params?: GetTicketClosedSeriesForTicketerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>,
+          TError,
+          TData
+        >,
+        "initialData"
+      >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useTicketClosedSeriesForTicketer<
+  TData = Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>,
+  TError = ErrorType<unknown>,
+>(
+  handlerId: number,
+  params?: GetTicketClosedSeriesForTicketerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+/**
+ * @summary Ticket closed series for a ticketer
+ */
+
+export function useTicketClosedSeriesForTicketer<
+  TData = Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>,
+  TError = ErrorType<unknown>,
+>(
+  handlerId: number,
+  params?: GetTicketClosedSeriesForTicketerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketClosedSeriesForTicketer>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getTicketClosedSeriesForTicketerQueryOptions(
+    handlerId,
+    params,
+    options,
+  );
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

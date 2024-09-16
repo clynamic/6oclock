@@ -177,6 +177,48 @@
         "security": [{ "bearer": [] }]
       }
     },
+    "/approvals/metrics/count/series/{approverId}": {
+      "get": {
+        "operationId": "getApprovalCountSeriesByApprover",
+        "summary": "Approval count series by approver",
+        "description": "Get a time series of approval counts for a given date range by approver",
+        "parameters": [
+          {
+            "name": "approverId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ApprovalCountPoint" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Approvals"],
+        "security": [{ "bearer": [] }]
+      }
+    },
     "/approvals/metrics/approver/summary": {
       "get": {
         "operationId": "getApproverSummary",
@@ -325,6 +367,45 @@
         "security": [{ "bearer": [] }]
       }
     },
+    "/tickets/metrics/type/summary/claimed/{claimantId}": {
+      "get": {
+        "operationId": "getTicketTypeSummaryForTicketer",
+        "summary": "Ticket type summary for a ticketer",
+        "description": "Get ticket types counts for a given date range for a specific ticketer",
+        "parameters": [
+          {
+            "name": "claimantId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TicketTypeSummary" }
+              }
+            }
+          }
+        },
+        "tags": ["Tickets"],
+        "security": [{ "bearer": [] }]
+      }
+    },
     "/tickets/metrics/open/series": {
       "get": {
         "operationId": "getTicketOpenSeries",
@@ -397,12 +478,96 @@
         "security": [{ "bearer": [] }]
       }
     },
+    "/tickets/metrics/created/series/{repoterId}": {
+      "get": {
+        "operationId": "getTicketCreatedSeriesForReporter",
+        "summary": "Ticket created series for a reporter",
+        "description": "Get a time series of created tickets for a given date range for a specific reporter",
+        "parameters": [
+          {
+            "name": "repoterId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/TicketCreatedPoint" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Tickets"],
+        "security": [{ "bearer": [] }]
+      }
+    },
     "/tickets/metrics/closed/series": {
       "get": {
         "operationId": "getTicketClosedSeries",
         "summary": "Ticket closed series",
         "description": "Get a time series of closed tickets for a given date range",
         "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/TicketClosedPoint" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Tickets"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/tickets/metrics/closed/series/{handlerId}": {
+      "get": {
+        "operationId": "getTicketClosedSeriesForTicketer",
+        "summary": "Ticket closed series for a ticketer",
+        "description": "Get a time series of closed tickets for a given date range for a specific ticketer",
+        "parameters": [
+          {
+            "name": "handlerId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          },
           {
             "name": "startDate",
             "required": false,
