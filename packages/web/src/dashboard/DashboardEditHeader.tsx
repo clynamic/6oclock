@@ -116,7 +116,7 @@ export const DashboardEditHeader: React.FC = () => {
                         }}
                       >
                         <Checkbox checked={currentItems?.includes(key)} />
-                        {value.card?.title}
+                        {value.name}
                       </MenuItem>
                     );
                   })}

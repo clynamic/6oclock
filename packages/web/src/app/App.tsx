@@ -5,11 +5,12 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { AuthGuard, AuthProvider } from "../auth";
 import { HomePage } from "../home";
-import { ApproverPage, JanitorDashboard } from "../janitors";
+import { ApproverPage, JanitorOverviewPage } from "../janitors";
 import { LoginPage } from "../login";
-import { ModDashboardPage, TicketerPage, TicketReporterPage } from "../mods";
+import { ModOverviewPage, TicketerPage, TicketReporterPage } from "../mods";
 import { NavigationEntryProvider } from "../page";
-import { ChartDateProvider } from "../utils";
+import { ProfilePage } from "../profile";
+import { ChartParamsProvider } from "../utils";
 import { navigationEntries } from "./navigation";
 import { NotFoundPage } from "./NotFound";
 import { theme } from "./theme";
@@ -22,8 +23,8 @@ export const App: React.FC = () => {
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
-          <NavigationEntryProvider navigation={navigationEntries}>
-            <ChartDateProvider>
+          <NavigationEntryProvider entries={navigationEntries}>
+            <ChartParamsProvider>
               <CssBaseline />
               <BrowserRouter>
                 <Routes>
@@ -31,24 +32,25 @@ export const App: React.FC = () => {
 
                   <Route path="/" element={<AuthGuard />}>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/mods" element={<ModDashboardPage />} />
+                    <Route path="/mods" element={<ModOverviewPage />} />
                     <Route path="/mods/tickets" element={<TicketerPage />} />
                     <Route
                       path="/mods/reports"
                       element={<TicketReporterPage />}
                     />
-                    <Route path="/janitors" element={<JanitorDashboard />} />
+                    <Route path="/janitors" element={<JanitorOverviewPage />} />
                     <Route
                       path="/janitors/approvals"
                       element={<ApproverPage />}
                     />
+                    <Route path="/users/:id" element={<ProfilePage />} />
                   </Route>
 
                   <Route path="*" element={<NotFoundPage />} />
                   <Route path="/unreachable" element={<UnreachablePage />} />
                 </Routes>
               </BrowserRouter>
-            </ChartDateProvider>
+            </ChartParamsProvider>
           </NavigationEntryProvider>
         </ThemeProvider>
       </QueryClientProvider>

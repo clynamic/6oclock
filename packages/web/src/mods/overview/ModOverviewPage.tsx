@@ -4,9 +4,9 @@ import { DashboardConfigType } from "../../api";
 import { DashboardBody, RemoteDashboardProvider } from "../../dashboard";
 import { DashboardEditHeader } from "../../dashboard/DashboardEditHeader";
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../../page";
-import { modDashboardCatalog } from "./catalog";
+import { modDashboardCatalog } from "./ModCatalog";
 
-export const ModDashboardPage: React.FC = () => {
+export const ModOverviewPage: React.FC = () => {
   return (
     <RemoteDashboardProvider
       type={DashboardConfigType.moderator}

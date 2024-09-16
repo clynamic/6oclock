@@ -22,6 +22,7 @@ export type DashboardItemLayout = Omit<DashboardPosition, "i"> &
 export type DashboardItemLayouts = Record<string, DashboardItemLayout>;
 
 export type DashboardItemConfig = {
+  name: string;
   defaultLayout: DashboardItemLayouts;
   card?: Omit<DashboardCardProps, "children">;
   component: React.FC;

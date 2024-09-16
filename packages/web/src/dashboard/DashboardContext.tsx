@@ -9,7 +9,11 @@ import React, {
   useState,
 } from "react";
 
-import { DashboardConfig, DashboardUpdate } from "../api";
+import {
+  DashboardConfigMeta,
+  DashboardPositions,
+  DashboardUpdate,
+} from "../api";
 import { useCurrentBreakpoint } from "../utils";
 import { useCurrentLayout } from "./current-layout";
 import { DashboardLayout, DashboardLayouts } from "./DashboardGrid";
@@ -33,6 +37,11 @@ interface DashboardContextType {
 const DashboardContext = createContext<DashboardContextType | undefined>(
   undefined
 );
+
+export interface DashboardConfig {
+  meta: DashboardConfigMeta;
+  positions: DashboardPositions;
+}
 
 export interface DashboardProviderProps {
   data?: DashboardConfig;

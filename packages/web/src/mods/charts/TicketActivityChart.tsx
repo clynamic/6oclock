@@ -20,7 +20,7 @@ export const TicketActivityChart: React.FC<TicketActivityChartProps> = ({
   const theme = useTheme();
   const range = useChartDateRange();
 
-  const { data: openData } = useTicketCreatedSeries(
+  const { data: createdData } = useTicketCreatedSeries(
     range,
     refetchQueryOptions()
   );
@@ -29,13 +29,13 @@ export const TicketActivityChart: React.FC<TicketActivityChartProps> = ({
     refetchQueryOptions()
   );
 
-  const openSeries = useMemo(
+  const createdSeries = useMemo(
     () =>
-      openData?.map((e) => ({
+      createdData?.map((e) => ({
         ...e,
         date: dayjs(e.date).format("YYYY-MM-DD"),
       })),
-    [openData]
+    [createdData]
   );
 
   const closedSeries = useMemo(
@@ -50,21 +50,21 @@ export const TicketActivityChart: React.FC<TicketActivityChartProps> = ({
   const xAxisLabels = useMemo(() => {
     return Array.from(
       new Set([
-        ...(openSeries?.map((e) => e.date) ?? []),
+        ...(createdSeries?.map((e) => e.date) ?? []),
         ...(closedSeries?.map((e) => e.date) ?? []),
       ])
     ).sort((a, b) => dayjs(a).unix() - dayjs(b).unix());
-  }, [openSeries, closedSeries]);
+  }, [createdSeries, closedSeries]);
 
   const dataset = useMemo(() => {
     return xAxisLabels.map((date) => {
       return {
         date,
-        created: openSeries?.find((e) => e.date === date)?.count ?? 0,
+        created: createdSeries?.find((e) => e.date === date)?.count ?? 0,
         closed: closedSeries?.find((e) => e.date === date)?.count ?? 0,
       };
     });
-  }, [openSeries, closedSeries, xAxisLabels]);
+  }, [createdSeries, closedSeries, xAxisLabels]);
 
   const chartProps: SeriesChartProps = {
     dataset,

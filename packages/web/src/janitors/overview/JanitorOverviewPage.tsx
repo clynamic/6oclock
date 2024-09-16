@@ -9,13 +9,9 @@ import {
   RemoteDashboardProvider,
 } from "../../dashboard";
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../../page";
-import { janitorDashboardCatalog } from "./catalog";
+import { janitorDashboardCatalog } from "./JanitorCatalog";
 
-const JanitorDashboardHeader = () => {
-  return <PageHeader actions={[<DashboardEditHeader />]} />;
-};
-
-export const JanitorDashboard: React.FC = () => {
+export const JanitorOverviewPage: React.FC = () => {
   const [showWarning, setShowWarning] = useState(true);
 
   return (
@@ -25,7 +21,7 @@ export const JanitorDashboard: React.FC = () => {
     >
       <Page>
         <PageTitle subtitle="Janitors" />
-        <JanitorDashboardHeader />
+        <PageHeader actions={[<DashboardEditHeader />]} />
         <PageBody>
           <Stack sx={{ height: "100%", width: "100%" }}>
             <DashboardBody />

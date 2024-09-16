@@ -1,5 +1,12 @@
 import { jwtDecode } from "jwt-decode";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { clearAxiosAuth, setAxiosAuth } from "../http";
 
@@ -37,9 +44,7 @@ export const useAuth = () => {
 
 const storageKey = "auth_token";
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [token, setToken] = useState<string | null>(() => {
     return localStorage.getItem(storageKey);
   });

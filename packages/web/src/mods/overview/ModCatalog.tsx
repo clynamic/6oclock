@@ -10,6 +10,7 @@ import { TicketLeaderboard } from "../tickets";
 
 export const modDashboardCatalog: DashboardCatalog = {
   tickets: {
+    name: "Ticket Leaderboard",
     defaultLayout: createSimpleLayout(
       {
         x: 0,
@@ -36,6 +37,7 @@ export const modDashboardCatalog: DashboardCatalog = {
     component: TicketLeaderboard,
   },
   volume: {
+    name: "Ticket Status",
     defaultLayout: createSimpleLayout(
       {
         x: 6,
@@ -59,6 +61,7 @@ export const modDashboardCatalog: DashboardCatalog = {
     component: TicketStatusChart,
   },
   type: {
+    name: "Ticket Type",
     defaultLayout: createSimpleLayout(
       {
         x: 11,
@@ -82,6 +85,7 @@ export const modDashboardCatalog: DashboardCatalog = {
     component: TicketTypeChart,
   },
   activity: {
+    name: "Ticket Activity",
     defaultLayout: createSimpleLayout(
       {
         x: 0,
@@ -104,6 +108,7 @@ export const modDashboardCatalog: DashboardCatalog = {
     component: TicketActivityChart,
   },
   reporters: {
+    name: "Ticket Reporters",
     defaultLayout: createSimpleLayout(
       {
         x: 8,
@@ -127,6 +132,7 @@ export const modDashboardCatalog: DashboardCatalog = {
     component: TicketReporterBoard,
   },
   frontline: {
+    name: "Ticket Opened",
     defaultLayout: createSimpleLayout(
       {
         x: 12,
