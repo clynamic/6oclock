@@ -10,11 +10,11 @@ import {
   useChartDateRange,
 } from "../../utils";
 
-export interface TicketActivityChartProps {
+export interface TicketTurnaroundChartProps {
   variant?: "bars" | "lines";
 }
 
-export const TicketActivityChart: React.FC<TicketActivityChartProps> = ({
+export const TicketTurnaroundChart: React.FC<TicketTurnaroundChartProps> = ({
   variant = "bars",
 }) => {
   const theme = useTheme();

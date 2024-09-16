@@ -6,14 +6,14 @@ import { useMemo } from "react";
 import { useApprovalCountSeries } from "../../api";
 import { DateRange, SeriesChartProps, useChartDateRange } from "../../utils";
 
-export interface ApprovalActivityProps {
+export interface ApprovalTurnaroundChartProps {
   range?: DateRange;
   variant?: "bars" | "lines";
 }
 
-export const ApprovalActivityChart: React.FC<ApprovalActivityProps> = ({
-  variant = "bars",
-}) => {
+export const ApprovalTurnaroundChart: React.FC<
+  ApprovalTurnaroundChartProps
+> = ({ variant = "bars" }) => {
   const theme = useTheme();
   const range = useChartDateRange();
 

@@ -1,1 +1,1 @@
-export * from "./ApprovalActivityChart";
+export * from "./ApprovalTurnaroundChart";
