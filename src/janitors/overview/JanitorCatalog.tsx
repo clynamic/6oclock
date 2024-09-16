@@ -1,9 +1,9 @@
 import { createSimpleLayout, DashboardCatalog } from "../../dashboard";
 import { ApprovalLeaderboard } from "../approvals";
-import { ApprovalActivityChart } from "../charts";
+import { ApprovalTurnaroundChart } from "../charts";
 
 export const janitorDashboardCatalog: DashboardCatalog = {
-  approvals: {
+  approvalsLeaderboard: {
     name: "Approval Leaderboard",
     component: ApprovalLeaderboard,
     defaultLayout: createSimpleLayout(
@@ -30,9 +30,9 @@ export const janitorDashboardCatalog: DashboardCatalog = {
       variant: "outlined",
     },
   },
-  activity: {
-    name: "Approval Activity",
-    component: ApprovalActivityChart,
+  approvalTurnaround: {
+    name: "Approval Turnaround",
+    component: ApprovalTurnaroundChart,
     defaultLayout: createSimpleLayout(
       {
         x: 0,
@@ -51,6 +51,6 @@ export const janitorDashboardCatalog: DashboardCatalog = {
         xl: { x: 6, y: 0, w: 10, h: 5 },
       }
     ),
-    card: { title: "Activity" },
+    card: { title: "Turnaround" },
   },
 };

@@ -1,15 +1,15 @@
 import { createSimpleLayout, DashboardCatalog } from "../../dashboard";
 import {
-  TicketActivityChart,
   TicketFrontlineChart,
   TicketStatusChart,
+  TicketTurnaroundChart as TicketTurnaroundChart,
   TicketTypeChart,
 } from "../charts";
 import { TicketReporterBoard } from "../reports";
 import { TicketLeaderboard } from "../tickets";
 
 export const modDashboardCatalog: DashboardCatalog = {
-  tickets: {
+  ticketLeaderboard: {
     name: "Ticket Leaderboard",
     defaultLayout: createSimpleLayout(
       {
@@ -36,7 +36,7 @@ export const modDashboardCatalog: DashboardCatalog = {
     },
     component: TicketLeaderboard,
   },
-  volume: {
+  ticketStatus: {
     name: "Ticket Status",
     defaultLayout: createSimpleLayout(
       {
@@ -60,7 +60,7 @@ export const modDashboardCatalog: DashboardCatalog = {
     card: { title: "Volume" },
     component: TicketStatusChart,
   },
-  type: {
+  ticketType: {
     name: "Ticket Type",
     defaultLayout: createSimpleLayout(
       {
@@ -84,8 +84,8 @@ export const modDashboardCatalog: DashboardCatalog = {
     card: { title: "Type" },
     component: TicketTypeChart,
   },
-  activity: {
-    name: "Ticket Activity",
+  ticketTurnaround: {
+    name: "Ticket Turnaround",
     defaultLayout: createSimpleLayout(
       {
         x: 0,
@@ -104,10 +104,10 @@ export const modDashboardCatalog: DashboardCatalog = {
         xl: { w: 8, h: 5, x: 0, y: 11 },
       }
     ),
-    card: { title: "Activity" },
-    component: TicketActivityChart,
+    card: { title: "Turnaround" },
+    component: TicketTurnaroundChart,
   },
-  reporters: {
+  ticketReporters: {
     name: "Ticket Reporters",
     defaultLayout: createSimpleLayout(
       {
@@ -131,7 +131,7 @@ export const modDashboardCatalog: DashboardCatalog = {
     card: { title: "Reporters", variant: "outlined" },
     component: TicketReporterBoard,
   },
-  frontline: {
+  ticketsOpened: {
     name: "Ticket Opened",
     defaultLayout: createSimpleLayout(
       {
