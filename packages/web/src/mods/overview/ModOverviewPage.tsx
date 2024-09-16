@@ -1,5 +1,3 @@
-import { Stack } from "@mui/material";
-
 import { DashboardConfigType } from "../../api";
 import { DashboardBody, RemoteDashboardProvider } from "../../dashboard";
 import { DashboardEditHeader } from "../../dashboard/DashboardEditHeader";
