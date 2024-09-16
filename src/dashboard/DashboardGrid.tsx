@@ -29,9 +29,12 @@ export const DashboardGrid: React.FC<DashboardGridProps> = ({ ...rest }) => {
           borderRadius: 1,
           backgroundColor: "secondary.light",
         },
+        height: "100%",
+        width: "100%",
       }}
     >
       <ResponsiveGridLayout
+        style={{ width: "100%" }}
         draggableHandle=".react-draggable-handle"
         draggableCancel=".react-draggable-cancel"
         resizeHandles={isEditing ? ["se", "sw", "ne", "nw"] : []}

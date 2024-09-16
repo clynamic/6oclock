@@ -16,9 +16,7 @@ export const ModOverviewPage: React.FC = () => {
         <PageTitle subtitle="Mods" />
         <PageHeader actions={[<DashboardEditHeader />]} />
         <PageBody>
-          <Stack sx={{ height: "100%", width: "100%" }}>
-            <DashboardBody />
-          </Stack>
+          <DashboardBody />
         </PageBody>
         <PageFooter />
       </Page>
