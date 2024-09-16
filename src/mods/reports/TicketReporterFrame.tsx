@@ -1,10 +1,10 @@
 import { Card, Skeleton, Stack, Typography } from "@mui/material";
 
-import { ReporterSummary } from "../../api";
+import { TicketReporterSummary } from "../../api";
 import { UserAvatar, UsernameText } from "../../common";
 
 export interface TicketReporterFrameProps {
-  summary?: ReporterSummary;
+  summary?: TicketReporterSummary;
 }
 
 export const TicketReporterFrame: React.FC<TicketReporterFrameProps> = ({

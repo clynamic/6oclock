@@ -5,11 +5,8 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.1
  */
-import type { UserHead } from "./userHead";
 
-export interface ReporterSummary {
-  days: number;
-  head?: UserHead;
-  total: number;
-  userId: number;
-}
+export type GetTicketActivitySummaryForHandlerParams = {
+  startDate?: Date;
+  endDate?: Date;
+};

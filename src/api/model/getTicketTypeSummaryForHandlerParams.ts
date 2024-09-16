@@ -6,7 +6,7 @@
  * OpenAPI spec version: 0.0.1
  */
 
-export type GetTicketTypeSummaryForTicketerParams = {
+export type GetTicketTypeSummaryForHandlerParams = {
   startDate?: Date;
   endDate?: Date;
 };

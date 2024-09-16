@@ -367,11 +367,11 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/type/summary/claimed/{claimantId}": {
+    "/tickets/metrics/type/summary/handler/{claimantId}": {
       "get": {
-        "operationId": "getTicketTypeSummaryForTicketer",
-        "summary": "Ticket type summary for a ticketer",
-        "description": "Get ticket types counts for a given date range for a specific ticketer",
+        "operationId": "getTicketTypeSummaryForHandler",
+        "summary": "Ticket type summary for a handler",
+        "description": "Get ticket types counts for a given date range for a specific handler",
         "parameters": [
           {
             "name": "claimantId",
@@ -558,9 +558,9 @@
     },
     "/tickets/metrics/closed/series/{handlerId}": {
       "get": {
-        "operationId": "getTicketClosedSeriesForTicketer",
-        "summary": "Ticket closed series for a ticketer",
-        "description": "Get a time series of closed tickets for a given date range for a specific ticketer",
+        "operationId": "getTicketClosedSeriesForHandler",
+        "summary": "Ticket closed series for a handler",
+        "description": "Get a time series of closed tickets for a given date range for a specific handler",
         "parameters": [
           {
             "name": "handlerId",
@@ -589,6 +589,88 @@
                 "schema": {
                   "type": "array",
                   "items": { "$ref": "#/components/schemas/TicketClosedPoint" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Tickets"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/tickets/metrics/activity/summary": {
+      "get": {
+        "operationId": "getTicketActivitySummary",
+        "summary": "Ticket activity summary",
+        "description": "Get a summary of ticket activity per hour for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TicketActivityPoint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Tickets"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/tickets/metrics/activity/summary/handler/{claimantId}": {
+      "get": {
+        "operationId": "getTicketActivitySummaryForHandler",
+        "summary": "Ticket activity summary for a handler",
+        "description": "Get a summary of ticket activity per hour for a given date range for a specific handler",
+        "parameters": [
+          {
+            "name": "claimantId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TicketActivityPoint"
+                  }
                 }
               }
             }
@@ -669,10 +751,10 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/ticketer/summary": {
+    "/tickets/metrics/handler/summary": {
       "get": {
-        "operationId": "getTicketerSummary",
-        "summary": "Ticketer summary",
+        "operationId": "getHandlerSummary",
+        "summary": "Handler summary",
         "description": "Get a summary of the top 20 ticket handlers (claimed and handled tickets) for a given date range",
         "parameters": [
           {
@@ -714,7 +796,9 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/TicketerSummary" }
+                  "items": {
+                    "$ref": "#/components/schemas/TicketHandlerSummary"
+                  }
                 }
               }
             }
@@ -769,7 +853,9 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/ReporterSummary" }
+                  "items": {
+                    "$ref": "#/components/schemas/TicketReporterSummary"
+                  }
                 }
               }
             }
@@ -951,6 +1037,14 @@
         },
         "required": ["date", "count"]
       },
+      "TicketActivityPoint": {
+        "type": "object",
+        "properties": {
+          "date": { "format": "date-time", "type": "string" },
+          "count": { "type": "number" }
+        },
+        "required": ["date", "count"]
+      },
       "TicketAgeGroup": {
         "type": "object",
         "properties": {
@@ -985,7 +1079,7 @@
         },
         "required": ["groups"]
       },
-      "TicketerSummary": {
+      "TicketHandlerSummary": {
         "type": "object",
         "properties": {
           "userId": { "type": "number" },
@@ -996,7 +1090,7 @@
         },
         "required": ["userId", "total", "position", "days"]
       },
-      "ReporterSummary": {
+      "TicketReporterSummary": {
         "type": "object",
         "properties": {
           "userId": { "type": "number" },
