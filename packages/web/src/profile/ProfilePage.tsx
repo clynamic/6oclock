@@ -32,7 +32,7 @@ export const ProfilePage: React.FC = () => {
 
   return (
     <Page>
-      <PageTitle subtitle="" />
+      <PageTitle subtitle={user?.name ?? `User #${id}`} />
       <PageHeader />
       <PageBody>
         <ChartParamsProvider params={{ ...chartParams, userId: Number(id) }}>
