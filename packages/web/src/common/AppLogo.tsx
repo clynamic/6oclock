@@ -17,7 +17,12 @@ export const AppLogo = () => {
         height: '64px',
       }}
     >
-      <Box component={'img'} src="/assets/6oclock.svg" alt="logo" height={48} />
+      <Box
+        component={'img'}
+        src="/assets/6oclock.svg"
+        alt="6oclock logo"
+        height={48}
+      />
     </Button>
   );
 };
