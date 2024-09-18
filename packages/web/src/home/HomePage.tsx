@@ -7,13 +7,11 @@ import {
   ThemeProvider,
   Typography,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
 
 export const HomePage = () => {
-  const navigate = useNavigate();
-
   return (
     <Page>
       <PageTitle subtitle="Home" />
@@ -56,32 +54,20 @@ export const HomePage = () => {
               })}
             >
               {/*
-                <Button
-                  onClick={() => {
-                    navigate("/admins");
-                  }}
-                >
+                <Button component={Link} to="/admins">
                   <Stack direction="row" alignItems="center" spacing={1}>
                     <Gavel sx={{ fontSize: 32 }} />
                     <Typography variant="h5">Admins</Typography>
                   </Stack>
                 </Button>
               */}
-              <Button
-                onClick={() => {
-                  navigate('/mods');
-                }}
-              >
+              <Button component={Link} to="/mods">
                 <Stack direction="row" alignItems="center" spacing={1}>
                   <Shield sx={{ fontSize: 32 }} />
                   <Typography variant="h5">Mods</Typography>
                 </Stack>
               </Button>
-              <Button
-                onClick={() => {
-                  navigate('/janitors');
-                }}
-              >
+              <Button component={Link} to="/janitors">
                 <Stack direction="row" alignItems="center" spacing={1}>
                   <Beenhere sx={{ fontSize: 32 }} />
                   <Typography variant="h5">Janitors</Typography>

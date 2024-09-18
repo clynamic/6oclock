@@ -1,12 +1,11 @@
 import { Avatar } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { useUserHead } from '../../api';
 import { useAuth } from '../../auth';
 import { NavButton } from './NavButton';
 
 export const NavUser: React.FC = () => {
-  const navigate = useNavigate();
   const { payload } = useAuth();
   const { data: user } = useUserHead(payload?.userId ?? 0, {
     query: {
@@ -18,7 +17,10 @@ export const NavUser: React.FC = () => {
 
   return (
     <NavButton
-      onClick={() => navigate(`/users/${user.id}`)}
+      component={Link}
+      {...{
+        to: `/users/${user.id}`,
+      }}
       endIcon={
         <Avatar
           variant="circular"

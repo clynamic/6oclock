@@ -1,6 +1,6 @@
 import { ArrowForward } from '@mui/icons-material';
 import { Button, Stack } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { useApproverSummary } from '../../api';
 import { LimitedList, NoDataHint } from '../../common';
@@ -8,7 +8,6 @@ import { refetchQueryOptions, useChartDateRange } from '../../utils';
 import { ApprovalLeaderboardFrame } from './ApprovalLeaderboardFrame';
 
 export const ApprovalLeaderboard: React.FC = () => {
-  const navigate = useNavigate();
   const range = useChartDateRange();
 
   const { data: approvers } = useApproverSummary(
@@ -28,7 +27,8 @@ export const ApprovalLeaderboard: React.FC = () => {
           <Button
             size="small"
             endIcon={<ArrowForward />}
-            onClick={() => navigate('/janitors/approvals')}
+            component={Link}
+            to="/janitors/approvals"
           >
             See All
           </Button>
