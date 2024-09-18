@@ -1,7 +1,6 @@
 import { useTheme } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
-import dayjs from "dayjs";
-import { useMemo } from "react";
+import { DateTime } from "luxon";
 
 import { useTicketOpenSeries } from "../../api";
 import { refetchQueryOptions, useChartDateRange } from "../../utils";
@@ -12,22 +11,15 @@ export const TicketFrontlineChart: React.FC = () => {
 
   const { data: series } = useTicketOpenSeries(range, refetchQueryOptions());
 
-  const data = useMemo(
-    () =>
-      series?.map((e) => ({
-        date: dayjs(e.date).format("YYYY-MM-DD"),
-        count: e.count,
-      })) ?? [],
-    [series]
-  );
-
   return (
     <LineChart
-      dataset={data}
+      dataset={series?.map((e) => ({ ...e })) ?? []}
       xAxis={[
         {
           scaleType: "band",
           dataKey: "date",
+          valueFormatter: (value) =>
+            DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
         },
       ]}
       series={[

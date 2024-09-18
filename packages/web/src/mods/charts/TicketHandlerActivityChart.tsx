@@ -1,7 +1,6 @@
 import { useTheme } from "@mui/material";
 import { BarChart } from "@mui/x-charts";
-import dayjs from "dayjs";
-import { useMemo } from "react";
+import { DateTime } from "luxon";
 
 import { useTicketActivitySummaryForHandler } from "../../api";
 import {
@@ -22,41 +21,19 @@ export const TicketHandlerActivityChart: React.FC = () => {
     })
   );
 
-  const series = useMemo(
-    () =>
-      data?.map((e) => ({
-        ...e,
-        date: dayjs(e.date).format("HH:00"),
-      })),
-    [data]
-  );
-
-  const xAxisLabels = useMemo(() => {
-    return Array.from(new Set(series?.map((e) => e.date) ?? [])).sort(
-      (a, b) => dayjs(a).unix() - dayjs(b).unix()
-    );
-  }, [series]);
-
-  const dataset = useMemo(() => {
-    return xAxisLabels.map((date) => {
-      return {
-        date,
-        closed: series?.find((e) => e.date === date)?.count ?? 0,
-      };
-    });
-  }, [series, xAxisLabels]);
-
   const chartProps: SeriesChartProps = {
-    dataset,
+    dataset: data?.map((e) => ({ ...e })) ?? [],
     xAxis: [
       {
         scaleType: "band",
         dataKey: "date",
+        valueFormatter: (value) =>
+          DateTime.fromJSDate(value).toLocaleString(DateTime.TIME_SIMPLE),
       },
     ],
     series: [
       {
-        dataKey: "closed",
+        dataKey: "count",
         label: "Closed",
         color: theme.palette.primary.main,
       },
