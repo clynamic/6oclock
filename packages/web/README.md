@@ -1,5 +1,7 @@
 # 6oclock
 
+![6oclock](public/assets/6oclock.svg)
+
 e6 staff dashboard
 
 ## Setup
@@ -45,3 +47,4 @@ yarn dev
 - [Orval](https://orval.dev/) - API client generator
 - [React Router](https://reactrouter.com/) - routing
 - [React Grid Layout](https://github.com/react-grid-layout/react-grid-layout) - draggable, resizable grid layout
+- [Luxon](https://moment.github.io/luxon/) - date and time library
