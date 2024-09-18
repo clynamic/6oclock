@@ -1,6 +1,6 @@
 import { useTheme } from "@mui/material";
 import { BarChart, LineChart } from "@mui/x-charts";
-import dayjs from "dayjs";
+import { DateTime } from "luxon";
 import { useMemo } from "react";
 
 import { useTicketClosedSeries, useTicketCreatedSeries } from "../../api";
@@ -24,47 +24,42 @@ export const TicketTurnaroundChart: React.FC<TicketTurnaroundChartProps> = ({
     range,
     refetchQueryOptions()
   );
+
   const { data: closedData } = useTicketClosedSeries(
     range,
     refetchQueryOptions()
   );
 
-  const createdSeries = useMemo(
-    () =>
-      createdData?.map((e) => ({
-        ...e,
-        date: dayjs(e.date).format("YYYY-MM-DD"),
-      })),
-    [createdData]
-  );
-
-  const closedSeries = useMemo(
-    () =>
-      closedData?.map((e) => ({
-        ...e,
-        date: dayjs(e.date).format("YYYY-MM-DD"),
-      })),
-    [closedData]
-  );
-
-  const xAxisLabels = useMemo(() => {
-    return Array.from(
-      new Set([
-        ...(createdSeries?.map((e) => e.date) ?? []),
-        ...(closedSeries?.map((e) => e.date) ?? []),
-      ])
-    ).sort((a, b) => dayjs(a).unix() - dayjs(b).unix());
-  }, [createdSeries, closedSeries]);
-
   const dataset = useMemo(() => {
-    return xAxisLabels.map((date) => {
-      return {
-        date,
-        created: createdSeries?.find((e) => e.date === date)?.count ?? 0,
-        closed: closedSeries?.find((e) => e.date === date)?.count ?? 0,
-      };
-    });
-  }, [createdSeries, closedSeries, xAxisLabels]);
+    const dateMap: Record<
+      string,
+      { date: Date; created: number; closed: number }
+    > = {};
+
+    const dateString = (date: Date) => DateTime.fromJSDate(date).toISODate();
+
+    if (createdData) {
+      for (const point of createdData) {
+        const date = dateString(point.date)!;
+        if (!dateMap[date]) {
+          dateMap[date] = { date: point.date, created: 0, closed: 0 };
+        }
+        dateMap[date].created = point.count;
+      }
+    }
+
+    if (closedData) {
+      for (const point of closedData) {
+        const date = dateString(point.date)!;
+        if (!dateMap[date]) {
+          dateMap[date] = { date: point.date, created: 0, closed: 0 };
+        }
+        dateMap[date].closed = point.count;
+      }
+    }
+
+    return Object.values(dateMap);
+  }, [createdData, closedData]);
 
   const chartProps: SeriesChartProps = {
     dataset,
@@ -72,6 +67,8 @@ export const TicketTurnaroundChart: React.FC<TicketTurnaroundChartProps> = ({
       {
         scaleType: "band",
         dataKey: "date",
+        valueFormatter: (value) =>
+          DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
       },
     ],
     series: [

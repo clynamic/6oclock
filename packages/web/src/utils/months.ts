@@ -1,17 +1,16 @@
-import dayjs from "dayjs";
+import { DateTime } from "luxon";
 
 export interface DateRange {
   startDate: Date;
   endDate: Date;
+  timezone?: string;
 }
 
 export const getCurrentMonthRange = (): DateRange => {
-  const now = dayjs();
-  const firstDay = now.startOf("month").format("YYYY-MM-DD");
-  const lastDay = now.endOf("month").format("YYYY-MM-DD");
-
+  const now = DateTime.now().toLocal();
   return {
-    startDate: new Date(firstDay),
-    endDate: new Date(lastDay),
+    startDate: now.startOf("month").toJSDate(),
+    endDate: now.endOf("month").toJSDate(),
+    timezone: now.zoneName,
   };
 };
