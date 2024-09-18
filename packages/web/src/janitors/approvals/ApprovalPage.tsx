@@ -1,10 +1,10 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Stack } from '@mui/material';
 
-import { useApproverSummaryInfinite } from "../../api";
-import { LoadMoreHint } from "../../common";
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../../page";
-import { useChartDateRange } from "../../utils";
-import { ApprovalLeaderboardFrame } from "./ApprovalLeaderboardFrame";
+import { useApproverSummaryInfinite } from '../../api';
+import { LoadMoreHint } from '../../common';
+import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
+import { useChartDateRange } from '../../utils';
+import { ApprovalLeaderboardFrame } from './ApprovalLeaderboardFrame';
 
 export const ApproverPage: React.FC = () => {
   const range = useChartDateRange();
@@ -24,7 +24,7 @@ export const ApproverPage: React.FC = () => {
           return (i ?? 1) + 1;
         },
       },
-    }
+    },
   );
 
   return (
@@ -32,8 +32,8 @@ export const ApproverPage: React.FC = () => {
       <PageTitle subtitle="Approvers" />
       <PageHeader />
       <PageBody>
-        <Box sx={{ width: "100%", maxWidth: 600, margin: "auto", p: 2 }}>
-          <Stack sx={{ height: "100%", width: "100%", gap: 1 }}>
+        <Box sx={{ width: '100%', maxWidth: 600, margin: 'auto', p: 2 }}>
+          <Stack sx={{ height: '100%', width: '100%', gap: 1 }}>
             {data?.pages
               .flat()
               .map((item, i) => (

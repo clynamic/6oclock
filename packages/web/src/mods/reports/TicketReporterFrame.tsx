@@ -1,7 +1,7 @@
-import { Card, Skeleton, Stack, Typography } from "@mui/material";
+import { Card, Skeleton, Stack, Typography } from '@mui/material';
 
-import { TicketReporterSummary } from "../../api";
-import { UserAvatar, UsernameText } from "../../common";
+import { TicketReporterSummary } from '../../api';
+import { UserAvatar, UsernameText } from '../../common';
 
 export interface TicketReporterFrameProps {
   summary?: TicketReporterSummary;
@@ -11,13 +11,13 @@ export const TicketReporterFrame: React.FC<TicketReporterFrameProps> = ({
   summary,
 }) => {
   return (
-    <Card sx={{ width: "100%" }}>
+    <Card sx={{ width: '100%' }}>
       <Stack
         direction="row"
         p={2}
         spacing={2}
         sx={{
-          width: "100%",
+          width: '100%',
         }}
       >
         <UserAvatar

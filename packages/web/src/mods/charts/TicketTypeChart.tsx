@@ -1,19 +1,19 @@
-import { PieChart, PieValueType } from "@mui/x-charts";
-import { useMemo } from "react";
+import { PieChart, PieValueType } from '@mui/x-charts';
+import { useMemo } from 'react';
 
-import { TicketTypeSummary, useTicketTypeSummary } from "../../api";
-import { refetchQueryOptions, useChartDateRange } from "../../utils";
+import { TicketTypeSummary, useTicketTypeSummary } from '../../api';
+import { refetchQueryOptions, useChartDateRange } from '../../utils';
 
 export const TicketQtypeColors = {
-  user: "#FFCCCB", // Soft pastel pink
-  comment: "#FFDAB9", // Light peach
-  forum: "#E6E6FA", // Lavender
-  blip: "#B0E0E6", // Pale blue
-  wiki: "#FFFACD", // Lemon chiffon
-  pool: "#D3FFCE", // Light mint green
-  set: "#FADADD", // Pale rose
-  post: "#F0E68C", // Pastel yellow
-  dmail: "#C1E1C1", // Light pastel green
+  user: '#FFCCCB', // Soft pastel pink
+  comment: '#FFDAB9', // Light peach
+  forum: '#E6E6FA', // Lavender
+  blip: '#B0E0E6', // Pale blue
+  wiki: '#FFFACD', // Lemon chiffon
+  pool: '#D3FFCE', // Light mint green
+  set: '#FADADD', // Pale rose
+  post: '#F0E68C', // Pastel yellow
+  dmail: '#C1E1C1', // Light pastel green
 } as const;
 
 export const TicketTypeChart: React.FC = () => {
@@ -41,23 +41,23 @@ export const TicketTypeChart: React.FC = () => {
 
   return (
     <PieChart
-      sx={{ height: "100%" }}
+      sx={{ height: '100%' }}
       series={[
         {
           data: data,
           arcLabel: (item) => `${item.value}`,
           arcLabelMinAngle: 20,
-          innerRadius: "30%",
-          outerRadius: "90%",
+          innerRadius: '30%',
+          outerRadius: '90%',
           paddingAngle: 5,
           cornerRadius: 5,
-          cx: "50%",
-          cy: "50%",
+          cx: '50%',
+          cy: '50%',
         },
       ]}
       slotProps={{
         noDataOverlay: {
-          message: "No data",
+          message: 'No data',
         },
       }}
     />

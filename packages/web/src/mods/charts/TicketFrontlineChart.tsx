@@ -1,9 +1,9 @@
-import { useTheme } from "@mui/material";
-import { LineChart } from "@mui/x-charts";
-import { DateTime } from "luxon";
+import { useTheme } from '@mui/material';
+import { LineChart } from '@mui/x-charts';
+import { DateTime } from 'luxon';
 
-import { useTicketOpenSeries } from "../../api";
-import { refetchQueryOptions, useChartDateRange } from "../../utils";
+import { useTicketOpenSeries } from '../../api';
+import { refetchQueryOptions, useChartDateRange } from '../../utils';
 
 export const TicketFrontlineChart: React.FC = () => {
   const theme = useTheme();
@@ -16,22 +16,22 @@ export const TicketFrontlineChart: React.FC = () => {
       dataset={series?.map((e) => ({ ...e })) ?? []}
       xAxis={[
         {
-          scaleType: "band",
-          dataKey: "date",
+          scaleType: 'band',
+          dataKey: 'date',
           valueFormatter: (value) =>
             DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
         },
       ]}
       series={[
         {
-          dataKey: "count",
-          label: "Open Tickets",
+          dataKey: 'count',
+          label: 'Open Tickets',
           color: theme.palette.primary.main,
         },
       ]}
       slotProps={{
         noDataOverlay: {
-          message: "No data",
+          message: 'No data',
         },
       }}
     />

@@ -1,19 +1,19 @@
-import { Box, Stack, Typography } from "@mui/material";
-import React from "react";
+import { Box, Stack, Typography } from '@mui/material';
+import React from 'react';
 
-import { version } from "../../package.json";
-import { AppLogo } from "../common";
+import { version } from '../../package.json';
+import { AppLogo } from '../common';
 
 export const PageFooter: React.FC = () => {
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
         padding: 1,
-        backgroundColor: "background.paper",
+        backgroundColor: 'background.paper',
         borderTopLeftRadius: (theme) => theme.shape.borderRadius,
         borderTopRightRadius: (theme) => theme.shape.borderRadius,
         marginTop: 1,
@@ -29,7 +29,7 @@ export const PageFooter: React.FC = () => {
       >
         <Typography variant="body2">beta</Typography>
         <AppLogo />
-        <Typography variant="body2">{"v" + version}</Typography>
+        <Typography variant="body2">{'v' + version}</Typography>
       </Stack>
     </Box>
   );

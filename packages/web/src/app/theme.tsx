@@ -1,22 +1,22 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from '@mui/material/styles';
 
 const hexagonColors = {
-  background: "#020f23", // $hexagon-color-background
-  foreground: "#152f56", // $hexagon-color-foreground
-  section: "#1f3c67", // $hexagon-color-section
-  text: "#ffffff", // $hexagon-color-text
-  textMuted: "#999999", // $hexagon-color-text-muted
-  primary: "#e8c446", // --color-button-active
-  primaryLight: "#f5e5ae", // shifted from primary
-  primaryDark: "#e1ac00", // shifted from primary
-  secondary: "#b4c7d9", // $hexagon-color-link, used as secondary
-  secondaryLight: "#cedeec", // shifted from secondary
-  secondaryDark: "#839db5", // shifted from secondary
+  background: '#020f23', // $hexagon-color-background
+  foreground: '#152f56', // $hexagon-color-foreground
+  section: '#1f3c67', // $hexagon-color-section
+  text: '#ffffff', // $hexagon-color-text
+  textMuted: '#999999', // $hexagon-color-text-muted
+  primary: '#e8c446', // --color-button-active
+  primaryLight: '#f5e5ae', // shifted from primary
+  primaryDark: '#e1ac00', // shifted from primary
+  secondary: '#b4c7d9', // $hexagon-color-link, used as secondary
+  secondaryLight: '#cedeec', // shifted from secondary
+  secondaryDark: '#839db5', // shifted from secondary
 };
 
 export const theme = createTheme({
   palette: {
-    mode: "dark",
+    mode: 'dark',
     background: {
       default: hexagonColors.background,
       // paper: hexagonColors.section,
@@ -43,12 +43,12 @@ export const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
+          boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
         },
       },
     },
   },
   typography: {
-    fontFamily: "Verdana, Noto Sans, sans-serif",
+    fontFamily: 'Verdana, Noto Sans, sans-serif',
   },
 });

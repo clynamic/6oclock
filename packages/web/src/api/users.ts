@@ -5,7 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.1
  */
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 import type {
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
@@ -14,10 +14,10 @@ import type {
   UndefinedInitialDataOptions,
   UseQueryOptions,
   UseQueryResult,
-} from "@tanstack/react-query";
-import type { UserHead } from "./model";
-import { makeRequest } from "../http/axios";
-import type { ErrorType } from "../http/axios";
+} from '@tanstack/react-query';
+import type { UserHead } from './model';
+import { makeRequest } from '../http/axios';
+import type { ErrorType } from '../http/axios';
 
 /**
  * Get user head by user id
@@ -26,7 +26,7 @@ import type { ErrorType } from "../http/axios";
 export const userHead = (id: number, signal?: AbortSignal) => {
   return makeRequest<UserHead>({
     url: `/users/head/${encodeURIComponent(String(id))}`,
-    method: "GET",
+    method: 'GET',
     signal,
   });
 };
@@ -84,7 +84,7 @@ export function useUserHead<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -103,7 +103,7 @@ export function useUserHead<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };

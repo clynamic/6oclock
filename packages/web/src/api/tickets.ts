@@ -5,7 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.1
  */
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import type {
   DefinedInitialDataOptions,
   DefinedUseInfiniteQueryResult,
@@ -18,7 +18,7 @@ import type {
   UseInfiniteQueryResult,
   UseQueryOptions,
   UseQueryResult,
-} from "@tanstack/react-query";
+} from '@tanstack/react-query';
 import type {
   GetHandlerSummaryParams,
   GetReporterSummaryParams,
@@ -44,9 +44,9 @@ import type {
   TicketReporterSummary,
   TicketStatusSummary,
   TicketTypeSummary,
-} from "./model";
-import { makeRequest } from "../http/axios";
-import type { ErrorType } from "../http/axios";
+} from './model';
+import { makeRequest } from '../http/axios';
+import type { ErrorType } from '../http/axios';
 
 /**
  * Get ticket status (pending, approved, partial) counts for a given date range
@@ -58,7 +58,7 @@ export const ticketStatusSummary = (
 ) => {
   return makeRequest<TicketStatusSummary>({
     url: `/tickets/metrics/status/summary`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -128,7 +128,7 @@ export function useTicketStatusSummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -151,7 +151,7 @@ export function useTicketStatusSummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -210,7 +210,7 @@ export const ticketTypeSummary = (
 ) => {
   return makeRequest<TicketTypeSummary>({
     url: `/tickets/metrics/type/summary`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -280,7 +280,7 @@ export function useTicketTypeSummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -303,7 +303,7 @@ export function useTicketTypeSummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -363,7 +363,7 @@ export const ticketTypeSummaryForHandler = (
 ) => {
   return makeRequest<TicketTypeSummary>({
     url: `/tickets/metrics/type/summary/handler/${encodeURIComponent(String(claimantId))}`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -442,7 +442,7 @@ export function useTicketTypeSummaryForHandler<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -466,7 +466,7 @@ export function useTicketTypeSummaryForHandler<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -531,7 +531,7 @@ export const ticketOpenSeries = (
 ) => {
   return makeRequest<TicketOpenPoint[]>({
     url: `/tickets/metrics/open/series`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -598,7 +598,7 @@ export function useTicketOpenSeries<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -621,7 +621,7 @@ export function useTicketOpenSeries<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -680,7 +680,7 @@ export const ticketCreatedSeries = (
 ) => {
   return makeRequest<TicketCreatedPoint[]>({
     url: `/tickets/metrics/created/series`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -750,7 +750,7 @@ export function useTicketCreatedSeries<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -773,7 +773,7 @@ export function useTicketCreatedSeries<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -833,7 +833,7 @@ export const ticketCreatedSeriesForReporter = (
 ) => {
   return makeRequest<TicketCreatedPoint[]>({
     url: `/tickets/metrics/created/series/${encodeURIComponent(String(repoterId))}`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -912,7 +912,7 @@ export function useTicketCreatedSeriesForReporter<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -936,7 +936,7 @@ export function useTicketCreatedSeriesForReporter<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -1001,7 +1001,7 @@ export const ticketClosedSeries = (
 ) => {
   return makeRequest<TicketClosedPoint[]>({
     url: `/tickets/metrics/closed/series`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -1071,7 +1071,7 @@ export function useTicketClosedSeries<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -1094,7 +1094,7 @@ export function useTicketClosedSeries<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -1154,7 +1154,7 @@ export const ticketClosedSeriesForHandler = (
 ) => {
   return makeRequest<TicketClosedPoint[]>({
     url: `/tickets/metrics/closed/series/${encodeURIComponent(String(handlerId))}`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -1233,7 +1233,7 @@ export function useTicketClosedSeriesForHandler<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -1257,7 +1257,7 @@ export function useTicketClosedSeriesForHandler<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -1322,7 +1322,7 @@ export const ticketActivitySummary = (
 ) => {
   return makeRequest<TicketActivityPoint[]>({
     url: `/tickets/metrics/activity/summary`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -1392,7 +1392,7 @@ export function useTicketActivitySummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -1415,7 +1415,7 @@ export function useTicketActivitySummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -1475,7 +1475,7 @@ export const ticketActivitySummaryForHandler = (
 ) => {
   return makeRequest<TicketActivityPoint[]>({
     url: `/tickets/metrics/activity/summary/handler/${encodeURIComponent(String(claimantId))}`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -1555,7 +1555,7 @@ export function useTicketActivitySummaryForHandler<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -1579,7 +1579,7 @@ export function useTicketActivitySummaryForHandler<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -1644,7 +1644,7 @@ export const ticketAgeSeries = (
 ) => {
   return makeRequest<TicketAgeSeriesPoint[]>({
     url: `/tickets/metrics/age/series`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -1710,7 +1710,7 @@ export function useTicketAgeSeries<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -1733,7 +1733,7 @@ export function useTicketAgeSeries<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -1792,7 +1792,7 @@ export const ticketAgeSummary = (
 ) => {
   return makeRequest<TicketAgeSummary>({
     url: `/tickets/metrics/age/summary`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -1859,7 +1859,7 @@ export function useTicketAgeSummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -1882,7 +1882,7 @@ export function useTicketAgeSummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -1941,7 +1941,7 @@ export const handlerSummary = (
 ) => {
   return makeRequest<TicketHandlerSummary[]>({
     url: `/tickets/metrics/handler/summary`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -1957,7 +1957,7 @@ export const getHandlerSummaryQueryKey = (params?: GetHandlerSummaryParams) => {
 export const getHandlerSummaryInfiniteQueryOptions = <
   TData = InfiniteData<
     Awaited<ReturnType<typeof handlerSummary>>,
-    GetHandlerSummaryParams["page"]
+    GetHandlerSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -1970,7 +1970,7 @@ export const getHandlerSummaryInfiniteQueryOptions = <
         TData,
         Awaited<ReturnType<typeof handlerSummary>>,
         QueryKey,
-        GetHandlerSummaryParams["page"]
+        GetHandlerSummaryParams['page']
       >
     >;
   },
@@ -1982,9 +1982,9 @@ export const getHandlerSummaryInfiniteQueryOptions = <
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof handlerSummary>>,
     QueryKey,
-    GetHandlerSummaryParams["page"]
+    GetHandlerSummaryParams['page']
   > = ({ signal, pageParam }) =>
-    handlerSummary({ ...params, page: pageParam || params?.["page"] }, signal);
+    handlerSummary({ ...params, page: pageParam || params?.['page'] }, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
     Awaited<ReturnType<typeof handlerSummary>>,
@@ -1992,7 +1992,7 @@ export const getHandlerSummaryInfiniteQueryOptions = <
     TData,
     Awaited<ReturnType<typeof handlerSummary>>,
     QueryKey,
-    GetHandlerSummaryParams["page"]
+    GetHandlerSummaryParams['page']
   > & { queryKey: QueryKey };
 };
 
@@ -2004,7 +2004,7 @@ export type HandlerSummaryInfiniteQueryError = ErrorType<unknown>;
 export function useHandlerSummaryInfinite<
   TData = InfiniteData<
     Awaited<ReturnType<typeof handlerSummary>>,
-    GetHandlerSummaryParams["page"]
+    GetHandlerSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -2017,7 +2017,7 @@ export function useHandlerSummaryInfinite<
         TData,
         Awaited<ReturnType<typeof handlerSummary>>,
         QueryKey,
-        GetHandlerSummaryParams["page"]
+        GetHandlerSummaryParams['page']
       >
     > &
       Pick<
@@ -2027,14 +2027,14 @@ export function useHandlerSummaryInfinite<
           TData,
           QueryKey
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
 export function useHandlerSummaryInfinite<
   TData = InfiniteData<
     Awaited<ReturnType<typeof handlerSummary>>,
-    GetHandlerSummaryParams["page"]
+    GetHandlerSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -2047,7 +2047,7 @@ export function useHandlerSummaryInfinite<
         TData,
         Awaited<ReturnType<typeof handlerSummary>>,
         QueryKey,
-        GetHandlerSummaryParams["page"]
+        GetHandlerSummaryParams['page']
       >
     > &
       Pick<
@@ -2057,14 +2057,14 @@ export function useHandlerSummaryInfinite<
           TData,
           QueryKey
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
 export function useHandlerSummaryInfinite<
   TData = InfiniteData<
     Awaited<ReturnType<typeof handlerSummary>>,
-    GetHandlerSummaryParams["page"]
+    GetHandlerSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -2077,7 +2077,7 @@ export function useHandlerSummaryInfinite<
         TData,
         Awaited<ReturnType<typeof handlerSummary>>,
         QueryKey,
-        GetHandlerSummaryParams["page"]
+        GetHandlerSummaryParams['page']
       >
     >;
   },
@@ -2089,7 +2089,7 @@ export function useHandlerSummaryInfinite<
 export function useHandlerSummaryInfinite<
   TData = InfiniteData<
     Awaited<ReturnType<typeof handlerSummary>>,
-    GetHandlerSummaryParams["page"]
+    GetHandlerSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -2102,7 +2102,7 @@ export function useHandlerSummaryInfinite<
         TData,
         Awaited<ReturnType<typeof handlerSummary>>,
         QueryKey,
-        GetHandlerSummaryParams["page"]
+        GetHandlerSummaryParams['page']
       >
     >;
   },
@@ -2165,7 +2165,7 @@ export function useHandlerSummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -2184,7 +2184,7 @@ export function useHandlerSummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -2235,7 +2235,7 @@ export const reporterSummary = (
 ) => {
   return makeRequest<TicketReporterSummary[]>({
     url: `/tickets/metrics/reporter/summary`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -2253,7 +2253,7 @@ export const getReporterSummaryQueryKey = (
 export const getReporterSummaryInfiniteQueryOptions = <
   TData = InfiniteData<
     Awaited<ReturnType<typeof reporterSummary>>,
-    GetReporterSummaryParams["page"]
+    GetReporterSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -2266,7 +2266,7 @@ export const getReporterSummaryInfiniteQueryOptions = <
         TData,
         Awaited<ReturnType<typeof reporterSummary>>,
         QueryKey,
-        GetReporterSummaryParams["page"]
+        GetReporterSummaryParams['page']
       >
     >;
   },
@@ -2278,9 +2278,9 @@ export const getReporterSummaryInfiniteQueryOptions = <
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof reporterSummary>>,
     QueryKey,
-    GetReporterSummaryParams["page"]
+    GetReporterSummaryParams['page']
   > = ({ signal, pageParam }) =>
-    reporterSummary({ ...params, page: pageParam || params?.["page"] }, signal);
+    reporterSummary({ ...params, page: pageParam || params?.['page'] }, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
     Awaited<ReturnType<typeof reporterSummary>>,
@@ -2288,7 +2288,7 @@ export const getReporterSummaryInfiniteQueryOptions = <
     TData,
     Awaited<ReturnType<typeof reporterSummary>>,
     QueryKey,
-    GetReporterSummaryParams["page"]
+    GetReporterSummaryParams['page']
   > & { queryKey: QueryKey };
 };
 
@@ -2300,7 +2300,7 @@ export type ReporterSummaryInfiniteQueryError = ErrorType<unknown>;
 export function useReporterSummaryInfinite<
   TData = InfiniteData<
     Awaited<ReturnType<typeof reporterSummary>>,
-    GetReporterSummaryParams["page"]
+    GetReporterSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -2313,7 +2313,7 @@ export function useReporterSummaryInfinite<
         TData,
         Awaited<ReturnType<typeof reporterSummary>>,
         QueryKey,
-        GetReporterSummaryParams["page"]
+        GetReporterSummaryParams['page']
       >
     > &
       Pick<
@@ -2323,14 +2323,14 @@ export function useReporterSummaryInfinite<
           TData,
           QueryKey
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
 export function useReporterSummaryInfinite<
   TData = InfiniteData<
     Awaited<ReturnType<typeof reporterSummary>>,
-    GetReporterSummaryParams["page"]
+    GetReporterSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -2343,7 +2343,7 @@ export function useReporterSummaryInfinite<
         TData,
         Awaited<ReturnType<typeof reporterSummary>>,
         QueryKey,
-        GetReporterSummaryParams["page"]
+        GetReporterSummaryParams['page']
       >
     > &
       Pick<
@@ -2353,14 +2353,14 @@ export function useReporterSummaryInfinite<
           TData,
           QueryKey
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
 export function useReporterSummaryInfinite<
   TData = InfiniteData<
     Awaited<ReturnType<typeof reporterSummary>>,
-    GetReporterSummaryParams["page"]
+    GetReporterSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -2373,7 +2373,7 @@ export function useReporterSummaryInfinite<
         TData,
         Awaited<ReturnType<typeof reporterSummary>>,
         QueryKey,
-        GetReporterSummaryParams["page"]
+        GetReporterSummaryParams['page']
       >
     >;
   },
@@ -2385,7 +2385,7 @@ export function useReporterSummaryInfinite<
 export function useReporterSummaryInfinite<
   TData = InfiniteData<
     Awaited<ReturnType<typeof reporterSummary>>,
-    GetReporterSummaryParams["page"]
+    GetReporterSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -2398,7 +2398,7 @@ export function useReporterSummaryInfinite<
         TData,
         Awaited<ReturnType<typeof reporterSummary>>,
         QueryKey,
-        GetReporterSummaryParams["page"]
+        GetReporterSummaryParams['page']
       >
     >;
   },
@@ -2469,7 +2469,7 @@ export function useReporterSummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -2492,7 +2492,7 @@ export function useReporterSummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };

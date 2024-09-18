@@ -1,18 +1,18 @@
-import { useTheme } from "@mui/material";
-import { BarChart, LineChart } from "@mui/x-charts";
-import { DateTime } from "luxon";
-import { useMemo } from "react";
+import { useTheme } from '@mui/material';
+import { BarChart, LineChart } from '@mui/x-charts';
+import { DateTime } from 'luxon';
+import { useMemo } from 'react';
 
-import { useApprovalCountSeries } from "../../api";
-import { SeriesChartProps, useChartDateRange } from "../../utils";
+import { useApprovalCountSeries } from '../../api';
+import { SeriesChartProps, useChartDateRange } from '../../utils';
 
 export interface ApprovalTurnaroundChartProps {
-  variant?: "bars" | "lines";
+  variant?: 'bars' | 'lines';
 }
 
 export const ApprovalTurnaroundChart: React.FC<
   ApprovalTurnaroundChartProps
-> = ({ variant = "bars" }) => {
+> = ({ variant = 'bars' }) => {
   const theme = useTheme();
   const range = useChartDateRange();
 
@@ -42,28 +42,28 @@ export const ApprovalTurnaroundChart: React.FC<
     dataset,
     xAxis: [
       {
-        scaleType: "band",
-        dataKey: "date",
+        scaleType: 'band',
+        dataKey: 'date',
         valueFormatter: (value) =>
           DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
       },
     ],
     series: [
       {
-        dataKey: "approved",
-        label: "Approved",
+        dataKey: 'approved',
+        label: 'Approved',
         color: theme.palette.success.main,
       },
     ],
     slotProps: {
       noDataOverlay: {
-        message: "No data",
+        message: 'No data',
       },
     },
   };
 
   const Chart = useMemo(() => {
-    return variant === "bars" ? BarChart : LineChart;
+    return variant === 'bars' ? BarChart : LineChart;
   }, [variant]);
 
   return <Chart {...chartProps} />;

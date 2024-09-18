@@ -1,1 +1,1 @@
-export * from "./ModProfileCatalog";
+export * from './ModProfileCatalog';

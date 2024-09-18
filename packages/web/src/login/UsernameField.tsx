@@ -1,8 +1,8 @@
-import { Person } from "@mui/icons-material";
-import { InputAdornment, TextField } from "@mui/material";
-import { Control, Controller, FieldErrors } from "react-hook-form";
+import { Person } from '@mui/icons-material';
+import { InputAdornment, TextField } from '@mui/material';
+import { Control, Controller, FieldErrors } from 'react-hook-form';
 
-import { LoginFormData } from "./type";
+import { LoginFormData } from './type';
 
 export interface UsernameFieldProps {
   control: Control<LoginFormData, unknown>;
@@ -18,12 +18,12 @@ export const UsernameField: React.FC<UsernameFieldProps> = ({
       name="username"
       control={control}
       defaultValue=""
-      rules={{ required: "Username is required" }}
+      rules={{ required: 'Username is required' }}
       render={({ field }) => (
         <TextField
           {...field}
           variant="outlined"
-          label={field.value ? "Username" : undefined}
+          label={field.value ? 'Username' : undefined}
           placeholder="Username"
           fullWidth
           error={!!errors.username}

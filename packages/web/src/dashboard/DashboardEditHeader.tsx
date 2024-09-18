@@ -1,13 +1,13 @@
-import { Cancel, Category, Edit, Save } from "@mui/icons-material";
-import { Checkbox, Menu, MenuItem } from "@mui/material";
-import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
-import { useMemo, useState } from "react";
+import { Cancel, Category, Edit, Save } from '@mui/icons-material';
+import { Checkbox, Menu, MenuItem } from '@mui/material';
+import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
+import { useMemo, useState } from 'react';
 
-import { DashboardPosition, DashboardPositions } from "../api";
-import { NavButton } from "../page/header/NavButton";
-import { NavDivider } from "../page/header/NavDivider";
-import { NavSpacer } from "../page/header/NavSpacer";
-import { useDashboard } from "./DashboardContext";
+import { DashboardPosition, DashboardPositions } from '../api';
+import { NavButton } from '../page/header/NavButton';
+import { NavDivider } from '../page/header/NavDivider';
+import { NavSpacer } from '../page/header/NavSpacer';
+import { useDashboard } from './DashboardContext';
 
 export const DashboardEditHeader: React.FC = () => {
   const {
@@ -64,37 +64,37 @@ export const DashboardEditHeader: React.FC = () => {
                             setConfig({
                               ...config!,
                               positions: Object.entries(
-                                config!.positions
+                                config!.positions,
                               ).reduce(
                                 (
                                   acc,
                                   [breakpoint, items]: [
                                     string,
                                     DashboardPosition[],
-                                  ]
+                                  ],
                                 ) => {
                                   return {
                                     ...acc,
                                     [breakpoint]: items.filter(
-                                      (item) => item.i !== key
+                                      (item) => item.i !== key,
                                     ),
                                   };
                                 },
-                                {} as DashboardPositions
+                                {} as DashboardPositions,
                               ),
                             });
                           } else {
                             setConfig({
                               ...config!,
                               positions: Object.entries(
-                                config!.positions
+                                config!.positions,
                               ).reduce(
                                 (
                                   acc,
                                   [breakpoint, items]: [
                                     string,
                                     DashboardPosition[],
-                                  ]
+                                  ],
                                 ) => {
                                   return {
                                     ...acc,
@@ -109,7 +109,7 @@ export const DashboardEditHeader: React.FC = () => {
                                     ],
                                   };
                                 },
-                                {} as DashboardPositions
+                                {} as DashboardPositions,
                               ),
                             });
                           }

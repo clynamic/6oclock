@@ -1,4 +1,4 @@
-import { Beenhere, Shield } from "@mui/icons-material";
+import { Beenhere, Shield } from '@mui/icons-material';
 import {
   Button,
   Divider,
@@ -6,10 +6,10 @@ import {
   Theme,
   ThemeProvider,
   Typography,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../page";
+import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -22,8 +22,8 @@ export const HomePage = () => {
         <Stack direction="column" spacing={2}>
           <Stack
             direction={{
-              sm: "row",
-              xs: "column",
+              sm: 'row',
+              xs: 'column',
             }}
             spacing={{
               xs: 2,
@@ -38,15 +38,15 @@ export const HomePage = () => {
                 components: {
                   MuiButton: {
                     defaultProps: {
-                      variant: "text",
-                      color: "secondary",
+                      variant: 'text',
+                      color: 'secondary',
                     },
                     styleOverrides: {
                       root: {
-                        width: "200px",
-                        height: "200px",
-                        maxWidth: "100%",
-                        maxHeight: "100%",
+                        width: '200px',
+                        height: '200px',
+                        maxWidth: '100%',
+                        maxHeight: '100%',
                         border: `2px solid ${theme.palette.secondary.main}`,
                         boxShadow: theme.shadows[6],
                       },
@@ -69,7 +69,7 @@ export const HomePage = () => {
               */}
               <Button
                 onClick={() => {
-                  navigate("/mods");
+                  navigate('/mods');
                 }}
               >
                 <Stack direction="row" alignItems="center" spacing={1}>
@@ -79,7 +79,7 @@ export const HomePage = () => {
               </Button>
               <Button
                 onClick={() => {
-                  navigate("/janitors");
+                  navigate('/janitors');
                 }}
               >
                 <Stack direction="row" alignItems="center" spacing={1}>

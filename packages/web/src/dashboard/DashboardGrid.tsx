@@ -1,15 +1,15 @@
-import { Box, useTheme } from "@mui/material";
-import { Ref } from "react";
+import { Box, useTheme } from '@mui/material';
+import { Ref } from 'react';
 import {
   Layout,
   Layouts,
   Responsive,
   ResponsiveProps,
   WidthProvider,
-} from "react-grid-layout";
+} from 'react-grid-layout';
 
-import { useDashboard } from "./DashboardContext";
-import { HandleDirection, ResizableHandle } from "./ResizableHandle";
+import { useDashboard } from './DashboardContext';
+import { HandleDirection, ResizableHandle } from './ResizableHandle';
 
 export type DashboardLayout = Layout;
 export type DashboardLayouts = Layouts;
@@ -25,19 +25,19 @@ export const DashboardGrid: React.FC<DashboardGridProps> = ({ ...rest }) => {
   return (
     <Box
       sx={{
-        ".react-grid-item.react-grid-placeholder": {
+        '.react-grid-item.react-grid-placeholder': {
           borderRadius: 1,
-          backgroundColor: "secondary.light",
+          backgroundColor: 'secondary.light',
         },
-        height: "100%",
-        width: "100%",
+        height: '100%',
+        width: '100%',
       }}
     >
       <ResponsiveGridLayout
-        style={{ width: "100%" }}
+        style={{ width: '100%' }}
         draggableHandle=".react-draggable-handle"
         draggableCancel=".react-draggable-cancel"
-        resizeHandles={isEditing ? ["se", "sw", "ne", "nw"] : []}
+        resizeHandles={isEditing ? ['se', 'sw', 'ne', 'nw'] : []}
         resizeHandle={
           ((handle: HandleDirection, ref: Ref<HTMLDivElement>) => (
             <ResizableHandle resizeHandle={handle} ref={ref} />
@@ -45,7 +45,7 @@ export const DashboardGrid: React.FC<DashboardGridProps> = ({ ...rest }) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           )) as any
         }
-        compactType={"horizontal"}
+        compactType={'horizontal'}
         breakpoints={breakpoints.values}
         cols={{ xl: 16, lg: 12, md: 9, sm: 6, xs: 4 }}
         rowHeight={50}

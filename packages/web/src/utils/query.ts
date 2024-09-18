@@ -1,7 +1,7 @@
-import { UseQueryOptions } from "@tanstack/react-query";
+import { UseQueryOptions } from '@tanstack/react-query';
 
 export const refetchQueryOptions = <T>(
-  partial?: Partial<UseQueryOptions<T>>
+  partial?: Partial<UseQueryOptions<T>>,
 ): {
   query: Partial<UseQueryOptions<T>>;
 } => {

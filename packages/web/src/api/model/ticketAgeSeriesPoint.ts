@@ -5,7 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.1
  */
-import type { TicketAgeGroup } from "./ticketAgeGroup";
+import type { TicketAgeGroup } from './ticketAgeGroup';
 
 export interface TicketAgeSeriesPoint {
   date: Date;

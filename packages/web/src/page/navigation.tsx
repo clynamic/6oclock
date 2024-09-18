@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, PropsWithChildren, useContext } from "react";
+import { createContext, PropsWithChildren, useContext } from 'react';
 
 export type NavNode = NavTopLink | NavAction;
 
@@ -37,7 +37,7 @@ export const NavigationEntryProvider: React.FC<
 export const useNavigationEntries = (): NavNode[] => {
   const context = useContext(NavigationEntryContext);
   if (context === undefined) {
-    throw new Error("useNavigation must be used within a NavigationProvider");
+    throw new Error('useNavigation must be used within a NavigationProvider');
   }
   return context;
 };

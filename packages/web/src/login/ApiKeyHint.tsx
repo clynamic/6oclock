@@ -1,16 +1,16 @@
-import { Grow, Link, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { Control, useWatch } from "react-hook-form";
+import { Grow, Link, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Control, useWatch } from 'react-hook-form';
 
-import { LoginFormData } from "./type";
+import { LoginFormData } from './type';
 
 export interface ApiKeyHintProps {
   control: Control<LoginFormData, unknown>;
 }
 
 export const ApiKeyHint: React.FC<ApiKeyHintProps> = ({ control }) => {
-  const username = useWatch({ control, name: "username" });
-  const password = useWatch({ control, name: "password" });
+  const username = useWatch({ control, name: 'username' });
+  const password = useWatch({ control, name: 'password' });
   const [showHint, setShowHint] = useState(false);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export const ApiKeyHint: React.FC<ApiKeyHintProps> = ({ control }) => {
   return (
     <Grow in={showHint}>
       <Typography variant="caption">
-        Get your API key from{" "}
+        Get your API key from{' '}
         <Link
           href={`https://e621.net/users/${encodeURIComponent(
             username as string,

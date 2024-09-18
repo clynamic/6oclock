@@ -5,15 +5,15 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.1
  */
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from '@tanstack/react-query';
 import type {
   MutationFunction,
   UseMutationOptions,
   UseMutationResult,
-} from "@tanstack/react-query";
-import type { TokenValidation, UserCredentials } from "./model";
-import { makeRequest } from "../http/axios";
-import type { ErrorType } from "../http/axios";
+} from '@tanstack/react-query';
+import type { TokenValidation, UserCredentials } from './model';
+import { makeRequest } from '../http/axios';
+import type { ErrorType } from '../http/axios';
 
 /**
  * Login with username and api key
@@ -22,8 +22,8 @@ import type { ErrorType } from "../http/axios";
 export const login = (userCredentials: UserCredentials) => {
   return makeRequest<string>({
     url: `/auth/login`,
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     data: userCredentials,
   });
 };
@@ -94,8 +94,8 @@ export const useLogin = <
 export const validateToken = (tokenValidation: TokenValidation) => {
   return makeRequest<boolean>({
     url: `/auth/validate`,
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     data: tokenValidation,
   });
 };

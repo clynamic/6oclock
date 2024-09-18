@@ -1,9 +1,9 @@
-import { ArrowBackIos } from "@mui/icons-material";
-import { Box } from "@mui/material";
-import { forwardRef } from "react";
-import { ReactGridLayoutProps } from "react-grid-layout";
+import { ArrowBackIos } from '@mui/icons-material';
+import { Box } from '@mui/material';
+import { forwardRef } from 'react';
+import { ReactGridLayoutProps } from 'react-grid-layout';
 
-import { DashboardChildForwardProps } from "./DashboardChild";
+import { DashboardChildForwardProps } from './DashboardChild';
 
 type ExtractResizeHandles<T> = T extends {
   resizeHandles?: (infer U)[] | undefined;
@@ -28,16 +28,16 @@ export const ResizableHandle = forwardRef<
 
   const offset = 4;
 
-  if (resizeHandle === "se") {
+  if (resizeHandle === 'se') {
     directionStyle.bottom = offset;
     directionStyle.right = offset;
-  } else if (resizeHandle === "sw") {
+  } else if (resizeHandle === 'sw') {
     directionStyle.bottom = offset;
     directionStyle.left = offset;
-  } else if (resizeHandle === "ne") {
+  } else if (resizeHandle === 'ne') {
     directionStyle.top = offset;
     directionStyle.right = offset;
-  } else if (resizeHandle === "nw") {
+  } else if (resizeHandle === 'nw') {
     directionStyle.top = offset;
     directionStyle.left = offset;
   }
@@ -46,11 +46,11 @@ export const ResizableHandle = forwardRef<
     transform: `rotate(${
       directionStyle.top !== undefined
         ? directionStyle.left !== undefined
-          ? "45deg"
-          : "-225deg"
+          ? '45deg'
+          : '-225deg'
         : directionStyle.left !== undefined
-          ? "315deg"
-          : "-135deg"
+          ? '315deg'
+          : '-135deg'
     })`,
   };
 
@@ -63,10 +63,10 @@ export const ResizableHandle = forwardRef<
       onMouseUp={onMouseUp}
       onTouchEnd={onTouchEnd}
       sx={{
-        position: "absolute",
+        position: 'absolute',
         ...directionStyle,
         cursor: `${resizeHandle}-resize`,
-        backgroundImage: "none",
+        backgroundImage: 'none',
       }}
     >
       <ArrowBackIos

@@ -1,10 +1,10 @@
-import { createSimpleLayout, DashboardCatalog } from "../../dashboard";
-import { ApprovalLeaderboard } from "../approvals";
-import { ApprovalTurnaroundChart } from "../charts";
+import { createSimpleLayout, DashboardCatalog } from '../../dashboard';
+import { ApprovalLeaderboard } from '../approvals';
+import { ApprovalTurnaroundChart } from '../charts';
 
 export const janitorDashboardCatalog: DashboardCatalog = {
   approvalsLeaderboard: {
-    name: "Approval Leaderboard",
+    name: 'Approval Leaderboard',
     component: ApprovalLeaderboard,
     defaultLayout: createSimpleLayout(
       {
@@ -23,15 +23,15 @@ export const janitorDashboardCatalog: DashboardCatalog = {
         md: { x: 0, y: 0, w: 4, h: 11 },
         lg: { w: 4, h: 11, x: 0, y: 0 },
         xl: { x: 0, y: 0, w: 6, h: 11 },
-      }
+      },
     ),
     card: {
-      title: "Approvals",
-      variant: "outlined",
+      title: 'Approvals',
+      variant: 'outlined',
     },
   },
   approvalTurnaround: {
-    name: "Approval Turnaround",
+    name: 'Approval Turnaround',
     component: ApprovalTurnaroundChart,
     defaultLayout: createSimpleLayout(
       {
@@ -49,8 +49,8 @@ export const janitorDashboardCatalog: DashboardCatalog = {
         md: { x: 0, y: 11, w: 8, h: 4 },
         lg: { w: 8, h: 4, x: 4, y: 0 },
         xl: { x: 6, y: 0, w: 10, h: 5 },
-      }
+      },
     ),
-    card: { title: "Turnaround" },
+    card: { title: 'Turnaround' },
   },
 };

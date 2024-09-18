@@ -5,7 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.1
  */
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from '@tanstack/react-query';
 import type {
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
@@ -17,10 +17,10 @@ import type {
   UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
-} from "@tanstack/react-query";
-import type { DashboardConfig, DashboardUpdate } from "./model";
-import { makeRequest } from "../http/axios";
-import type { ErrorType } from "../http/axios";
+} from '@tanstack/react-query';
+import type { DashboardConfig, DashboardUpdate } from './model';
+import { makeRequest } from '../http/axios';
+import type { ErrorType } from '../http/axios';
 
 /**
  * Get dashboard by type, for the current user
@@ -29,7 +29,7 @@ import type { ErrorType } from "../http/axios";
 export const dashboard = (type: string, signal?: AbortSignal) => {
   return makeRequest<DashboardConfig>({
     url: `/dashboard/${encodeURIComponent(String(type))}`,
-    method: "GET",
+    method: 'GET',
     signal,
   });
 };
@@ -87,7 +87,7 @@ export function useDashboard<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -106,7 +106,7 @@ export function useDashboard<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -157,8 +157,8 @@ export const updateDashboard = (
 ) => {
   return makeRequest<void>({
     url: `/dashboard/${encodeURIComponent(String(type))}`,
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     data: dashboardUpdate,
   });
 };
