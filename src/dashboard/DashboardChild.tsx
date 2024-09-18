@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import { forwardRef } from "react";
+import { Box } from '@mui/material';
+import { forwardRef } from 'react';
 
 export interface DashboardChildForwardProps {
   className?: string;
@@ -15,17 +15,17 @@ export interface DashboardChildCreateProps {
 
 export const createDashboardChild = <P extends object>(
   Component: React.ComponentType<P>,
-  props?: DashboardChildCreateProps
+  props?: DashboardChildCreateProps,
 ) => {
   return forwardRef<HTMLDivElement, P & DashboardChildForwardProps>(
     (
       { className, style, onMouseDown, onMouseUp, onTouchEnd, ...rest },
-      ref
+      ref,
     ) => {
       return (
         <Box
           ref={ref}
-          className={(className ?? "") + (props?.className ?? "")}
+          className={(className ?? '') + (props?.className ?? '')}
           style={style}
           onMouseDown={onMouseDown}
           onMouseUp={onMouseUp}
@@ -34,6 +34,6 @@ export const createDashboardChild = <P extends object>(
           <Component {...(rest as P)} />
         </Box>
       );
-    }
+    },
   );
 };

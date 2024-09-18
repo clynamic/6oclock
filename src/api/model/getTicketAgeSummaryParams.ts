@@ -9,4 +9,5 @@
 export type GetTicketAgeSummaryParams = {
   startDate?: Date;
   endDate?: Date;
+  timezone?: string;
 };

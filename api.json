@@ -1,6 +1,16 @@
 {
   "openapi": "3.0.0",
   "paths": {
+    "/health": {
+      "get": {
+        "operationId": "healthCheck",
+        "summary": "Health Check",
+        "description": "Check the health of the application",
+        "parameters": [],
+        "responses": { "200": { "description": "The application is healthy" } },
+        "tags": ["Health"]
+      }
+    },
     "/auth/login": {
       "post": {
         "operationId": "login",
@@ -123,6 +133,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -158,6 +174,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -200,6 +222,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -236,6 +264,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           },
           {
             "name": "page",
@@ -318,6 +352,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -351,6 +391,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -390,6 +436,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -423,6 +475,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -459,6 +517,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -501,6 +565,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -537,6 +607,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -579,6 +655,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -615,6 +697,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -659,6 +747,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -697,6 +791,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -735,6 +835,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -768,6 +874,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           },
           {
             "name": "page",
@@ -825,6 +937,12 @@
             "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           },
           {
             "name": "page",
@@ -1101,5 +1219,6 @@
         "required": ["userId", "total", "days"]
       }
     }
-  }
+  },
+  "externalDocs": { "description": "/swagger.json", "url": "/swagger.json" }
 }

@@ -1,16 +1,16 @@
-import { useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 
-import { useUserHead } from "../api";
+import { useUserHead } from '../api';
 import {
   buildCatalogLayouts,
   DashboardBody,
   DashboardCatalog,
   DashboardProvider,
-} from "../dashboard";
-import { modProfileCatalog } from "../mods";
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../page";
-import { ChartParamsProvider, useChartParamsValue } from "../utils";
+} from '../dashboard';
+import { modProfileCatalog } from '../mods';
+import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
+import { ChartParamsProvider, useChartParamsValue } from '../utils';
 
 export const ProfilePage: React.FC = () => {
   const { id } = useParams();

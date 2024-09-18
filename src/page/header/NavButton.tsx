@@ -7,16 +7,16 @@ import {
   MenuItem,
   MenuItemProps,
   Typography,
-} from "@mui/material";
+} from '@mui/material';
 
-import { usePageHeaderContext } from "./PageHeaderContext";
+import { usePageHeaderContext } from './PageHeaderContext';
 
 export type NavButtonProps = ButtonBaseProps & MenuItemProps & ButtonProps;
 
 export const NavButton: React.FC<NavButtonProps> = (props) => {
   const { layout, popupState } = usePageHeaderContext();
 
-  if (layout === "small") {
+  if (layout === 'small') {
     const { endIcon, color, children, ...menuProps } = props;
 
     return (
@@ -25,7 +25,7 @@ export const NavButton: React.FC<NavButtonProps> = (props) => {
         sx={{
           ...(props.sx || {}),
           color: (theme) =>
-            color === "primary" ? theme.palette.primary.main : undefined,
+            color === 'primary' ? theme.palette.primary.main : undefined,
         }}
         onClick={(e) => {
           props.onClick?.(e);
@@ -38,7 +38,7 @@ export const NavButton: React.FC<NavButtonProps> = (props) => {
           <ListItemIcon
             sx={{
               color: (theme) =>
-                color === "primary" ? theme.palette.primary.main : undefined,
+                color === 'primary' ? theme.palette.primary.main : undefined,
             }}
           >
             {endIcon}
@@ -48,7 +48,7 @@ export const NavButton: React.FC<NavButtonProps> = (props) => {
       </MenuItem>
     );
   }
-  if (layout === "wide") {
+  if (layout === 'wide') {
     return (
       <Button
         variant="text"
@@ -56,7 +56,7 @@ export const NavButton: React.FC<NavButtonProps> = (props) => {
         color="secondary"
         sx={{
           ...(props.sx || {}),
-          textTransform: "none",
+          textTransform: 'none',
           p: 0.2,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,

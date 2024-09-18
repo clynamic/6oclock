@@ -1,4 +1,4 @@
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 import {
   createContext,
   PropsWithChildren,
@@ -6,9 +6,9 @@ import {
   useEffect,
   useMemo,
   useState,
-} from "react";
+} from 'react';
 
-import { clearAxiosAuth, setAxiosAuth } from "../http";
+import { clearAxiosAuth, setAxiosAuth } from '../http';
 
 export interface AuthPayload {
   userId: number;
@@ -37,12 +37,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within a AuthProvider");
+    throw new Error('useAuth must be used within a AuthProvider');
   }
   return context;
 };
 
-const storageKey = "auth_token";
+const storageKey = 'auth_token';
 
 export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [token, setToken] = useState<string | null>(() => {

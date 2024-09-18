@@ -9,6 +9,7 @@
 export type GetHandlerSummaryParams = {
   startDate?: Date;
   endDate?: Date;
+  timezone?: string;
   /**
    * Page number
    */

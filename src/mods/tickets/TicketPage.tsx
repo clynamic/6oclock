@@ -1,10 +1,10 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Stack } from '@mui/material';
 
-import { useHandlerSummaryInfinite } from "../../api";
-import { LoadMoreHint } from "../../common";
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../../page";
-import { useChartDateRange } from "../../utils";
-import { TicketLeaderboardFrame } from "./TicketLeaderboardFrame";
+import { useHandlerSummaryInfinite } from '../../api';
+import { LoadMoreHint } from '../../common';
+import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
+import { useChartDateRange } from '../../utils';
+import { TicketLeaderboardFrame } from './TicketLeaderboardFrame';
 
 export const TicketerPage: React.FC = () => {
   const range = useChartDateRange();
@@ -24,7 +24,7 @@ export const TicketerPage: React.FC = () => {
           return (i ?? 1) + 1;
         },
       },
-    }
+    },
   );
 
   return (
@@ -32,8 +32,8 @@ export const TicketerPage: React.FC = () => {
       <PageTitle subtitle="Ticketers" />
       <PageHeader />
       <PageBody>
-        <Box sx={{ width: "100%", maxWidth: 600, margin: "auto", p: 2 }}>
-          <Stack sx={{ height: "100%", width: "100%", gap: 1 }}>
+        <Box sx={{ width: '100%', maxWidth: 600, margin: 'auto', p: 2 }}>
+          <Stack sx={{ height: '100%', width: '100%', gap: 1 }}>
             {data?.pages
               .flat()
               .map((item, i) => (

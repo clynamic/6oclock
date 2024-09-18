@@ -1,10 +1,10 @@
-import { UserCard } from "../../common";
-import { createSimpleLayout, DashboardCatalog } from "../../dashboard";
-import { TicketHandlerActivityChart, TicketHandlerChart } from "../charts";
+import { UserCard } from '../../common';
+import { createSimpleLayout, DashboardCatalog } from '../../dashboard';
+import { TicketHandlerActivityChart, TicketHandlerChart } from '../charts';
 
 export const modProfileCatalog: DashboardCatalog = {
   userHead: {
-    name: "User Head",
+    name: 'User Head',
     defaultLayout: createSimpleLayout(
       {
         x: 0,
@@ -22,12 +22,12 @@ export const modProfileCatalog: DashboardCatalog = {
         md: { w: 5, h: 2, x: 0, y: 0 },
         lg: { w: 5, h: 2, x: 0, y: 0 },
         xl: { w: 5, h: 2, x: 0, y: 0 },
-      }
+      },
     ),
     component: UserCard,
   },
   ticketsClosed: {
-    name: "Tickets Closed",
+    name: 'Tickets Closed',
     defaultLayout: createSimpleLayout(
       {
         x: 0,
@@ -45,13 +45,13 @@ export const modProfileCatalog: DashboardCatalog = {
         md: { w: 5, h: 5, x: 0, y: 2 },
         lg: { w: 5, h: 5, x: 0, y: 2 },
         xl: { w: 5, h: 5, x: 0, y: 2 },
-      }
+      },
     ),
-    card: { title: "Closed" },
+    card: { title: 'Closed' },
     component: TicketHandlerChart,
   },
   ticketActivity: {
-    name: "Ticket Activity",
+    name: 'Ticket Activity',
     defaultLayout: createSimpleLayout(
       {
         x: 0,
@@ -69,9 +69,9 @@ export const modProfileCatalog: DashboardCatalog = {
         md: { w: 5, h: 5, x: 0, y: 7 },
         lg: { w: 5, h: 5, x: 0, y: 7 },
         xl: { w: 5, h: 5, x: 0, y: 7 },
-      }
+      },
     ),
-    card: { title: "Activity" },
+    card: { title: 'Activity' },
     component: TicketHandlerActivityChart,
   },
 };

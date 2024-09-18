@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { Breakpoint, useTheme } from "@mui/material";
+import { Breakpoint, useTheme } from '@mui/material';
 import React, {
   createContext,
   useCallback,
@@ -7,17 +7,17 @@ import React, {
   useEffect,
   useMemo,
   useState,
-} from "react";
+} from 'react';
 
 import {
   DashboardConfigMeta,
   DashboardPositions,
   DashboardUpdate,
-} from "../api";
-import { useCurrentBreakpoint } from "../utils";
-import { useCurrentLayout } from "./current-layout";
-import { DashboardLayout, DashboardLayouts } from "./DashboardGrid";
-import { buildCatalogLayout, DashboardCatalog } from "./DashboardItem";
+} from '../api';
+import { useCurrentBreakpoint } from '../utils';
+import { useCurrentLayout } from './current-layout';
+import { DashboardLayout, DashboardLayouts } from './DashboardGrid';
+import { buildCatalogLayout, DashboardCatalog } from './DashboardItem';
 
 interface DashboardContextType {
   config?: DashboardConfig;
@@ -35,7 +35,7 @@ interface DashboardContextType {
 }
 
 const DashboardContext = createContext<DashboardContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export interface DashboardConfig {
@@ -81,7 +81,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
         });
       }
     },
-    [config, updateData]
+    [config, updateData],
   );
 
   const {
@@ -101,7 +101,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
             : buildCatalogLayout(catalog, breakpoint),
         };
       }, {} as DashboardLayouts),
-    [breakpoints, catalog, config]
+    [breakpoints, catalog, config],
   );
 
   const currentBreakpoint = useCurrentBreakpoint();
@@ -133,7 +133,7 @@ export const useDashboard = () => {
   const context = useContext(DashboardContext);
 
   if (!context) {
-    throw new Error("useDashboard must be used within a DashboardProvider");
+    throw new Error('useDashboard must be used within a DashboardProvider');
   }
 
   return context;

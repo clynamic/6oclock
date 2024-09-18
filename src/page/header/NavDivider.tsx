@@ -1,14 +1,14 @@
-import { Divider } from "@mui/material";
+import { Divider } from '@mui/material';
 
-import { usePageHeaderContext } from "./PageHeaderContext";
+import { usePageHeaderContext } from './PageHeaderContext';
 
 export const NavDivider: React.FC = () => {
   const { layout } = usePageHeaderContext();
 
-  if (layout === "small") {
+  if (layout === 'small') {
     return <Divider orientation="horizontal" variant="middle" />;
   }
-  if (layout === "wide") {
+  if (layout === 'wide') {
     return <Divider orientation="vertical" variant="middle" flexItem />;
   }
   return null;

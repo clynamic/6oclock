@@ -1,14 +1,14 @@
-import { AxiosError } from "axios";
-import { useCallback, useEffect } from "react";
+import { AxiosError } from 'axios';
+import { useCallback, useEffect } from 'react';
 
 import {
   DashboardConfigType,
   DashboardUpdate,
   useDashboard as useRemoteDashboard,
   useUpdateDashboard,
-} from "../api";
-import { DashboardProvider } from "./DashboardContext";
-import { buildCatalogLayouts, DashboardCatalog } from "./DashboardItem";
+} from '../api';
+import { DashboardProvider } from './DashboardContext';
+import { buildCatalogLayouts, DashboardCatalog } from './DashboardItem';
 
 export interface RemoteDashboardProviderProps {
   type: DashboardConfigType;
@@ -30,7 +30,7 @@ export const RemoteDashboardProvider: React.FC<
           return failureCount < 3;
         },
       },
-    }
+    },
   );
   const { mutateAsync } = useUpdateDashboard();
 
@@ -41,7 +41,7 @@ export const RemoteDashboardProvider: React.FC<
         data: update,
       });
     },
-    [mutateAsync, type]
+    [mutateAsync, type],
   );
 
   useEffect(() => {

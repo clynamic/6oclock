@@ -1,33 +1,33 @@
-import { useTheme } from "@mui/material";
-import { BarChart, LineChart } from "@mui/x-charts";
-import { DateTime } from "luxon";
-import { useMemo } from "react";
+import { useTheme } from '@mui/material';
+import { BarChart, LineChart } from '@mui/x-charts';
+import { DateTime } from 'luxon';
+import { useMemo } from 'react';
 
-import { useTicketClosedSeries, useTicketCreatedSeries } from "../../api";
+import { useTicketClosedSeries, useTicketCreatedSeries } from '../../api';
 import {
   refetchQueryOptions,
   SeriesChartProps,
   useChartDateRange,
-} from "../../utils";
+} from '../../utils';
 
 export interface TicketTurnaroundChartProps {
-  variant?: "bars" | "lines";
+  variant?: 'bars' | 'lines';
 }
 
 export const TicketTurnaroundChart: React.FC<TicketTurnaroundChartProps> = ({
-  variant = "bars",
+  variant = 'bars',
 }) => {
   const theme = useTheme();
   const range = useChartDateRange();
 
   const { data: createdData } = useTicketCreatedSeries(
     range,
-    refetchQueryOptions()
+    refetchQueryOptions(),
   );
 
   const { data: closedData } = useTicketClosedSeries(
     range,
-    refetchQueryOptions()
+    refetchQueryOptions(),
   );
 
   const dataset = useMemo(() => {
@@ -65,33 +65,33 @@ export const TicketTurnaroundChart: React.FC<TicketTurnaroundChartProps> = ({
     dataset,
     xAxis: [
       {
-        scaleType: "band",
-        dataKey: "date",
+        scaleType: 'band',
+        dataKey: 'date',
         valueFormatter: (value) =>
           DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
       },
     ],
     series: [
       {
-        dataKey: "created",
-        label: "Created",
+        dataKey: 'created',
+        label: 'Created',
         color: theme.palette.primary.main,
       },
       {
-        dataKey: "closed",
-        label: "Closed",
+        dataKey: 'closed',
+        label: 'Closed',
         color: theme.palette.secondary.main,
       },
     ],
     slotProps: {
       noDataOverlay: {
-        message: "No data",
+        message: 'No data',
       },
     },
   };
 
   const Chart = useMemo(() => {
-    return variant === "bars" ? BarChart : LineChart;
+    return variant === 'bars' ? BarChart : LineChart;
   }, [variant]);
 
   return <Chart {...chartProps} />;

@@ -1,12 +1,12 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
-import { MD5 } from "crypto-js";
-import { DateTime } from "luxon";
-import React, { useEffect, useMemo, useRef } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Box, CircularProgress, Typography } from '@mui/material';
+import { MD5 } from 'crypto-js';
+import { DateTime } from 'luxon';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-import { checkAuthToken } from "../http";
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../page";
-import { useAuth } from "./context";
+import { checkAuthToken } from '../http';
+import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
+import { useAuth } from './context';
 
 export interface AuthGuardProps {
   children?: React.ReactNode;
@@ -30,13 +30,15 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     const runCheck = async () => {
       const id = ++sentinel.current;
 
-      let redirect = "/login";
+      let loginUrl = '/login';
+      let unreadableUrl = '/unreachable';
       const params = new URLSearchParams();
-      if (path.current !== "/") {
-        params.append("redirect", path.current);
+      if (path.current !== '/') {
+        params.append('redirect', path.current);
       }
       if (params.size > 0) {
-        redirect += `?${params.toString()}`;
+        loginUrl += `?${params.toString()}`;
+        unreadableUrl += `?${params.toString()}`;
       }
 
       if (token && session) {
@@ -53,7 +55,7 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       }
 
       if (!token) {
-        navigate(redirect, { replace: true });
+        navigate(loginUrl, { replace: true });
         return;
       }
 
@@ -61,14 +63,14 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
 
       if (id !== sentinel.current) return;
 
-      if (checkResult === "invalid") {
+      if (checkResult === 'invalid') {
         clearToken();
-        navigate(redirect, { replace: true });
+        navigate(loginUrl, { replace: true });
         return;
       }
 
-      if (checkResult === "error") {
-        navigate("/unreachable", { replace: true });
+      if (checkResult === 'error') {
+        navigate(unreadableUrl, { replace: true });
         return;
       }
 
@@ -86,11 +88,11 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
         <PageBody>
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
               gap: 2,
             }}
           >

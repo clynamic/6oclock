@@ -9,6 +9,7 @@
 export type GetApproverSummaryParams = {
   startDate?: Date;
   endDate?: Date;
+  timezone?: string;
   /**
    * Page number
    */

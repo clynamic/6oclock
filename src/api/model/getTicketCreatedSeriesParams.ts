@@ -9,4 +9,5 @@
 export type GetTicketCreatedSeriesParams = {
   startDate?: Date;
   endDate?: Date;
+  timezone?: string;
 };

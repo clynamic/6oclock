@@ -1,12 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
-import { PopupState } from "material-ui-popup-state/hooks";
-import React, { createContext, ReactNode, useContext, useMemo } from "react";
-import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
+import { PopupState } from 'material-ui-popup-state/hooks';
+import React, { createContext, ReactNode, useContext, useMemo } from 'react';
+import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 
-import { useCurrentBreakpoint } from "../../utils";
-import { NavAction, NavNode, NavTopLink, SubNavNode } from "../navigation";
+import { useCurrentBreakpoint } from '../../utils';
+import { NavAction, NavNode, NavTopLink, SubNavNode } from '../navigation';
 
-export type PageHeaderLayout = "small" | "wide";
+export type PageHeaderLayout = 'small' | 'wide';
 
 export interface PageHeaderContextValue {
   navigation: NavNode[];
@@ -18,7 +18,7 @@ export interface PageHeaderContextValue {
 }
 
 export const PageHeaderContext = createContext<PageHeaderContextValue | null>(
-  null
+  null,
 );
 
 export interface PageHeaderProviderProps {
@@ -35,17 +35,17 @@ export const PageHeaderProvider: React.FC<PageHeaderProviderProps> = ({
   popupState,
 }) => {
   const currentBreakpoint = useCurrentBreakpoint();
-  const layout = ["xs", "sm"].includes(currentBreakpoint) ? "small" : "wide";
+  const layout = ['xs', 'sm'].includes(currentBreakpoint) ? 'small' : 'wide';
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const currentLink = useMemo(() => {
     const entry = navigation.find((entry): entry is NavTopLink => {
-      if (entry instanceof Object && "href" in entry) {
-        const segments = location.pathname.split("/");
+      if (entry instanceof Object && 'href' in entry) {
+        const segments = location.pathname.split('/');
         return entry.href
-          .split("/")
+          .split('/')
           .every((segment, index) => segments[index] === segment);
       }
       return false;
@@ -84,7 +84,7 @@ export const usePageHeaderContext = () => {
   const context = useContext(PageHeaderContext);
   if (!context) {
     throw new Error(
-      "usePageHeaderContext must be used within a PageHeaderProvider"
+      'usePageHeaderContext must be used within a PageHeaderProvider',
     );
   }
   return context;

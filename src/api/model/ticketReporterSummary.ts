@@ -5,7 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.1
  */
-import type { UserHead } from "./userHead";
+import type { UserHead } from './userHead';
 
 export interface TicketReporterSummary {
   days: number;

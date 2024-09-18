@@ -1,15 +1,15 @@
-import { Construction } from "@mui/icons-material";
-import { Alert, Stack } from "@mui/material";
-import { useState } from "react";
+import { Construction } from '@mui/icons-material';
+import { Alert, Stack } from '@mui/material';
+import { useState } from 'react';
 
-import { DashboardConfigType } from "../../api";
+import { DashboardConfigType } from '../../api';
 import {
   DashboardBody,
   DashboardEditHeader,
   RemoteDashboardProvider,
-} from "../../dashboard";
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../../page";
-import { janitorDashboardCatalog } from "./JanitorCatalog";
+} from '../../dashboard';
+import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
+import { janitorDashboardCatalog } from './JanitorCatalog';
 
 export const JanitorOverviewPage: React.FC = () => {
   const [showWarning, setShowWarning] = useState(true);
@@ -23,7 +23,7 @@ export const JanitorOverviewPage: React.FC = () => {
         <PageTitle subtitle="Janitors" />
         <PageHeader actions={[<DashboardEditHeader />]} />
         <PageBody>
-          <Stack sx={{ height: "100%", width: "100%" }}>
+          <Stack sx={{ height: '100%', width: '100%' }}>
             <DashboardBody />
             {showWarning && (
               <Alert

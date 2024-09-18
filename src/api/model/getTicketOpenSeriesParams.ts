@@ -9,4 +9,5 @@
 export type GetTicketOpenSeriesParams = {
   startDate?: Date;
   endDate?: Date;
+  timezone?: string;
 };

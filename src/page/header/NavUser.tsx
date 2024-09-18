@@ -1,9 +1,9 @@
-import { Avatar } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Avatar } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-import { useUserHead } from "../../api";
-import { useAuth } from "../../auth";
-import { NavButton } from "./NavButton";
+import { useUserHead } from '../../api';
+import { useAuth } from '../../auth';
+import { NavButton } from './NavButton';
 
 export const NavUser: React.FC = () => {
   const navigate = useNavigate();
@@ -27,15 +27,15 @@ export const NavUser: React.FC = () => {
           sx={{
             width: 24,
             height: 24,
-            bgcolor: "background.paper",
-            color: "text.primary",
+            bgcolor: 'background.paper',
+            color: 'text.primary',
           }}
         >
-          {user?.name.split("_").map((part) => part[0]) ?? "?"}
+          {user?.name.split('_').map((part) => part[0]) ?? '?'}
         </Avatar>
       }
     >
-      {user?.name.replace("_", " ") ?? "Profile"}
+      {user?.name.replace('_', ' ') ?? 'Profile'}
     </NavButton>
   );
 };

@@ -1,9 +1,9 @@
-import { Beenhere, CalendarMonth } from "@mui/icons-material";
-import { Avatar, Box, Card, Chip, Skeleton, Stack } from "@mui/material";
+import { Beenhere, CalendarMonth } from '@mui/icons-material';
+import { Avatar, Box, Card, Chip, Skeleton, Stack } from '@mui/material';
 
-import { ApproverSummary } from "../../api";
-import { UsernameText } from "../../common";
-import { RankingText } from "../../common/RankingText";
+import { ApproverSummary } from '../../api';
+import { UsernameText } from '../../common';
+import { RankingText } from '../../common/RankingText';
 
 export interface ApprovalLeaderboardFrame {
   summary?: ApproverSummary;
@@ -24,11 +24,11 @@ export const ApprovalLeaderboardFrame: React.FC<ApprovalLeaderboardFrame> = ({
               sx={{
                 width: 64,
                 height: 64,
-                bgcolor: "background.paper",
-                color: "text.primary",
+                bgcolor: 'background.paper',
+                color: 'text.primary',
               }}
             >
-              {summary.head?.name.split("_").map((part) => part[0]) ?? "?"}
+              {summary.head?.name.split('_').map((part) => part[0]) ?? '?'}
             </Avatar>
           ) : (
             <Skeleton variant="rounded" width={64} height={64} />

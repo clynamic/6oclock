@@ -9,4 +9,5 @@
 export type GetApprovalCountSeriesByApproverParams = {
   startDate?: Date;
   endDate?: Date;
+  timezone?: string;
 };

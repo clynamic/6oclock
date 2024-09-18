@@ -1,11 +1,11 @@
-import { ArrowForward } from "@mui/icons-material";
-import { Button, Stack } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { ArrowForward } from '@mui/icons-material';
+import { Button, Stack } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-import { useApproverSummary } from "../../api";
-import { LimitedList, NoDataHint } from "../../common";
-import { refetchQueryOptions, useChartDateRange } from "../../utils";
-import { ApprovalLeaderboardFrame } from "./ApprovalLeaderboardFrame";
+import { useApproverSummary } from '../../api';
+import { LimitedList, NoDataHint } from '../../common';
+import { refetchQueryOptions, useChartDateRange } from '../../utils';
+import { ApprovalLeaderboardFrame } from './ApprovalLeaderboardFrame';
 
 export const ApprovalLeaderboard: React.FC = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export const ApprovalLeaderboard: React.FC = () => {
       ...range,
       limit: 10,
     },
-    refetchQueryOptions()
+    refetchQueryOptions(),
   );
 
   if (approvers?.length === 0) return <NoDataHint />;
@@ -28,7 +28,7 @@ export const ApprovalLeaderboard: React.FC = () => {
           <Button
             size="small"
             endIcon={<ArrowForward />}
-            onClick={() => navigate("/janitors/approvals")}
+            onClick={() => navigate('/janitors/approvals')}
           >
             See All
           </Button>

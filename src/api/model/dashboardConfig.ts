@@ -5,9 +5,9 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.1
  */
-import type { DashboardConfigMeta } from "./dashboardConfigMeta";
-import type { DashboardPositions } from "./dashboardPositions";
-import type { DashboardConfigType } from "./dashboardConfigType";
+import type { DashboardConfigMeta } from './dashboardConfigMeta';
+import type { DashboardPositions } from './dashboardPositions';
+import type { DashboardConfigType } from './dashboardConfigType';
 
 export interface DashboardConfig {
   meta: DashboardConfigMeta;

@@ -1,4 +1,4 @@
-import { DateTime } from "luxon";
+import { DateTime } from 'luxon';
 
 export interface DateRange {
   startDate: Date;
@@ -9,8 +9,8 @@ export interface DateRange {
 export const getCurrentMonthRange = (): DateRange => {
   const now = DateTime.now().toLocal();
   return {
-    startDate: now.startOf("month").toJSDate(),
-    endDate: now.endOf("month").toJSDate(),
+    startDate: now.startOf('month').toJSDate(),
+    endDate: now.endOf('month').toJSDate(),
     timezone: now.zoneName,
   };
 };

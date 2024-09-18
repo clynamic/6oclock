@@ -4,7 +4,7 @@ import {
   Fragment,
   isValidElement,
   ReactNode,
-} from "react";
+} from 'react';
 
 type Props = {
   children?: ReactNode;
@@ -22,7 +22,7 @@ export const Nest = (props: Props) => {
               ? cloneElement(parent, parent.props, child)
               : child;
           },
-          <Fragment />
+          <Fragment />,
         )}
     </Fragment>
   );
