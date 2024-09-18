@@ -1,13 +1,12 @@
 import { useTheme } from "@mui/material";
 import { BarChart, LineChart } from "@mui/x-charts";
-import dayjs from "dayjs";
+import { DateTime } from "luxon";
 import { useMemo } from "react";
 
 import { useApprovalCountSeries } from "../../api";
-import { DateRange, SeriesChartProps, useChartDateRange } from "../../utils";
+import { SeriesChartProps, useChartDateRange } from "../../utils";
 
 export interface ApprovalTurnaroundChartProps {
-  range?: DateRange;
   variant?: "bars" | "lines";
 }
 
@@ -19,33 +18,25 @@ export const ApprovalTurnaroundChart: React.FC<
 
   const { data: approvedData } = useApprovalCountSeries(range);
 
-  const approvedSeries = useMemo(
-    () =>
-      approvedData?.map((e) => ({
-        ...e,
-        date: dayjs(e.date).format("YYYY-MM-DD"),
-      })),
-    [approvedData]
-  );
-
-  const xAxisLabels = useMemo(() => {
-    return Array.from(
-      new Set([
-        // ...(uploadedSeries?.map((e) => e.date) ?? []),
-        ...(approvedSeries?.map((e) => e.date) ?? []),
-      ])
-    ).sort((a, b) => dayjs(a).unix() - dayjs(b).unix());
-  }, [approvedSeries]);
-
   const dataset = useMemo(() => {
-    return xAxisLabels.map((date) => {
-      return {
-        date,
-        // uploaded: uploadedSeries?.find((e) => e.date === date)?.count ?? 0,
-        approved: approvedSeries?.find((e) => e.date === date)?.count ?? 0,
-      };
-    });
-  }, [approvedSeries, xAxisLabels]);
+    const dateMap: Record<string, { date: Date; approved: number }> = {};
+
+    const dateString = (date: Date) => DateTime.fromJSDate(date).toISODate();
+
+    if (approvedData) {
+      for (const point of approvedData) {
+        const date = dateString(point.date)!;
+        if (!dateMap[date]) {
+          dateMap[date] = { date: point.date, approved: 0 };
+        }
+        dateMap[date].approved = point.count;
+      }
+    }
+
+    // uploads data goes here
+
+    return Object.values(dateMap);
+  }, [approvedData]);
 
   const chartProps: SeriesChartProps = {
     dataset,
@@ -53,16 +44,11 @@ export const ApprovalTurnaroundChart: React.FC<
       {
         scaleType: "band",
         dataKey: "date",
+        valueFormatter: (value) =>
+          DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
       },
     ],
     series: [
-      /*
-      {
-        dataKey: "uploaded",
-        label: "Uploaded",
-        color: theme.palette.primary.main,
-      },
-      */
       {
         dataKey: "approved",
         label: "Approved",
@@ -76,9 +62,9 @@ export const ApprovalTurnaroundChart: React.FC<
     },
   };
 
-  return variant === "bars" ? (
-    <BarChart {...chartProps} />
-  ) : (
-    <LineChart {...chartProps} />
-  );
+  const Chart = useMemo(() => {
+    return variant === "bars" ? BarChart : LineChart;
+  }, [variant]);
+
+  return <Chart {...chartProps} />;
 };

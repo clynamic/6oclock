@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { MD5 } from "crypto-js";
-import dayjs from "dayjs";
+import { DateTime } from "luxon";
 import React, { useEffect, useMemo, useRef } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
@@ -40,7 +40,10 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       }
 
       if (token && session) {
-        const expired = dayjs(session.date).add(1, "hour").isBefore(dayjs());
+        const expired =
+          DateTime.fromJSDate(session.date).plus({
+            hours: 1,
+          }) < DateTime.now();
         const hash = MD5(token).toString();
         const valid = hash === session.hash;
         if (expired || !valid) {
