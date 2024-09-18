@@ -48,4 +48,7 @@ export const theme = createTheme({
       },
     },
   },
+  typography: {
+    fontFamily: "Verdana, Noto Sans, sans-serif",
+  },
 });

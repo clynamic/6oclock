@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 export const AppLogo = () => {
@@ -13,11 +13,11 @@ export const AppLogo = () => {
       sx={{
         textTransform: "none",
         color: "text.primary",
+        width: "64px",
+        height: "64px",
       }}
     >
-      <Typography variant="h4" whiteSpace={"nowrap"}>
-        6o
-      </Typography>
+      <Box component={"img"} src="/assets/6oclock.svg" alt="logo" height={48} />
     </Button>
   );
 };
