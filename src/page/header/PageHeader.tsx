@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 import { Fragment } from 'react/jsx-runtime';
+import { Link as RouterLink } from 'react-router-dom';
 
 import { AppLogo } from '../../common';
 import { NavAction, useNavigationEntries } from '../navigation';
@@ -229,14 +230,15 @@ const PageHeaderBar: React.FC = () => {
                     if (entry instanceof Object && 'href' in entry) {
                       return (
                         <Button
-                          key={`nav-${entry.href}`}
+                          key={i}
+                          component={RouterLink}
+                          to={entry.href}
                           color={'secondary'}
                           sx={{
                             backgroundColor: selected
                               ? 'background.paper'
                               : undefined,
                           }}
-                          onClick={() => navigate(entry.href)}
                         >
                           <Typography>{entry.label}</Typography>
                         </Button>
@@ -260,16 +262,17 @@ const PageHeaderBar: React.FC = () => {
                   if (entry instanceof Object && 'href' in entry) {
                     return (
                       <Button
+                        key={`subnav-${entry.href}`}
+                        component={RouterLink}
+                        to={entry.href}
                         variant="text"
                         size="small"
                         color="secondary"
-                        key={`subnav-${entry.href}`}
                         sx={{
                           p: 0.2,
                           borderBottomLeftRadius: 0,
                           borderBottomRightRadius: 0,
                         }}
-                        onClick={() => navigate(entry.href!)}
                       >
                         <Typography>{entry.label}</Typography>
                       </Button>

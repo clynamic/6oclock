@@ -1,15 +1,14 @@
 import { Box, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export const AppLogo = () => {
-  const navigate = useNavigate();
-
   return (
     <Button
       variant="text"
       color="secondary"
       size="small"
-      onClick={() => navigate('/')}
+      component={Link}
+      to="/"
       sx={{
         textTransform: 'none',
         color: 'text.primary',
