@@ -2,7 +2,7 @@
   "name": "6oclock",
   "description": "e6 staff dashboard",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
