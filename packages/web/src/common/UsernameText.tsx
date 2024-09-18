@@ -1,9 +1,9 @@
-import { Skeleton, Typography } from "@mui/material";
-import { useMemo } from "react";
+import { Skeleton, Typography } from '@mui/material';
+import { useMemo } from 'react';
 
-import { UserHead } from "../api";
+import { UserHead } from '../api';
 
-type UsernameInfo = Pick<UserHead, "name" | "level">;
+type UsernameInfo = Pick<UserHead, 'name' | 'level'>;
 
 export interface UsernameTextProps {
   user:
@@ -36,23 +36,23 @@ export interface UsernameTextProps {
  *   --color-user-admin-alt:         #9d6703;
  */
 const UsernameColors: Record<string, string> = {
-  member: "#b4c7d9",
-  privileged: "#b4c7d9",
-  blocked: "#b4c7d9",
-  "former-staff": "#78dca5",
-  janitor: "#d82828",
-  moderator: "#d82828",
-  admin: "#e69500",
+  member: '#b4c7d9',
+  privileged: '#b4c7d9',
+  blocked: '#b4c7d9',
+  'former-staff': '#78dca5',
+  janitor: '#d82828',
+  moderator: '#d82828',
+  admin: '#e69500',
 };
 
 export const UsernameText = ({ user }: UsernameTextProps) => {
   const head = useMemo(() => {
     if (!user) return undefined;
-    if ("userId" in user)
+    if ('userId' in user)
       return (
         user.head ?? {
           name: `User #${user.userId}`,
-          level: "member",
+          level: 'member',
         }
       );
     return user as UsernameInfo;
@@ -62,18 +62,18 @@ export const UsernameText = ({ user }: UsernameTextProps) => {
 
   const { name, level } = head;
   const color =
-    UsernameColors[level.replace(" ", "-").toLowerCase()] ?? "inherit";
+    UsernameColors[level.replace(' ', '-').toLowerCase()] ?? 'inherit';
 
   return (
     <Typography
       variant="h6"
       sx={{ color }}
       noWrap
-      textOverflow={"ellipsis"}
-      whiteSpace={"nowrap"}
-      overflow={"hidden"}
+      textOverflow={'ellipsis'}
+      whiteSpace={'nowrap'}
+      overflow={'hidden'}
     >
-      {name.replace("_", " ")}
+      {name.replace('_', ' ')}
     </Typography>
   );
 };

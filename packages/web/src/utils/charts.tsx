@@ -1,14 +1,14 @@
 /* eslint-disable react-refresh/only-export-components */
-import { BarChart, LineChart } from "@mui/x-charts";
+import { BarChart, LineChart } from '@mui/x-charts';
 import {
   createContext,
   PropsWithChildren,
   useContext,
   useEffect,
   useState,
-} from "react";
+} from 'react';
 
-import { DateRange, getCurrentMonthRange } from "./months";
+import { DateRange, getCurrentMonthRange } from './months';
 
 export type SeriesChartProps = Parameters<typeof BarChart>[0] &
   Parameters<typeof LineChart>[0];
@@ -24,7 +24,7 @@ interface ChartParamsContextValue {
 }
 
 const ChartParamsContext = createContext<ChartParamsContextValue | undefined>(
-  undefined
+  undefined,
 );
 
 export type ChartParamsProviderProps = PropsWithChildren & {
@@ -62,7 +62,7 @@ export const ChartParamsProvider: React.FC<ChartParamsProviderProps> = ({
 export const useChartParams = (): ChartParamsContextValue => {
   const context = useContext(ChartParamsContext);
   if (!context) {
-    throw new Error("useChartDate must be used within a ChartDateProvider");
+    throw new Error('useChartDate must be used within a ChartDateProvider');
   }
   return context;
 };

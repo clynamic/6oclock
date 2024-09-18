@@ -1,36 +1,36 @@
-import { NavNode } from "../page";
-import { NavSpacer, NavUser } from "../page";
+import { NavNode } from '../page';
+import { NavSpacer, NavUser } from '../page';
 
 export const navigationEntries: NavNode[] = [
   {
-    label: "Mods",
-    href: "/mods",
+    label: 'Mods',
+    href: '/mods',
     children: [
       {
-        label: "Dashboard",
-        href: "/mods",
+        label: 'Dashboard',
+        href: '/mods',
       },
       {
-        label: "Tickets",
-        href: "/mods/tickets",
+        label: 'Tickets',
+        href: '/mods/tickets',
       },
       {
-        label: "Reports",
-        href: "/mods/reports",
+        label: 'Reports',
+        href: '/mods/reports',
       },
     ],
   },
   {
-    label: "Janitors",
-    href: "/janitors",
+    label: 'Janitors',
+    href: '/janitors',
     children: [
       {
-        label: "Dashboard",
-        href: "/janitors",
+        label: 'Dashboard',
+        href: '/janitors',
       },
       {
-        label: "Approvals",
-        href: "/janitors/approvals",
+        label: 'Approvals',
+        href: '/janitors/approvals',
       },
     ],
   },

@@ -1,21 +1,21 @@
-import { useTheme } from "@mui/material";
-import { BarChart, LineChart } from "@mui/x-charts";
-import { DateTime } from "luxon";
-import { useMemo } from "react";
+import { useTheme } from '@mui/material';
+import { BarChart, LineChart } from '@mui/x-charts';
+import { DateTime } from 'luxon';
+import { useMemo } from 'react';
 
-import { useTicketClosedSeriesForHandler } from "../../api";
+import { useTicketClosedSeriesForHandler } from '../../api';
 import {
   refetchQueryOptions,
   SeriesChartProps,
   useChartParamsValue,
-} from "../../utils";
+} from '../../utils';
 
 export interface TicketHandlerChartProps {
-  variant?: "bars" | "lines";
+  variant?: 'bars' | 'lines';
 }
 
 export const TicketHandlerChart: React.FC<TicketHandlerChartProps> = ({
-  variant = "bars",
+  variant = 'bars',
 }) => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
@@ -25,35 +25,35 @@ export const TicketHandlerChart: React.FC<TicketHandlerChartProps> = ({
     range,
     refetchQueryOptions({
       enabled: !!userId,
-    })
+    }),
   );
 
   const chartProps: SeriesChartProps = {
     dataset: data?.map((e) => ({ ...e })) ?? [],
     xAxis: [
       {
-        scaleType: "band",
-        dataKey: "date",
+        scaleType: 'band',
+        dataKey: 'date',
         valueFormatter: (value) =>
           DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
       },
     ],
     series: [
       {
-        dataKey: "count",
-        label: "Closed",
+        dataKey: 'count',
+        label: 'Closed',
         color: theme.palette.primary.main,
       },
     ],
     slotProps: {
       noDataOverlay: {
-        message: "No data",
+        message: 'No data',
       },
     },
   };
 
   const Chart = useMemo(() => {
-    return variant === "bars" ? BarChart : LineChart;
+    return variant === 'bars' ? BarChart : LineChart;
   }, [variant]);
 
   return <Chart {...chartProps} />;

@@ -5,7 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.1
  */
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import type {
   DefinedInitialDataOptions,
   DefinedUseInfiniteQueryResult,
@@ -18,7 +18,7 @@ import type {
   UseInfiniteQueryResult,
   UseQueryOptions,
   UseQueryResult,
-} from "@tanstack/react-query";
+} from '@tanstack/react-query';
 import type {
   ApprovalCountPoint,
   ApprovalCountSummary,
@@ -27,9 +27,9 @@ import type {
   GetApprovalCountSeriesParams,
   GetApprovalCountSummaryParams,
   GetApproverSummaryParams,
-} from "./model";
-import { makeRequest } from "../http/axios";
-import type { ErrorType } from "../http/axios";
+} from './model';
+import { makeRequest } from '../http/axios';
+import type { ErrorType } from '../http/axios';
 
 /**
  * Get total approval counts for a given date range
@@ -41,7 +41,7 @@ export const approvalCountSummary = (
 ) => {
   return makeRequest<ApprovalCountSummary>({
     url: `/approvals/metrics/count/summary`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -111,7 +111,7 @@ export function useApprovalCountSummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -134,7 +134,7 @@ export function useApprovalCountSummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -193,7 +193,7 @@ export const approvalCountSeries = (
 ) => {
   return makeRequest<ApprovalCountPoint[]>({
     url: `/approvals/metrics/count/series`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -263,7 +263,7 @@ export function useApprovalCountSeries<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -286,7 +286,7 @@ export function useApprovalCountSeries<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -346,7 +346,7 @@ export const approvalCountSeriesByApprover = (
 ) => {
   return makeRequest<ApprovalCountPoint[]>({
     url: `/approvals/metrics/count/series/${encodeURIComponent(String(approverId))}`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -425,7 +425,7 @@ export function useApprovalCountSeriesByApprover<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -449,7 +449,7 @@ export function useApprovalCountSeriesByApprover<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -514,7 +514,7 @@ export const approverSummary = (
 ) => {
   return makeRequest<ApproverSummary[]>({
     url: `/approvals/metrics/approver/summary`,
-    method: "GET",
+    method: 'GET',
     params,
     signal,
   });
@@ -532,7 +532,7 @@ export const getApproverSummaryQueryKey = (
 export const getApproverSummaryInfiniteQueryOptions = <
   TData = InfiniteData<
     Awaited<ReturnType<typeof approverSummary>>,
-    GetApproverSummaryParams["page"]
+    GetApproverSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -545,7 +545,7 @@ export const getApproverSummaryInfiniteQueryOptions = <
         TData,
         Awaited<ReturnType<typeof approverSummary>>,
         QueryKey,
-        GetApproverSummaryParams["page"]
+        GetApproverSummaryParams['page']
       >
     >;
   },
@@ -557,9 +557,9 @@ export const getApproverSummaryInfiniteQueryOptions = <
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof approverSummary>>,
     QueryKey,
-    GetApproverSummaryParams["page"]
+    GetApproverSummaryParams['page']
   > = ({ signal, pageParam }) =>
-    approverSummary({ ...params, page: pageParam || params?.["page"] }, signal);
+    approverSummary({ ...params, page: pageParam || params?.['page'] }, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
     Awaited<ReturnType<typeof approverSummary>>,
@@ -567,7 +567,7 @@ export const getApproverSummaryInfiniteQueryOptions = <
     TData,
     Awaited<ReturnType<typeof approverSummary>>,
     QueryKey,
-    GetApproverSummaryParams["page"]
+    GetApproverSummaryParams['page']
   > & { queryKey: QueryKey };
 };
 
@@ -579,7 +579,7 @@ export type ApproverSummaryInfiniteQueryError = ErrorType<unknown>;
 export function useApproverSummaryInfinite<
   TData = InfiniteData<
     Awaited<ReturnType<typeof approverSummary>>,
-    GetApproverSummaryParams["page"]
+    GetApproverSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -592,7 +592,7 @@ export function useApproverSummaryInfinite<
         TData,
         Awaited<ReturnType<typeof approverSummary>>,
         QueryKey,
-        GetApproverSummaryParams["page"]
+        GetApproverSummaryParams['page']
       >
     > &
       Pick<
@@ -602,14 +602,14 @@ export function useApproverSummaryInfinite<
           TData,
           QueryKey
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
 export function useApproverSummaryInfinite<
   TData = InfiniteData<
     Awaited<ReturnType<typeof approverSummary>>,
-    GetApproverSummaryParams["page"]
+    GetApproverSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -622,7 +622,7 @@ export function useApproverSummaryInfinite<
         TData,
         Awaited<ReturnType<typeof approverSummary>>,
         QueryKey,
-        GetApproverSummaryParams["page"]
+        GetApproverSummaryParams['page']
       >
     > &
       Pick<
@@ -632,14 +632,14 @@ export function useApproverSummaryInfinite<
           TData,
           QueryKey
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
 export function useApproverSummaryInfinite<
   TData = InfiniteData<
     Awaited<ReturnType<typeof approverSummary>>,
-    GetApproverSummaryParams["page"]
+    GetApproverSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -652,7 +652,7 @@ export function useApproverSummaryInfinite<
         TData,
         Awaited<ReturnType<typeof approverSummary>>,
         QueryKey,
-        GetApproverSummaryParams["page"]
+        GetApproverSummaryParams['page']
       >
     >;
   },
@@ -664,7 +664,7 @@ export function useApproverSummaryInfinite<
 export function useApproverSummaryInfinite<
   TData = InfiniteData<
     Awaited<ReturnType<typeof approverSummary>>,
-    GetApproverSummaryParams["page"]
+    GetApproverSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
@@ -677,7 +677,7 @@ export function useApproverSummaryInfinite<
         TData,
         Awaited<ReturnType<typeof approverSummary>>,
         QueryKey,
-        GetApproverSummaryParams["page"]
+        GetApproverSummaryParams['page']
       >
     >;
   },
@@ -748,7 +748,7 @@ export function useApproverSummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -771,7 +771,7 @@ export function useApproverSummary<
           TError,
           TData
         >,
-        "initialData"
+        'initialData'
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };

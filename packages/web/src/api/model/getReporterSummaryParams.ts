@@ -9,6 +9,7 @@
 export type GetReporterSummaryParams = {
   startDate?: Date;
   endDate?: Date;
+  timezone?: string;
   /**
    * Page number
    */

@@ -1,13 +1,13 @@
-import { useTheme } from "@mui/material";
-import { BarChart } from "@mui/x-charts";
-import { DateTime } from "luxon";
+import { useTheme } from '@mui/material';
+import { BarChart } from '@mui/x-charts';
+import { DateTime } from 'luxon';
 
-import { useTicketActivitySummaryForHandler } from "../../api";
+import { useTicketActivitySummaryForHandler } from '../../api';
 import {
   refetchQueryOptions,
   SeriesChartProps,
   useChartParamsValue,
-} from "../../utils";
+} from '../../utils';
 
 export const TicketHandlerActivityChart: React.FC = () => {
   const theme = useTheme();
@@ -18,29 +18,29 @@ export const TicketHandlerActivityChart: React.FC = () => {
     range,
     refetchQueryOptions({
       enabled: !!userId,
-    })
+    }),
   );
 
   const chartProps: SeriesChartProps = {
     dataset: data?.map((e) => ({ ...e })) ?? [],
     xAxis: [
       {
-        scaleType: "band",
-        dataKey: "date",
+        scaleType: 'band',
+        dataKey: 'date',
         valueFormatter: (value) =>
           DateTime.fromJSDate(value).toLocaleString(DateTime.TIME_SIMPLE),
       },
     ],
     series: [
       {
-        dataKey: "count",
-        label: "Closed",
+        dataKey: 'count',
+        label: 'Closed',
         color: theme.palette.primary.main,
       },
     ],
     slotProps: {
       noDataOverlay: {
-        message: "No data",
+        message: 'No data',
       },
     },
   };

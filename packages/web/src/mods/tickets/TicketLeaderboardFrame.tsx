@@ -1,4 +1,4 @@
-import { CalendarMonth, Sell } from "@mui/icons-material";
+import { CalendarMonth, Sell } from '@mui/icons-material';
 import {
   Box,
   Card,
@@ -6,12 +6,12 @@ import {
   Chip,
   Skeleton,
   Stack,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-import { TicketHandlerSummary } from "../../api";
-import { UserAvatar, UsernameText } from "../../common";
-import { RankingText } from "../../common/RankingText";
+import { TicketHandlerSummary } from '../../api';
+import { UserAvatar, UsernameText } from '../../common';
+import { RankingText } from '../../common/RankingText';
 
 export interface TicketLeaderboardFrameProps {
   summary?: TicketHandlerSummary;
@@ -25,8 +25,8 @@ export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
   return (
     <Card
       sx={{
-        transition: "box-shadow 0.3s",
-        "&:hover": {
+        transition: 'box-shadow 0.3s',
+        '&:hover': {
           boxShadow: 6,
         },
       }}
@@ -37,7 +37,7 @@ export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
         }
         disabled={!summary}
       >
-        <Box p={2} sx={{ width: "100%" }}>
+        <Box p={2} sx={{ width: '100%' }}>
           <Stack direction="row" spacing={2}>
             <UserAvatar
               user={
@@ -63,7 +63,7 @@ export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
               <Stack
                 direction="row"
                 gap={1}
-                sx={{ flexWrap: "wrap", maxWidth: 300 }}
+                sx={{ flexWrap: 'wrap', maxWidth: 300 }}
               >
                 {summary ? (
                   <>

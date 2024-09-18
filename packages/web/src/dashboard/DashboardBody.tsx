@@ -1,9 +1,9 @@
-import { ErrorOutline, HourglassEmpty } from "@mui/icons-material";
-import { Box, CircularProgress, Stack, Typography } from "@mui/material";
+import { ErrorOutline, HourglassEmpty } from '@mui/icons-material';
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 
-import { DashboardCard } from "./DashboardCard";
-import { useDashboard } from "./DashboardContext";
-import { DashboardGrid } from "./DashboardGrid";
+import { DashboardCard } from './DashboardCard';
+import { useDashboard } from './DashboardContext';
+import { DashboardGrid } from './DashboardGrid';
 
 export const DashboardBody = () => {
   const {
@@ -22,9 +22,9 @@ export const DashboardBody = () => {
         direction="column"
         gap={2}
         sx={{
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
         }}
       >
         <CircularProgress />
@@ -37,11 +37,11 @@ export const DashboardBody = () => {
     return (
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
           gap: 2,
         }}
       >
@@ -57,11 +57,11 @@ export const DashboardBody = () => {
     return (
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
           gap: 2,
         }}
       >
@@ -76,7 +76,7 @@ export const DashboardBody = () => {
 
   return (
     <DashboardGrid
-      compactType={"vertical"}
+      compactType={'vertical'}
       layouts={layouts}
       onLayoutChange={(_, allLayouts) => {
         if (!config) return;

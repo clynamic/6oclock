@@ -9,4 +9,5 @@
 export type GetTicketStatusSummaryParams = {
   startDate?: Date;
   endDate?: Date;
+  timezone?: string;
 };

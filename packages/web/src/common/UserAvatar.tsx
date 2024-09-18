@@ -3,7 +3,7 @@ import {
   AvatarOwnProps,
   Skeleton,
   SkeletonOwnProps,
-} from "@mui/material";
+} from '@mui/material';
 
 export interface UserAvatarProps {
   user?: {
@@ -12,13 +12,13 @@ export interface UserAvatarProps {
     avatar?: string;
   };
   size?: number;
-  shape?: AvatarOwnProps["variant"] & SkeletonOwnProps["variant"];
+  shape?: AvatarOwnProps['variant'] & SkeletonOwnProps['variant'];
 }
 
 export const UserAvatar: React.FC<UserAvatarProps> = ({
   user,
   size = 48,
-  shape = "circular",
+  shape = 'circular',
 }) => {
   return user ? (
     <Avatar
@@ -28,14 +28,14 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
       sx={{
         width: size,
         height: size,
-        bgcolor: "background.paper",
-        color: "text.primary",
+        bgcolor: 'background.paper',
+        color: 'text.primary',
       }}
     >
       {user.name
-        ?.split("_")
+        ?.split('_')
         .map((part) => part[0])
-        .join("") ?? "?"}
+        .join('') ?? '?'}
     </Avatar>
   ) : (
     <Skeleton variant={shape} width={size} height={size} />

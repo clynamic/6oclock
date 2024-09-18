@@ -1,8 +1,8 @@
-import Axios, { AxiosError, AxiosRequestConfig } from "axios";
+import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
-import { dateDeserializeInterceptor } from "./date";
+import { dateDeserializeInterceptor } from './date';
 
-const baseURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 export const AXIOS_INSTANCE = Axios.create({ baseURL });
 

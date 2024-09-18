@@ -1,9 +1,9 @@
-import { Stack } from "@mui/material";
+import { Stack } from '@mui/material';
 
-import { useUserHead } from "../api";
-import { useChartParamsValue } from "../utils";
-import { UserAvatar } from "./UserAvatar";
-import { UsernameText } from "./UsernameText";
+import { useUserHead } from '../api';
+import { useChartParamsValue } from '../utils';
+import { UserAvatar } from './UserAvatar';
+import { UsernameText } from './UsernameText';
 
 export const UserCard: React.FC = () => {
   const { userId } = useChartParamsValue();

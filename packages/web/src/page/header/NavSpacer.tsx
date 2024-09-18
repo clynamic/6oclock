@@ -1,14 +1,14 @@
-import { Box, Divider } from "@mui/material";
+import { Box, Divider } from '@mui/material';
 
-import { usePageHeaderContext } from "./PageHeaderContext";
+import { usePageHeaderContext } from './PageHeaderContext';
 
 export const NavSpacer: React.FC = () => {
   const { layout } = usePageHeaderContext();
 
-  if (layout === "small") {
+  if (layout === 'small') {
     return <Divider orientation="horizontal" variant="middle" />;
   }
-  if (layout === "wide") {
+  if (layout === 'wide') {
     return <Box sx={{ flexGrow: 1 }} />;
   }
 };

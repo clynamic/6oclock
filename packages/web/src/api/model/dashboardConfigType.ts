@@ -11,6 +11,6 @@ export type DashboardConfigType =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DashboardConfigType = {
-  moderator: "moderator",
-  janitor: "janitor",
+  moderator: 'moderator',
+  janitor: 'janitor',
 } as const;

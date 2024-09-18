@@ -1,9 +1,9 @@
-import { useTheme } from "@mui/material";
-import { PieChart, PieValueType } from "@mui/x-charts";
-import { useMemo } from "react";
+import { useTheme } from '@mui/material';
+import { PieChart, PieValueType } from '@mui/x-charts';
+import { useMemo } from 'react';
 
-import { useTicketStatusSummary } from "../../api";
-import { refetchQueryOptions, useChartDateRange } from "../../utils";
+import { useTicketStatusSummary } from '../../api';
+import { refetchQueryOptions, useChartDateRange } from '../../utils';
 
 export const TicketStatusChart: React.FC = () => {
   const theme = useTheme();
@@ -11,26 +11,26 @@ export const TicketStatusChart: React.FC = () => {
 
   const { data: summary } = useTicketStatusSummary(
     range,
-    refetchQueryOptions()
+    refetchQueryOptions(),
   );
 
   const data: PieValueType[] = useMemo(() => {
     return [
       {
         id: 0,
-        label: "Open",
+        label: 'Open',
         value: summary?.pending || 0,
         color: theme.palette.primary.main,
       },
       {
         id: 1,
-        label: "In Progress",
+        label: 'In Progress',
         value: summary?.partial || 0,
         color: theme.palette.warning.main,
       },
       {
         id: 2,
-        label: "Closed",
+        label: 'Closed',
         value: summary?.approved || 0,
         color: theme.palette.secondary.main,
       },
@@ -41,23 +41,23 @@ export const TicketStatusChart: React.FC = () => {
 
   return (
     <PieChart
-      sx={{ height: "100%" }}
+      sx={{ height: '100%' }}
       series={[
         {
           data: data,
           arcLabel: (item) => `${item.value}`,
           arcLabelMinAngle: 20,
-          innerRadius: "30%",
-          outerRadius: "90%",
+          innerRadius: '30%',
+          outerRadius: '90%',
           paddingAngle: 5,
           cornerRadius: 5,
-          cx: "50%",
-          cy: "50%",
+          cx: '50%',
+          cy: '50%',
         },
       ]}
       slotProps={{
         noDataOverlay: {
-          message: "No data",
+          message: 'No data',
         },
       }}
     />

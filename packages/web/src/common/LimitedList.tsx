@@ -1,9 +1,9 @@
-import { Box } from "@mui/material";
-import { PropsWithChildren } from "react";
-import { TruncatedList, TruncatedListProps } from "react-truncate-list";
+import { Box } from '@mui/material';
+import { PropsWithChildren } from 'react';
+import { TruncatedList, TruncatedListProps } from 'react-truncate-list';
 
 export interface LimitedListProps extends PropsWithChildren {
-  indicator: TruncatedListProps["renderTruncator"];
+  indicator: TruncatedListProps['renderTruncator'];
 }
 
 export const LimitedList: React.FC<LimitedListProps> = ({
@@ -13,11 +13,11 @@ export const LimitedList: React.FC<LimitedListProps> = ({
   return (
     <Box
       sx={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
         gap: 1,
-        listStyleType: "none",
+        listStyleType: 'none',
         paddingInline: 0,
         marginBlock: 0,
       }}

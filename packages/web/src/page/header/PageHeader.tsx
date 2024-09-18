@@ -1,4 +1,4 @@
-import MenuIcon from "@mui/icons-material/Menu";
+import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
   Backdrop,
@@ -12,13 +12,13 @@ import {
   ThemeProvider,
   Toolbar,
   Typography,
-} from "@mui/material";
-import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
-import { Fragment } from "react/jsx-runtime";
+} from '@mui/material';
+import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
+import { Fragment } from 'react/jsx-runtime';
 
-import { AppLogo } from "../../common";
-import { NavAction, useNavigationEntries } from "../navigation";
-import { PageHeaderProvider, usePageHeaderContext } from "./PageHeaderContext";
+import { AppLogo } from '../../common';
+import { NavAction, useNavigationEntries } from '../navigation';
+import { PageHeaderProvider, usePageHeaderContext } from './PageHeaderContext';
 
 export interface PageHeaderProps {
   actions?: NavAction[];
@@ -39,7 +39,7 @@ const PageHeaderBar: React.FC = () => {
   const { layout, navigation, navigate, currentLink, currentSubLinks } =
     pageHeaderContext;
 
-  if (layout === "small") {
+  if (layout === 'small') {
     return (
       <PopupState variant="popover" popupId="navigation-menu">
         {(popupState) => (
@@ -48,7 +48,7 @@ const PageHeaderBar: React.FC = () => {
               position="static"
               elevation={0}
               sx={{
-                backgroundColor: "transparent",
+                backgroundColor: 'transparent',
                 borderBottomLeftRadius: (theme) => theme.shape.borderRadius,
                 borderBottomRightRadius: (theme) => theme.shape.borderRadius,
                 marginBottom: 1,
@@ -66,11 +66,11 @@ const PageHeaderBar: React.FC = () => {
                   size="large"
                   sx={{
                     flex: 1,
-                    backgroundColor: "background.paper",
-                    "&:hover": {
-                      backgroundColor: "background.paper",
+                    backgroundColor: 'background.paper',
+                    '&:hover': {
+                      backgroundColor: 'background.paper',
                     },
-                    textTransform: "none",
+                    textTransform: 'none',
                   }}
                   {...bindTrigger(popupState)}
                 >
@@ -80,7 +80,7 @@ const PageHeaderBar: React.FC = () => {
                     justifyContent="space-between"
                     spacing={1}
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                   >
                     <Typography variant="h6">{currentLink?.label}</Typography>
@@ -105,21 +105,21 @@ const PageHeaderBar: React.FC = () => {
                   },
                 }}
                 anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "center",
+                  vertical: 'bottom',
+                  horizontal: 'center',
                 }}
                 transformOrigin={{
-                  vertical: "top",
-                  horizontal: "center",
+                  vertical: 'top',
+                  horizontal: 'center',
                 }}
               >
                 {navigation.map((entry, i) => {
-                  if (entry instanceof Object && "href" in entry) {
+                  if (entry instanceof Object && 'href' in entry) {
                     return (
                       <MenuItem
                         key={`nav-${entry.href}`}
                         sx={{
-                          width: "100%",
+                          width: '100%',
                         }}
                         onClick={() => {
                           navigate(entry.href);
@@ -136,7 +136,7 @@ const PageHeaderBar: React.FC = () => {
                   <Divider orientation="horizontal" variant="middle" />
                 )}
                 {currentSubLinks?.map((entry) => {
-                  if (entry instanceof Object && "href" in entry) {
+                  if (entry instanceof Object && 'href' in entry) {
                     return (
                       <MenuItem
                         key={`subnav-${entry.href}`}
@@ -160,7 +160,7 @@ const PageHeaderBar: React.FC = () => {
       </PopupState>
     );
   }
-  if (layout === "wide") {
+  if (layout === 'wide') {
     return (
       <ThemeProvider
         theme={(theme) => ({
@@ -169,7 +169,7 @@ const PageHeaderBar: React.FC = () => {
             MuiButton: {
               styleOverrides: {
                 root: {
-                  textTransform: "none",
+                  textTransform: 'none',
                 },
               },
             },
@@ -190,7 +190,7 @@ const PageHeaderBar: React.FC = () => {
               sx={{
                 paddingTop: 0.5,
                 paddingBottom: 0.5,
-                flexBasis: "100%",
+                flexBasis: '100%',
               }}
             >
               <Stack
@@ -199,7 +199,7 @@ const PageHeaderBar: React.FC = () => {
                 sx={{
                   paddingLeft: 0.5,
                   paddingRight: 0.5,
-                  width: "100%",
+                  width: '100%',
                 }}
               >
                 <ThemeProvider
@@ -208,13 +208,13 @@ const PageHeaderBar: React.FC = () => {
                     components: {
                       MuiButton: {
                         defaultProps: {
-                          variant: "text",
-                          size: "small",
-                          color: "secondary",
+                          variant: 'text',
+                          size: 'small',
+                          color: 'secondary',
                         },
                         styleOverrides: {
                           root: {
-                            textTransform: "none",
+                            textTransform: 'none',
                             p: 0.2,
                             borderBottomLeftRadius: 0,
                             borderBottomRightRadius: 0,
@@ -226,14 +226,14 @@ const PageHeaderBar: React.FC = () => {
                 >
                   {navigation.map((entry, i) => {
                     const selected = entry === currentLink;
-                    if (entry instanceof Object && "href" in entry) {
+                    if (entry instanceof Object && 'href' in entry) {
                       return (
                         <Button
                           key={`nav-${entry.href}`}
-                          color={"secondary"}
+                          color={'secondary'}
                           sx={{
                             backgroundColor: selected
-                              ? "background.paper"
+                              ? 'background.paper'
                               : undefined,
                           }}
                           onClick={() => navigate(entry.href)}
@@ -250,14 +250,14 @@ const PageHeaderBar: React.FC = () => {
                 direction="row"
                 gap={2}
                 sx={{
-                  backgroundColor: "background.paper",
+                  backgroundColor: 'background.paper',
                   borderRadius: 1,
                   paddingLeft: 2,
                   paddingRight: 2,
                 }}
               >
                 {currentSubLinks?.map((entry, i) => {
-                  if (entry instanceof Object && "href" in entry) {
+                  if (entry instanceof Object && 'href' in entry) {
                     return (
                       <Button
                         variant="text"

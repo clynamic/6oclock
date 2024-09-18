@@ -1,11 +1,11 @@
-import { ZoomOutMap } from "@mui/icons-material";
-import { Box, Card, CardProps, Stack, Typography } from "@mui/material";
-import { ReactNode } from "react";
+import { ZoomOutMap } from '@mui/icons-material';
+import { Box, Card, CardProps, Stack, Typography } from '@mui/material';
+import { ReactNode } from 'react';
 
-import { createDashboardChild } from "./DashboardChild";
-import { useDashboard } from "./DashboardContext";
+import { createDashboardChild } from './DashboardChild';
+import { useDashboard } from './DashboardContext';
 
-export type DashboardCardProps = Pick<CardProps, "variant"> & {
+export type DashboardCardProps = Pick<CardProps, 'variant'> & {
   children: ReactNode;
   title?: ReactNode;
 };
@@ -17,30 +17,30 @@ export const DashboardCard = createDashboardChild<DashboardCardProps>(
     return (
       <Box
         sx={{
-          width: "100%",
-          height: "100%",
+          width: '100%',
+          height: '100%',
         }}
       >
         <Card
           variant={variant}
           sx={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: variant === "outlined" ? "transparent" : undefined,
-            position: "relative",
+            width: '100%',
+            height: '100%',
+            backgroundColor: variant === 'outlined' ? 'transparent' : undefined,
+            position: 'relative',
 
-            userSelect: isEditing ? "none" : undefined,
+            userSelect: isEditing ? 'none' : undefined,
           }}
         >
           <Stack
             p={2}
             spacing={1}
             sx={{
-              height: "100%",
-              width: "100%",
+              height: '100%',
+              width: '100%',
 
-              "& > *:not(.react-resizable-handle)": {
-                transition: "opacity 0.2s",
+              '& > *:not(.react-resizable-handle)': {
+                transition: 'opacity 0.2s',
                 opacity: isEditing ? 0.5 : 1,
               },
             }}
@@ -66,28 +66,28 @@ export const DashboardCard = createDashboardChild<DashboardCardProps>(
                 left: 12,
                 right: 12,
                 bottom: 12,
-                position: "absolute",
+                position: 'absolute',
                 zIndex: 500,
 
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
                 borderRadius: 1,
-                cursor: "grab",
+                cursor: 'grab',
 
-                transition: "opacity 0.2s",
+                transition: 'opacity 0.2s',
               }}
             >
               <Box
                 sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}
               >
                 <ZoomOutMap
                   sx={{
-                    rotate: "135deg",
+                    rotate: '135deg',
                   }}
                 />
               </Box>
@@ -96,5 +96,5 @@ export const DashboardCard = createDashboardChild<DashboardCardProps>(
         </Card>
       </Box>
     );
-  }
+  },
 );

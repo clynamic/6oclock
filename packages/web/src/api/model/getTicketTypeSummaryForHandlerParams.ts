@@ -9,4 +9,5 @@
 export type GetTicketTypeSummaryForHandlerParams = {
   startDate?: Date;
   endDate?: Date;
+  timezone?: string;
 };

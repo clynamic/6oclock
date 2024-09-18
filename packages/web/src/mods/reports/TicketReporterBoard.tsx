@@ -1,11 +1,11 @@
-import { ArrowForward } from "@mui/icons-material";
-import { Button, Stack } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { ArrowForward } from '@mui/icons-material';
+import { Button, Stack } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-import { useReporterSummary } from "../../api";
-import { LimitedList, NoDataHint } from "../../common";
-import { refetchQueryOptions, useChartDateRange } from "../../utils";
-import { TicketReporterFrame } from "./TicketReporterFrame";
+import { useReporterSummary } from '../../api';
+import { LimitedList, NoDataHint } from '../../common';
+import { refetchQueryOptions, useChartDateRange } from '../../utils';
+import { TicketReporterFrame } from './TicketReporterFrame';
 
 export const TicketReporterBoard: React.FC = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export const TicketReporterBoard: React.FC = () => {
       ...range,
       limit: 10,
     },
-    refetchQueryOptions()
+    refetchQueryOptions(),
   );
 
   if (reporters?.length === 0) return <NoDataHint />;
@@ -28,7 +28,7 @@ export const TicketReporterBoard: React.FC = () => {
           <Button
             size="small"
             endIcon={<ArrowForward />}
-            onClick={() => navigate("/mods/reports")}
+            onClick={() => navigate('/mods/reports')}
           >
             See All
           </Button>

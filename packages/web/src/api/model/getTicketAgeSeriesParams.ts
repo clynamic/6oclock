@@ -9,4 +9,5 @@
 export type GetTicketAgeSeriesParams = {
   startDate?: Date;
   endDate?: Date;
+  timezone?: string;
 };

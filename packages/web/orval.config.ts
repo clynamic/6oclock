@@ -1,16 +1,16 @@
-import { defineConfig } from "orval";
+import { defineConfig } from 'orval';
 
 export default defineConfig({
   api: {
     input: {
-      target: "./api.json",
+      target: './api.json',
     },
     output: {
-      workspace: "./src/api",
-      mode: "tags",
-      schemas: "model",
-      target: "api.ts",
-      client: "react-query",
+      workspace: './src/api',
+      mode: 'tags',
+      schemas: 'model',
+      target: 'api.ts',
+      client: 'react-query',
       clean: true,
       urlEncodeParameters: true,
       prettier: true,
@@ -19,11 +19,11 @@ export default defineConfig({
         query: {
           useQuery: true,
           useMutation: true,
-          useInfiniteQueryParam: "page",
+          useInfiniteQueryParam: 'page',
         },
         mutator: {
-          path: "../http/axios.ts",
-          name: "makeRequest",
+          path: '../http/axios.ts',
+          name: 'makeRequest',
         },
         transformer: (options) => {
           // remove get prefix from operation name
@@ -31,11 +31,11 @@ export default defineConfig({
             ...options,
             operationName: options.operationName.replace(
               /^get(.)(.*)/,
-              (_, firstChar, rest) => firstChar.toLowerCase() + rest
+              (_, firstChar, rest) => firstChar.toLowerCase() + rest,
             ),
           };
           // enable infinite query for endpoints with pages
-          if (options.queryParams?.schema.model.includes("page?: number;")) {
+          if (options.queryParams?.schema.model.includes('page?: number;')) {
             options = {
               ...options,
               override: {

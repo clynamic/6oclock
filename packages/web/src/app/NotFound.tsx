@@ -1,6 +1,6 @@
-import { Stack, Typography } from "@mui/material";
+import { Stack, Typography } from '@mui/material';
 
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../page";
+import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
 
 export const NotFoundPage: React.FC = () => {
   return (

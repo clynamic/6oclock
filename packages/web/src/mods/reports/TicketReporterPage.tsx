@@ -1,11 +1,11 @@
-import { Box, CircularProgress, Stack, Typography } from "@mui/material";
-import { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
+import { useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
 
-import { useReporterSummaryInfinite } from "../../api";
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from "../../page";
-import { useChartDateRange } from "../../utils";
-import { TicketReporterFrame } from "./TicketReporterFrame";
+import { useReporterSummaryInfinite } from '../../api';
+import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
+import { useChartDateRange } from '../../utils';
+import { TicketReporterFrame } from './TicketReporterFrame';
 
 export const TicketReporterPage: React.FC = () => {
   const range = useChartDateRange();
@@ -26,7 +26,7 @@ export const TicketReporterPage: React.FC = () => {
             return (i ?? 1) + 1;
           },
         },
-      }
+      },
     );
 
   const { ref, inView } = useInView();
@@ -42,15 +42,15 @@ export const TicketReporterPage: React.FC = () => {
       <PageTitle subtitle="Reporters" />
       <PageHeader />
       <PageBody>
-        <Box sx={{ width: "100%", maxWidth: 600, margin: "auto", p: 2 }}>
-          <Stack sx={{ height: "100%", width: "100%", gap: 1 }}>
+        <Box sx={{ width: '100%', maxWidth: 600, margin: 'auto', p: 2 }}>
+          <Stack sx={{ height: '100%', width: '100%', gap: 1 }}>
             {data?.pages
               .flat()
               .map((item, i) => <TicketReporterFrame key={i} summary={item} />)}
           </Stack>
           <div ref={ref} style={{ height: 1 }} />
           {isFetchingNextPage && (
-            <Stack direction={"column"} alignItems={"center"} spacing={1}>
+            <Stack direction={'column'} alignItems={'center'} spacing={1}>
               <CircularProgress />
               <Typography>Loading more...</Typography>
             </Stack>

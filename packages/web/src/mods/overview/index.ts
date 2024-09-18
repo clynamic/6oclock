@@ -1,2 +1,2 @@
-export * from "./ModCatalog";
-export * from "./ModOverviewPage";
+export * from './ModCatalog';
+export * from './ModOverviewPage';

@@ -6,23 +6,24 @@ import {
   Container,
   Stack,
   Typography,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { useAuth } from "../auth";
-import { getAuthToken } from "../http";
-import { PageBody, PageFooter, PageHeader, PageTitle } from "../page";
-import { Page } from "../page/Page";
-import { ApiKeyField } from "./ApiKeyField";
-import { ApiKeyHint } from "./ApiKeyHint";
-import { LoginButton } from "./LoginButton";
-import { LoginFormData } from "./type";
-import { UsernameField } from "./UsernameField";
+import { useAuth } from '../auth';
+import { getAuthToken } from '../http';
+import { PageBody, PageFooter, PageHeader, PageTitle } from '../page';
+import { Page } from '../page/Page';
+import { ApiKeyField } from './ApiKeyField';
+import { ApiKeyHint } from './ApiKeyHint';
+import { LoginButton } from './LoginButton';
+import { LoginFormData } from './type';
+import { UsernameField } from './UsernameField';
 
 export const LoginPage = () => {
   const navigation = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [redirect, setRedirect] = useState<string | null>(null);
 
   const {
@@ -35,19 +36,18 @@ export const LoginPage = () => {
   const { saveToken } = useAuth();
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const redirect = searchParams.get("redirect");
-    if (redirect) {
-      const value = decodeURIComponent(redirect);
-      if (value.startsWith("/")) {
+    const redirectParam = searchParams.get('redirect');
+    if (redirectParam) {
+      const value = decodeURIComponent(redirectParam);
+      if (value.startsWith('/')) {
         setRedirect(value);
       } else {
-        console.error("Invalid redirect URL", value);
+        console.error('Invalid redirect URL', value);
       }
-      searchParams.delete("redirect");
-      navigation({ search: searchParams.toString() }, { replace: true });
+      searchParams.delete('redirect');
+      setSearchParams(searchParams);
     }
-  }, [navigation]);
+  }, [searchParams, setSearchParams]);
 
   const onSubmit = async (data: LoginFormData) => {
     setLoading(true);
@@ -55,12 +55,12 @@ export const LoginPage = () => {
       const token = await getAuthToken(data);
       saveToken(token);
     } catch {
-      control.setError("password", { message: "Invalid credentials" });
+      control.setError('password', { message: 'Invalid credentials' });
       setLoading(false);
       return;
     }
     setLoading(false);
-    navigation(redirect || "/");
+    navigation(redirect || '/');
   };
 
   return (
@@ -71,18 +71,18 @@ export const LoginPage = () => {
         <Container
           maxWidth="sm"
           sx={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
           <Box
-            sx={{ width: "100%" }}
-            component={"form"}
+            sx={{ width: '100%' }}
+            component={'form'}
             onSubmit={handleSubmit(onSubmit)}
           >
-            <Card sx={{ width: "100%" }}>
+            <Card sx={{ width: '100%' }}>
               <CardContent
                 sx={{
                   p: {
@@ -104,9 +104,9 @@ export const LoginPage = () => {
               <CardActions>
                 <Box
                   sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    width: "100%",
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    width: '100%',
                     p: 1,
                   }}
                 >
