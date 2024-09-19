@@ -6,7 +6,8 @@
  * OpenAPI spec version: 0.0.2
  */
 
-export interface TicketCreatedPoint {
-  count: number;
-  date: Date;
+export interface IdGap {
+  gap: number;
+  id: number;
+  nextId: number;
 }

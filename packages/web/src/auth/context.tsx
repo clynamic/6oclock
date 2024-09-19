@@ -85,7 +85,12 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     if (!token) {
       return null;
     }
-    return jwtDecode<AuthPayload>(token);
+    const raw = jwtDecode<AuthPayload>(token);
+    return {
+      userId: Number(raw.userId),
+      username: raw.username,
+      level: raw.level,
+    };
   }, [token]);
 
   return (

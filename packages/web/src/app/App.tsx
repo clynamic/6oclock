@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { AuthGuard, AuthProvider } from '../auth';
+import { HealthPage } from '../health';
 import { HomePage } from '../home';
 import { ApproverPage, JanitorOverviewPage } from '../janitors';
 import { LoginPage } from '../login';
@@ -11,6 +12,7 @@ import { ModOverviewPage, TicketerPage, TicketReporterPage } from '../mods';
 import { NavigationEntryProvider } from '../page';
 import { ProfilePage } from '../profile';
 import { ChartParamsProvider } from '../utils';
+import { LogoutPage } from './Logout';
 import { navigationEntries } from './navigation';
 import { NotFoundPage } from './NotFound';
 import { theme } from './theme';
@@ -29,6 +31,7 @@ export const App: React.FC = () => {
               <BrowserRouter>
                 <Routes>
                   <Route path="/login" element={<LoginPage />} />
+                  <Route path="/logout" element={<LogoutPage />} />
 
                   <Route path="/" element={<AuthGuard />}>
                     <Route path="/" element={<HomePage />} />
@@ -44,6 +47,7 @@ export const App: React.FC = () => {
                       element={<ApproverPage />}
                     />
                     <Route path="/users/:id" element={<ProfilePage />} />
+                    <Route path="/health" element={<HealthPage />} />
                   </Route>
 
                   <Route path="*" element={<NotFoundPage />} />
