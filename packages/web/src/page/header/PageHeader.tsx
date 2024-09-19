@@ -258,7 +258,13 @@ const PageHeaderBar: React.FC = () => {
                   paddingRight: 2,
                 }}
               >
-                {(currentSubLinks &&
+                <Box
+                  key="empty-subnav"
+                  sx={{
+                    height: (theme) => theme.spacing(3.4),
+                  }}
+                />
+                {currentSubLinks &&
                   currentSubLinks.length > 0 &&
                   currentSubLinks.map((entry, i) => {
                     if (entry instanceof Object && 'href' in entry) {
@@ -283,14 +289,7 @@ const PageHeaderBar: React.FC = () => {
                     return (
                       <Fragment key={`subnav-action-${i}`}>{entry}</Fragment>
                     );
-                  })) || (
-                  <Box
-                    key="empty-subnav"
-                    sx={{
-                      height: (theme) => theme.spacing(3.4),
-                    }}
-                  />
-                )}
+                  })}
               </Stack>
             </Stack>
           </Stack>
