@@ -5,4 +5,5 @@ export * from './manifest';
 export * from './approvals';
 export * from './users';
 export * from './tickets';
+export * from './flags';
 export * from './model';
