@@ -9,7 +9,7 @@ export interface Credentials {
 export const getAuthToken = async (
   credentials: Credentials,
 ): Promise<string> => {
-  return await login(credentials);
+  return login(credentials);
 };
 
 export type AuthTokenCheckResult = 'valid' | 'invalid' | 'error';

@@ -9,18 +9,20 @@ import {
   DashboardProvider,
 } from '../dashboard';
 import { modProfileCatalog } from '../mods';
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
+import { Page, PageBody, PageFooter, PageTitle } from '../page';
 import { ChartParamsProvider, useChartParamsValue } from '../utils';
+import { ProfilePageHeader } from './ProfilePageHeader';
 
 export const ProfilePage: React.FC = () => {
   const { id } = useParams();
+  const userId = useMemo(() => (id ? Number(id) : undefined), [id]);
   const {
     data: user,
     isLoading,
     isError,
-  } = useUserHead(Number(id), {
+  } = useUserHead(userId ?? 0, {
     query: {
-      enabled: id !== undefined,
+      enabled: !!userId,
     },
   });
   const chartParams = useChartParamsValue();
@@ -33,7 +35,7 @@ export const ProfilePage: React.FC = () => {
   return (
     <Page>
       <PageTitle subtitle={user?.name ?? `User #${id}`} />
-      <PageHeader />
+      <ProfilePageHeader userId={userId} />
       <PageBody>
         <ChartParamsProvider params={{ ...chartParams, userId: Number(id) }}>
           <DashboardProvider

@@ -3,13 +3,20 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.1
+ * OpenAPI spec version: 0.0.2
  */
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import type {
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
   MutationFunction,
+  QueryFunction,
+  QueryKey,
+  UndefinedInitialDataOptions,
   UseMutationOptions,
   UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
 } from '@tanstack/react-query';
 import type { TokenValidation, UserCredentials } from './model';
 import { makeRequest } from '../http/axios';
@@ -159,3 +166,105 @@ export const useValidateToken = <
 
   return useMutation(mutationOptions);
 };
+/**
+ * Check if the current user is admin
+ * @summary Check if the current user is admin
+ */
+export const isAdmin = (signal?: AbortSignal) => {
+  return makeRequest<boolean>({ url: `/auth/is-admin`, method: 'GET', signal });
+};
+
+export const getIsAdminQueryKey = () => {
+  return [`/auth/is-admin`] as const;
+};
+
+export const getIsAdminQueryOptions = <
+  TData = Awaited<ReturnType<typeof isAdmin>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
+  >;
+}) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getIsAdminQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof isAdmin>>> = ({
+    signal,
+  }) => isAdmin(signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof isAdmin>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type IsAdminQueryResult = NonNullable<
+  Awaited<ReturnType<typeof isAdmin>>
+>;
+export type IsAdminQueryError = ErrorType<unknown>;
+
+export function useIsAdmin<
+  TData = Awaited<ReturnType<typeof isAdmin>>,
+  TError = ErrorType<unknown>,
+>(options: {
+  query: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
+  > &
+    Pick<
+      DefinedInitialDataOptions<
+        Awaited<ReturnType<typeof isAdmin>>,
+        TError,
+        TData
+      >,
+      'initialData'
+    >;
+}): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useIsAdmin<
+  TData = Awaited<ReturnType<typeof isAdmin>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
+  > &
+    Pick<
+      UndefinedInitialDataOptions<
+        Awaited<ReturnType<typeof isAdmin>>,
+        TError,
+        TData
+      >,
+      'initialData'
+    >;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useIsAdmin<
+  TData = Awaited<ReturnType<typeof isAdmin>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
+  >;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+/**
+ * @summary Check if the current user is admin
+ */
+
+export function useIsAdmin<
+  TData = Awaited<ReturnType<typeof isAdmin>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
+  >;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getIsAdminQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}

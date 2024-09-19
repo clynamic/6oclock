@@ -258,30 +258,32 @@ const PageHeaderBar: React.FC = () => {
                   paddingRight: 2,
                 }}
               >
-                {currentSubLinks?.map((entry, i) => {
-                  if (entry instanceof Object && 'href' in entry) {
+                {(currentSubLinks &&
+                  currentSubLinks.length > 0 &&
+                  currentSubLinks.map((entry, i) => {
+                    if (entry instanceof Object && 'href' in entry) {
+                      return (
+                        <Button
+                          key={`subnav-${entry.href}`}
+                          component={RouterLink}
+                          to={entry.href}
+                          variant="text"
+                          size="small"
+                          color="secondary"
+                          sx={{
+                            p: 0.2,
+                            borderBottomLeftRadius: 0,
+                            borderBottomRightRadius: 0,
+                          }}
+                        >
+                          <Typography>{entry.label}</Typography>
+                        </Button>
+                      );
+                    }
                     return (
-                      <Button
-                        key={`subnav-${entry.href}`}
-                        component={RouterLink}
-                        to={entry.href}
-                        variant="text"
-                        size="small"
-                        color="secondary"
-                        sx={{
-                          p: 0.2,
-                          borderBottomLeftRadius: 0,
-                          borderBottomRightRadius: 0,
-                        }}
-                      >
-                        <Typography>{entry.label}</Typography>
-                      </Button>
+                      <Fragment key={`subnav-action-${i}`}>{entry}</Fragment>
                     );
-                  }
-                  return (
-                    <Fragment key={`subnav-action-${i}`}>{entry}</Fragment>
-                  );
-                }) || (
+                  })) || (
                   <Box
                     key="empty-subnav"
                     sx={{
