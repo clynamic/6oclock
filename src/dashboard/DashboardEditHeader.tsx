@@ -31,8 +31,12 @@ export const DashboardEditHeader: React.FC = () => {
     if (isEditing) {
       return (
         <>
-          <NavSpacer />
-          <PopupState variant="popover" popupId="dashboard-items-menu">
+          <NavSpacer key="edit-dashboard-spacer" />
+          <PopupState
+            variant="popover"
+            popupId="dashboard-items-menu"
+            key="edit-dashboard-items-menu"
+          >
             {(popupState) => (
               <>
                 <NavButton
@@ -124,7 +128,7 @@ export const DashboardEditHeader: React.FC = () => {
               </>
             )}
           </PopupState>
-          <NavDivider />
+          <NavDivider key="edit-dashboard-divider" />
           <NavButton
             key="cancel-edit"
             endIcon={<Cancel />}
@@ -155,7 +159,7 @@ export const DashboardEditHeader: React.FC = () => {
     } else {
       return (
         <>
-          <NavSpacer />
+          <NavSpacer key="edit-dashboard-spacer" />
           <NavButton
             key="edit-dashboard"
             endIcon={<Edit />}
