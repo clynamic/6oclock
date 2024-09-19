@@ -114,7 +114,7 @@ const PageHeaderBar: React.FC = () => {
                   horizontal: 'center',
                 }}
               >
-                {navigation.map((entry, i) => {
+                {navigation.map((entry) => {
                   if (entry instanceof Object && 'href' in entry) {
                     return (
                       <MenuItem
@@ -131,10 +131,14 @@ const PageHeaderBar: React.FC = () => {
                       </MenuItem>
                     );
                   }
-                  return <Fragment key={`nav-action-${i}`}>{entry}</Fragment>;
+                  return entry;
                 })}
                 {currentSubLinks && currentSubLinks.length > 0 && (
-                  <Divider orientation="horizontal" variant="middle" />
+                  <Divider
+                    key="subnav-divider"
+                    orientation="horizontal"
+                    variant="middle"
+                  />
                 )}
                 {currentSubLinks?.map((entry) => {
                   if (entry instanceof Object && 'href' in entry) {
@@ -150,9 +154,7 @@ const PageHeaderBar: React.FC = () => {
                       </MenuItem>
                     );
                   }
-                  return (
-                    <Fragment key={`subnav-action-${entry}`}>{entry}</Fragment>
-                  );
+                  return entry;
                 })}
               </Menu>
             </AppBar>
