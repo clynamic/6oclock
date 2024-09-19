@@ -1,0 +1,38 @@
+import { DateTime } from 'luxon';
+
+export interface SeriesPoint {
+  count: number;
+  date: Date;
+}
+
+export type MergedSeriesPoint<T extends string> = { date: Date } & Record<
+  T,
+  number
+>;
+
+export const mergePointSeries = <T extends string>(
+  seriesRecord: Record<T, SeriesPoint[]>,
+): MergedSeriesPoint<T>[] => {
+  const dateMap: Record<string, MergedSeriesPoint<T>> = {};
+
+  const dateString = (date: Date) => DateTime.fromJSDate(date).toISODate()!;
+
+  for (const [seriesName, points] of Object.entries(seriesRecord) as [
+    T,
+    SeriesPoint[],
+  ][]) {
+    for (const point of points) {
+      const date = dateString(point.date);
+      if (!dateMap[date]) {
+        dateMap[date] = { date: point.date } as MergedSeriesPoint<T>;
+      }
+      if (dateMap[date][seriesName] === undefined) {
+        dateMap[date][seriesName] = 0 as MergedSeriesPoint<T>[T];
+      }
+      dateMap[date][seriesName] = (dateMap[date][seriesName] +
+        point.count) as MergedSeriesPoint<T>[T];
+    }
+  }
+
+  return Object.values(dateMap);
+};
