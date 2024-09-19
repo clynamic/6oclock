@@ -1,16 +1,6 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/health": {
-      "get": {
-        "operationId": "healthCheck",
-        "summary": "Health Check",
-        "description": "Check the health of the application",
-        "parameters": [],
-        "responses": { "200": { "description": "The application is healthy" } },
-        "tags": ["Health"]
-      }
-    },
     "/auth/login": {
       "post": {
         "operationId": "login",
@@ -59,6 +49,63 @@
           }
         },
         "tags": ["Auth"]
+      }
+    },
+    "/auth/is-admin": {
+      "get": {
+        "operationId": "isAdmin",
+        "summary": "Check if the current user is admin",
+        "description": "Check if the current user is admin",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "type": "boolean" } }
+            }
+          },
+          "201": {
+            "description": "Whether the user is admin",
+            "content": {
+              "application/json": { "schema": { "type": "boolean" } }
+            }
+          }
+        },
+        "tags": ["Auth"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "healthCheck",
+        "summary": "Health Check",
+        "description": "Check the health of the application",
+        "parameters": [],
+        "responses": { "200": { "description": "The application is healthy" } },
+        "tags": ["Health"]
+      }
+    },
+    "/health/manifests": {
+      "get": {
+        "operationId": "getManifestHealth",
+        "summary": "Retrieve manifest health",
+        "description": "Retrieve manifest health",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Manifest health",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ManifestHealth" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Health"],
+        "security": [{ "bearer": [] }]
       }
     },
     "/dashboard/{type}": {
@@ -113,6 +160,118 @@
           "201": { "description": "" }
         },
         "tags": ["Dashboard"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/manifests/{id}": {
+      "get": {
+        "operationId": "getManifest",
+        "summary": "Get a manifest by ID",
+        "description": "Get a manifest by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Manifest",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Manifest" }
+              }
+            }
+          }
+        },
+        "tags": ["Manifest"],
+        "security": [{ "bearer": [] }]
+      },
+      "delete": {
+        "operationId": "deleteManifest",
+        "summary": "Delete a manifest by ID",
+        "description": "Delete a manifest by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Manifest deleted successfully" }
+        },
+        "tags": ["Manifest"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/manifests": {
+      "get": {
+        "operationId": "listManifests",
+        "summary": "List manifests",
+        "description": "List manifests",
+        "parameters": [
+          {
+            "required": true,
+            "name": "startDate",
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "required": true,
+            "name": "endDate",
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "required": true,
+            "name": "timezone",
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "required": false,
+            "name": "id",
+            "in": "query",
+            "schema": { "type": "number" }
+          },
+          {
+            "required": false,
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "approvals",
+                  "tickets",
+                  "posts",
+                  "users",
+                  "user_profiles",
+                  "flags"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of manifests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Manifest" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Manifest"],
         "security": [{ "bearer": [] }]
       }
     },
@@ -987,7 +1146,7 @@
   "info": {
     "title": "5-thirty",
     "description": "backend data aggregate for 6 o'clock",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "contact": {}
   },
   "tags": [],
@@ -1009,6 +1168,52 @@
         "type": "object",
         "properties": { "token": { "type": "string" } },
         "required": ["token"]
+      },
+      "IdGap": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "nextId": { "type": "number" },
+          "gap": { "type": "number" }
+        },
+        "required": ["id", "nextId", "gap"]
+      },
+      "ManifestHealth": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "type": {
+            "type": "string",
+            "enum": [
+              "approvals",
+              "tickets",
+              "posts",
+              "users",
+              "user_profiles",
+              "flags"
+            ]
+          },
+          "startDate": { "format": "date-time", "type": "string" },
+          "endDate": { "format": "date-time", "type": "string" },
+          "coverage": { "type": "number" },
+          "condition": {
+            "type": "string",
+            "enum": ["nominal", "degraded", "abnormal"]
+          },
+          "gaps": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/IdGap" }
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "startDate",
+          "endDate",
+          "coverage",
+          "condition",
+          "gaps"
+        ]
       },
       "DashboardPosition": {
         "type": "object",
@@ -1062,6 +1267,28 @@
           "positions": { "$ref": "#/components/schemas/DashboardPositions" },
           "meta": { "type": "object" }
         }
+      },
+      "Manifest": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "startDate": { "format": "date-time", "type": "string" },
+          "endDate": { "format": "date-time", "type": "string" },
+          "type": {
+            "enum": [
+              "approvals",
+              "tickets",
+              "posts",
+              "users",
+              "user_profiles",
+              "flags"
+            ],
+            "type": "string"
+          },
+          "lowerId": { "type": "number" },
+          "upperId": { "type": "number" }
+        },
+        "required": ["id", "startDate", "endDate", "type", "lowerId", "upperId"]
       },
       "ApprovalCountSummary": {
         "type": "object",

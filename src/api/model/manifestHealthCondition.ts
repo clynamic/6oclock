@@ -6,11 +6,12 @@
  * OpenAPI spec version: 0.0.2
  */
 
-export type DashboardConfigType =
-  (typeof DashboardConfigType)[keyof typeof DashboardConfigType];
+export type ManifestHealthCondition =
+  (typeof ManifestHealthCondition)[keyof typeof ManifestHealthCondition];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const DashboardConfigType = {
-  moderator: 'moderator',
-  janitor: 'janitor',
+export const ManifestHealthCondition = {
+  nominal: 'nominal',
+  degraded: 'degraded',
+  abnormal: 'abnormal',
 } as const;
