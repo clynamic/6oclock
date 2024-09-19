@@ -26,8 +26,10 @@ export const mergePointSeries = <T extends string>(
       if (!dateMap[date]) {
         dateMap[date] = { date: point.date } as MergedSeriesPoint<T>;
       }
-      if (dateMap[date][seriesName] === undefined) {
-        dateMap[date][seriesName] = 0 as MergedSeriesPoint<T>[T];
+      for (const series of Object.keys(seriesRecord) as T[]) {
+        if (dateMap[date][series] === undefined) {
+          dateMap[date][series] = 0 as MergedSeriesPoint<T>[T];
+        }
       }
       dateMap[date][seriesName] = (dateMap[date][seriesName] +
         point.count) as MergedSeriesPoint<T>[T];
