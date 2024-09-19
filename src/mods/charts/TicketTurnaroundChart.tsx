@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 
 import { useTicketClosedSeries, useTicketCreatedSeries } from '../../api';
 import {
+  mergePointSeries,
   refetchQueryOptions,
   SeriesChartProps,
   useChartDateRange,
@@ -31,34 +32,10 @@ export const TicketTurnaroundChart: React.FC<TicketTurnaroundChartProps> = ({
   );
 
   const dataset = useMemo(() => {
-    const dateMap: Record<
-      string,
-      { date: Date; created: number; closed: number }
-    > = {};
-
-    const dateString = (date: Date) => DateTime.fromJSDate(date).toISODate();
-
-    if (createdData) {
-      for (const point of createdData) {
-        const date = dateString(point.date)!;
-        if (!dateMap[date]) {
-          dateMap[date] = { date: point.date, created: 0, closed: 0 };
-        }
-        dateMap[date].created = point.count;
-      }
-    }
-
-    if (closedData) {
-      for (const point of closedData) {
-        const date = dateString(point.date)!;
-        if (!dateMap[date]) {
-          dateMap[date] = { date: point.date, created: 0, closed: 0 };
-        }
-        dateMap[date].closed = point.count;
-      }
-    }
-
-    return Object.values(dateMap);
+    return mergePointSeries({
+      created: createdData || [],
+      closed: closedData || [],
+    });
   }, [createdData, closedData]);
 
   const chartProps: SeriesChartProps = {

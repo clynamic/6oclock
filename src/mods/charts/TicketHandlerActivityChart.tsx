@@ -34,7 +34,7 @@ export const TicketHandlerActivityChart: React.FC = () => {
     series: [
       {
         dataKey: 'count',
-        label: 'Closed',
+        label: 'Action',
         color: theme.palette.primary.main,
       },
     ],

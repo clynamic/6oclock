@@ -1,6 +1,6 @@
 import { createSimpleLayout, DashboardCatalog } from '../../dashboard';
 import { ApprovalLeaderboard } from '../approvals';
-import { ApprovalTurnaroundChart } from '../charts';
+import { PostTurnaroundChart } from '../charts';
 
 export const janitorDashboardCatalog: DashboardCatalog = {
   approvalsLeaderboard: {
@@ -30,9 +30,9 @@ export const janitorDashboardCatalog: DashboardCatalog = {
       variant: 'outlined',
     },
   },
-  approvalTurnaround: {
-    name: 'Approvals by Day',
-    component: ApprovalTurnaroundChart,
+  postTurnaround: {
+    name: 'Posts Approved/Deleted',
+    component: PostTurnaroundChart,
     defaultLayout: createSimpleLayout(
       {
         x: 0,
