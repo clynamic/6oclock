@@ -7,7 +7,7 @@ import {
   Skeleton,
   Stack,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { TicketHandlerSummary } from '../../api';
 import { UserAvatar, UsernameText } from '../../common';
@@ -20,8 +20,6 @@ export interface TicketLeaderboardFrameProps {
 export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
   summary,
 }) => {
-  const navigate = useNavigate();
-
   return (
     <Card
       sx={{
@@ -32,9 +30,8 @@ export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
       }}
     >
       <CardActionArea
-        onClick={
-          summary ? () => navigate(`/users/${summary?.userId}`) : undefined
-        }
+        component={Link}
+        to={`/users/${summary?.userId}`}
         disabled={!summary}
       >
         <Box p={2} sx={{ width: '100%' }}>

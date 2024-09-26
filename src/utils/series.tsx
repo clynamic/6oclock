@@ -12,10 +12,16 @@ export type MergedSeriesPoint<T extends string> = { date: Date } & Record<
 
 export const mergePointSeries = <T extends string>(
   seriesRecord: Record<T, SeriesPoint[]>,
+  granularity: 'time' | 'date' = 'date',
 ): MergedSeriesPoint<T>[] => {
   const dateMap: Record<string, MergedSeriesPoint<T>> = {};
 
-  const dateString = (date: Date) => DateTime.fromJSDate(date).toISODate()!;
+  const dateString = (date: Date) => {
+    if (granularity === 'time') {
+      return DateTime.fromJSDate(date).toISO()!;
+    }
+    return DateTime.fromJSDate(date).toISODate()!;
+  };
 
   for (const [seriesName, points] of Object.entries(seriesRecord) as [
     T,
