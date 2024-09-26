@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.0.2
  */
 
+export * from './approvalActivityPoint';
 export * from './approvalCountPoint';
 export * from './approvalCountSummary';
 export * from './approverSummary';
@@ -16,10 +17,14 @@ export * from './dashboardPosition';
 export * from './dashboardPositions';
 export * from './dashboardUpdate';
 export * from './dashboardUpdateMeta';
+export * from './getApprovalActivitySummaryByApproverParams';
+export * from './getApprovalActivitySummaryParams';
 export * from './getApprovalCountSeriesByApproverParams';
 export * from './getApprovalCountSeriesParams';
 export * from './getApprovalCountSummaryParams';
 export * from './getApproverSummaryParams';
+export * from './getDeletionActivitySummaryByDeleterParams';
+export * from './getDeletionActivitySummaryParams';
 export * from './getDeletionSeriesByUserParams';
 export * from './getDeletionSeriesParams';
 export * from './getHandlerSummaryParams';
@@ -46,6 +51,7 @@ export * from './manifestHealth';
 export * from './manifestHealthCondition';
 export * from './manifestHealthType';
 export * from './manifestType';
+export * from './postDeletedActivityPoint';
 export * from './postDeletedPoint';
 export * from './ticketActivityPoint';
 export * from './ticketAgeGroup';

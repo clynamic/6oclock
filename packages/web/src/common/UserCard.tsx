@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 
 import { useUserHead } from '../api';
 import { useChartParamsValue } from '../utils';
@@ -16,7 +16,12 @@ export const UserCard: React.FC = () => {
   return (
     <Stack direction="row" spacing={2} alignItems="center">
       <UserAvatar user={user} shape="rounded" size={64} />
-      <UsernameText user={user} />
+      <Stack>
+        <UsernameText user={user} />
+        <Typography variant="caption" color="text.secondary">
+          {user?.level}
+        </Typography>
+      </Stack>
     </Stack>
   );
 };

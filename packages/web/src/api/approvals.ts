@@ -20,9 +20,12 @@ import type {
   UseQueryResult,
 } from '@tanstack/react-query';
 import type {
+  ApprovalActivityPoint,
   ApprovalCountPoint,
   ApprovalCountSummary,
   ApproverSummary,
+  GetApprovalActivitySummaryByApproverParams,
+  GetApprovalActivitySummaryParams,
   GetApprovalCountSeriesByApproverParams,
   GetApprovalCountSeriesParams,
   GetApprovalCountSummaryParams,
@@ -490,6 +493,328 @@ export function useApprovalCountSeriesByApprover<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getApprovalCountSeriesByApproverQueryOptions(
+    approverId,
+    params,
+    options,
+  );
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * Get total approval activity counts for a given date range
+ * @summary Approval activity summary
+ */
+export const approvalActivitySummary = (
+  params?: GetApprovalActivitySummaryParams,
+  signal?: AbortSignal,
+) => {
+  return makeRequest<ApprovalActivityPoint[]>({
+    url: `/approvals/metrics/activity/summary`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
+
+export const getApprovalActivitySummaryQueryKey = (
+  params?: GetApprovalActivitySummaryParams,
+) => {
+  return [
+    `/approvals/metrics/activity/summary`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getApprovalActivitySummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof approvalActivitySummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApprovalActivitySummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalActivitySummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getApprovalActivitySummaryQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof approvalActivitySummary>>
+  > = ({ signal }) => approvalActivitySummary(params, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof approvalActivitySummary>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ApprovalActivitySummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof approvalActivitySummary>>
+>;
+export type ApprovalActivitySummaryQueryError = ErrorType<unknown>;
+
+export function useApprovalActivitySummary<
+  TData = Awaited<ReturnType<typeof approvalActivitySummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetApprovalActivitySummaryParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalActivitySummary>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof approvalActivitySummary>>,
+          TError,
+          TData
+        >,
+        'initialData'
+      >;
+  },
+): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useApprovalActivitySummary<
+  TData = Awaited<ReturnType<typeof approvalActivitySummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApprovalActivitySummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalActivitySummary>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof approvalActivitySummary>>,
+          TError,
+          TData
+        >,
+        'initialData'
+      >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useApprovalActivitySummary<
+  TData = Awaited<ReturnType<typeof approvalActivitySummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApprovalActivitySummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalActivitySummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+/**
+ * @summary Approval activity summary
+ */
+
+export function useApprovalActivitySummary<
+  TData = Awaited<ReturnType<typeof approvalActivitySummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApprovalActivitySummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalActivitySummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getApprovalActivitySummaryQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * Get total approval activity counts for a given date range by approver
+ * @summary Approval activity summary by approver
+ */
+export const approvalActivitySummaryByApprover = (
+  approverId: number,
+  params?: GetApprovalActivitySummaryByApproverParams,
+  signal?: AbortSignal,
+) => {
+  return makeRequest<ApprovalActivityPoint[]>({
+    url: `/approvals/metrics/activity/summary/${encodeURIComponent(String(approverId))}`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
+
+export const getApprovalActivitySummaryByApproverQueryKey = (
+  approverId: number,
+  params?: GetApprovalActivitySummaryByApproverParams,
+) => {
+  return [
+    `/approvals/metrics/activity/summary/${approverId}`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getApprovalActivitySummaryByApproverQueryOptions = <
+  TData = Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>,
+  TError = ErrorType<unknown>,
+>(
+  approverId: number,
+  params?: GetApprovalActivitySummaryByApproverParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getApprovalActivitySummaryByApproverQueryKey(approverId, params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>
+  > = ({ signal }) =>
+    approvalActivitySummaryByApprover(approverId, params, signal);
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!approverId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ApprovalActivitySummaryByApproverQueryResult = NonNullable<
+  Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>
+>;
+export type ApprovalActivitySummaryByApproverQueryError = ErrorType<unknown>;
+
+export function useApprovalActivitySummaryByApprover<
+  TData = Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>,
+  TError = ErrorType<unknown>,
+>(
+  approverId: number,
+  params: undefined | GetApprovalActivitySummaryByApproverParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>,
+          TError,
+          TData
+        >,
+        'initialData'
+      >;
+  },
+): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useApprovalActivitySummaryByApprover<
+  TData = Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>,
+  TError = ErrorType<unknown>,
+>(
+  approverId: number,
+  params?: GetApprovalActivitySummaryByApproverParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>,
+          TError,
+          TData
+        >,
+        'initialData'
+      >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useApprovalActivitySummaryByApprover<
+  TData = Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>,
+  TError = ErrorType<unknown>,
+>(
+  approverId: number,
+  params?: GetApprovalActivitySummaryByApproverParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+/**
+ * @summary Approval activity summary by approver
+ */
+
+export function useApprovalActivitySummaryByApprover<
+  TData = Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>,
+  TError = ErrorType<unknown>,
+>(
+  approverId: number,
+  params?: GetApprovalActivitySummaryByApproverParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalActivitySummaryByApprover>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getApprovalActivitySummaryByApproverQueryOptions(
     approverId,
     params,
     options,
