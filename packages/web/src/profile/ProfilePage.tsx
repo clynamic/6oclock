@@ -8,6 +8,7 @@ import {
   DashboardCatalog,
   DashboardProvider,
 } from '../dashboard';
+import { janitorProfileCatalog } from '../janitors';
 import { modProfileCatalog } from '../mods';
 import { Page, PageBody, PageFooter, PageTitle } from '../page';
 import { ChartParamsProvider, useChartParamsValue } from '../utils';
@@ -29,7 +30,16 @@ export const ProfilePage: React.FC = () => {
 
   const catalog = useMemo<DashboardCatalog | undefined>(() => {
     if (!user) return undefined;
-    return modProfileCatalog;
+
+    switch (user.level.toLowerCase()) {
+      case 'janitor':
+        return janitorProfileCatalog;
+      case 'moderator':
+        return modProfileCatalog;
+      case 'admin':
+      default:
+        return modProfileCatalog; // TODO: default to user profile catalog
+    }
   }, [user]);
 
   return (

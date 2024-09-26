@@ -449,6 +449,100 @@
         "security": [{ "bearer": [] }]
       }
     },
+    "/approvals/metrics/activity/summary": {
+      "get": {
+        "operationId": "getApprovalActivitySummary",
+        "summary": "Approval activity summary",
+        "description": "Get total approval activity counts for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApprovalActivityPoint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Approvals"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/approvals/metrics/activity/summary/{approverId}": {
+      "get": {
+        "operationId": "getApprovalActivitySummaryByApprover",
+        "summary": "Approval activity summary by approver",
+        "description": "Get total approval activity counts for a given date range by approver",
+        "parameters": [
+          {
+            "name": "approverId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApprovalActivityPoint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Approvals"],
+        "security": [{ "bearer": [] }]
+      }
+    },
     "/approvals/metrics/approver/summary": {
       "get": {
         "operationId": "getApproverSummary",
@@ -1185,6 +1279,100 @@
         "security": [{ "bearer": [] }]
       }
     },
+    "/flags/metric/deletion/activity/summary": {
+      "get": {
+        "operationId": "getDeletionActivitySummary",
+        "summary": "Post deletion activity summary",
+        "description": "Get total post deletion counts for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostDeletedActivityPoint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Flags"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/flags/metric/deletion/activity/summary/{userId}": {
+      "get": {
+        "operationId": "getDeletionActivitySummaryByDeleter",
+        "summary": "Post deletion activity summary by deleter",
+        "description": "Get total post deletion counts for a given date range by deleter",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostDeletedActivityPoint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Flags"],
+        "security": [{ "bearer": [] }]
+      }
+    },
     "/flags/metric/deletion/series": {
       "get": {
         "operationId": "getDeletionSeries",
@@ -1449,6 +1637,14 @@
         },
         "required": ["date", "count"]
       },
+      "ApprovalActivityPoint": {
+        "type": "object",
+        "properties": {
+          "date": { "format": "date-time", "type": "string" },
+          "count": { "type": "number" }
+        },
+        "required": ["date", "count"]
+      },
       "UserHead": {
         "type": "object",
         "properties": {
@@ -1590,6 +1786,14 @@
           "days": { "type": "number" }
         },
         "required": ["userId", "total", "days"]
+      },
+      "PostDeletedActivityPoint": {
+        "type": "object",
+        "properties": {
+          "date": { "format": "date-time", "type": "string" },
+          "count": { "type": "number" }
+        },
+        "required": ["date", "count"]
       },
       "PostDeletedPoint": {
         "type": "object",
