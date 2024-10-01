@@ -51,11 +51,11 @@ export const modProfileCatalog: DashboardCatalog = {
         xl: { w: 5, h: 5, x: 5, y: 0 },
       },
     ),
-    card: { title: 'Types' },
+    card: { title: 'Ticket Types' },
     component: TicketHandlerTypeChart,
   },
-  ticketsClosed: {
-    name: 'Tickets Closed',
+  ticketsHandled: {
+    name: 'Tickets Handled',
     defaultLayout: createSimpleLayout(
       {
         x: 0,
@@ -75,11 +75,11 @@ export const modProfileCatalog: DashboardCatalog = {
         xl: { w: 5, h: 5, x: 0, y: 5 },
       },
     ),
-    card: { title: 'Closed' },
+    card: { title: 'Tickets Handled' },
     component: TicketHandlerChart,
   },
-  ticketActivity: {
-    name: 'Ticket Activity',
+  userActivity: {
+    name: 'User Activity',
     defaultLayout: createSimpleLayout(
       {
         x: 0,
@@ -99,7 +99,7 @@ export const modProfileCatalog: DashboardCatalog = {
         xl: { w: 5, h: 5, x: 0, y: 10 },
       },
     ),
-    card: { title: 'Activity' },
+    card: { title: 'User Activity' },
     component: TicketHandlerActivityChart,
   },
 };

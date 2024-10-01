@@ -30,6 +30,9 @@ export const TicketFrontlineChart: React.FC = () => {
         },
       ]}
       slotProps={{
+        legend: {
+          hidden: true,
+        },
         noDataOverlay: {
           message: 'No data',
         },

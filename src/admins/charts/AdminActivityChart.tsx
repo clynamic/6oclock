@@ -6,6 +6,7 @@ import { useMemo } from 'react';
 import {
   useApprovalActivitySummaryByApprover,
   useDeletionActivitySummaryByDeleter,
+  useTicketActivitySummaryForHandler,
 } from '../../api';
 import {
   mergePointSeries,
@@ -14,9 +15,17 @@ import {
   useChartParamsValue,
 } from '../../utils';
 
-export const ApproverActivityChart: React.FC = () => {
+export const AdminActivityChart: React.FC = () => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
+
+  const { data: ticketData } = useTicketActivitySummaryForHandler(
+    userId ?? 0,
+    range,
+    refetchQueryOptions({
+      enabled: !!userId,
+    }),
+  );
 
   const { data: approvalData } = useApprovalActivitySummaryByApprover(
     userId ?? 0,
@@ -37,15 +46,16 @@ export const ApproverActivityChart: React.FC = () => {
   const dataset = useMemo(() => {
     return mergePointSeries(
       {
+        tickets: ticketData || [],
         approved: approvalData || [],
         deleted: deletionData || [],
       },
       'time',
     ).map((e) => ({
       date: e.date,
-      count: e.approved + e.deleted,
+      count: e.tickets + e.approved + e.deleted,
     }));
-  }, [approvalData, deletionData]);
+  }, [approvalData, deletionData, ticketData]);
 
   const chartProps: SeriesChartProps = {
     dataset: dataset?.map((e) => ({ ...e })) ?? [],
