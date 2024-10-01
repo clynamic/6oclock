@@ -46,6 +46,9 @@ export const TicketHandlerChart: React.FC<TicketHandlerChartProps> = ({
       },
     ],
     slotProps: {
+      legend: {
+        hidden: true,
+      },
       noDataOverlay: {
         message: 'No data',
       },

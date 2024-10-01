@@ -12,9 +12,9 @@ export const janitorProfileCatalog: DashboardCatalog = {
         w: 5,
         h: 2,
         minW: 2,
-        maxW: 5,
+        maxW: undefined,
         minH: 2,
-        maxH: 3,
+        maxH: 2,
       },
       {
         xs: { w: 4, h: 2, x: 0, y: 0 },
@@ -35,9 +35,9 @@ export const janitorProfileCatalog: DashboardCatalog = {
         w: 5,
         h: 5,
         minW: 2,
-        maxW: 5,
+        maxW: undefined,
         minH: 2,
-        maxH: 5,
+        maxH: 6,
       },
       {
         xs: { w: 4, h: 5, x: 0, y: 5 },
@@ -47,11 +47,11 @@ export const janitorProfileCatalog: DashboardCatalog = {
         xl: { w: 5, h: 5, x: 0, y: 5 },
       },
     ),
-    card: { title: 'Handled' },
+    card: { title: 'Posts Handled' },
     component: ApproverChart,
   },
-  approverActivity: {
-    name: 'Approver Activity',
+  userActivity: {
+    name: 'User Activity',
     defaultLayout: createSimpleLayout(
       {
         x: 0,
@@ -59,9 +59,9 @@ export const janitorProfileCatalog: DashboardCatalog = {
         w: 5,
         h: 5,
         minW: 2,
-        maxW: 5,
+        maxW: undefined,
         minH: 2,
-        maxH: 5,
+        maxH: 6,
       },
       {
         xs: { w: 4, h: 5, x: 0, y: 10 },
@@ -71,7 +71,7 @@ export const janitorProfileCatalog: DashboardCatalog = {
         xl: { w: 5, h: 5, x: 0, y: 10 },
       },
     ),
-    card: { title: 'Activity' },
+    card: { title: 'User Activity' },
     component: ApproverActivityChart,
   },
 };

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { adminProfileCatalog } from '../admins';
 import { useUserHead } from '../api';
 import {
   buildCatalogLayouts,
@@ -37,35 +38,39 @@ export const ProfilePage: React.FC = () => {
       case 'moderator':
         return modProfileCatalog;
       case 'admin':
+        return adminProfileCatalog;
       default:
         return modProfileCatalog; // TODO: default to user profile catalog
     }
   }, [user]);
 
   return (
-    <Page>
-      <PageTitle subtitle={user?.name ?? `User #${id}`} />
-      <ProfilePageHeader userId={userId} />
-      <PageBody>
-        <ChartParamsProvider params={{ ...chartParams, userId: Number(id) }}>
-          <DashboardProvider
-            catalog={catalog || {}}
-            isLoading={isLoading}
-            isError={isError}
-            data={
-              catalog
-                ? {
-                    positions: buildCatalogLayouts(catalog),
-                    meta: {},
-                  }
-                : undefined
+    <DashboardProvider
+      catalog={catalog || {}}
+      isLoading={isLoading}
+      isError={isError}
+      data={
+        catalog
+          ? {
+              positions: buildCatalogLayouts(catalog),
+              meta: {},
             }
-          >
+          : undefined
+      }
+      updateData={async (data) => {
+        console.log(`Update data: ${JSON.stringify(data)}`);
+      }}
+    >
+      <ChartParamsProvider params={{ ...chartParams, userId: Number(id) }}>
+        <Page>
+          <PageTitle subtitle={user?.name ?? `User #${id}`} />
+          <ProfilePageHeader userId={userId} />
+          <PageBody>
             <DashboardBody />
-          </DashboardProvider>
-        </ChartParamsProvider>
-      </PageBody>
-      <PageFooter />
-    </Page>
+          </PageBody>
+          <PageFooter />
+        </Page>
+      </ChartParamsProvider>
+    </DashboardProvider>
   );
 };
