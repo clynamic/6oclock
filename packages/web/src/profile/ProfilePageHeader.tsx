@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { useIsAdmin } from '../api';
 import { useAuth } from '../auth';
+import { DashboardEditHeader } from '../dashboard';
 import { NavButton, NavDivider, NavSpacer, PageHeader } from '../page';
 
 export interface ProfilePageHeaderProps {
@@ -26,7 +27,11 @@ export const ProfilePageHeader: React.FC<ProfilePageHeaderProps> = ({
   return (
     <PageHeader
       actions={[
-        <NavSpacer />,
+        // if in debug mode, show Edit Header
+        (import.meta.env.MODE === 'development' && [
+          <DashboardEditHeader key="edit-dashboard" />,
+          <NavDivider />,
+        ]) || [<NavSpacer />],
         ...(isOwnProfile
           ? [
               ...(isAdmin
