@@ -5,15 +5,15 @@ import { TicketTypeSummary, useTicketTypeSummary } from '../../api';
 import { refetchQueryOptions, useChartDateRange } from '../../utils';
 
 export const TicketQtypeColors = {
-  user: '#FFCCCB', // Soft pastel pink
-  comment: '#FFDAB9', // Light peach
-  forum: '#E6E6FA', // Lavender
-  blip: '#B0E0E6', // Pale blue
-  wiki: '#FFFACD', // Lemon chiffon
-  pool: '#D3FFCE', // Light mint green
-  set: '#FADADD', // Pale rose
-  post: '#F0E68C', // Pastel yellow
-  dmail: '#C1E1C1', // Light pastel green
+  user: '#e1675d', // Vibrant coral
+  comment: '#f2b07e', // Rich peach
+  forum: '#d1b3f1', // Deep lavender
+  blip: '#77c1e4', // Sky blue
+  wiki: '#ffe36d', // Bold lemon
+  pool: '#92e4aa', // Mint green
+  set: '#f092b0', // Rose pink
+  post: '#f0c23b', // Golden yellow
+  dmail: '#88cc88', // Fresh green
 } as const;
 
 export const TicketTypeChart: React.FC = () => {
