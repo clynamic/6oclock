@@ -1,9 +1,9 @@
 import { UserCard } from '../../common';
 import { createSimpleLayout, DashboardCatalog } from '../../dashboard';
 import {
-  TicketHandlerActivityChart,
-  TicketHandlerChart,
-  TicketHandlerTypeChart,
+  TicketActivitySummaryByHandlerChart,
+  TicketClosedSeriesByHandlerChart,
+  TicketTypeSummaryByHandlerTypeChart,
 } from '../charts';
 
 export const modProfileCatalog: DashboardCatalog = {
@@ -52,7 +52,7 @@ export const modProfileCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'Ticket Types' },
-    component: TicketHandlerTypeChart,
+    component: TicketTypeSummaryByHandlerTypeChart,
   },
   ticketsHandled: {
     name: 'Tickets Handled',
@@ -76,7 +76,7 @@ export const modProfileCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'Tickets Handled' },
-    component: TicketHandlerChart,
+    component: TicketClosedSeriesByHandlerChart,
   },
   userActivity: {
     name: 'User Activity',
@@ -100,6 +100,6 @@ export const modProfileCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'User Activity' },
-    component: TicketHandlerActivityChart,
+    component: TicketActivitySummaryByHandlerChart,
   },
 };

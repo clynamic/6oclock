@@ -15,7 +15,7 @@ import {
   useChartParamsValue,
 } from '../../utils';
 
-export const AdminActivityChart: React.FC = () => {
+export const AdminActivitySummaryByAdminChart: React.FC = () => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 

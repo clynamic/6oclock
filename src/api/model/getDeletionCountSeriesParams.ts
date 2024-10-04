@@ -6,7 +6,7 @@
  * OpenAPI spec version: 0.0.3
  */
 
-export type GetDeletionSeriesParams = {
+export type GetDeletionCountSeriesParams = {
   startDate?: Date;
   endDate?: Date;
   timezone?: string;

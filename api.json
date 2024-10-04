@@ -1272,9 +1272,9 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/metrics/flags/deletion/series": {
+    "/metrics/deletions/count/series": {
       "get": {
-        "operationId": "getDeletionSeries",
+        "operationId": "getDeletionCountSeries",
         "summary": "Post deletion series",
         "description": "Get a time series of post deletion counts for a given date range",
         "parameters": [
@@ -1310,11 +1310,11 @@
             }
           }
         },
-        "tags": ["Flags"],
+        "tags": ["Deletions"],
         "security": [{ "bearer": [] }]
       }
     },
-    "/metrics/flags/deletion/series/by/deleter/{userId}": {
+    "/metrics/deletions/count/series/by/deleter/{userId}": {
       "get": {
         "operationId": "getDeletionSeriesByDeleter",
         "summary": "Post deletion series by deleter",
@@ -1358,11 +1358,11 @@
             }
           }
         },
-        "tags": ["Flags"],
+        "tags": ["Deletions"],
         "security": [{ "bearer": [] }]
       }
     },
-    "/metrics/flags/deletion/activity/summary": {
+    "/metrics/deletions/activity/summary": {
       "get": {
         "operationId": "getDeletionActivitySummary",
         "summary": "Post deletion activity summary",
@@ -1400,11 +1400,11 @@
             }
           }
         },
-        "tags": ["Flags"],
+        "tags": ["Deletions"],
         "security": [{ "bearer": [] }]
       }
     },
-    "/metrics/flags/deletion/activity/summary/by/deleter/{userId}": {
+    "/metrics/deletions/activity/summary/by/deleter/{userId}": {
       "get": {
         "operationId": "getDeletionActivitySummaryByDeleter",
         "summary": "Post deletion activity summary by deleter",
@@ -1448,7 +1448,7 @@
             }
           }
         },
-        "tags": ["Flags"],
+        "tags": ["Deletions"],
         "security": [{ "bearer": [] }]
       }
     },

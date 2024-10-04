@@ -1,19 +1,24 @@
 import { PieChart, PieValueType } from '@mui/x-charts';
 import { useMemo } from 'react';
 
-import { TicketTypeSummary, useTicketTypeSummaryByHandler } from '../../api';
-import { refetchQueryOptions, useChartParamsValue } from '../../utils';
-import { TicketQtypeColors } from './TicketTypeChart';
+import { TicketTypeSummary, useTicketTypeSummary } from '../../api';
+import { refetchQueryOptions, useChartDateRange } from '../../utils';
 
-export const TicketHandlerTypeChart: React.FC = () => {
-  const { range, userId } = useChartParamsValue();
-  const { data: summary } = useTicketTypeSummaryByHandler(
-    userId ?? 0,
-    range,
-    refetchQueryOptions({
-      enabled: !!userId,
-    }),
-  );
+export const TicketQtypeColors = {
+  user: '#e1675d', // Vibrant coral
+  comment: '#f2b07e', // Rich peach
+  forum: '#d1b3f1', // Deep lavender
+  blip: '#77c1e4', // Sky blue
+  wiki: '#ffe36d', // Bold lemon
+  pool: '#92e4aa', // Mint green
+  set: '#f092b0', // Rose pink
+  post: '#f0c23b', // Golden yellow
+  dmail: '#88cc88', // Fresh green
+} as const;
+
+export const TicketTypeSummaryChart: React.FC = () => {
+  const range = useChartDateRange();
+  const { data: summary } = useTicketTypeSummary(range, refetchQueryOptions());
 
   const emptyQtypes = useMemo(() => {
     return Object.keys(summary || {})

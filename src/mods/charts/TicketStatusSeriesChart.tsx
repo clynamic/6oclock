@@ -15,7 +15,7 @@ export interface TicketTurnaroundChartProps {
   variant?: 'bars' | 'lines';
 }
 
-export const TicketTurnaroundChart: React.FC<TicketTurnaroundChartProps> = ({
+export const TicketStatusSeriesChart: React.FC<TicketTurnaroundChartProps> = ({
   variant = 'bars',
 }) => {
   const theme = useTheme();

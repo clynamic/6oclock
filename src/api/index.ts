@@ -6,6 +6,6 @@ export * from './manifests';
 export * from './approvals';
 export * from './users';
 export * from './tickets';
-export * from './flags';
+export * from './deletions';
 export * from './feedbacks';
 export * from './model';
