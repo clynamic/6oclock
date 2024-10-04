@@ -3,11 +3,9 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.2
+ * OpenAPI spec version: 0.0.3
  */
 
-export * from './approvalActivityPoint';
-export * from './approvalCountPoint';
 export * from './approvalCountSummary';
 export * from './approverSummary';
 export * from './dashboardConfig';
@@ -51,16 +49,11 @@ export * from './manifestHealth';
 export * from './manifestHealthCondition';
 export * from './manifestHealthType';
 export * from './manifestType';
-export * from './postDeletedActivityPoint';
-export * from './postDeletedPoint';
-export * from './ticketActivityPoint';
+export * from './seriesCountPoint';
 export * from './ticketAgeGroup';
 export * from './ticketAgeSeriesPoint';
 export * from './ticketAgeSummary';
-export * from './ticketClosedPoint';
-export * from './ticketCreatedPoint';
 export * from './ticketHandlerSummary';
-export * from './ticketOpenPoint';
 export * from './ticketReporterSummary';
 export * from './ticketStatusSummary';
 export * from './ticketTypeSummary';
