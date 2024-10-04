@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 import {
   useApprovalActivitySummaryByApprover,
   useDeletionActivitySummaryByDeleter,
-  useTicketActivitySummaryForHandler,
+  useTicketActivitySummaryByHandler,
 } from '../../api';
 import {
   mergePointSeries,
@@ -19,7 +19,7 @@ export const AdminActivityChart: React.FC = () => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data: ticketData } = useTicketActivitySummaryForHandler(
+  const { data: ticketData } = useTicketActivitySummaryByHandler(
     userId ?? 0,
     range,
     refetchQueryOptions({

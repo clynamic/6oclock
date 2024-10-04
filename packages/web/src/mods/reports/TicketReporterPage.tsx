@@ -2,7 +2,7 @@ import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-import { useReporterSummaryInfinite } from '../../api';
+import { useTicketReporterSummaryInfinite } from '../../api';
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
 import { useChartDateRange } from '../../utils';
 import { TicketReporterFrame } from './TicketReporterFrame';
@@ -11,7 +11,7 @@ export const TicketReporterPage: React.FC = () => {
   const range = useChartDateRange();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useReporterSummaryInfinite(
+    useTicketReporterSummaryInfinite(
       {
         ...range,
       },

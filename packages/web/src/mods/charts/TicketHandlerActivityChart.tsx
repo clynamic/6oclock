@@ -2,7 +2,7 @@ import { useTheme } from '@mui/material';
 import { BarChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
 
-import { useTicketActivitySummaryForHandler } from '../../api';
+import { useTicketActivitySummaryByHandler } from '../../api';
 import {
   refetchQueryOptions,
   SeriesChartProps,
@@ -13,7 +13,7 @@ export const TicketHandlerActivityChart: React.FC = () => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data } = useTicketActivitySummaryForHandler(
+  const { data } = useTicketActivitySummaryByHandler(
     userId ?? 0,
     range,
     refetchQueryOptions({

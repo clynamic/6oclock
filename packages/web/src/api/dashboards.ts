@@ -28,14 +28,14 @@ import type { ErrorType } from '../http/axios';
  */
 export const dashboard = (type: string, signal?: AbortSignal) => {
   return makeRequest<DashboardConfig>({
-    url: `/dashboard/${encodeURIComponent(String(type))}`,
+    url: `/dashboards/${encodeURIComponent(String(type))}`,
     method: 'GET',
     signal,
   });
 };
 
 export const getDashboardQueryKey = (type: string) => {
-  return [`/dashboard/${type}`] as const;
+  return [`/dashboards/${type}`] as const;
 };
 
 export const getDashboardQueryOptions = <
@@ -156,7 +156,7 @@ export const updateDashboard = (
   dashboardUpdate: DashboardUpdate,
 ) => {
   return makeRequest<void>({
-    url: `/dashboard/${encodeURIComponent(String(type))}`,
+    url: `/dashboards/${encodeURIComponent(String(type))}`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data: dashboardUpdate,

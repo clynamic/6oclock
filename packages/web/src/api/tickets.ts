@@ -20,19 +20,19 @@ import type {
   UseQueryResult,
 } from '@tanstack/react-query';
 import type {
-  GetHandlerSummaryParams,
-  GetReporterSummaryParams,
-  GetTicketActivitySummaryForHandlerParams,
+  GetTicketActivitySummaryByHandlerParams,
   GetTicketActivitySummaryParams,
   GetTicketAgeSeriesParams,
   GetTicketAgeSummaryParams,
-  GetTicketClosedSeriesForHandlerParams,
+  GetTicketClosedSeriesByHandlerParams,
   GetTicketClosedSeriesParams,
-  GetTicketCreatedSeriesForReporterParams,
+  GetTicketCreatedSeriesByReporterParams,
   GetTicketCreatedSeriesParams,
+  GetTicketHandlerSummaryParams,
   GetTicketOpenSeriesParams,
+  GetTicketReporterSummaryParams,
   GetTicketStatusSummaryParams,
-  GetTicketTypeSummaryForHandlerParams,
+  GetTicketTypeSummaryByHandlerParams,
   GetTicketTypeSummaryParams,
   SeriesCountPoint,
   TicketAgeSeriesPoint,
@@ -54,7 +54,7 @@ export const ticketStatusSummary = (
   signal?: AbortSignal,
 ) => {
   return makeRequest<TicketStatusSummary>({
-    url: `/tickets/metrics/status/summary`,
+    url: `/metrics/tickets/status/summary`,
     method: 'GET',
     params,
     signal,
@@ -65,7 +65,7 @@ export const getTicketStatusSummaryQueryKey = (
   params?: GetTicketStatusSummaryParams,
 ) => {
   return [
-    `/tickets/metrics/status/summary`,
+    `/metrics/tickets/status/summary`,
     ...(params ? [params] : []),
   ] as const;
 };
@@ -206,7 +206,7 @@ export const ticketTypeSummary = (
   signal?: AbortSignal,
 ) => {
   return makeRequest<TicketTypeSummary>({
-    url: `/tickets/metrics/type/summary`,
+    url: `/metrics/tickets/type/summary`,
     method: 'GET',
     params,
     signal,
@@ -217,7 +217,7 @@ export const getTicketTypeSummaryQueryKey = (
   params?: GetTicketTypeSummaryParams,
 ) => {
   return [
-    `/tickets/metrics/type/summary`,
+    `/metrics/tickets/type/summary`,
     ...(params ? [params] : []),
   ] as const;
 };
@@ -353,39 +353,39 @@ export function useTicketTypeSummary<
  * Get ticket types counts for a given date range for a specific handler
  * @summary Ticket type summary for a handler
  */
-export const ticketTypeSummaryForHandler = (
+export const ticketTypeSummaryByHandler = (
   claimantId: number,
-  params?: GetTicketTypeSummaryForHandlerParams,
+  params?: GetTicketTypeSummaryByHandlerParams,
   signal?: AbortSignal,
 ) => {
   return makeRequest<TicketTypeSummary>({
-    url: `/tickets/metrics/type/summary/handler/${encodeURIComponent(String(claimantId))}`,
+    url: `/metrics/tickets/type/summary/by/handler/${encodeURIComponent(String(claimantId))}`,
     method: 'GET',
     params,
     signal,
   });
 };
 
-export const getTicketTypeSummaryForHandlerQueryKey = (
+export const getTicketTypeSummaryByHandlerQueryKey = (
   claimantId: number,
-  params?: GetTicketTypeSummaryForHandlerParams,
+  params?: GetTicketTypeSummaryByHandlerParams,
 ) => {
   return [
-    `/tickets/metrics/type/summary/handler/${claimantId}`,
+    `/metrics/tickets/type/summary/by/handler/${claimantId}`,
     ...(params ? [params] : []),
   ] as const;
 };
 
-export const getTicketTypeSummaryForHandlerQueryOptions = <
-  TData = Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>,
+export const getTicketTypeSummaryByHandlerQueryOptions = <
+  TData = Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>,
   TError = ErrorType<unknown>,
 >(
   claimantId: number,
-  params?: GetTicketTypeSummaryForHandlerParams,
+  params?: GetTicketTypeSummaryByHandlerParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>,
+        Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>,
         TError,
         TData
       >
@@ -396,11 +396,11 @@ export const getTicketTypeSummaryForHandlerQueryOptions = <
 
   const queryKey =
     queryOptions?.queryKey ??
-    getTicketTypeSummaryForHandlerQueryKey(claimantId, params);
+    getTicketTypeSummaryByHandlerQueryKey(claimantId, params);
 
   const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>
-  > = ({ signal }) => ticketTypeSummaryForHandler(claimantId, params, signal);
+    Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>
+  > = ({ signal }) => ticketTypeSummaryByHandler(claimantId, params, signal);
 
   return {
     queryKey,
@@ -408,34 +408,34 @@ export const getTicketTypeSummaryForHandlerQueryOptions = <
     enabled: !!claimantId,
     ...queryOptions,
   } as UseQueryOptions<
-    Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>,
+    Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>,
     TError,
     TData
   > & { queryKey: QueryKey };
 };
 
-export type TicketTypeSummaryForHandlerQueryResult = NonNullable<
-  Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>
+export type TicketTypeSummaryByHandlerQueryResult = NonNullable<
+  Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>
 >;
-export type TicketTypeSummaryForHandlerQueryError = ErrorType<unknown>;
+export type TicketTypeSummaryByHandlerQueryError = ErrorType<unknown>;
 
-export function useTicketTypeSummaryForHandler<
-  TData = Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>,
+export function useTicketTypeSummaryByHandler<
+  TData = Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>,
   TError = ErrorType<unknown>,
 >(
   claimantId: number,
-  params: undefined | GetTicketTypeSummaryForHandlerParams,
+  params: undefined | GetTicketTypeSummaryByHandlerParams,
   options: {
     query: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>,
+        Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>,
         TError,
         TData
       >
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>,
+          Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>,
           TError,
           TData
         >,
@@ -443,23 +443,23 @@ export function useTicketTypeSummaryForHandler<
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useTicketTypeSummaryForHandler<
-  TData = Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>,
+export function useTicketTypeSummaryByHandler<
+  TData = Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>,
   TError = ErrorType<unknown>,
 >(
   claimantId: number,
-  params?: GetTicketTypeSummaryForHandlerParams,
+  params?: GetTicketTypeSummaryByHandlerParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>,
+        Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>,
         TError,
         TData
       >
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>,
+          Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>,
           TError,
           TData
         >,
@@ -467,16 +467,16 @@ export function useTicketTypeSummaryForHandler<
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useTicketTypeSummaryForHandler<
-  TData = Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>,
+export function useTicketTypeSummaryByHandler<
+  TData = Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>,
   TError = ErrorType<unknown>,
 >(
   claimantId: number,
-  params?: GetTicketTypeSummaryForHandlerParams,
+  params?: GetTicketTypeSummaryByHandlerParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>,
+        Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>,
         TError,
         TData
       >
@@ -487,23 +487,23 @@ export function useTicketTypeSummaryForHandler<
  * @summary Ticket type summary for a handler
  */
 
-export function useTicketTypeSummaryForHandler<
-  TData = Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>,
+export function useTicketTypeSummaryByHandler<
+  TData = Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>,
   TError = ErrorType<unknown>,
 >(
   claimantId: number,
-  params?: GetTicketTypeSummaryForHandlerParams,
+  params?: GetTicketTypeSummaryByHandlerParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketTypeSummaryForHandler>>,
+        Awaited<ReturnType<typeof ticketTypeSummaryByHandler>>,
         TError,
         TData
       >
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getTicketTypeSummaryForHandlerQueryOptions(
+  const queryOptions = getTicketTypeSummaryByHandlerQueryOptions(
     claimantId,
     params,
     options,
@@ -527,7 +527,7 @@ export const ticketOpenSeries = (
   signal?: AbortSignal,
 ) => {
   return makeRequest<SeriesCountPoint[]>({
-    url: `/tickets/metrics/open/series`,
+    url: `/metrics/tickets/open/series`,
     method: 'GET',
     params,
     signal,
@@ -537,7 +537,7 @@ export const ticketOpenSeries = (
 export const getTicketOpenSeriesQueryKey = (
   params?: GetTicketOpenSeriesParams,
 ) => {
-  return [`/tickets/metrics/open/series`, ...(params ? [params] : [])] as const;
+  return [`/metrics/tickets/open/series`, ...(params ? [params] : [])] as const;
 };
 
 export const getTicketOpenSeriesQueryOptions = <
@@ -676,7 +676,7 @@ export const ticketCreatedSeries = (
   signal?: AbortSignal,
 ) => {
   return makeRequest<SeriesCountPoint[]>({
-    url: `/tickets/metrics/created/series`,
+    url: `/metrics/tickets/created/series`,
     method: 'GET',
     params,
     signal,
@@ -687,7 +687,7 @@ export const getTicketCreatedSeriesQueryKey = (
   params?: GetTicketCreatedSeriesParams,
 ) => {
   return [
-    `/tickets/metrics/created/series`,
+    `/metrics/tickets/created/series`,
     ...(params ? [params] : []),
   ] as const;
 };
@@ -821,41 +821,41 @@ export function useTicketCreatedSeries<
 
 /**
  * Get a time series of created tickets for a given date range for a specific reporter
- * @summary Ticket created series for a reporter
+ * @summary Ticket created series by reporter
  */
-export const ticketCreatedSeriesForReporter = (
+export const ticketCreatedSeriesByReporter = (
   repoterId: number,
-  params?: GetTicketCreatedSeriesForReporterParams,
+  params?: GetTicketCreatedSeriesByReporterParams,
   signal?: AbortSignal,
 ) => {
   return makeRequest<SeriesCountPoint[]>({
-    url: `/tickets/metrics/created/series/${encodeURIComponent(String(repoterId))}`,
+    url: `/metrics/tickets/created/series/by/reporter/${encodeURIComponent(String(repoterId))}`,
     method: 'GET',
     params,
     signal,
   });
 };
 
-export const getTicketCreatedSeriesForReporterQueryKey = (
+export const getTicketCreatedSeriesByReporterQueryKey = (
   repoterId: number,
-  params?: GetTicketCreatedSeriesForReporterParams,
+  params?: GetTicketCreatedSeriesByReporterParams,
 ) => {
   return [
-    `/tickets/metrics/created/series/${repoterId}`,
+    `/metrics/tickets/created/series/by/reporter/${repoterId}`,
     ...(params ? [params] : []),
   ] as const;
 };
 
-export const getTicketCreatedSeriesForReporterQueryOptions = <
-  TData = Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+export const getTicketCreatedSeriesByReporterQueryOptions = <
+  TData = Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>,
   TError = ErrorType<unknown>,
 >(
   repoterId: number,
-  params?: GetTicketCreatedSeriesForReporterParams,
+  params?: GetTicketCreatedSeriesByReporterParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+        Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>,
         TError,
         TData
       >
@@ -866,11 +866,11 @@ export const getTicketCreatedSeriesForReporterQueryOptions = <
 
   const queryKey =
     queryOptions?.queryKey ??
-    getTicketCreatedSeriesForReporterQueryKey(repoterId, params);
+    getTicketCreatedSeriesByReporterQueryKey(repoterId, params);
 
   const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>
-  > = ({ signal }) => ticketCreatedSeriesForReporter(repoterId, params, signal);
+    Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>
+  > = ({ signal }) => ticketCreatedSeriesByReporter(repoterId, params, signal);
 
   return {
     queryKey,
@@ -878,34 +878,34 @@ export const getTicketCreatedSeriesForReporterQueryOptions = <
     enabled: !!repoterId,
     ...queryOptions,
   } as UseQueryOptions<
-    Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+    Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>,
     TError,
     TData
   > & { queryKey: QueryKey };
 };
 
-export type TicketCreatedSeriesForReporterQueryResult = NonNullable<
-  Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>
+export type TicketCreatedSeriesByReporterQueryResult = NonNullable<
+  Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>
 >;
-export type TicketCreatedSeriesForReporterQueryError = ErrorType<unknown>;
+export type TicketCreatedSeriesByReporterQueryError = ErrorType<unknown>;
 
-export function useTicketCreatedSeriesForReporter<
-  TData = Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+export function useTicketCreatedSeriesByReporter<
+  TData = Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>,
   TError = ErrorType<unknown>,
 >(
   repoterId: number,
-  params: undefined | GetTicketCreatedSeriesForReporterParams,
+  params: undefined | GetTicketCreatedSeriesByReporterParams,
   options: {
     query: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+        Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>,
         TError,
         TData
       >
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+          Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>,
           TError,
           TData
         >,
@@ -913,23 +913,23 @@ export function useTicketCreatedSeriesForReporter<
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useTicketCreatedSeriesForReporter<
-  TData = Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+export function useTicketCreatedSeriesByReporter<
+  TData = Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>,
   TError = ErrorType<unknown>,
 >(
   repoterId: number,
-  params?: GetTicketCreatedSeriesForReporterParams,
+  params?: GetTicketCreatedSeriesByReporterParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+        Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>,
         TError,
         TData
       >
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+          Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>,
           TError,
           TData
         >,
@@ -937,16 +937,16 @@ export function useTicketCreatedSeriesForReporter<
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useTicketCreatedSeriesForReporter<
-  TData = Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+export function useTicketCreatedSeriesByReporter<
+  TData = Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>,
   TError = ErrorType<unknown>,
 >(
   repoterId: number,
-  params?: GetTicketCreatedSeriesForReporterParams,
+  params?: GetTicketCreatedSeriesByReporterParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+        Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>,
         TError,
         TData
       >
@@ -954,26 +954,26 @@ export function useTicketCreatedSeriesForReporter<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
 /**
- * @summary Ticket created series for a reporter
+ * @summary Ticket created series by reporter
  */
 
-export function useTicketCreatedSeriesForReporter<
-  TData = Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+export function useTicketCreatedSeriesByReporter<
+  TData = Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>,
   TError = ErrorType<unknown>,
 >(
   repoterId: number,
-  params?: GetTicketCreatedSeriesForReporterParams,
+  params?: GetTicketCreatedSeriesByReporterParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketCreatedSeriesForReporter>>,
+        Awaited<ReturnType<typeof ticketCreatedSeriesByReporter>>,
         TError,
         TData
       >
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getTicketCreatedSeriesForReporterQueryOptions(
+  const queryOptions = getTicketCreatedSeriesByReporterQueryOptions(
     repoterId,
     params,
     options,
@@ -997,7 +997,7 @@ export const ticketClosedSeries = (
   signal?: AbortSignal,
 ) => {
   return makeRequest<SeriesCountPoint[]>({
-    url: `/tickets/metrics/closed/series`,
+    url: `/metrics/tickets/closed/series`,
     method: 'GET',
     params,
     signal,
@@ -1008,7 +1008,7 @@ export const getTicketClosedSeriesQueryKey = (
   params?: GetTicketClosedSeriesParams,
 ) => {
   return [
-    `/tickets/metrics/closed/series`,
+    `/metrics/tickets/closed/series`,
     ...(params ? [params] : []),
   ] as const;
 };
@@ -1142,41 +1142,41 @@ export function useTicketClosedSeries<
 
 /**
  * Get a time series of closed tickets for a given date range for a specific handler
- * @summary Ticket closed series for a handler
+ * @summary Ticket closed series by handler
  */
-export const ticketClosedSeriesForHandler = (
+export const ticketClosedSeriesByHandler = (
   handlerId: number,
-  params?: GetTicketClosedSeriesForHandlerParams,
+  params?: GetTicketClosedSeriesByHandlerParams,
   signal?: AbortSignal,
 ) => {
   return makeRequest<SeriesCountPoint[]>({
-    url: `/tickets/metrics/closed/series/${encodeURIComponent(String(handlerId))}`,
+    url: `/metrics/tickets/closed/series/by/handler/${encodeURIComponent(String(handlerId))}`,
     method: 'GET',
     params,
     signal,
   });
 };
 
-export const getTicketClosedSeriesForHandlerQueryKey = (
+export const getTicketClosedSeriesByHandlerQueryKey = (
   handlerId: number,
-  params?: GetTicketClosedSeriesForHandlerParams,
+  params?: GetTicketClosedSeriesByHandlerParams,
 ) => {
   return [
-    `/tickets/metrics/closed/series/${handlerId}`,
+    `/metrics/tickets/closed/series/by/handler/${handlerId}`,
     ...(params ? [params] : []),
   ] as const;
 };
 
-export const getTicketClosedSeriesForHandlerQueryOptions = <
-  TData = Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>,
+export const getTicketClosedSeriesByHandlerQueryOptions = <
+  TData = Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>,
   TError = ErrorType<unknown>,
 >(
   handlerId: number,
-  params?: GetTicketClosedSeriesForHandlerParams,
+  params?: GetTicketClosedSeriesByHandlerParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>,
+        Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>,
         TError,
         TData
       >
@@ -1187,11 +1187,11 @@ export const getTicketClosedSeriesForHandlerQueryOptions = <
 
   const queryKey =
     queryOptions?.queryKey ??
-    getTicketClosedSeriesForHandlerQueryKey(handlerId, params);
+    getTicketClosedSeriesByHandlerQueryKey(handlerId, params);
 
   const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>
-  > = ({ signal }) => ticketClosedSeriesForHandler(handlerId, params, signal);
+    Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>
+  > = ({ signal }) => ticketClosedSeriesByHandler(handlerId, params, signal);
 
   return {
     queryKey,
@@ -1199,34 +1199,34 @@ export const getTicketClosedSeriesForHandlerQueryOptions = <
     enabled: !!handlerId,
     ...queryOptions,
   } as UseQueryOptions<
-    Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>,
+    Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>,
     TError,
     TData
   > & { queryKey: QueryKey };
 };
 
-export type TicketClosedSeriesForHandlerQueryResult = NonNullable<
-  Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>
+export type TicketClosedSeriesByHandlerQueryResult = NonNullable<
+  Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>
 >;
-export type TicketClosedSeriesForHandlerQueryError = ErrorType<unknown>;
+export type TicketClosedSeriesByHandlerQueryError = ErrorType<unknown>;
 
-export function useTicketClosedSeriesForHandler<
-  TData = Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>,
+export function useTicketClosedSeriesByHandler<
+  TData = Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>,
   TError = ErrorType<unknown>,
 >(
   handlerId: number,
-  params: undefined | GetTicketClosedSeriesForHandlerParams,
+  params: undefined | GetTicketClosedSeriesByHandlerParams,
   options: {
     query: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>,
+        Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>,
         TError,
         TData
       >
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>,
+          Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>,
           TError,
           TData
         >,
@@ -1234,23 +1234,23 @@ export function useTicketClosedSeriesForHandler<
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useTicketClosedSeriesForHandler<
-  TData = Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>,
+export function useTicketClosedSeriesByHandler<
+  TData = Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>,
   TError = ErrorType<unknown>,
 >(
   handlerId: number,
-  params?: GetTicketClosedSeriesForHandlerParams,
+  params?: GetTicketClosedSeriesByHandlerParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>,
+        Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>,
         TError,
         TData
       >
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>,
+          Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>,
           TError,
           TData
         >,
@@ -1258,16 +1258,16 @@ export function useTicketClosedSeriesForHandler<
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useTicketClosedSeriesForHandler<
-  TData = Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>,
+export function useTicketClosedSeriesByHandler<
+  TData = Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>,
   TError = ErrorType<unknown>,
 >(
   handlerId: number,
-  params?: GetTicketClosedSeriesForHandlerParams,
+  params?: GetTicketClosedSeriesByHandlerParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>,
+        Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>,
         TError,
         TData
       >
@@ -1275,26 +1275,26 @@ export function useTicketClosedSeriesForHandler<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
 /**
- * @summary Ticket closed series for a handler
+ * @summary Ticket closed series by handler
  */
 
-export function useTicketClosedSeriesForHandler<
-  TData = Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>,
+export function useTicketClosedSeriesByHandler<
+  TData = Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>,
   TError = ErrorType<unknown>,
 >(
   handlerId: number,
-  params?: GetTicketClosedSeriesForHandlerParams,
+  params?: GetTicketClosedSeriesByHandlerParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketClosedSeriesForHandler>>,
+        Awaited<ReturnType<typeof ticketClosedSeriesByHandler>>,
         TError,
         TData
       >
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getTicketClosedSeriesForHandlerQueryOptions(
+  const queryOptions = getTicketClosedSeriesByHandlerQueryOptions(
     handlerId,
     params,
     options,
@@ -1310,15 +1310,15 @@ export function useTicketClosedSeriesForHandler<
 }
 
 /**
- * Get a summary of ticket activity per hour for a given date range
- * @summary Ticket activity summary
+ * Get a hourly summary of ticket activity for a given date range
+ * @summary Ticket summary series
  */
 export const ticketActivitySummary = (
   params?: GetTicketActivitySummaryParams,
   signal?: AbortSignal,
 ) => {
   return makeRequest<SeriesCountPoint[]>({
-    url: `/tickets/metrics/activity/summary`,
+    url: `/metrics/tickets/activity/summary`,
     method: 'GET',
     params,
     signal,
@@ -1329,7 +1329,7 @@ export const getTicketActivitySummaryQueryKey = (
   params?: GetTicketActivitySummaryParams,
 ) => {
   return [
-    `/tickets/metrics/activity/summary`,
+    `/metrics/tickets/activity/summary`,
     ...(params ? [params] : []),
   ] as const;
 };
@@ -1432,7 +1432,7 @@ export function useTicketActivitySummary<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
 /**
- * @summary Ticket activity summary
+ * @summary Ticket summary series
  */
 
 export function useTicketActivitySummary<
@@ -1462,42 +1462,42 @@ export function useTicketActivitySummary<
 }
 
 /**
- * Get a summary of ticket activity per hour for a given date range for a specific handler
- * @summary Ticket activity summary for a handler
+ * Get a hourly summary of ticket activity for a given date range for a specific handler
+ * @summary Ticket activity summary by handler
  */
-export const ticketActivitySummaryForHandler = (
+export const ticketActivitySummaryByHandler = (
   claimantId: number,
-  params?: GetTicketActivitySummaryForHandlerParams,
+  params?: GetTicketActivitySummaryByHandlerParams,
   signal?: AbortSignal,
 ) => {
   return makeRequest<SeriesCountPoint[]>({
-    url: `/tickets/metrics/activity/summary/handler/${encodeURIComponent(String(claimantId))}`,
+    url: `/metrics/tickets/activity/summary/by/handler/${encodeURIComponent(String(claimantId))}`,
     method: 'GET',
     params,
     signal,
   });
 };
 
-export const getTicketActivitySummaryForHandlerQueryKey = (
+export const getTicketActivitySummaryByHandlerQueryKey = (
   claimantId: number,
-  params?: GetTicketActivitySummaryForHandlerParams,
+  params?: GetTicketActivitySummaryByHandlerParams,
 ) => {
   return [
-    `/tickets/metrics/activity/summary/handler/${claimantId}`,
+    `/metrics/tickets/activity/summary/by/handler/${claimantId}`,
     ...(params ? [params] : []),
   ] as const;
 };
 
-export const getTicketActivitySummaryForHandlerQueryOptions = <
-  TData = Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>,
+export const getTicketActivitySummaryByHandlerQueryOptions = <
+  TData = Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>,
   TError = ErrorType<unknown>,
 >(
   claimantId: number,
-  params?: GetTicketActivitySummaryForHandlerParams,
+  params?: GetTicketActivitySummaryByHandlerParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>,
+        Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>,
         TError,
         TData
       >
@@ -1508,12 +1508,12 @@ export const getTicketActivitySummaryForHandlerQueryOptions = <
 
   const queryKey =
     queryOptions?.queryKey ??
-    getTicketActivitySummaryForHandlerQueryKey(claimantId, params);
+    getTicketActivitySummaryByHandlerQueryKey(claimantId, params);
 
   const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>
+    Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>
   > = ({ signal }) =>
-    ticketActivitySummaryForHandler(claimantId, params, signal);
+    ticketActivitySummaryByHandler(claimantId, params, signal);
 
   return {
     queryKey,
@@ -1521,34 +1521,34 @@ export const getTicketActivitySummaryForHandlerQueryOptions = <
     enabled: !!claimantId,
     ...queryOptions,
   } as UseQueryOptions<
-    Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>,
+    Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>,
     TError,
     TData
   > & { queryKey: QueryKey };
 };
 
-export type TicketActivitySummaryForHandlerQueryResult = NonNullable<
-  Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>
+export type TicketActivitySummaryByHandlerQueryResult = NonNullable<
+  Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>
 >;
-export type TicketActivitySummaryForHandlerQueryError = ErrorType<unknown>;
+export type TicketActivitySummaryByHandlerQueryError = ErrorType<unknown>;
 
-export function useTicketActivitySummaryForHandler<
-  TData = Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>,
+export function useTicketActivitySummaryByHandler<
+  TData = Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>,
   TError = ErrorType<unknown>,
 >(
   claimantId: number,
-  params: undefined | GetTicketActivitySummaryForHandlerParams,
+  params: undefined | GetTicketActivitySummaryByHandlerParams,
   options: {
     query: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>,
+        Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>,
         TError,
         TData
       >
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>,
+          Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>,
           TError,
           TData
         >,
@@ -1556,23 +1556,23 @@ export function useTicketActivitySummaryForHandler<
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useTicketActivitySummaryForHandler<
-  TData = Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>,
+export function useTicketActivitySummaryByHandler<
+  TData = Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>,
   TError = ErrorType<unknown>,
 >(
   claimantId: number,
-  params?: GetTicketActivitySummaryForHandlerParams,
+  params?: GetTicketActivitySummaryByHandlerParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>,
+        Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>,
         TError,
         TData
       >
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>,
+          Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>,
           TError,
           TData
         >,
@@ -1580,16 +1580,16 @@ export function useTicketActivitySummaryForHandler<
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useTicketActivitySummaryForHandler<
-  TData = Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>,
+export function useTicketActivitySummaryByHandler<
+  TData = Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>,
   TError = ErrorType<unknown>,
 >(
   claimantId: number,
-  params?: GetTicketActivitySummaryForHandlerParams,
+  params?: GetTicketActivitySummaryByHandlerParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>,
+        Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>,
         TError,
         TData
       >
@@ -1597,26 +1597,26 @@ export function useTicketActivitySummaryForHandler<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
 /**
- * @summary Ticket activity summary for a handler
+ * @summary Ticket activity summary by handler
  */
 
-export function useTicketActivitySummaryForHandler<
-  TData = Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>,
+export function useTicketActivitySummaryByHandler<
+  TData = Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>,
   TError = ErrorType<unknown>,
 >(
   claimantId: number,
-  params?: GetTicketActivitySummaryForHandlerParams,
+  params?: GetTicketActivitySummaryByHandlerParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof ticketActivitySummaryForHandler>>,
+        Awaited<ReturnType<typeof ticketActivitySummaryByHandler>>,
         TError,
         TData
       >
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getTicketActivitySummaryForHandlerQueryOptions(
+  const queryOptions = getTicketActivitySummaryByHandlerQueryOptions(
     claimantId,
     params,
     options,
@@ -1640,7 +1640,7 @@ export const ticketAgeSeries = (
   signal?: AbortSignal,
 ) => {
   return makeRequest<TicketAgeSeriesPoint[]>({
-    url: `/tickets/metrics/age/series`,
+    url: `/metrics/tickets/age/series`,
     method: 'GET',
     params,
     signal,
@@ -1650,7 +1650,7 @@ export const ticketAgeSeries = (
 export const getTicketAgeSeriesQueryKey = (
   params?: GetTicketAgeSeriesParams,
 ) => {
-  return [`/tickets/metrics/age/series`, ...(params ? [params] : [])] as const;
+  return [`/metrics/tickets/age/series`, ...(params ? [params] : [])] as const;
 };
 
 export const getTicketAgeSeriesQueryOptions = <
@@ -1788,7 +1788,7 @@ export const ticketAgeSummary = (
   signal?: AbortSignal,
 ) => {
   return makeRequest<TicketAgeSummary>({
-    url: `/tickets/metrics/age/summary`,
+    url: `/metrics/tickets/age/summary`,
     method: 'GET',
     params,
     signal,
@@ -1798,7 +1798,7 @@ export const ticketAgeSummary = (
 export const getTicketAgeSummaryQueryKey = (
   params?: GetTicketAgeSummaryParams,
 ) => {
-  return [`/tickets/metrics/age/summary`, ...(params ? [params] : [])] as const;
+  return [`/metrics/tickets/age/summary`, ...(params ? [params] : [])] as const;
 };
 
 export const getTicketAgeSummaryQueryOptions = <
@@ -1929,97 +1929,103 @@ export function useTicketAgeSummary<
 }
 
 /**
- * Get a summary of the top 20 ticket handlers (claimed and handled tickets) for a given date range
+ * Get a summary of ticket handling counts for a given date range
  * @summary Handler summary
  */
-export const handlerSummary = (
-  params?: GetHandlerSummaryParams,
+export const ticketHandlerSummary = (
+  params?: GetTicketHandlerSummaryParams,
   signal?: AbortSignal,
 ) => {
   return makeRequest<TicketHandlerSummary[]>({
-    url: `/tickets/metrics/handler/summary`,
+    url: `/metrics/tickets/handler/summary`,
     method: 'GET',
     params,
     signal,
   });
 };
 
-export const getHandlerSummaryQueryKey = (params?: GetHandlerSummaryParams) => {
+export const getTicketHandlerSummaryQueryKey = (
+  params?: GetTicketHandlerSummaryParams,
+) => {
   return [
-    `/tickets/metrics/handler/summary`,
+    `/metrics/tickets/handler/summary`,
     ...(params ? [params] : []),
   ] as const;
 };
 
-export const getHandlerSummaryInfiniteQueryOptions = <
+export const getTicketHandlerSummaryInfiniteQueryOptions = <
   TData = InfiniteData<
-    Awaited<ReturnType<typeof handlerSummary>>,
-    GetHandlerSummaryParams['page']
+    Awaited<ReturnType<typeof ticketHandlerSummary>>,
+    GetTicketHandlerSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
-  params?: GetHandlerSummaryParams,
+  params?: GetTicketHandlerSummaryParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof handlerSummary>>,
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
         TError,
         TData,
-        Awaited<ReturnType<typeof handlerSummary>>,
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
         QueryKey,
-        GetHandlerSummaryParams['page']
+        GetTicketHandlerSummaryParams['page']
       >
     >;
   },
 ) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getHandlerSummaryQueryKey(params);
+  const queryKey =
+    queryOptions?.queryKey ?? getTicketHandlerSummaryQueryKey(params);
 
   const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof handlerSummary>>,
+    Awaited<ReturnType<typeof ticketHandlerSummary>>,
     QueryKey,
-    GetHandlerSummaryParams['page']
+    GetTicketHandlerSummaryParams['page']
   > = ({ signal, pageParam }) =>
-    handlerSummary({ ...params, page: pageParam || params?.['page'] }, signal);
+    ticketHandlerSummary(
+      { ...params, page: pageParam || params?.['page'] },
+      signal,
+    );
 
   return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
-    Awaited<ReturnType<typeof handlerSummary>>,
+    Awaited<ReturnType<typeof ticketHandlerSummary>>,
     TError,
     TData,
-    Awaited<ReturnType<typeof handlerSummary>>,
+    Awaited<ReturnType<typeof ticketHandlerSummary>>,
     QueryKey,
-    GetHandlerSummaryParams['page']
+    GetTicketHandlerSummaryParams['page']
   > & { queryKey: QueryKey };
 };
 
-export type HandlerSummaryInfiniteQueryResult = NonNullable<
-  Awaited<ReturnType<typeof handlerSummary>>
+export type TicketHandlerSummaryInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof ticketHandlerSummary>>
 >;
-export type HandlerSummaryInfiniteQueryError = ErrorType<unknown>;
+export type TicketHandlerSummaryInfiniteQueryError = ErrorType<unknown>;
 
-export function useHandlerSummaryInfinite<
+export function useTicketHandlerSummaryInfinite<
   TData = InfiniteData<
-    Awaited<ReturnType<typeof handlerSummary>>,
-    GetHandlerSummaryParams['page']
+    Awaited<ReturnType<typeof ticketHandlerSummary>>,
+    GetTicketHandlerSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
-  params: undefined | GetHandlerSummaryParams,
+  params: undefined | GetTicketHandlerSummaryParams,
   options: {
     query: Partial<
       UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof handlerSummary>>,
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
         TError,
         TData,
-        Awaited<ReturnType<typeof handlerSummary>>,
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
         QueryKey,
-        GetHandlerSummaryParams['page']
+        GetTicketHandlerSummaryParams['page']
       >
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof handlerSummary>>,
+          Awaited<ReturnType<typeof ticketHandlerSummary>>,
           TError,
           TData,
           QueryKey
@@ -2028,28 +2034,28 @@ export function useHandlerSummaryInfinite<
       >;
   },
 ): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useHandlerSummaryInfinite<
+export function useTicketHandlerSummaryInfinite<
   TData = InfiniteData<
-    Awaited<ReturnType<typeof handlerSummary>>,
-    GetHandlerSummaryParams['page']
+    Awaited<ReturnType<typeof ticketHandlerSummary>>,
+    GetTicketHandlerSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
-  params?: GetHandlerSummaryParams,
+  params?: GetTicketHandlerSummaryParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof handlerSummary>>,
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
         TError,
         TData,
-        Awaited<ReturnType<typeof handlerSummary>>,
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
         QueryKey,
-        GetHandlerSummaryParams['page']
+        GetTicketHandlerSummaryParams['page']
       >
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof handlerSummary>>,
+          Awaited<ReturnType<typeof ticketHandlerSummary>>,
           TError,
           TData,
           QueryKey
@@ -2058,23 +2064,23 @@ export function useHandlerSummaryInfinite<
       >;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useHandlerSummaryInfinite<
+export function useTicketHandlerSummaryInfinite<
   TData = InfiniteData<
-    Awaited<ReturnType<typeof handlerSummary>>,
-    GetHandlerSummaryParams['page']
+    Awaited<ReturnType<typeof ticketHandlerSummary>>,
+    GetTicketHandlerSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
-  params?: GetHandlerSummaryParams,
+  params?: GetTicketHandlerSummaryParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof handlerSummary>>,
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
         TError,
         TData,
-        Awaited<ReturnType<typeof handlerSummary>>,
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
         QueryKey,
-        GetHandlerSummaryParams['page']
+        GetTicketHandlerSummaryParams['page']
       >
     >;
   },
@@ -2083,28 +2089,31 @@ export function useHandlerSummaryInfinite<
  * @summary Handler summary
  */
 
-export function useHandlerSummaryInfinite<
+export function useTicketHandlerSummaryInfinite<
   TData = InfiniteData<
-    Awaited<ReturnType<typeof handlerSummary>>,
-    GetHandlerSummaryParams['page']
+    Awaited<ReturnType<typeof ticketHandlerSummary>>,
+    GetTicketHandlerSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
-  params?: GetHandlerSummaryParams,
+  params?: GetTicketHandlerSummaryParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof handlerSummary>>,
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
         TError,
         TData,
-        Awaited<ReturnType<typeof handlerSummary>>,
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
         QueryKey,
-        GetHandlerSummaryParams['page']
+        GetTicketHandlerSummaryParams['page']
       >
     >;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getHandlerSummaryInfiniteQueryOptions(params, options);
+  const queryOptions = getTicketHandlerSummaryInfiniteQueryOptions(
+    params,
+    options,
+  );
 
   const query = useInfiniteQuery(queryOptions) as UseInfiniteQueryResult<
     TData,
@@ -2116,49 +2125,58 @@ export function useHandlerSummaryInfinite<
   return query;
 }
 
-export const getHandlerSummaryQueryOptions = <
-  TData = Awaited<ReturnType<typeof handlerSummary>>,
+export const getTicketHandlerSummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof ticketHandlerSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetHandlerSummaryParams,
+  params?: GetTicketHandlerSummaryParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof handlerSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
+        TError,
+        TData
+      >
     >;
   },
 ) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getHandlerSummaryQueryKey(params);
+  const queryKey =
+    queryOptions?.queryKey ?? getTicketHandlerSummaryQueryKey(params);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof handlerSummary>>> = ({
-    signal,
-  }) => handlerSummary(params, signal);
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof ticketHandlerSummary>>
+  > = ({ signal }) => ticketHandlerSummary(params, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof handlerSummary>>,
+    Awaited<ReturnType<typeof ticketHandlerSummary>>,
     TError,
     TData
   > & { queryKey: QueryKey };
 };
 
-export type HandlerSummaryQueryResult = NonNullable<
-  Awaited<ReturnType<typeof handlerSummary>>
+export type TicketHandlerSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof ticketHandlerSummary>>
 >;
-export type HandlerSummaryQueryError = ErrorType<unknown>;
+export type TicketHandlerSummaryQueryError = ErrorType<unknown>;
 
-export function useHandlerSummary<
-  TData = Awaited<ReturnType<typeof handlerSummary>>,
+export function useTicketHandlerSummary<
+  TData = Awaited<ReturnType<typeof ticketHandlerSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params: undefined | GetHandlerSummaryParams,
+  params: undefined | GetTicketHandlerSummaryParams,
   options: {
     query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof handlerSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
+        TError,
+        TData
+      >
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof handlerSummary>>,
+          Awaited<ReturnType<typeof ticketHandlerSummary>>,
           TError,
           TData
         >,
@@ -2166,18 +2184,22 @@ export function useHandlerSummary<
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useHandlerSummary<
-  TData = Awaited<ReturnType<typeof handlerSummary>>,
+export function useTicketHandlerSummary<
+  TData = Awaited<ReturnType<typeof ticketHandlerSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetHandlerSummaryParams,
+  params?: GetTicketHandlerSummaryParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof handlerSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
+        TError,
+        TData
+      >
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof handlerSummary>>,
+          Awaited<ReturnType<typeof ticketHandlerSummary>>,
           TError,
           TData
         >,
@@ -2185,14 +2207,18 @@ export function useHandlerSummary<
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useHandlerSummary<
-  TData = Awaited<ReturnType<typeof handlerSummary>>,
+export function useTicketHandlerSummary<
+  TData = Awaited<ReturnType<typeof ticketHandlerSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetHandlerSummaryParams,
+  params?: GetTicketHandlerSummaryParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof handlerSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
+        TError,
+        TData
+      >
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
@@ -2200,18 +2226,22 @@ export function useHandlerSummary<
  * @summary Handler summary
  */
 
-export function useHandlerSummary<
-  TData = Awaited<ReturnType<typeof handlerSummary>>,
+export function useTicketHandlerSummary<
+  TData = Awaited<ReturnType<typeof ticketHandlerSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetHandlerSummaryParams,
+  params?: GetTicketHandlerSummaryParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof handlerSummary>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof ticketHandlerSummary>>,
+        TError,
+        TData
+      >
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getHandlerSummaryQueryOptions(params, options);
+  const queryOptions = getTicketHandlerSummaryQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
@@ -2223,99 +2253,103 @@ export function useHandlerSummary<
 }
 
 /**
- * Get a summary of the top 20 reporters (submitted tickets) for a given date range
+ * Get a summary of ticket reporting counts for a given date range
  * @summary Reporter summary
  */
-export const reporterSummary = (
-  params?: GetReporterSummaryParams,
+export const ticketReporterSummary = (
+  params?: GetTicketReporterSummaryParams,
   signal?: AbortSignal,
 ) => {
   return makeRequest<TicketReporterSummary[]>({
-    url: `/tickets/metrics/reporter/summary`,
+    url: `/metrics/tickets/reporter/summary`,
     method: 'GET',
     params,
     signal,
   });
 };
 
-export const getReporterSummaryQueryKey = (
-  params?: GetReporterSummaryParams,
+export const getTicketReporterSummaryQueryKey = (
+  params?: GetTicketReporterSummaryParams,
 ) => {
   return [
-    `/tickets/metrics/reporter/summary`,
+    `/metrics/tickets/reporter/summary`,
     ...(params ? [params] : []),
   ] as const;
 };
 
-export const getReporterSummaryInfiniteQueryOptions = <
+export const getTicketReporterSummaryInfiniteQueryOptions = <
   TData = InfiniteData<
-    Awaited<ReturnType<typeof reporterSummary>>,
-    GetReporterSummaryParams['page']
+    Awaited<ReturnType<typeof ticketReporterSummary>>,
+    GetTicketReporterSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
-  params?: GetReporterSummaryParams,
+  params?: GetTicketReporterSummaryParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         TError,
         TData,
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         QueryKey,
-        GetReporterSummaryParams['page']
+        GetTicketReporterSummaryParams['page']
       >
     >;
   },
 ) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getReporterSummaryQueryKey(params);
+  const queryKey =
+    queryOptions?.queryKey ?? getTicketReporterSummaryQueryKey(params);
 
   const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof reporterSummary>>,
+    Awaited<ReturnType<typeof ticketReporterSummary>>,
     QueryKey,
-    GetReporterSummaryParams['page']
+    GetTicketReporterSummaryParams['page']
   > = ({ signal, pageParam }) =>
-    reporterSummary({ ...params, page: pageParam || params?.['page'] }, signal);
+    ticketReporterSummary(
+      { ...params, page: pageParam || params?.['page'] },
+      signal,
+    );
 
   return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
-    Awaited<ReturnType<typeof reporterSummary>>,
+    Awaited<ReturnType<typeof ticketReporterSummary>>,
     TError,
     TData,
-    Awaited<ReturnType<typeof reporterSummary>>,
+    Awaited<ReturnType<typeof ticketReporterSummary>>,
     QueryKey,
-    GetReporterSummaryParams['page']
+    GetTicketReporterSummaryParams['page']
   > & { queryKey: QueryKey };
 };
 
-export type ReporterSummaryInfiniteQueryResult = NonNullable<
-  Awaited<ReturnType<typeof reporterSummary>>
+export type TicketReporterSummaryInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof ticketReporterSummary>>
 >;
-export type ReporterSummaryInfiniteQueryError = ErrorType<unknown>;
+export type TicketReporterSummaryInfiniteQueryError = ErrorType<unknown>;
 
-export function useReporterSummaryInfinite<
+export function useTicketReporterSummaryInfinite<
   TData = InfiniteData<
-    Awaited<ReturnType<typeof reporterSummary>>,
-    GetReporterSummaryParams['page']
+    Awaited<ReturnType<typeof ticketReporterSummary>>,
+    GetTicketReporterSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
-  params: undefined | GetReporterSummaryParams,
+  params: undefined | GetTicketReporterSummaryParams,
   options: {
     query: Partial<
       UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         TError,
         TData,
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         QueryKey,
-        GetReporterSummaryParams['page']
+        GetTicketReporterSummaryParams['page']
       >
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof reporterSummary>>,
+          Awaited<ReturnType<typeof ticketReporterSummary>>,
           TError,
           TData,
           QueryKey
@@ -2324,28 +2358,28 @@ export function useReporterSummaryInfinite<
       >;
   },
 ): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useReporterSummaryInfinite<
+export function useTicketReporterSummaryInfinite<
   TData = InfiniteData<
-    Awaited<ReturnType<typeof reporterSummary>>,
-    GetReporterSummaryParams['page']
+    Awaited<ReturnType<typeof ticketReporterSummary>>,
+    GetTicketReporterSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
-  params?: GetReporterSummaryParams,
+  params?: GetTicketReporterSummaryParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         TError,
         TData,
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         QueryKey,
-        GetReporterSummaryParams['page']
+        GetTicketReporterSummaryParams['page']
       >
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof reporterSummary>>,
+          Awaited<ReturnType<typeof ticketReporterSummary>>,
           TError,
           TData,
           QueryKey
@@ -2354,23 +2388,23 @@ export function useReporterSummaryInfinite<
       >;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useReporterSummaryInfinite<
+export function useTicketReporterSummaryInfinite<
   TData = InfiniteData<
-    Awaited<ReturnType<typeof reporterSummary>>,
-    GetReporterSummaryParams['page']
+    Awaited<ReturnType<typeof ticketReporterSummary>>,
+    GetTicketReporterSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
-  params?: GetReporterSummaryParams,
+  params?: GetTicketReporterSummaryParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         TError,
         TData,
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         QueryKey,
-        GetReporterSummaryParams['page']
+        GetTicketReporterSummaryParams['page']
       >
     >;
   },
@@ -2379,28 +2413,31 @@ export function useReporterSummaryInfinite<
  * @summary Reporter summary
  */
 
-export function useReporterSummaryInfinite<
+export function useTicketReporterSummaryInfinite<
   TData = InfiniteData<
-    Awaited<ReturnType<typeof reporterSummary>>,
-    GetReporterSummaryParams['page']
+    Awaited<ReturnType<typeof ticketReporterSummary>>,
+    GetTicketReporterSummaryParams['page']
   >,
   TError = ErrorType<unknown>,
 >(
-  params?: GetReporterSummaryParams,
+  params?: GetTicketReporterSummaryParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         TError,
         TData,
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         QueryKey,
-        GetReporterSummaryParams['page']
+        GetTicketReporterSummaryParams['page']
       >
     >;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getReporterSummaryInfiniteQueryOptions(params, options);
+  const queryOptions = getTicketReporterSummaryInfiniteQueryOptions(
+    params,
+    options,
+  );
 
   const query = useInfiniteQuery(queryOptions) as UseInfiniteQueryResult<
     TData,
@@ -2412,15 +2449,15 @@ export function useReporterSummaryInfinite<
   return query;
 }
 
-export const getReporterSummaryQueryOptions = <
-  TData = Awaited<ReturnType<typeof reporterSummary>>,
+export const getTicketReporterSummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof ticketReporterSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetReporterSummaryParams,
+  params?: GetTicketReporterSummaryParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         TError,
         TData
       >
@@ -2429,40 +2466,41 @@ export const getReporterSummaryQueryOptions = <
 ) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getReporterSummaryQueryKey(params);
+  const queryKey =
+    queryOptions?.queryKey ?? getTicketReporterSummaryQueryKey(params);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof reporterSummary>>> = ({
-    signal,
-  }) => reporterSummary(params, signal);
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof ticketReporterSummary>>
+  > = ({ signal }) => ticketReporterSummary(params, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof reporterSummary>>,
+    Awaited<ReturnType<typeof ticketReporterSummary>>,
     TError,
     TData
   > & { queryKey: QueryKey };
 };
 
-export type ReporterSummaryQueryResult = NonNullable<
-  Awaited<ReturnType<typeof reporterSummary>>
+export type TicketReporterSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof ticketReporterSummary>>
 >;
-export type ReporterSummaryQueryError = ErrorType<unknown>;
+export type TicketReporterSummaryQueryError = ErrorType<unknown>;
 
-export function useReporterSummary<
-  TData = Awaited<ReturnType<typeof reporterSummary>>,
+export function useTicketReporterSummary<
+  TData = Awaited<ReturnType<typeof ticketReporterSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params: undefined | GetReporterSummaryParams,
+  params: undefined | GetTicketReporterSummaryParams,
   options: {
     query: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         TError,
         TData
       >
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof reporterSummary>>,
+          Awaited<ReturnType<typeof ticketReporterSummary>>,
           TError,
           TData
         >,
@@ -2470,22 +2508,22 @@ export function useReporterSummary<
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useReporterSummary<
-  TData = Awaited<ReturnType<typeof reporterSummary>>,
+export function useTicketReporterSummary<
+  TData = Awaited<ReturnType<typeof ticketReporterSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetReporterSummaryParams,
+  params?: GetTicketReporterSummaryParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         TError,
         TData
       >
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof reporterSummary>>,
+          Awaited<ReturnType<typeof ticketReporterSummary>>,
           TError,
           TData
         >,
@@ -2493,15 +2531,15 @@ export function useReporterSummary<
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useReporterSummary<
-  TData = Awaited<ReturnType<typeof reporterSummary>>,
+export function useTicketReporterSummary<
+  TData = Awaited<ReturnType<typeof ticketReporterSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetReporterSummaryParams,
+  params?: GetTicketReporterSummaryParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         TError,
         TData
       >
@@ -2512,22 +2550,22 @@ export function useReporterSummary<
  * @summary Reporter summary
  */
 
-export function useReporterSummary<
-  TData = Awaited<ReturnType<typeof reporterSummary>>,
+export function useTicketReporterSummary<
+  TData = Awaited<ReturnType<typeof ticketReporterSummary>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetReporterSummaryParams,
+  params?: GetTicketReporterSummaryParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof reporterSummary>>,
+        Awaited<ReturnType<typeof ticketReporterSummary>>,
         TError,
         TData
       >
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getReporterSummaryQueryOptions(params, options);
+  const queryOptions = getTicketReporterSummaryQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

@@ -1,13 +1,13 @@
 import { PieChart, PieValueType } from '@mui/x-charts';
 import { useMemo } from 'react';
 
-import { TicketTypeSummary, useTicketTypeSummaryForHandler } from '../../api';
+import { TicketTypeSummary, useTicketTypeSummaryByHandler } from '../../api';
 import { refetchQueryOptions, useChartParamsValue } from '../../utils';
 import { TicketQtypeColors } from './TicketTypeChart';
 
 export const TicketHandlerTypeChart: React.FC = () => {
   const { range, userId } = useChartParamsValue();
-  const { data: summary } = useTicketTypeSummaryForHandler(
+  const { data: summary } = useTicketTypeSummaryByHandler(
     userId ?? 0,
     range,
     refetchQueryOptions({

@@ -114,7 +114,7 @@
             }
           }
         },
-        "tags": ["Job"],
+        "tags": ["Jobs"],
         "security": [{ "bearer": [] }]
       }
     },
@@ -151,7 +151,7 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/dashboard/{type}": {
+    "/dashboards/{type}": {
       "get": {
         "operationId": "getDashboard",
         "summary": "Get dashboard",
@@ -175,7 +175,7 @@
           },
           "404": { "description": "Dashboard not found" }
         },
-        "tags": ["Dashboard"],
+        "tags": ["Dashboards"],
         "security": [{ "bearer": [] }]
       },
       "post": {
@@ -202,7 +202,7 @@
           "200": { "description": "Updated dashboard object" },
           "201": { "description": "" }
         },
-        "tags": ["Dashboard"],
+        "tags": ["Dashboards"],
         "security": [{ "bearer": [] }]
       }
     },
@@ -229,7 +229,7 @@
             }
           }
         },
-        "tags": ["Manifest"],
+        "tags": ["Manifests"],
         "security": [{ "bearer": [] }]
       },
       "delete": {
@@ -247,7 +247,7 @@
         "responses": {
           "200": { "description": "Manifest deleted successfully" }
         },
-        "tags": ["Manifest"],
+        "tags": ["Manifests"],
         "security": [{ "bearer": [] }]
       }
     },
@@ -295,7 +295,8 @@
                   "posts",
                   "users",
                   "user_profiles",
-                  "flags"
+                  "flags",
+                  "feedbacks"
                 ]
               }
             }
@@ -314,11 +315,11 @@
             }
           }
         },
-        "tags": ["Manifest"],
+        "tags": ["Manifests"],
         "security": [{ "bearer": [] }]
       }
     },
-    "/approvals/metrics/count/summary": {
+    "/metrics/approvals/count/summary": {
       "get": {
         "operationId": "getApprovalCountSummary",
         "summary": "Approval count summary",
@@ -359,7 +360,7 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/approvals/metrics/count/series": {
+    "/metrics/approvals/count/series": {
       "get": {
         "operationId": "getApprovalCountSeries",
         "summary": "Approval count series",
@@ -401,7 +402,7 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/approvals/metrics/count/series/{approverId}": {
+    "/metrics/approvals/count/series/by/approver/{approverId}": {
       "get": {
         "operationId": "getApprovalCountSeriesByApprover",
         "summary": "Approval count series by approver",
@@ -449,11 +450,11 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/approvals/metrics/activity/summary": {
+    "/metrics/approvals/activity/summary": {
       "get": {
-        "operationId": "getApprovalActivitySummary",
+        "operationId": "getApprovalActivitySeries",
         "summary": "Approval activity summary",
-        "description": "Get total approval activity counts for a given date range",
+        "description": "Get a hourly summary of approval activity for a given date range",
         "parameters": [
           {
             "name": "startDate",
@@ -491,11 +492,11 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/approvals/metrics/activity/summary/{approverId}": {
+    "/metrics/approvals/activity/summary/by/approver/{approverId}": {
       "get": {
         "operationId": "getApprovalActivitySummaryByApprover",
         "summary": "Approval activity summary by approver",
-        "description": "Get total approval activity counts for a given date range by approver",
+        "description": "Get a hourly summary of approval activity for a given date range by approver",
         "parameters": [
           {
             "name": "approverId",
@@ -539,11 +540,11 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/approvals/metrics/approver/summary": {
+    "/metrics/approvals/approver/summary": {
       "get": {
         "operationId": "getApproverSummary",
         "summary": "Approver summary",
-        "description": "Get a summary of the top 20 approvers by approval count for a given date range",
+        "description": "Get a summary of approvals by approver for a given date range",
         "parameters": [
           {
             "name": "startDate",
@@ -627,7 +628,7 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/status/summary": {
+    "/metrics/tickets/status/summary": {
       "get": {
         "operationId": "getTicketStatusSummary",
         "summary": "Ticket status summary",
@@ -666,7 +667,7 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/type/summary": {
+    "/metrics/tickets/type/summary": {
       "get": {
         "operationId": "getTicketTypeSummary",
         "summary": "Ticket type summary",
@@ -705,9 +706,9 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/type/summary/handler/{claimantId}": {
+    "/metrics/tickets/type/summary/by/handler/{claimantId}": {
       "get": {
-        "operationId": "getTicketTypeSummaryForHandler",
+        "operationId": "getTicketTypeSummaryByHandler",
         "summary": "Ticket type summary for a handler",
         "description": "Get ticket types counts for a given date range for a specific handler",
         "parameters": [
@@ -750,7 +751,7 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/open/series": {
+    "/metrics/tickets/open/series": {
       "get": {
         "operationId": "getTicketOpenSeries",
         "summary": "Ticket open series",
@@ -792,7 +793,7 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/created/series": {
+    "/metrics/tickets/created/series": {
       "get": {
         "operationId": "getTicketCreatedSeries",
         "summary": "Ticket created series",
@@ -834,10 +835,10 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/created/series/{repoterId}": {
+    "/metrics/tickets/created/series/by/reporter/{repoterId}": {
       "get": {
-        "operationId": "getTicketCreatedSeriesForReporter",
-        "summary": "Ticket created series for a reporter",
+        "operationId": "getTicketCreatedSeriesByReporter",
+        "summary": "Ticket created series by reporter",
         "description": "Get a time series of created tickets for a given date range for a specific reporter",
         "parameters": [
           {
@@ -882,7 +883,7 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/closed/series": {
+    "/metrics/tickets/closed/series": {
       "get": {
         "operationId": "getTicketClosedSeries",
         "summary": "Ticket closed series",
@@ -924,10 +925,10 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/closed/series/{handlerId}": {
+    "/metrics/tickets/closed/series/by/handler/{handlerId}": {
       "get": {
-        "operationId": "getTicketClosedSeriesForHandler",
-        "summary": "Ticket closed series for a handler",
+        "operationId": "getTicketClosedSeriesByHandler",
+        "summary": "Ticket closed series by handler",
         "description": "Get a time series of closed tickets for a given date range for a specific handler",
         "parameters": [
           {
@@ -972,11 +973,11 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/activity/summary": {
+    "/metrics/tickets/activity/summary": {
       "get": {
         "operationId": "getTicketActivitySummary",
-        "summary": "Ticket activity summary",
-        "description": "Get a summary of ticket activity per hour for a given date range",
+        "summary": "Ticket summary series",
+        "description": "Get a hourly summary of ticket activity for a given date range",
         "parameters": [
           {
             "name": "startDate",
@@ -1014,11 +1015,11 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/activity/summary/handler/{claimantId}": {
+    "/metrics/tickets/activity/summary/by/handler/{claimantId}": {
       "get": {
-        "operationId": "getTicketActivitySummaryForHandler",
-        "summary": "Ticket activity summary for a handler",
-        "description": "Get a summary of ticket activity per hour for a given date range for a specific handler",
+        "operationId": "getTicketActivitySummaryByHandler",
+        "summary": "Ticket activity summary by handler",
+        "description": "Get a hourly summary of ticket activity for a given date range for a specific handler",
         "parameters": [
           {
             "name": "claimantId",
@@ -1062,7 +1063,7 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/age/series": {
+    "/metrics/tickets/age/series": {
       "get": {
         "operationId": "getTicketAgeSeries",
         "summary": "Ticket age series",
@@ -1106,7 +1107,7 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/age/summary": {
+    "/metrics/tickets/age/summary": {
       "get": {
         "operationId": "getTicketAgeSummary",
         "summary": "Ticket age summary",
@@ -1145,11 +1146,11 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/handler/summary": {
+    "/metrics/tickets/handler/summary": {
       "get": {
-        "operationId": "getHandlerSummary",
+        "operationId": "getTicketHandlerSummary",
         "summary": "Handler summary",
-        "description": "Get a summary of the top 20 ticket handlers (claimed and handled tickets) for a given date range",
+        "description": "Get a summary of ticket handling counts for a given date range",
         "parameters": [
           {
             "name": "startDate",
@@ -1208,11 +1209,11 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/tickets/metrics/reporter/summary": {
+    "/metrics/tickets/reporter/summary": {
       "get": {
-        "operationId": "getReporterSummary",
+        "operationId": "getTicketReporterSummary",
         "summary": "Reporter summary",
-        "description": "Get a summary of the top 20 reporters (submitted tickets) for a given date range",
+        "description": "Get a summary of ticket reporting counts for a given date range",
         "parameters": [
           {
             "name": "startDate",
@@ -1271,97 +1272,7 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/flags/metric/deletion/activity/summary": {
-      "get": {
-        "operationId": "getDeletionActivitySummary",
-        "summary": "Post deletion activity summary",
-        "description": "Get total post deletion counts for a given date range",
-        "parameters": [
-          {
-            "name": "startDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "endDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "timezone",
-            "required": false,
-            "in": "query",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Flags"],
-        "security": [{ "bearer": [] }]
-      }
-    },
-    "/flags/metric/deletion/activity/summary/{userId}": {
-      "get": {
-        "operationId": "getDeletionActivitySummaryByDeleter",
-        "summary": "Post deletion activity summary by deleter",
-        "description": "Get total post deletion counts for a given date range by deleter",
-        "parameters": [
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": { "type": "number" }
-          },
-          {
-            "name": "startDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "endDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "timezone",
-            "required": false,
-            "in": "query",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Flags"],
-        "security": [{ "bearer": [] }]
-      }
-    },
-    "/flags/metric/deletion/series": {
+    "/metrics/flags/deletion/series": {
       "get": {
         "operationId": "getDeletionSeries",
         "summary": "Post deletion series",
@@ -1403,11 +1314,11 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/flags/metric/deletion/series/{userId}": {
+    "/metrics/flags/deletion/series/by/deleter/{userId}": {
       "get": {
-        "operationId": "getDeletionSeriesByUser",
-        "summary": "Post deletion series by user",
-        "description": "Get a time series of post deletion counts for a given date range by user",
+        "operationId": "getDeletionSeriesByDeleter",
+        "summary": "Post deletion series by deleter",
+        "description": "Get a time series of post deletion counts for a given date range by deleter",
         "parameters": [
           {
             "name": "userId",
@@ -1448,6 +1359,179 @@
           }
         },
         "tags": ["Flags"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/metrics/flags/deletion/activity/summary": {
+      "get": {
+        "operationId": "getDeletionActivitySummary",
+        "summary": "Post deletion activity summary",
+        "description": "Get a hourly summary of post deletion counts for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Flags"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/metrics/flags/deletion/activity/summary/by/deleter/{userId}": {
+      "get": {
+        "operationId": "getDeletionActivitySummaryByDeleter",
+        "summary": "Post deletion activity summary by deleter",
+        "description": "Get a hourly summary of post deletion counts for a given date range by deleter",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Flags"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/metrics/feedbacks/type/summary": {
+      "get": {
+        "operationId": "getFeedbackTypeSummary",
+        "summary": "Feedback type summary",
+        "description": "Get feedback types counts for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FeedbackTypeSummary" }
+              }
+            }
+          }
+        },
+        "tags": ["Feedbacks"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/metrics/feedbacks/count/series": {
+      "get": {
+        "operationId": "getFeedbackCountSeries",
+        "summary": "Feedback count series",
+        "description": "Get a time series of feedback counts for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FeedbackCountSeriesPoint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Feedbacks"],
         "security": [{ "bearer": [] }]
       }
     }
@@ -1512,7 +1596,8 @@
               "posts",
               "users",
               "user_profiles",
-              "flags"
+              "flags",
+              "feedbacks"
             ]
           },
           "startDate": { "format": "date-time", "type": "string" },
@@ -1603,7 +1688,8 @@
               "posts",
               "users",
               "user_profiles",
-              "flags"
+              "flags",
+              "feedbacks"
             ],
             "type": "string"
           },
@@ -1734,6 +1820,32 @@
           "days": { "type": "number" }
         },
         "required": ["userId", "total", "days"]
+      },
+      "FeedbackTypeSummary": {
+        "type": "object",
+        "properties": {
+          "negative": { "type": "number" },
+          "neutral": { "type": "number" },
+          "positive": { "type": "number" }
+        },
+        "required": ["negative", "neutral", "positive"]
+      },
+      "FeedbackCountGroup": {
+        "type": "object",
+        "properties": {
+          "negative": { "type": "number" },
+          "neutral": { "type": "number" },
+          "positive": { "type": "number" }
+        },
+        "required": ["negative", "neutral", "positive"]
+      },
+      "FeedbackCountSeriesPoint": {
+        "type": "object",
+        "properties": {
+          "date": { "format": "date-time", "type": "string" },
+          "groups": { "$ref": "#/components/schemas/FeedbackCountGroup" }
+        },
+        "required": ["date", "groups"]
       }
     }
   },
