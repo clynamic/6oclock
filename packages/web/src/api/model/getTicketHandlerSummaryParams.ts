@@ -6,8 +6,16 @@
  * OpenAPI spec version: 0.0.3
  */
 
-export type GetDeletionSeriesByUserParams = {
+export type GetTicketHandlerSummaryParams = {
   startDate?: Date;
   endDate?: Date;
   timezone?: string;
+  /**
+   * Page number
+   */
+  page?: number;
+  /**
+   * Page size
+   */
+  limit?: number;
 };

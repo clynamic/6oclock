@@ -2,7 +2,7 @@ import { ArrowForward } from '@mui/icons-material';
 import { Button, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { useReporterSummary } from '../../api';
+import { useTicketReporterSummary } from '../../api';
 import { LimitedList, NoDataHint } from '../../common';
 import { refetchQueryOptions, useChartDateRange } from '../../utils';
 import { TicketReporterFrame } from './TicketReporterFrame';
@@ -10,7 +10,7 @@ import { TicketReporterFrame } from './TicketReporterFrame';
 export const TicketReporterBoard: React.FC = () => {
   const range = useChartDateRange();
 
-  const { data: reporters } = useReporterSummary(
+  const { data: reporters } = useTicketReporterSummary(
     {
       ...range,
       limit: 10,

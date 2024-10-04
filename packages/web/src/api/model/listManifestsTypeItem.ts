@@ -17,4 +17,5 @@ export const ListManifestsTypeItem = {
   users: 'users',
   user_profiles: 'user_profiles',
   flags: 'flags',
+  feedbacks: 'feedbacks',
 } as const;

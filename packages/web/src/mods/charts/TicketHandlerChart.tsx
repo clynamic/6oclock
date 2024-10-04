@@ -3,7 +3,7 @@ import { BarChart, LineChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
-import { useTicketClosedSeriesForHandler } from '../../api';
+import { useTicketClosedSeriesByHandler } from '../../api';
 import {
   refetchQueryOptions,
   SeriesChartProps,
@@ -20,7 +20,7 @@ export const TicketHandlerChart: React.FC<TicketHandlerChartProps> = ({
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data } = useTicketClosedSeriesForHandler(
+  const { data } = useTicketClosedSeriesByHandler(
     userId ?? 0,
     range,
     refetchQueryOptions({

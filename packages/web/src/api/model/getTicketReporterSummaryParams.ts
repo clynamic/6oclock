@@ -6,7 +6,7 @@
  * OpenAPI spec version: 0.0.3
  */
 
-export type GetHandlerSummaryParams = {
+export type GetTicketReporterSummaryParams = {
   startDate?: Date;
   endDate?: Date;
   timezone?: string;

@@ -6,16 +6,8 @@
  * OpenAPI spec version: 0.0.3
  */
 
-export type GetReporterSummaryParams = {
+export type GetApprovalActivitySeriesParams = {
   startDate?: Date;
   endDate?: Date;
   timezone?: string;
-  /**
-   * Page number
-   */
-  page?: number;
-  /**
-   * Page size
-   */
-  limit?: number;
 };
