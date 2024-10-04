@@ -6,8 +6,8 @@
  * OpenAPI spec version: 0.0.3
  */
 
-export type GetTicketCreatedSeriesForReporterParams = {
-  startDate?: Date;
-  endDate?: Date;
-  timezone?: string;
-};
+export interface FeedbackTypeSummary {
+  negative: number;
+  neutral: number;
+  positive: number;
+}

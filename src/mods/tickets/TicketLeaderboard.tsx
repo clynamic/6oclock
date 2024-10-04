@@ -2,7 +2,7 @@ import { ArrowForward } from '@mui/icons-material';
 import { Button, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { useHandlerSummary } from '../../api';
+import { useTicketHandlerSummary } from '../../api';
 import { LimitedList, NoDataHint } from '../../common';
 import { refetchQueryOptions, useChartDateRange } from '../../utils';
 import { TicketLeaderboardFrame } from './TicketLeaderboardFrame';
@@ -10,7 +10,7 @@ import { TicketLeaderboardFrame } from './TicketLeaderboardFrame';
 export const TicketLeaderboard: React.FC = () => {
   const range = useChartDateRange();
 
-  const { data: ticketers } = useHandlerSummary(
+  const { data: ticketers } = useTicketHandlerSummary(
     {
       ...range,
       limit: 10,

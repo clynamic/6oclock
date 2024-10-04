@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 
 import {
   useApprovalCountSeriesByApprover,
-  useDeletionSeriesByUser,
+  useDeletionSeriesByDeleter,
 } from '../../api';
 import {
   mergePointSeries,
@@ -27,7 +27,7 @@ export const ApproverChart: React.FC = () => {
     },
   );
 
-  const { data: deletedData } = useDeletionSeriesByUser(
+  const { data: deletedData } = useDeletionSeriesByDeleter(
     userId ?? 0,
     { ...range },
     {

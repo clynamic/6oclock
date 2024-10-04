@@ -22,8 +22,8 @@ import type {
 import type {
   ApprovalCountSummary,
   ApproverSummary,
+  GetApprovalActivitySeriesParams,
   GetApprovalActivitySummaryByApproverParams,
-  GetApprovalActivitySummaryParams,
   GetApprovalCountSeriesByApproverParams,
   GetApprovalCountSeriesParams,
   GetApprovalCountSummaryParams,
@@ -42,7 +42,7 @@ export const approvalCountSummary = (
   signal?: AbortSignal,
 ) => {
   return makeRequest<ApprovalCountSummary>({
-    url: `/approvals/metrics/count/summary`,
+    url: `/metrics/approvals/count/summary`,
     method: 'GET',
     params,
     signal,
@@ -53,7 +53,7 @@ export const getApprovalCountSummaryQueryKey = (
   params?: GetApprovalCountSummaryParams,
 ) => {
   return [
-    `/approvals/metrics/count/summary`,
+    `/metrics/approvals/count/summary`,
     ...(params ? [params] : []),
   ] as const;
 };
@@ -194,7 +194,7 @@ export const approvalCountSeries = (
   signal?: AbortSignal,
 ) => {
   return makeRequest<SeriesCountPoint[]>({
-    url: `/approvals/metrics/count/series`,
+    url: `/metrics/approvals/count/series`,
     method: 'GET',
     params,
     signal,
@@ -205,7 +205,7 @@ export const getApprovalCountSeriesQueryKey = (
   params?: GetApprovalCountSeriesParams,
 ) => {
   return [
-    `/approvals/metrics/count/series`,
+    `/metrics/approvals/count/series`,
     ...(params ? [params] : []),
   ] as const;
 };
@@ -347,7 +347,7 @@ export const approvalCountSeriesByApprover = (
   signal?: AbortSignal,
 ) => {
   return makeRequest<SeriesCountPoint[]>({
-    url: `/approvals/metrics/count/series/${encodeURIComponent(String(approverId))}`,
+    url: `/metrics/approvals/count/series/by/approver/${encodeURIComponent(String(approverId))}`,
     method: 'GET',
     params,
     signal,
@@ -359,7 +359,7 @@ export const getApprovalCountSeriesByApproverQueryKey = (
   params?: GetApprovalCountSeriesByApproverParams,
 ) => {
   return [
-    `/approvals/metrics/count/series/${approverId}`,
+    `/metrics/approvals/count/series/by/approver/${approverId}`,
     ...(params ? [params] : []),
   ] as const;
 };
@@ -507,39 +507,39 @@ export function useApprovalCountSeriesByApprover<
 }
 
 /**
- * Get total approval activity counts for a given date range
+ * Get a hourly summary of approval activity for a given date range
  * @summary Approval activity summary
  */
-export const approvalActivitySummary = (
-  params?: GetApprovalActivitySummaryParams,
+export const approvalActivitySeries = (
+  params?: GetApprovalActivitySeriesParams,
   signal?: AbortSignal,
 ) => {
   return makeRequest<SeriesCountPoint[]>({
-    url: `/approvals/metrics/activity/summary`,
+    url: `/metrics/approvals/activity/summary`,
     method: 'GET',
     params,
     signal,
   });
 };
 
-export const getApprovalActivitySummaryQueryKey = (
-  params?: GetApprovalActivitySummaryParams,
+export const getApprovalActivitySeriesQueryKey = (
+  params?: GetApprovalActivitySeriesParams,
 ) => {
   return [
-    `/approvals/metrics/activity/summary`,
+    `/metrics/approvals/activity/summary`,
     ...(params ? [params] : []),
   ] as const;
 };
 
-export const getApprovalActivitySummaryQueryOptions = <
-  TData = Awaited<ReturnType<typeof approvalActivitySummary>>,
+export const getApprovalActivitySeriesQueryOptions = <
+  TData = Awaited<ReturnType<typeof approvalActivitySeries>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetApprovalActivitySummaryParams,
+  params?: GetApprovalActivitySeriesParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof approvalActivitySummary>>,
+        Awaited<ReturnType<typeof approvalActivitySeries>>,
         TError,
         TData
       >
@@ -549,40 +549,40 @@ export const getApprovalActivitySummaryQueryOptions = <
   const { query: queryOptions } = options ?? {};
 
   const queryKey =
-    queryOptions?.queryKey ?? getApprovalActivitySummaryQueryKey(params);
+    queryOptions?.queryKey ?? getApprovalActivitySeriesQueryKey(params);
 
   const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof approvalActivitySummary>>
-  > = ({ signal }) => approvalActivitySummary(params, signal);
+    Awaited<ReturnType<typeof approvalActivitySeries>>
+  > = ({ signal }) => approvalActivitySeries(params, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof approvalActivitySummary>>,
+    Awaited<ReturnType<typeof approvalActivitySeries>>,
     TError,
     TData
   > & { queryKey: QueryKey };
 };
 
-export type ApprovalActivitySummaryQueryResult = NonNullable<
-  Awaited<ReturnType<typeof approvalActivitySummary>>
+export type ApprovalActivitySeriesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof approvalActivitySeries>>
 >;
-export type ApprovalActivitySummaryQueryError = ErrorType<unknown>;
+export type ApprovalActivitySeriesQueryError = ErrorType<unknown>;
 
-export function useApprovalActivitySummary<
-  TData = Awaited<ReturnType<typeof approvalActivitySummary>>,
+export function useApprovalActivitySeries<
+  TData = Awaited<ReturnType<typeof approvalActivitySeries>>,
   TError = ErrorType<unknown>,
 >(
-  params: undefined | GetApprovalActivitySummaryParams,
+  params: undefined | GetApprovalActivitySeriesParams,
   options: {
     query: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof approvalActivitySummary>>,
+        Awaited<ReturnType<typeof approvalActivitySeries>>,
         TError,
         TData
       >
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof approvalActivitySummary>>,
+          Awaited<ReturnType<typeof approvalActivitySeries>>,
           TError,
           TData
         >,
@@ -590,22 +590,22 @@ export function useApprovalActivitySummary<
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useApprovalActivitySummary<
-  TData = Awaited<ReturnType<typeof approvalActivitySummary>>,
+export function useApprovalActivitySeries<
+  TData = Awaited<ReturnType<typeof approvalActivitySeries>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetApprovalActivitySummaryParams,
+  params?: GetApprovalActivitySeriesParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof approvalActivitySummary>>,
+        Awaited<ReturnType<typeof approvalActivitySeries>>,
         TError,
         TData
       >
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof approvalActivitySummary>>,
+          Awaited<ReturnType<typeof approvalActivitySeries>>,
           TError,
           TData
         >,
@@ -613,15 +613,15 @@ export function useApprovalActivitySummary<
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useApprovalActivitySummary<
-  TData = Awaited<ReturnType<typeof approvalActivitySummary>>,
+export function useApprovalActivitySeries<
+  TData = Awaited<ReturnType<typeof approvalActivitySeries>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetApprovalActivitySummaryParams,
+  params?: GetApprovalActivitySeriesParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof approvalActivitySummary>>,
+        Awaited<ReturnType<typeof approvalActivitySeries>>,
         TError,
         TData
       >
@@ -632,22 +632,22 @@ export function useApprovalActivitySummary<
  * @summary Approval activity summary
  */
 
-export function useApprovalActivitySummary<
-  TData = Awaited<ReturnType<typeof approvalActivitySummary>>,
+export function useApprovalActivitySeries<
+  TData = Awaited<ReturnType<typeof approvalActivitySeries>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetApprovalActivitySummaryParams,
+  params?: GetApprovalActivitySeriesParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof approvalActivitySummary>>,
+        Awaited<ReturnType<typeof approvalActivitySeries>>,
         TError,
         TData
       >
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getApprovalActivitySummaryQueryOptions(params, options);
+  const queryOptions = getApprovalActivitySeriesQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
@@ -659,7 +659,7 @@ export function useApprovalActivitySummary<
 }
 
 /**
- * Get total approval activity counts for a given date range by approver
+ * Get a hourly summary of approval activity for a given date range by approver
  * @summary Approval activity summary by approver
  */
 export const approvalActivitySummaryByApprover = (
@@ -668,7 +668,7 @@ export const approvalActivitySummaryByApprover = (
   signal?: AbortSignal,
 ) => {
   return makeRequest<SeriesCountPoint[]>({
-    url: `/approvals/metrics/activity/summary/${encodeURIComponent(String(approverId))}`,
+    url: `/metrics/approvals/activity/summary/by/approver/${encodeURIComponent(String(approverId))}`,
     method: 'GET',
     params,
     signal,
@@ -680,7 +680,7 @@ export const getApprovalActivitySummaryByApproverQueryKey = (
   params?: GetApprovalActivitySummaryByApproverParams,
 ) => {
   return [
-    `/approvals/metrics/activity/summary/${approverId}`,
+    `/metrics/approvals/activity/summary/by/approver/${approverId}`,
     ...(params ? [params] : []),
   ] as const;
 };
@@ -829,7 +829,7 @@ export function useApprovalActivitySummaryByApprover<
 }
 
 /**
- * Get a summary of the top 20 approvers by approval count for a given date range
+ * Get a summary of approvals by approver for a given date range
  * @summary Approver summary
  */
 export const approverSummary = (
@@ -837,7 +837,7 @@ export const approverSummary = (
   signal?: AbortSignal,
 ) => {
   return makeRequest<ApproverSummary[]>({
-    url: `/approvals/metrics/approver/summary`,
+    url: `/metrics/approvals/approver/summary`,
     method: 'GET',
     params,
     signal,
@@ -848,7 +848,7 @@ export const getApproverSummaryQueryKey = (
   params?: GetApproverSummaryParams,
 ) => {
   return [
-    `/approvals/metrics/approver/summary`,
+    `/metrics/approvals/approver/summary`,
     ...(params ? [params] : []),
   ] as const;
 };

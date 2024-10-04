@@ -6,8 +6,8 @@
  * OpenAPI spec version: 0.0.3
  */
 
-export type GetApprovalActivitySummaryParams = {
-  startDate?: Date;
-  endDate?: Date;
-  timezone?: string;
-};
+export interface FeedbackCountGroup {
+  negative: number;
+  neutral: number;
+  positive: number;
+}

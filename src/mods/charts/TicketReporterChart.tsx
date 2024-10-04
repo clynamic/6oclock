@@ -3,7 +3,7 @@ import { BarChart, LineChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
-import { useTicketCreatedSeriesForReporter } from '../../api';
+import { useTicketCreatedSeriesByReporter } from '../../api';
 import {
   refetchQueryOptions,
   SeriesChartProps,
@@ -20,7 +20,7 @@ export const TicketReporterChart: React.FC<TicketReporterChartProps> = ({
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data } = useTicketCreatedSeriesForReporter(
+  const { data } = useTicketCreatedSeriesByReporter(
     userId ?? 0,
     range,
     refetchQueryOptions({
