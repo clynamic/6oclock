@@ -3,7 +3,7 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.2
+ * OpenAPI spec version: 0.0.3
  */
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import type {
@@ -20,8 +20,6 @@ import type {
   UseQueryResult,
 } from '@tanstack/react-query';
 import type {
-  ApprovalActivityPoint,
-  ApprovalCountPoint,
   ApprovalCountSummary,
   ApproverSummary,
   GetApprovalActivitySummaryByApproverParams,
@@ -30,6 +28,7 @@ import type {
   GetApprovalCountSeriesParams,
   GetApprovalCountSummaryParams,
   GetApproverSummaryParams,
+  SeriesCountPoint,
 } from './model';
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
@@ -194,7 +193,7 @@ export const approvalCountSeries = (
   params?: GetApprovalCountSeriesParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<ApprovalCountPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/approvals/metrics/count/series`,
     method: 'GET',
     params,
@@ -347,7 +346,7 @@ export const approvalCountSeriesByApprover = (
   params?: GetApprovalCountSeriesByApproverParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<ApprovalCountPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/approvals/metrics/count/series/${encodeURIComponent(String(approverId))}`,
     method: 'GET',
     params,
@@ -515,7 +514,7 @@ export const approvalActivitySummary = (
   params?: GetApprovalActivitySummaryParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<ApprovalActivityPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/approvals/metrics/activity/summary`,
     method: 'GET',
     params,
@@ -668,7 +667,7 @@ export const approvalActivitySummaryByApprover = (
   params?: GetApprovalActivitySummaryByApproverParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<ApprovalActivityPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/approvals/metrics/activity/summary/${encodeURIComponent(String(approverId))}`,
     method: 'GET',
     params,
