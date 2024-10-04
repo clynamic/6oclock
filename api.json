@@ -391,7 +391,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/ApprovalCountPoint" }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -439,7 +439,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/ApprovalCountPoint" }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -481,9 +481,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApprovalActivityPoint"
-                  }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -531,9 +529,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApprovalActivityPoint"
-                  }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -786,7 +782,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/TicketOpenPoint" }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -828,7 +824,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/TicketCreatedPoint" }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -876,7 +872,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/TicketCreatedPoint" }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -918,7 +914,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/TicketClosedPoint" }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -966,7 +962,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/TicketClosedPoint" }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -1008,9 +1004,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TicketActivityPoint"
-                  }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -1058,9 +1052,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TicketActivityPoint"
-                  }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -1311,9 +1303,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PostDeletedActivityPoint"
-                  }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -1361,9 +1351,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PostDeletedActivityPoint"
-                  }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -1405,7 +1393,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/PostDeletedPoint" }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -1453,7 +1441,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/PostDeletedPoint" }
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
                 }
               }
             }
@@ -1467,7 +1455,7 @@
   "info": {
     "title": "5-thirty",
     "description": "backend data aggregate for 6 o'clock",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "contact": {}
   },
   "tags": [],
@@ -1629,15 +1617,7 @@
         "properties": { "total": { "type": "number" } },
         "required": ["total"]
       },
-      "ApprovalCountPoint": {
-        "type": "object",
-        "properties": {
-          "date": { "format": "date-time", "type": "string" },
-          "count": { "type": "number" }
-        },
-        "required": ["date", "count"]
-      },
-      "ApprovalActivityPoint": {
+      "SeriesCountPoint": {
         "type": "object",
         "properties": {
           "date": { "format": "date-time", "type": "string" },
@@ -1700,38 +1680,6 @@
           "dmail"
         ]
       },
-      "TicketOpenPoint": {
-        "type": "object",
-        "properties": {
-          "date": { "format": "date-time", "type": "string" },
-          "count": { "type": "number" }
-        },
-        "required": ["date", "count"]
-      },
-      "TicketCreatedPoint": {
-        "type": "object",
-        "properties": {
-          "date": { "format": "date-time", "type": "string" },
-          "count": { "type": "number" }
-        },
-        "required": ["date", "count"]
-      },
-      "TicketClosedPoint": {
-        "type": "object",
-        "properties": {
-          "date": { "format": "date-time", "type": "string" },
-          "count": { "type": "number" }
-        },
-        "required": ["date", "count"]
-      },
-      "TicketActivityPoint": {
-        "type": "object",
-        "properties": {
-          "date": { "format": "date-time", "type": "string" },
-          "count": { "type": "number" }
-        },
-        "required": ["date", "count"]
-      },
       "TicketAgeGroup": {
         "type": "object",
         "properties": {
@@ -1786,22 +1734,6 @@
           "days": { "type": "number" }
         },
         "required": ["userId", "total", "days"]
-      },
-      "PostDeletedActivityPoint": {
-        "type": "object",
-        "properties": {
-          "date": { "format": "date-time", "type": "string" },
-          "count": { "type": "number" }
-        },
-        "required": ["date", "count"]
-      },
-      "PostDeletedPoint": {
-        "type": "object",
-        "properties": {
-          "date": { "format": "date-time", "type": "string" },
-          "count": { "type": "number" }
-        },
-        "required": ["date", "count"]
       }
     }
   },

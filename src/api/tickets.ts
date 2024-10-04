@@ -3,7 +3,7 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.2
+ * OpenAPI spec version: 0.0.3
  */
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import type {
@@ -34,13 +34,10 @@ import type {
   GetTicketStatusSummaryParams,
   GetTicketTypeSummaryForHandlerParams,
   GetTicketTypeSummaryParams,
-  TicketActivityPoint,
+  SeriesCountPoint,
   TicketAgeSeriesPoint,
   TicketAgeSummary,
-  TicketClosedPoint,
-  TicketCreatedPoint,
   TicketHandlerSummary,
-  TicketOpenPoint,
   TicketReporterSummary,
   TicketStatusSummary,
   TicketTypeSummary,
@@ -529,7 +526,7 @@ export const ticketOpenSeries = (
   params?: GetTicketOpenSeriesParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<TicketOpenPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/tickets/metrics/open/series`,
     method: 'GET',
     params,
@@ -678,7 +675,7 @@ export const ticketCreatedSeries = (
   params?: GetTicketCreatedSeriesParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<TicketCreatedPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/tickets/metrics/created/series`,
     method: 'GET',
     params,
@@ -831,7 +828,7 @@ export const ticketCreatedSeriesForReporter = (
   params?: GetTicketCreatedSeriesForReporterParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<TicketCreatedPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/tickets/metrics/created/series/${encodeURIComponent(String(repoterId))}`,
     method: 'GET',
     params,
@@ -999,7 +996,7 @@ export const ticketClosedSeries = (
   params?: GetTicketClosedSeriesParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<TicketClosedPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/tickets/metrics/closed/series`,
     method: 'GET',
     params,
@@ -1152,7 +1149,7 @@ export const ticketClosedSeriesForHandler = (
   params?: GetTicketClosedSeriesForHandlerParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<TicketClosedPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/tickets/metrics/closed/series/${encodeURIComponent(String(handlerId))}`,
     method: 'GET',
     params,
@@ -1320,7 +1317,7 @@ export const ticketActivitySummary = (
   params?: GetTicketActivitySummaryParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<TicketActivityPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/tickets/metrics/activity/summary`,
     method: 'GET',
     params,
@@ -1473,7 +1470,7 @@ export const ticketActivitySummaryForHandler = (
   params?: GetTicketActivitySummaryForHandlerParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<TicketActivityPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/tickets/metrics/activity/summary/handler/${encodeURIComponent(String(claimantId))}`,
     method: 'GET',
     params,

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.2
+ * OpenAPI spec version: 0.0.3
  */
 import { useQuery } from '@tanstack/react-query';
 import type {
@@ -20,8 +20,7 @@ import type {
   GetDeletionActivitySummaryParams,
   GetDeletionSeriesByUserParams,
   GetDeletionSeriesParams,
-  PostDeletedActivityPoint,
-  PostDeletedPoint,
+  SeriesCountPoint,
 } from './model';
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
@@ -34,7 +33,7 @@ export const deletionActivitySummary = (
   params?: GetDeletionActivitySummaryParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<PostDeletedActivityPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/flags/metric/deletion/activity/summary`,
     method: 'GET',
     params,
@@ -187,7 +186,7 @@ export const deletionActivitySummaryByDeleter = (
   params?: GetDeletionActivitySummaryByDeleterParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<PostDeletedActivityPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/flags/metric/deletion/activity/summary/${encodeURIComponent(String(userId))}`,
     method: 'GET',
     params,
@@ -355,7 +354,7 @@ export const deletionSeries = (
   params?: GetDeletionSeriesParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<PostDeletedPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/flags/metric/deletion/series`,
     method: 'GET',
     params,
@@ -485,7 +484,7 @@ export const deletionSeriesByUser = (
   params?: GetDeletionSeriesByUserParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<PostDeletedPoint[]>({
+  return makeRequest<SeriesCountPoint[]>({
     url: `/flags/metric/deletion/series/${encodeURIComponent(String(userId))}`,
     method: 'GET',
     params,
