@@ -1,3 +1,3 @@
-export * from './ApproverActivityChart';
-export * from './ApproverChart';
-export * from './PostTurnaroundChart';
+export * from './ApprovalActivitySummaryByApproverChart';
+export * from './ApprovalCountSeriesByApproverChart';
+export * from './PostStatusSeriesChart';

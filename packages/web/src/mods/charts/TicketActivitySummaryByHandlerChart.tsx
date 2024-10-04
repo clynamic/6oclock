@@ -1,26 +1,19 @@
 import { useTheme } from '@mui/material';
-import { BarChart, LineChart } from '@mui/x-charts';
+import { BarChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
-import { useMemo } from 'react';
 
-import { useTicketCreatedSeriesByReporter } from '../../api';
+import { useTicketActivitySummaryByHandler } from '../../api';
 import {
   refetchQueryOptions,
   SeriesChartProps,
   useChartParamsValue,
 } from '../../utils';
 
-export interface TicketReporterChartProps {
-  variant?: 'bars' | 'lines';
-}
-
-export const TicketReporterChart: React.FC<TicketReporterChartProps> = ({
-  variant = 'bars',
-}) => {
+export const TicketActivitySummaryByHandlerChart: React.FC = () => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data } = useTicketCreatedSeriesByReporter(
+  const { data } = useTicketActivitySummaryByHandler(
     userId ?? 0,
     range,
     refetchQueryOptions({
@@ -35,26 +28,25 @@ export const TicketReporterChart: React.FC<TicketReporterChartProps> = ({
         scaleType: 'band',
         dataKey: 'date',
         valueFormatter: (value) =>
-          DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
+          DateTime.fromJSDate(value).toLocaleString(DateTime.TIME_SIMPLE),
       },
     ],
     series: [
       {
         dataKey: 'count',
-        label: 'Created',
+        label: 'Action',
         color: theme.palette.primary.main,
       },
     ],
     slotProps: {
+      legend: {
+        hidden: true,
+      },
       noDataOverlay: {
         message: 'No data',
       },
     },
   };
 
-  const Chart = useMemo(() => {
-    return variant === 'bars' ? BarChart : LineChart;
-  }, [variant]);
-
-  return <Chart {...chartProps} />;
+  return <BarChart {...chartProps} />;
 };

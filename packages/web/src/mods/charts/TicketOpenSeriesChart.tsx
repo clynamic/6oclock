@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 import { useTicketOpenSeries } from '../../api';
 import { refetchQueryOptions, useChartDateRange } from '../../utils';
 
-export const TicketFrontlineChart: React.FC = () => {
+export const TicketOpenSeriesChart: React.FC = () => {
   const theme = useTheme();
   const range = useChartDateRange();
 

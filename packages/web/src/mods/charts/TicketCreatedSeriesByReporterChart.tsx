@@ -3,24 +3,24 @@ import { BarChart, LineChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
-import { useTicketClosedSeriesByHandler } from '../../api';
+import { useTicketCreatedSeriesByReporter } from '../../api';
 import {
   refetchQueryOptions,
   SeriesChartProps,
   useChartParamsValue,
 } from '../../utils';
 
-export interface TicketHandlerChartProps {
+export interface TicketReporterChartProps {
   variant?: 'bars' | 'lines';
 }
 
-export const TicketHandlerChart: React.FC<TicketHandlerChartProps> = ({
-  variant = 'bars',
-}) => {
+export const TicketCreatedSeriesByReporterChart: React.FC<
+  TicketReporterChartProps
+> = ({ variant = 'bars' }) => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data } = useTicketClosedSeriesByHandler(
+  const { data } = useTicketCreatedSeriesByReporter(
     userId ?? 0,
     range,
     refetchQueryOptions({
@@ -41,14 +41,11 @@ export const TicketHandlerChart: React.FC<TicketHandlerChartProps> = ({
     series: [
       {
         dataKey: 'count',
-        label: 'Closed',
+        label: 'Created',
         color: theme.palette.primary.main,
       },
     ],
     slotProps: {
-      legend: {
-        hidden: true,
-      },
       noDataOverlay: {
         message: 'No data',
       },

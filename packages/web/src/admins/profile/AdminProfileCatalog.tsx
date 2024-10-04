@@ -1,8 +1,11 @@
 import { UserCard } from '../../common';
 import { createSimpleLayout, DashboardCatalog } from '../../dashboard';
-import { ApproverChart } from '../../janitors';
-import { TicketHandlerChart, TicketHandlerTypeChart } from '../../mods';
-import { AdminActivityChart } from '../charts';
+import { ApprovalCountSeriesByApproverChart } from '../../janitors';
+import {
+  TicketClosedSeriesByHandlerChart,
+  TicketTypeSummaryByHandlerTypeChart,
+} from '../../mods';
+import { AdminActivitySummaryByAdminChart } from '../charts';
 
 export const adminProfileCatalog: DashboardCatalog = {
   userHead: {
@@ -50,7 +53,7 @@ export const adminProfileCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'Ticket Types' },
-    component: TicketHandlerTypeChart,
+    component: TicketTypeSummaryByHandlerTypeChart,
   },
   ticketsHandled: {
     name: 'Tickets Handled',
@@ -74,7 +77,7 @@ export const adminProfileCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'Tickets Handled' },
-    component: TicketHandlerChart,
+    component: TicketClosedSeriesByHandlerChart,
   },
   postsHandled: {
     name: 'Posts Handled',
@@ -98,7 +101,7 @@ export const adminProfileCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'Posts Handled' },
-    component: ApproverChart,
+    component: ApprovalCountSeriesByApproverChart,
   },
   userActivity: {
     name: 'User Activity',
@@ -122,6 +125,6 @@ export const adminProfileCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'User Activity' },
-    component: AdminActivityChart,
+    component: AdminActivitySummaryByAdminChart,
   },
 };
