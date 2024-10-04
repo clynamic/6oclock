@@ -3,20 +3,20 @@ import { BarChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
-import { useApprovalCountSeries, useDeletionSeries } from '../../api';
+import { useApprovalCountSeries, useDeletionCountSeries } from '../../api';
 import {
   mergePointSeries,
   SeriesChartProps,
   useChartDateRange,
 } from '../../utils';
 
-export const PostTurnaroundChart: React.FC = () => {
+export const PostStatusCountSeriesChart: React.FC = () => {
   const theme = useTheme();
   const range = useChartDateRange();
 
   const { data: approvedData } = useApprovalCountSeries(range);
 
-  const { data: deletedData } = useDeletionSeries(range);
+  const { data: deletedData } = useDeletionCountSeries(range);
 
   const dataset = useMemo(() => {
     return mergePointSeries({

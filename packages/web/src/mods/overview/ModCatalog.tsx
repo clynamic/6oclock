@@ -1,9 +1,9 @@
 import { createSimpleLayout, DashboardCatalog } from '../../dashboard';
 import {
-  TicketFrontlineChart,
-  TicketStatusChart,
-  TicketTurnaroundChart as TicketTurnaroundChart,
-  TicketTypeChart,
+  TicketOpenSeriesChart,
+  TicketStatusSummaryChart,
+  TicketStatusSeriesChart as TicketStatusSeriesChart,
+  TicketTypeSummaryChart,
 } from '../charts';
 import { TicketReporterBoard } from '../reports';
 import { TicketLeaderboard } from '../tickets';
@@ -58,7 +58,7 @@ export const modDashboardCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'Status' },
-    component: TicketStatusChart,
+    component: TicketStatusSummaryChart,
   },
   ticketType: {
     name: 'All Tickets Type',
@@ -82,7 +82,7 @@ export const modDashboardCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'Type' },
-    component: TicketTypeChart,
+    component: TicketTypeSummaryChart,
   },
   ticketTurnaround: {
     name: 'Tickets Opened/Closed by Day',
@@ -105,7 +105,7 @@ export const modDashboardCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'Turnaround' },
-    component: TicketTurnaroundChart,
+    component: TicketStatusSeriesChart,
   },
   ticketReporters: {
     name: 'Top Ticket Reporters',
@@ -152,6 +152,6 @@ export const modDashboardCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'Frontline' },
-    component: TicketFrontlineChart,
+    component: TicketOpenSeriesChart,
   },
 };

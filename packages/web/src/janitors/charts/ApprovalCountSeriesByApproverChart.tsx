@@ -13,7 +13,7 @@ import {
   useChartParamsValue,
 } from '../../utils';
 
-export const ApproverChart: React.FC = () => {
+export const ApprovalCountSeriesByApproverChart: React.FC = () => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 

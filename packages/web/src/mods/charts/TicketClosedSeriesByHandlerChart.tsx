@@ -1,19 +1,26 @@
 import { useTheme } from '@mui/material';
-import { BarChart } from '@mui/x-charts';
+import { BarChart, LineChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
+import { useMemo } from 'react';
 
-import { useTicketActivitySummaryByHandler } from '../../api';
+import { useTicketClosedSeriesByHandler } from '../../api';
 import {
   refetchQueryOptions,
   SeriesChartProps,
   useChartParamsValue,
 } from '../../utils';
 
-export const TicketHandlerActivityChart: React.FC = () => {
+export interface TicketHandlerChartProps {
+  variant?: 'bars' | 'lines';
+}
+
+export const TicketClosedSeriesByHandlerChart: React.FC<
+  TicketHandlerChartProps
+> = ({ variant = 'bars' }) => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data } = useTicketActivitySummaryByHandler(
+  const { data } = useTicketClosedSeriesByHandler(
     userId ?? 0,
     range,
     refetchQueryOptions({
@@ -28,13 +35,13 @@ export const TicketHandlerActivityChart: React.FC = () => {
         scaleType: 'band',
         dataKey: 'date',
         valueFormatter: (value) =>
-          DateTime.fromJSDate(value).toLocaleString(DateTime.TIME_SIMPLE),
+          DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
       },
     ],
     series: [
       {
         dataKey: 'count',
-        label: 'Action',
+        label: 'Closed',
         color: theme.palette.primary.main,
       },
     ],
@@ -48,5 +55,9 @@ export const TicketHandlerActivityChart: React.FC = () => {
     },
   };
 
-  return <BarChart {...chartProps} />;
+  const Chart = useMemo(() => {
+    return variant === 'bars' ? BarChart : LineChart;
+  }, [variant]);
+
+  return <Chart {...chartProps} />;
 };

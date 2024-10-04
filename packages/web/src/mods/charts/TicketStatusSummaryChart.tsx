@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { useTicketStatusSummary } from '../../api';
 import { refetchQueryOptions, useChartDateRange } from '../../utils';
 
-export const TicketStatusChart: React.FC = () => {
+export const TicketStatusSummaryChart: React.FC = () => {
   const theme = useTheme();
   const range = useChartDateRange();
 

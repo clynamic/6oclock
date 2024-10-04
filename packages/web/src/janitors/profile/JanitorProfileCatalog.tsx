@@ -1,6 +1,9 @@
 import { UserCard } from '../../common';
 import { createSimpleLayout, DashboardCatalog } from '../../dashboard';
-import { ApproverActivityChart, ApproverChart } from '../charts';
+import {
+  ApprovalActivitySummaryByApproverChart,
+  ApprovalCountSeriesByApproverChart,
+} from '../charts';
 
 export const janitorProfileCatalog: DashboardCatalog = {
   userHead: {
@@ -48,7 +51,7 @@ export const janitorProfileCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'Posts Handled' },
-    component: ApproverChart,
+    component: ApprovalCountSeriesByApproverChart,
   },
   userActivity: {
     name: 'User Activity',
@@ -72,6 +75,6 @@ export const janitorProfileCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'User Activity' },
-    component: ApproverActivityChart,
+    component: ApprovalActivitySummaryByApproverChart,
   },
 };
