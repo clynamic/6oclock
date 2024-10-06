@@ -55,7 +55,6 @@ export * from './manifestHealthCondition';
 export * from './manifestHealthType';
 export * from './manifestType';
 export * from './seriesCountPoint';
-export * from './ticketAgeGroup';
 export * from './ticketAgeSeriesPoint';
 export * from './ticketAgeSummary';
 export * from './ticketHandlerSummary';

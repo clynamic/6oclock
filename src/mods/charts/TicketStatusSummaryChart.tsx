@@ -60,6 +60,9 @@ export const TicketStatusSummaryChart: React.FC = () => {
           message: 'No data',
         },
       }}
+      margin={{
+        right: 150,
+      }}
     />
   );
 };

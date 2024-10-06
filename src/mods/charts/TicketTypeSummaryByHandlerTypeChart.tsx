@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 
 import { TicketTypeSummary, useTicketTypeSummaryByHandler } from '../../api';
 import { refetchQueryOptions, useChartParamsValue } from '../../utils';
-import { TicketQtypeColors } from './TicketTypeSummaryChart';
+import { TicketTypeColors } from './TicketTypeSummaryChart';
 
 export const TicketTypeSummaryByHandlerTypeChart: React.FC = () => {
   const { range, userId } = useChartParamsValue();
@@ -29,7 +29,7 @@ export const TicketTypeSummaryByHandlerTypeChart: React.FC = () => {
         id: i,
         label: type,
         value: summary?.[type] || 0,
-        color: TicketQtypeColors[type],
+        color: TicketTypeColors[type],
       }))
       .sort((a, b) => b.value - a.value);
   }, [emptyQtypes, summary]);
@@ -54,6 +54,9 @@ export const TicketTypeSummaryByHandlerTypeChart: React.FC = () => {
         noDataOverlay: {
           message: 'No data',
         },
+      }}
+      margin={{
+        right: 150,
       }}
     />
   );

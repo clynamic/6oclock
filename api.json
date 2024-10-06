@@ -1766,7 +1766,28 @@
           "dmail"
         ]
       },
-      "TicketAgeGroup": {
+      "TicketAgeSeriesPoint": {
+        "type": "object",
+        "properties": {
+          "date": { "format": "date-time", "type": "string" },
+          "oneDay": { "type": "number" },
+          "threeDays": { "type": "number" },
+          "oneWeek": { "type": "number" },
+          "twoWeeks": { "type": "number" },
+          "oneMonth": { "type": "number" },
+          "aboveOneMonth": { "type": "number" }
+        },
+        "required": [
+          "date",
+          "oneDay",
+          "threeDays",
+          "oneWeek",
+          "twoWeeks",
+          "oneMonth",
+          "aboveOneMonth"
+        ]
+      },
+      "TicketAgeSummary": {
         "type": "object",
         "properties": {
           "oneDay": { "type": "number" },
@@ -1784,21 +1805,6 @@
           "oneMonth",
           "aboveOneMonth"
         ]
-      },
-      "TicketAgeSeriesPoint": {
-        "type": "object",
-        "properties": {
-          "date": { "format": "date-time", "type": "string" },
-          "groups": { "$ref": "#/components/schemas/TicketAgeGroup" }
-        },
-        "required": ["date", "groups"]
-      },
-      "TicketAgeSummary": {
-        "type": "object",
-        "properties": {
-          "groups": { "$ref": "#/components/schemas/TicketAgeGroup" }
-        },
-        "required": ["groups"]
       },
       "TicketHandlerSummary": {
         "type": "object",
