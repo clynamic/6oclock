@@ -1,8 +1,8 @@
 import { createSimpleLayout, DashboardCatalog } from '../../dashboard';
 import {
   TicketOpenSeriesChart,
+  TicketStatusSeriesChart,
   TicketStatusSummaryChart,
-  TicketStatusSeriesChart as TicketStatusSeriesChart,
   TicketTypeSummaryChart,
 } from '../charts';
 import { TicketReporterBoard } from '../reports';
@@ -45,7 +45,7 @@ export const modDashboardCatalog: DashboardCatalog = {
         w: 5,
         h: 5,
         minW: 3,
-        maxW: 5,
+        maxW: 8,
         minH: 4,
         maxH: 9,
       },
@@ -69,7 +69,7 @@ export const modDashboardCatalog: DashboardCatalog = {
         w: 5,
         h: 6,
         minW: 3,
-        maxW: 5,
+        maxW: 8,
         minH: 4,
         maxH: 9,
       },

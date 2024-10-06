@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { TicketTypeSummary, useTicketTypeSummary } from '../../api';
 import { refetchQueryOptions, useChartDateRange } from '../../utils';
 
-export const TicketQtypeColors = {
+export const TicketTypeColors = {
   user: '#e1675d', // Vibrant coral
   comment: '#f2b07e', // Rich peach
   forum: '#d1b3f1', // Deep lavender
@@ -20,7 +20,7 @@ export const TicketTypeSummaryChart: React.FC = () => {
   const range = useChartDateRange();
   const { data: summary } = useTicketTypeSummary(range, refetchQueryOptions());
 
-  const emptyQtypes = useMemo(() => {
+  const emptyTypes = useMemo(() => {
     return Object.keys(summary || {})
       .map((qtype) => qtype as keyof TicketTypeSummary)
       .filter((type) => summary?.[type] === 0);
@@ -29,15 +29,15 @@ export const TicketTypeSummaryChart: React.FC = () => {
   const data: PieValueType[] = useMemo(() => {
     return Object.keys(summary || {})
       .map((type) => type as keyof TicketTypeSummary)
-      .filter((type) => !emptyQtypes.includes(type))
+      .filter((type) => !emptyTypes.includes(type))
       .map((type, i) => ({
         id: i,
         label: type,
         value: summary?.[type] || 0,
-        color: TicketQtypeColors[type],
+        color: TicketTypeColors[type],
       }))
       .sort((a, b) => b.value - a.value);
-  }, [emptyQtypes, summary]);
+  }, [emptyTypes, summary]);
 
   return (
     <PieChart
@@ -59,6 +59,9 @@ export const TicketTypeSummaryChart: React.FC = () => {
         noDataOverlay: {
           message: 'No data',
         },
+      }}
+      margin={{
+        right: 150,
       }}
     />
   );
