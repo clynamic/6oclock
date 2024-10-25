@@ -37,7 +37,7 @@ export const NavUser: React.FC = () => {
         </Avatar>
       }
     >
-      {user?.name.replace('_', ' ') ?? 'Profile'}
+      {user?.name.replace(/_/g, ' ') ?? 'Profile'}
     </NavButton>
   );
 };
