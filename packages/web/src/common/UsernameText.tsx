@@ -62,7 +62,7 @@ export const UsernameText = ({ user }: UsernameTextProps) => {
 
   const { name, level } = head;
   const color =
-    UsernameColors[level.replace(' ', '-').toLowerCase()] ?? 'inherit';
+    UsernameColors[level.replace(/\s/g, '-').toLowerCase()] ?? 'inherit';
 
   return (
     <Typography
@@ -73,7 +73,7 @@ export const UsernameText = ({ user }: UsernameTextProps) => {
       whiteSpace={'nowrap'}
       overflow={'hidden'}
     >
-      {name.replace('_', ' ')}
+      {name.replace(/_/g, ' ')}
     </Typography>
   );
 };
