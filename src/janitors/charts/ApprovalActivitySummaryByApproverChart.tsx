@@ -43,7 +43,7 @@ export const ApprovalActivitySummaryByApproverChart: React.FC = () => {
       'time',
     ).map((e) => ({
       date: e.date,
-      count: e.approved + e.deleted,
+      value: e.approved + e.deleted,
     }));
   }, [approvalData, deletionData]);
 
@@ -59,7 +59,7 @@ export const ApprovalActivitySummaryByApproverChart: React.FC = () => {
     ],
     series: [
       {
-        dataKey: 'count',
+        dataKey: 'value',
         label: 'Action',
         color: theme.palette.primary.main,
       },

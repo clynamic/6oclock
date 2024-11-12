@@ -40,7 +40,7 @@ export const TicketCreatedSeriesByReporterChart: React.FC<
     ],
     series: [
       {
-        dataKey: 'count',
+        dataKey: 'value',
         label: 'Created',
         color: theme.palette.primary.main,
       },

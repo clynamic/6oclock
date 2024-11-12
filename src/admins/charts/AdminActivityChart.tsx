@@ -53,7 +53,7 @@ export const AdminActivitySummaryByAdminChart: React.FC = () => {
       'time',
     ).map((e) => ({
       date: e.date,
-      count: e.tickets + e.approved + e.deleted,
+      value: e.tickets + e.approved + e.deleted,
     }));
   }, [approvalData, deletionData, ticketData]);
 
@@ -69,7 +69,7 @@ export const AdminActivitySummaryByAdminChart: React.FC = () => {
     ],
     series: [
       {
-        dataKey: 'count',
+        dataKey: 'value',
         label: 'Action',
         color: theme.palette.primary.main,
       },

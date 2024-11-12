@@ -33,7 +33,7 @@ export const TicketActivitySummaryByHandlerChart: React.FC = () => {
     ],
     series: [
       {
-        dataKey: 'count',
+        dataKey: 'value',
         label: 'Action',
         color: theme.palette.primary.main,
       },

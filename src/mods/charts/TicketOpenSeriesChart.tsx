@@ -24,7 +24,7 @@ export const TicketOpenSeriesChart: React.FC = () => {
       ]}
       series={[
         {
-          dataKey: 'count',
+          dataKey: 'value',
           label: 'Open Tickets',
           color: theme.palette.primary.main,
         },
