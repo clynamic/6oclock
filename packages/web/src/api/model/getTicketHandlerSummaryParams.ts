@@ -5,11 +5,13 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.3
  */
+import type { GetTicketHandlerSummaryScale } from './getTicketHandlerSummaryScale';
 
 export type GetTicketHandlerSummaryParams = {
   startDate?: Date;
   endDate?: Date;
   timezone?: string;
+  scale?: GetTicketHandlerSummaryScale;
   /**
    * Page number
    */

@@ -7,6 +7,6 @@
  */
 
 export interface SeriesCountPoint {
-  count: number;
   date: Date;
+  value: number;
 }

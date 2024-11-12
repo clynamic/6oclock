@@ -276,6 +276,24 @@
             "schema": { "type": "string" }
           },
           {
+            "required": true,
+            "name": "scale",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
+          },
+          {
             "required": false,
             "name": "id",
             "in": "query",
@@ -342,6 +360,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -383,6 +419,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -431,6 +485,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -473,6 +545,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -521,6 +611,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -563,6 +671,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           },
           {
             "name": "page",
@@ -651,6 +777,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -690,6 +834,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -735,6 +897,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -774,6 +954,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -816,6 +1014,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -864,6 +1080,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -906,6 +1140,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -954,6 +1206,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -996,6 +1266,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1044,6 +1332,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1086,6 +1392,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1130,6 +1454,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1169,6 +1511,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           },
           {
             "name": "page",
@@ -1234,6 +1594,24 @@
             "schema": { "type": "string" }
           },
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
+          },
+          {
             "name": "page",
             "required": false,
             "in": "query",
@@ -1295,6 +1673,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1343,6 +1739,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1385,6 +1799,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1433,6 +1865,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1475,6 +1925,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1514,6 +1982,24 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1707,9 +2193,9 @@
         "type": "object",
         "properties": {
           "date": { "format": "date-time", "type": "string" },
-          "count": { "type": "number" }
+          "value": { "type": "number" }
         },
-        "required": ["date", "count"]
+        "required": ["date", "value"]
       },
       "UserHead": {
         "type": "object",
