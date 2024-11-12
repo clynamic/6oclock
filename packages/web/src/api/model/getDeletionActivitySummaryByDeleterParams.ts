@@ -5,9 +5,11 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.3
  */
+import type { GetDeletionActivitySummaryByDeleterScale } from './getDeletionActivitySummaryByDeleterScale';
 
 export type GetDeletionActivitySummaryByDeleterParams = {
   startDate?: Date;
   endDate?: Date;
   timezone?: string;
+  scale?: GetDeletionActivitySummaryByDeleterScale;
 };

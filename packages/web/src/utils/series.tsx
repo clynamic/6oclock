@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 
 export interface SeriesPoint {
-  count: number;
   date: Date;
+  value: number;
 }
 
 export type MergedSeriesPoint<T extends string> = { date: Date } & Record<
@@ -38,7 +38,7 @@ export const mergePointSeries = <T extends string>(
         }
       }
       dateMap[date][seriesName] = (dateMap[date][seriesName] +
-        point.count) as MergedSeriesPoint<T>[T];
+        point.value) as MergedSeriesPoint<T>[T];
     }
   }
 

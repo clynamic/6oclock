@@ -5,12 +5,14 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.3
  */
+import type { ListManifestsScale } from './listManifestsScale';
 import type { ListManifestsTypeItem } from './listManifestsTypeItem';
 
 export type ListManifestsParams = {
   startDate: Date;
   endDate: Date;
   timezone: string;
+  scale: ListManifestsScale;
   id?: number;
   type?: ListManifestsTypeItem[];
 };

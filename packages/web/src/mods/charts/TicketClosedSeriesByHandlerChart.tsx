@@ -40,7 +40,7 @@ export const TicketClosedSeriesByHandlerChart: React.FC<
     ],
     series: [
       {
-        dataKey: 'count',
+        dataKey: 'value',
         label: 'Closed',
         color: theme.palette.primary.main,
       },
