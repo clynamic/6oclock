@@ -2061,14 +2061,16 @@
         },
         "required": ["id", "title", "succeeded", "cancelled"]
       },
-      "IdGap": {
+      "ManifestSlice": {
         "type": "object",
         "properties": {
-          "id": { "type": "number" },
-          "nextId": { "type": "number" },
-          "gap": { "type": "number" }
+          "startId": { "type": "number" },
+          "endId": { "type": "number" },
+          "available": { "type": "number" },
+          "unavailable": { "type": "number" },
+          "none": { "type": "number" }
         },
-        "required": ["id", "nextId", "gap"]
+        "required": ["startId", "endId", "available", "unavailable", "none"]
       },
       "ManifestHealth": {
         "type": "object",
@@ -2088,14 +2090,12 @@
           },
           "startDate": { "format": "date-time", "type": "string" },
           "endDate": { "format": "date-time", "type": "string" },
-          "coverage": { "type": "number" },
-          "condition": {
-            "type": "string",
-            "enum": ["nominal", "degraded", "abnormal"]
-          },
-          "gaps": {
+          "startId": { "type": "number" },
+          "endId": { "type": "number" },
+          "count": { "type": "number" },
+          "slices": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/IdGap" }
+            "items": { "$ref": "#/components/schemas/ManifestSlice" }
           }
         },
         "required": [
@@ -2103,9 +2103,10 @@
           "type",
           "startDate",
           "endDate",
-          "coverage",
-          "condition",
-          "gaps"
+          "startId",
+          "endId",
+          "count",
+          "slices"
         ]
       },
       "DashboardPosition": {
