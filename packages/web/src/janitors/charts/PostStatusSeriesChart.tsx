@@ -3,7 +3,11 @@ import { BarChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
-import { useApprovalCountSeries, useDeletionCountSeries } from '../../api';
+import {
+  useApprovalCountSeries,
+  useDeletionCountSeries,
+  useUploadCount,
+} from '../../api';
 import {
   mergePointSeries,
   SeriesChartProps,
@@ -18,14 +22,18 @@ export const PostStatusCountSeriesChart: React.FC = () => {
 
   const { data: deletedData } = useDeletionCountSeries(range);
 
+  const { data: uploadsData } = useUploadCount(range);
+
   const dataset = useMemo(() => {
     return mergePointSeries({
       approved: approvedData || [],
       deleted: deletedData || [],
+      uploads: uploadsData || [],
     });
-  }, [approvedData, deletedData]);
+  }, [approvedData, deletedData, uploadsData]);
 
   const chartProps: SeriesChartProps = {
+    loading: !approvedData || !deletedData || !uploadsData,
     dataset,
     xAxis: [
       {
@@ -36,6 +44,12 @@ export const PostStatusCountSeriesChart: React.FC = () => {
       },
     ],
     series: [
+      {
+        dataKey: 'uploads',
+        label: 'Uploads',
+        color: theme.palette.primary.main,
+        stack: 'uploaded',
+      },
       {
         dataKey: 'approved',
         label: 'Approved',

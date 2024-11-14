@@ -1,6 +1,4 @@
-import { Construction } from '@mui/icons-material';
-import { Alert, Stack } from '@mui/material';
-import { useState } from 'react';
+import { Stack } from '@mui/material';
 
 import { DashboardConfigType } from '../../api';
 import {
@@ -12,8 +10,6 @@ import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
 import { janitorDashboardCatalog } from './JanitorCatalog';
 
 export const JanitorOverviewPage: React.FC = () => {
-  const [showWarning, setShowWarning] = useState(true);
-
   return (
     <RemoteDashboardProvider
       type={DashboardConfigType.janitor}
@@ -25,16 +21,6 @@ export const JanitorOverviewPage: React.FC = () => {
         <PageBody>
           <Stack sx={{ height: '100%', width: '100%' }}>
             <DashboardBody />
-            {showWarning && (
-              <Alert
-                severity="warning"
-                icon={<Construction />}
-                sx={{ m: 2 }}
-                onClose={() => setShowWarning(false)}
-              >
-                Something missing? We're still working on this page.
-              </Alert>
-            )}
           </Stack>
         </PageBody>
         <PageFooter />
