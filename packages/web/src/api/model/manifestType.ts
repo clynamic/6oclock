@@ -17,4 +17,5 @@ export const ManifestType = {
   user_profiles: 'user_profiles',
   flags: 'flags',
   feedbacks: 'feedbacks',
+  post_versions: 'post_versions',
 } as const;
