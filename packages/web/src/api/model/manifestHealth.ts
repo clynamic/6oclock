@@ -5,16 +5,16 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.3
  */
-import type { ManifestHealthCondition } from './manifestHealthCondition';
-import type { IdGap } from './idGap';
+import type { ManifestSlice } from './manifestSlice';
 import type { ManifestHealthType } from './manifestHealthType';
 
 export interface ManifestHealth {
-  condition: ManifestHealthCondition;
-  coverage: number;
+  count: number;
   endDate: Date;
-  gaps: IdGap[];
+  endId: number;
   id: number;
+  slices: ManifestSlice[];
   startDate: Date;
+  startId: number;
   type: ManifestHealthType;
 }

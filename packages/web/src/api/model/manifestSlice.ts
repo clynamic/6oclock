@@ -6,8 +6,10 @@
  * OpenAPI spec version: 0.0.3
  */
 
-export interface IdGap {
-  gap: number;
-  id: number;
-  nextId: number;
+export interface ManifestSlice {
+  available: number;
+  endId: number;
+  none: number;
+  startId: number;
+  unavailable: number;
 }
