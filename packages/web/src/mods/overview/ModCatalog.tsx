@@ -6,7 +6,7 @@ import {
   TicketTypeSummaryChart,
 } from '../charts';
 import { TicketReporterBoard } from '../reports';
-import { TicketLeaderboard } from '../tickets';
+import { TicketerLeaderboard } from '../tickets';
 
 export const modDashboardCatalog: DashboardCatalog = {
   ticketLeaderboard: {
@@ -34,7 +34,7 @@ export const modDashboardCatalog: DashboardCatalog = {
       title: 'Tickets',
       variant: 'outlined',
     },
-    component: TicketLeaderboard,
+    component: TicketerLeaderboard,
   },
   ticketStatus: {
     name: 'All Tickets Status',

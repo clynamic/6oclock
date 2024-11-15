@@ -1,3 +1,3 @@
-export * from './ApprovalLeaderboard';
-export * from './ApprovalLeaderboardFrame';
-export * from './ApprovalPage';
+export * from './ApproverBoard';
+export * from './ApproverFrame';
+export * from './ApproverPage';

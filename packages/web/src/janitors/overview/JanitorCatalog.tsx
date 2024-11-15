@@ -1,5 +1,5 @@
 import { createSimpleLayout, DashboardCatalog } from '../../dashboard';
-import { ApprovalLeaderboard } from '../approvals';
+import { ApproverBoard } from '../approvals';
 import { PostStatusCountSeriesChart } from '../charts';
 import { PostPendingSeriesChart } from '../charts/PostPendingSeriesChart';
 import { PostStatusSummaryChart } from '../charts/PostStatusSummaryChart';
@@ -8,7 +8,7 @@ import { PostUploaderBoard } from '../uploads';
 export const janitorDashboardCatalog: DashboardCatalog = {
   approvalsLeaderboard: {
     name: 'Top Approvers',
-    component: ApprovalLeaderboard,
+    component: ApproverBoard,
     defaultLayout: createSimpleLayout(
       {
         x: 0,

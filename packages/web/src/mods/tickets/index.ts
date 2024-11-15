@@ -1,3 +1,3 @@
-export * from './TicketLeaderboard';
-export * from './TicketLeaderboardFrame';
-export * from './TicketPage';
+export * from './TicketerBoard';
+export * from './TicketerFrame';
+export * from './TicketerPage';

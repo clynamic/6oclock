@@ -1,6 +1,5 @@
-import { Beenhere, CalendarMonth } from '@mui/icons-material';
+import { CalendarMonth, Sell } from '@mui/icons-material';
 import {
-  Avatar,
   Box,
   Card,
   CardActionArea,
@@ -10,15 +9,15 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { ApproverSummary } from '../../api';
-import { UsernameText } from '../../common';
+import { TicketHandlerSummary } from '../../api';
+import { UserAvatar, UsernameText } from '../../common';
 import { RankingText } from '../../common/RankingText';
 
-export interface ApprovalLeaderboardFrame {
-  summary?: ApproverSummary;
+export interface TicketLeaderboardFrameProps {
+  summary?: TicketHandlerSummary;
 }
 
-export const ApprovalLeaderboardFrame: React.FC<ApprovalLeaderboardFrame> = ({
+export const TicketerFrame: React.FC<TicketLeaderboardFrameProps> = ({
   summary,
 }) => {
   return (
@@ -32,28 +31,18 @@ export const ApprovalLeaderboardFrame: React.FC<ApprovalLeaderboardFrame> = ({
     >
       <CardActionArea
         component={Link}
-        to={`/users/${summary?.userId ?? ''}`}
+        to={`/users/${summary?.userId}`}
         disabled={!summary}
       >
-        <Box p={2}>
+        <Box p={2} sx={{ width: '100%' }}>
           <Stack direction="row" spacing={2}>
-            {summary ? (
-              <Avatar
-                variant="rounded"
-                alt={`avatar of ${summary.head?.name ?? `User #${summary.userId}`}`}
-                src={summary.head?.avatar}
-                sx={{
-                  width: 64,
-                  height: 64,
-                  bgcolor: 'background.paper',
-                  color: 'text.primary',
-                }}
-              >
-                {summary.head?.name.split('_').map((part) => part[0]) ?? '?'}
-              </Avatar>
-            ) : (
-              <Skeleton variant="rounded" width={64} height={64} />
-            )}
+            <UserAvatar
+              user={
+                summary ? { id: summary.userId, ...summary.head } : undefined
+              }
+              size={64}
+              shape="rounded"
+            />
             <Stack spacing={1} sx={{ flexGrow: 1 }}>
               <Stack
                 direction="row"
@@ -61,20 +50,24 @@ export const ApprovalLeaderboardFrame: React.FC<ApprovalLeaderboardFrame> = ({
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <UsernameText user={summary} />
+                <UsernameText user={summary?.head} />
                 {summary && (
                   <RankingText rank={summary.position}>
                     #{summary.position}
                   </RankingText>
                 )}
               </Stack>
-              <Stack direction="row" spacing={1}>
+              <Stack
+                direction="row"
+                gap={1}
+                sx={{ flexWrap: 'wrap', maxWidth: 300 }}
+              >
                 {summary ? (
                   <>
                     <Chip
                       size="small"
-                      avatar={<Beenhere />}
-                      label={`${summary.total} approvals`}
+                      avatar={<Sell />}
+                      label={`${summary.total} tickets`}
                     />
                     {summary.days > 1 && (
                       <Chip
@@ -83,6 +76,8 @@ export const ApprovalLeaderboardFrame: React.FC<ApprovalLeaderboardFrame> = ({
                         label={`${summary.days} days`}
                       />
                     )}
+                    {/* TODO: actually calculate trends with previous month's data */}
+                    {/* <Chip size="small" label={<TrendingUp />} /> */}
                   </>
                 ) : (
                   <Skeleton width={100} />
