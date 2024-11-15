@@ -3,13 +3,17 @@ import { PieChart } from '@mui/x-charts';
 import { useMemo } from 'react';
 
 import { usePostStatusSummary } from '../../api';
+import { QueryHint } from '../../common';
 import { refetchQueryOptions, useChartDateRange } from '../../utils';
 
 export const PostStatusSummaryChart: React.FC = () => {
   const theme = useTheme();
   const range = useChartDateRange();
 
-  const { data } = usePostStatusSummary(range, refetchQueryOptions());
+  const { data, isLoading, error } = usePostStatusSummary(
+    range,
+    refetchQueryOptions(),
+  );
 
   const dataset = useMemo(() => {
     return [
@@ -41,29 +45,32 @@ export const PostStatusSummaryChart: React.FC = () => {
   }, [data, theme]);
 
   return (
-    <PieChart
-      sx={{ height: '100%' }}
-      series={[
-        {
-          data: dataset,
-          arcLabel: (item) => `${item.value}`,
-          arcLabelMinAngle: 20,
-          innerRadius: '30%',
-          outerRadius: '90%',
-          paddingAngle: 5,
-          cornerRadius: 5,
-          cx: '50%',
-          cy: '50%',
-        },
-      ]}
-      slotProps={{
-        noDataOverlay: {
-          message: 'No data',
-        },
-      }}
-      margin={{
-        right: 150,
-      }}
-    />
+    <QueryHint isLoading={isLoading} error={error} type="pie">
+      <PieChart
+        sx={{ height: '100%' }}
+        series={[
+          {
+            data: dataset,
+            arcLabel: (item) => `${item.value}`,
+            arcLabelMinAngle: 20,
+            innerRadius: '30%',
+            outerRadius: '90%',
+            paddingAngle: 5,
+            cornerRadius: 5,
+            cx: '50%',
+            cy: '50%',
+          },
+        ]}
+        loading={isLoading}
+        slotProps={{
+          noDataOverlay: {
+            message: 'No data',
+          },
+        }}
+        margin={{
+          right: 150,
+        }}
+      />
+    </QueryHint>
   );
 };

@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
 import { useTicketCreatedSeriesByReporter } from '../../api';
+import { QueryHint } from '../../common';
 import {
   refetchQueryOptions,
   SeriesChartProps,
@@ -20,7 +21,7 @@ export const TicketCreatedSeriesByReporterChart: React.FC<
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data } = useTicketCreatedSeriesByReporter(
+  const { data, isLoading, error } = useTicketCreatedSeriesByReporter(
     userId ?? 0,
     range,
     refetchQueryOptions({
@@ -56,5 +57,9 @@ export const TicketCreatedSeriesByReporterChart: React.FC<
     return variant === 'bars' ? BarChart : LineChart;
   }, [variant]);
 
-  return <Chart {...chartProps} />;
+  return (
+    <QueryHint isLoading={isLoading} error={error} type={variant}>
+      <Chart {...chartProps} />
+    </QueryHint>
+  );
 };

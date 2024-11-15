@@ -3,13 +3,14 @@ import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
 import { useTicketAgeSeries } from '../../api';
+import { QueryHint } from '../../common';
 import { SeriesChartProps, useChartDateRange } from '../../utils';
 import { TicketAgeColors, TicketAgeLabels } from './TicketAgeSummaryChart';
 
 export const TicketAgeSeriesChart: React.FC = () => {
   const range = useChartDateRange();
 
-  const { data } = useTicketAgeSeries(range);
+  const { data, isLoading, error } = useTicketAgeSeries(range);
 
   const dataset = useMemo(() => {
     return (
@@ -53,5 +54,9 @@ export const TicketAgeSeriesChart: React.FC = () => {
     },
   };
 
-  return <BarChart {...chartProps} />;
+  return (
+    <QueryHint isLoading={isLoading} error={error} type="barchart">
+      <BarChart {...chartProps} />;
+    </QueryHint>
+  );
 };

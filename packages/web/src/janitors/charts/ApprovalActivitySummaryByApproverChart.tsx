@@ -7,6 +7,7 @@ import {
   useApprovalActivitySummaryByApprover,
   useDeletionActivitySummaryByDeleter,
 } from '../../api';
+import { QueryHint } from '../../common';
 import {
   mergePointSeries,
   refetchQueryOptions,
@@ -18,23 +19,29 @@ export const ApprovalActivitySummaryByApproverChart: React.FC = () => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data: approvalData, isLoading: approvalIsLoading } =
-    useApprovalActivitySummaryByApprover(
-      userId ?? 0,
-      range,
-      refetchQueryOptions({
-        enabled: !!userId,
-      }),
-    );
+  const {
+    data: approvalData,
+    isLoading: approvalLoading,
+    error: approvalError,
+  } = useApprovalActivitySummaryByApprover(
+    userId ?? 0,
+    range,
+    refetchQueryOptions({
+      enabled: !!userId,
+    }),
+  );
 
-  const { data: deletionData, isLoading: deletionIsLoading } =
-    useDeletionActivitySummaryByDeleter(
-      userId ?? 0,
-      range,
-      refetchQueryOptions({
-        enabled: !!userId,
-      }),
-    );
+  const {
+    data: deletionData,
+    isLoading: deletionLoading,
+    error: deletionError,
+  } = useDeletionActivitySummaryByDeleter(
+    userId ?? 0,
+    range,
+    refetchQueryOptions({
+      enabled: !!userId,
+    }),
+  );
 
   const dataset = useMemo(() => {
     return mergePointSeries(
@@ -51,6 +58,7 @@ export const ApprovalActivitySummaryByApproverChart: React.FC = () => {
 
   const chartProps: SeriesChartProps = {
     dataset: dataset?.map((e) => ({ ...e })) ?? [],
+    loading: approvalLoading || deletionLoading,
     xAxis: [
       {
         scaleType: 'band',
@@ -76,5 +84,13 @@ export const ApprovalActivitySummaryByApproverChart: React.FC = () => {
     },
   };
 
-  return <BarChart {...chartProps} />;
+  return (
+    <QueryHint
+      type="bars"
+      isLoading={[approvalLoading, deletionLoading]}
+      error={[approvalError, deletionError]}
+    >
+      <BarChart {...chartProps} />
+    </QueryHint>
+  );
 };

@@ -3,40 +3,46 @@ import { LineChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
 
 import { useTicketOpenSeries } from '../../api';
+import { QueryHint } from '../../common';
 import { refetchQueryOptions, useChartDateRange } from '../../utils';
 
 export const TicketOpenSeriesChart: React.FC = () => {
   const theme = useTheme();
   const range = useChartDateRange();
 
-  const { data: series } = useTicketOpenSeries(range, refetchQueryOptions());
+  const { data, isLoading, error } = useTicketOpenSeries(
+    range,
+    refetchQueryOptions(),
+  );
 
   return (
-    <LineChart
-      dataset={series?.map((e) => ({ ...e })) ?? []}
-      xAxis={[
-        {
-          scaleType: 'band',
-          dataKey: 'date',
-          valueFormatter: (value) =>
-            DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
-        },
-      ]}
-      series={[
-        {
-          dataKey: 'value',
-          label: 'Open Tickets',
-          color: theme.palette.primary.main,
-        },
-      ]}
-      slotProps={{
-        legend: {
-          hidden: true,
-        },
-        noDataOverlay: {
-          message: 'No data',
-        },
-      }}
-    />
+    <QueryHint isLoading={isLoading} error={error} type="lines">
+      <LineChart
+        dataset={data?.map((e) => ({ ...e })) ?? []}
+        xAxis={[
+          {
+            scaleType: 'band',
+            dataKey: 'date',
+            valueFormatter: (value) =>
+              DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
+          },
+        ]}
+        series={[
+          {
+            dataKey: 'value',
+            label: 'Open Tickets',
+            color: theme.palette.primary.main,
+          },
+        ]}
+        slotProps={{
+          legend: {
+            hidden: true,
+          },
+          noDataOverlay: {
+            message: 'No data',
+          },
+        }}
+      />
+    </QueryHint>
   );
 };

@@ -3,6 +3,7 @@ import { BarChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
 
 import { useTicketActivitySummaryByHandler } from '../../api';
+import { QueryHint } from '../../common';
 import {
   refetchQueryOptions,
   SeriesChartProps,
@@ -13,7 +14,7 @@ export const TicketActivitySummaryByHandlerChart: React.FC = () => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data } = useTicketActivitySummaryByHandler(
+  const { data, isLoading, error } = useTicketActivitySummaryByHandler(
     userId ?? 0,
     range,
     refetchQueryOptions({
@@ -48,5 +49,9 @@ export const TicketActivitySummaryByHandlerChart: React.FC = () => {
     },
   };
 
-  return <BarChart {...chartProps} />;
+  return (
+    <QueryHint isLoading={isLoading} error={error} type="barchart">
+      <BarChart {...chartProps} />
+    </QueryHint>
+  );
 };

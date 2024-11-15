@@ -7,6 +7,7 @@ import {
   useApprovalCountSeriesByApprover,
   useDeletionSeriesByDeleter,
 } from '../../api';
+import { QueryHint } from '../../common';
 import {
   mergePointSeries,
   refetchQueryOptions,
@@ -18,7 +19,11 @@ export const ApprovalCountSeriesByApproverChart: React.FC = () => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data: approvedData } = useApprovalCountSeriesByApprover(
+  const {
+    data: approvedData,
+    isLoading: approvedLoading,
+    error: approvedError,
+  } = useApprovalCountSeriesByApprover(
     userId ?? 0,
     { ...range },
     refetchQueryOptions({
@@ -26,7 +31,11 @@ export const ApprovalCountSeriesByApproverChart: React.FC = () => {
     }),
   );
 
-  const { data: deletedData } = useDeletionSeriesByDeleter(
+  const {
+    data: deletedData,
+    isLoading: deletedLoading,
+    error: deletedError,
+  } = useDeletionSeriesByDeleter(
     userId ?? 0,
     { ...range },
     refetchQueryOptions({
@@ -43,6 +52,7 @@ export const ApprovalCountSeriesByApproverChart: React.FC = () => {
 
   const chartProps: SeriesChartProps = {
     dataset,
+    loading: approvedLoading || deletedLoading,
     xAxis: [
       {
         scaleType: 'band',
@@ -72,5 +82,13 @@ export const ApprovalCountSeriesByApproverChart: React.FC = () => {
     },
   };
 
-  return <BarChart {...chartProps} />;
+  return (
+    <QueryHint
+      isLoading={[approvedLoading, deletedLoading]}
+      error={[approvedError, deletedError]}
+      type="bars"
+    >
+      <BarChart {...chartProps} />;
+    </QueryHint>
+  );
 };
