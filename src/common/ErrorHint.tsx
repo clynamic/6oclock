@@ -10,6 +10,10 @@ export interface ErrorHintProps {
 export const ErrorHint: React.FC<ErrorHintProps> = ({ error }) => {
   const message = useMemo(() => {
     if (error instanceof AxiosError) {
+      if (!error.response) {
+        return 'Server is offline';
+      }
+
       const status = error.response?.status;
       const statusText = error.response?.statusText || 'Unknown Error';
       const message = error.response?.data?.message;
