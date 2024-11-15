@@ -4,11 +4,8 @@ import { useMemo } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { AuthGuard, AuthProvider } from '../auth';
-import { HealthPage } from '../health';
-import { HomePage } from '../home';
 import { LoginPage } from '../login';
 import { NavigationEntryProvider } from '../page';
-import { ProfilePage } from '../profile';
 import { ChartParamsProvider } from '../utils';
 import { LogoutPage } from './Logout';
 import { appNavNodes, createRoutesFromNodes } from './navigation';
@@ -32,12 +29,7 @@ export const App: React.FC = () => {
                   <Route path="/logout" element={<LogoutPage />} />
 
                   <Route path="/" element={<AuthGuard />}>
-                    <Route path="/" element={<HomePage />} />
-
                     {...createRoutesFromNodes(appNavNodes)}
-
-                    <Route path="/users/:id" element={<ProfilePage />} />
-                    <Route path="/health" element={<HealthPage />} />
                   </Route>
 
                   <Route path="*" element={<NotFoundPage />} />

@@ -9,6 +9,7 @@
 export interface JobInfo {
   cancelled: boolean;
   endedAt?: Date;
+  failed: boolean;
   id: number;
   key?: string;
   startedAt?: Date;

@@ -116,6 +116,7 @@ const PageHeaderBar: React.FC = () => {
               >
                 {navigation.map((entry) => {
                   if (entry instanceof Object && 'href' in entry) {
+                    if (entry.hidden) return null;
                     return (
                       <MenuItem
                         key={`nav-${entry.href}`}
@@ -142,6 +143,7 @@ const PageHeaderBar: React.FC = () => {
                 )}
                 {currentSubLinks?.map((entry) => {
                   if (entry instanceof Object && 'href' in entry) {
+                    if (entry.hidden) return null;
                     return (
                       <MenuItem
                         key={`subnav-${entry.href}`}
@@ -230,6 +232,7 @@ const PageHeaderBar: React.FC = () => {
                   {navigation.map((entry, i) => {
                     const selected = entry === currentLink;
                     if (entry instanceof Object && 'href' in entry) {
+                      if (entry.hidden) return null;
                       return (
                         <Button
                           key={i}
@@ -270,6 +273,7 @@ const PageHeaderBar: React.FC = () => {
                   currentSubLinks.length > 0 &&
                   currentSubLinks.map((entry, i) => {
                     if (entry instanceof Object && 'href' in entry) {
+                      if (entry.hidden) return null;
                       return (
                         <Button
                           key={`subnav-${entry.href}`}
