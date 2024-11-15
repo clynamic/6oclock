@@ -3,13 +3,13 @@ import { PieChart } from '@mui/x-charts';
 import { useMemo } from 'react';
 
 import { usePostStatusSummary } from '../../api';
-import { useChartDateRange } from '../../utils';
+import { refetchQueryOptions, useChartDateRange } from '../../utils';
 
 export const PostStatusSummaryChart: React.FC = () => {
   const theme = useTheme();
   const range = useChartDateRange();
 
-  const { data } = usePostStatusSummary(range);
+  const { data } = usePostStatusSummary(range, refetchQueryOptions());
 
   const dataset = useMemo(() => {
     return [

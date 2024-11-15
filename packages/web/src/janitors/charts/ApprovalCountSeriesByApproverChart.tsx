@@ -9,6 +9,7 @@ import {
 } from '../../api';
 import {
   mergePointSeries,
+  refetchQueryOptions,
   SeriesChartProps,
   useChartParamsValue,
 } from '../../utils';
@@ -20,21 +21,17 @@ export const ApprovalCountSeriesByApproverChart: React.FC = () => {
   const { data: approvedData } = useApprovalCountSeriesByApprover(
     userId ?? 0,
     { ...range },
-    {
-      query: {
-        enabled: !!userId,
-      },
-    },
+    refetchQueryOptions({
+      enabled: !!userId,
+    }),
   );
 
   const { data: deletedData } = useDeletionSeriesByDeleter(
     userId ?? 0,
     { ...range },
-    {
-      query: {
-        enabled: !!userId,
-      },
-    },
+    refetchQueryOptions({
+      enabled: !!userId,
+    }),
   );
 
   const dataset = useMemo(() => {

@@ -32,6 +32,10 @@ export const navigationEntries: NavNode[] = [
         label: 'Approvals',
         href: '/janitors/approvals',
       },
+      {
+        label: 'Uploaders',
+        href: '/janitors/uploaders',
+      },
     ],
   },
   <NavSpacer />,

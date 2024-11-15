@@ -3,6 +3,7 @@ import { ApprovalLeaderboard } from '../approvals';
 import { PostStatusCountSeriesChart } from '../charts';
 import { PostPendingSeriesChart } from '../charts/PostPendingSeriesChart';
 import { PostStatusSummaryChart } from '../charts/PostStatusSummaryChart';
+import { PostUploaderBoard } from '../uploads';
 
 export const janitorDashboardCatalog: DashboardCatalog = {
   approvalsLeaderboard: {
@@ -78,6 +79,30 @@ export const janitorDashboardCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'Turnaround' },
+  },
+  postUploaders: {
+    name: 'Top Post Uploaders',
+    defaultLayout: createSimpleLayout(
+      {
+        x: 8,
+        y: 11,
+        w: 4,
+        h: 11,
+        minW: 2,
+        maxW: 4,
+        minH: 7,
+        maxH: 15,
+      },
+      {
+        xs: { w: 4, h: 11, x: 0, y: 22 },
+        sm: { w: 2, h: 11, x: 4, y: 11 },
+        md: { w: 3, h: 10, x: 6, y: 11 },
+        lg: { w: 3, h: 11, x: 9, y: 0 },
+        xl: { w: 4, h: 11, x: 11, y: 0 },
+      },
+    ),
+    card: { title: 'Uploaders', variant: 'outlined' },
+    component: PostUploaderBoard,
   },
   postsPending: {
     name: 'Posts Pending by Day',
