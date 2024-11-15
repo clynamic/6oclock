@@ -114,26 +114,32 @@ const PageHeaderBar: React.FC = () => {
                   horizontal: 'center',
                 }}
               >
-                {navigation.map((entry) => {
-                  if (entry instanceof Object && 'href' in entry) {
-                    if (entry.hidden) return null;
-                    return (
-                      <MenuItem
-                        key={`nav-${entry.href}`}
-                        sx={{
-                          width: '100%',
-                        }}
-                        onClick={() => {
-                          navigate(entry.href);
-                          popupState.close();
-                        }}
-                      >
-                        {entry.label}
-                      </MenuItem>
-                    );
-                  }
-                  return entry;
-                })}
+                {navigation
+                  .filter((entry) => {
+                    if (entry instanceof Object && 'href' in entry) {
+                      return !entry.hidden;
+                    }
+                    return true;
+                  })
+                  .map((entry) => {
+                    if (entry instanceof Object && 'href' in entry) {
+                      return (
+                        <MenuItem
+                          key={`nav-${entry.href}`}
+                          sx={{
+                            width: '100%',
+                          }}
+                          onClick={() => {
+                            navigate(entry.href);
+                            popupState.close();
+                          }}
+                        >
+                          {entry.label}
+                        </MenuItem>
+                      );
+                    }
+                    return entry;
+                  })}
                 {currentSubLinks && currentSubLinks.length > 0 && (
                   <Divider
                     key="subnav-divider"
@@ -141,23 +147,29 @@ const PageHeaderBar: React.FC = () => {
                     variant="middle"
                   />
                 )}
-                {currentSubLinks?.map((entry) => {
-                  if (entry instanceof Object && 'href' in entry) {
-                    if (entry.hidden) return null;
-                    return (
-                      <MenuItem
-                        key={`subnav-${entry.href}`}
-                        onClick={() => {
-                          navigate(entry.href!);
-                          popupState.close();
-                        }}
-                      >
-                        <ListItemText>{entry.label}</ListItemText>
-                      </MenuItem>
-                    );
-                  }
-                  return entry;
-                })}
+                {currentSubLinks
+                  ?.filter((entry) => {
+                    if (entry instanceof Object && 'href' in entry) {
+                      return !entry.hidden;
+                    }
+                    return true;
+                  })
+                  .map((entry) => {
+                    if (entry instanceof Object && 'href' in entry) {
+                      return (
+                        <MenuItem
+                          key={`subnav-${entry.href}`}
+                          onClick={() => {
+                            navigate(entry.href!);
+                            popupState.close();
+                          }}
+                        >
+                          <ListItemText>{entry.label}</ListItemText>
+                        </MenuItem>
+                      );
+                    }
+                    return entry;
+                  })}
               </Menu>
             </AppBar>
           </PageHeaderProvider>
@@ -229,28 +241,36 @@ const PageHeaderBar: React.FC = () => {
                     },
                   })}
                 >
-                  {navigation.map((entry, i) => {
-                    const selected = entry === currentLink;
-                    if (entry instanceof Object && 'href' in entry) {
-                      if (entry.hidden) return null;
+                  {navigation
+                    .filter((entry) => {
+                      if (entry instanceof Object && 'href' in entry) {
+                        return !entry.hidden;
+                      }
+                      return true;
+                    })
+                    .map((entry, i) => {
+                      const selected = entry === currentLink;
+                      if (entry instanceof Object && 'href' in entry) {
+                        return (
+                          <Button
+                            key={i}
+                            component={RouterLink}
+                            to={entry.href}
+                            color={'secondary'}
+                            sx={{
+                              backgroundColor: selected
+                                ? 'background.paper'
+                                : undefined,
+                            }}
+                          >
+                            <Typography>{entry.label}</Typography>
+                          </Button>
+                        );
+                      }
                       return (
-                        <Button
-                          key={i}
-                          component={RouterLink}
-                          to={entry.href}
-                          color={'secondary'}
-                          sx={{
-                            backgroundColor: selected
-                              ? 'background.paper'
-                              : undefined,
-                          }}
-                        >
-                          <Typography>{entry.label}</Typography>
-                        </Button>
+                        <Fragment key={`nav-action-${i}`}>{entry}</Fragment>
                       );
-                    }
-                    return <Fragment key={`nav-action-${i}`}>{entry}</Fragment>;
-                  })}
+                    })}
                 </ThemeProvider>
               </Stack>
               <Stack
@@ -271,31 +291,37 @@ const PageHeaderBar: React.FC = () => {
                 />
                 {currentSubLinks &&
                   currentSubLinks.length > 0 &&
-                  currentSubLinks.map((entry, i) => {
-                    if (entry instanceof Object && 'href' in entry) {
-                      if (entry.hidden) return null;
+                  currentSubLinks
+                    .filter((entry) => {
+                      if (entry instanceof Object && 'href' in entry) {
+                        return !entry.hidden;
+                      }
+                      return true;
+                    })
+                    .map((entry, i) => {
+                      if (entry instanceof Object && 'href' in entry) {
+                        return (
+                          <Button
+                            key={`subnav-${entry.href}`}
+                            component={RouterLink}
+                            to={entry.href}
+                            variant="text"
+                            size="small"
+                            color="secondary"
+                            sx={{
+                              p: 0.2,
+                              borderBottomLeftRadius: 0,
+                              borderBottomRightRadius: 0,
+                            }}
+                          >
+                            <Typography>{entry.label}</Typography>
+                          </Button>
+                        );
+                      }
                       return (
-                        <Button
-                          key={`subnav-${entry.href}`}
-                          component={RouterLink}
-                          to={entry.href}
-                          variant="text"
-                          size="small"
-                          color="secondary"
-                          sx={{
-                            p: 0.2,
-                            borderBottomLeftRadius: 0,
-                            borderBottomRightRadius: 0,
-                          }}
-                        >
-                          <Typography>{entry.label}</Typography>
-                        </Button>
+                        <Fragment key={`subnav-action-${i}`}>{entry}</Fragment>
                       );
-                    }
-                    return (
-                      <Fragment key={`subnav-action-${i}`}>{entry}</Fragment>
-                    );
-                  })}
+                    })}
               </Stack>
             </Stack>
           </Stack>

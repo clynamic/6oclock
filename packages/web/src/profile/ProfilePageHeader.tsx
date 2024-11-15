@@ -30,7 +30,7 @@ export const ProfilePageHeader: React.FC<ProfilePageHeaderProps> = ({
         // if in debug mode, show Edit Header
         (import.meta.env.MODE === 'development' && [
           <DashboardEditHeader key="edit-dashboard" />,
-          <NavDivider />,
+          <NavDivider key="edit-dashboard-divider" />,
         ]) || [<NavSpacer />],
         ...(isOwnProfile
           ? [
