@@ -6,6 +6,7 @@ import { useMemo } from 'react';
 import {
   useApprovalCountSeries,
   useDeletionCountSeries,
+  usePermitCount,
   useUploadCount,
 } from '../../api';
 import { QueryHint } from '../../common';
@@ -27,6 +28,12 @@ export const PostStatusCountSeriesChart: React.FC = () => {
   } = useApprovalCountSeries(range, refetchQueryOptions());
 
   const {
+    data: permittedData,
+    isLoading: permittedLoading,
+    error: permittedError,
+  } = usePermitCount(range, refetchQueryOptions());
+
+  const {
     data: deletedData,
     isLoading: deletedLoading,
     error: deletedError,
@@ -41,14 +48,16 @@ export const PostStatusCountSeriesChart: React.FC = () => {
   const dataset = useMemo(() => {
     return mergePointSeries({
       approved: approvedData || [],
+      permitted: permittedData || [],
       deleted: deletedData || [],
       uploads: uploadsData || [],
     });
-  }, [approvedData, deletedData, uploadsData]);
+  }, [approvedData, permittedData, deletedData, uploadsData]);
 
   const chartProps: SeriesChartProps = {
     dataset,
-    loading: approvedLoading || deletedLoading || uploadsLoading,
+    loading:
+      approvedLoading || permittedLoading || deletedLoading || uploadsLoading,
     xAxis: [
       {
         scaleType: 'band',
@@ -71,6 +80,12 @@ export const PostStatusCountSeriesChart: React.FC = () => {
         stack: 'handled',
       },
       {
+        dataKey: 'permitted',
+        label: 'Permitted',
+        color: theme.palette.success.light,
+        stack: 'handled',
+      },
+      {
         dataKey: 'deleted',
         label: 'Deleted',
         color: theme.palette.error.main,
@@ -86,8 +101,13 @@ export const PostStatusCountSeriesChart: React.FC = () => {
 
   return (
     <QueryHint
-      isLoading={[approvedLoading, deletedLoading, uploadsLoading]}
-      error={[approvedError, deletedError, uploadsError]}
+      isLoading={[
+        approvedLoading,
+        permittedLoading,
+        deletedLoading,
+        uploadsLoading,
+      ]}
+      error={[approvedError, permittedError, deletedError, uploadsError]}
       type="bars"
     >
       <BarChart {...chartProps} />
