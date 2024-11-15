@@ -14,4 +14,5 @@ export interface DashboardConfig {
   positions: DashboardPositions;
   type: DashboardConfigType;
   userId: number;
+  version: number;
 }

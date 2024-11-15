@@ -5,6 +5,8 @@ import { PostPendingSeriesChart } from '../charts/PostPendingSeriesChart';
 import { PostStatusSummaryChart } from '../charts/PostStatusSummaryChart';
 import { PostUploaderBoard } from '../uploads';
 
+export const janitorDashboardCatalogVersion = 2;
+
 export const janitorDashboardCatalog: DashboardCatalog = {
   approvalsLeaderboard: {
     name: 'Top Approvers',

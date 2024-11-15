@@ -26,6 +26,7 @@ interface DashboardContextType {
   currentBreakpoint?: Breakpoint;
   currentLayout?: DashboardLayout[];
   catalog: DashboardCatalog;
+  version?: number;
   isLoading?: boolean;
   isError?: boolean;
   error?: unknown;
@@ -40,6 +41,7 @@ const DashboardContext = createContext<DashboardContextType | undefined>(
 );
 
 export interface DashboardConfig {
+  version: number;
   meta: DashboardConfigMeta;
   positions: DashboardPositions;
 }
@@ -51,6 +53,7 @@ export interface DashboardProviderProps {
   isError?: boolean;
   error?: unknown;
   catalog: DashboardCatalog;
+  version?: number;
   children: React.ReactNode;
 }
 
@@ -62,6 +65,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
   error,
   children,
   catalog,
+  version,
 }) => {
   const [config, setConfig] = useState<DashboardConfig | undefined>(data);
 
@@ -121,6 +125,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
         currentBreakpoint,
         currentLayout,
         catalog,
+        version,
         isLoading,
         isError,
         error,
