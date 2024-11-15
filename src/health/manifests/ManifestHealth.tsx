@@ -11,12 +11,12 @@ import {
   Box,
   Card,
   Chip,
-  CircularProgress,
   IconButton,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
+  Skeleton,
   Stack,
   Typography,
   useTheme,
@@ -25,27 +25,54 @@ import { BarChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 
-import { useDeleteManifest, useManifestHealth } from '../api';
+import { useDeleteManifest, useManifestHealth } from '../../api';
+import { QueryHint } from '../../common';
 
 export const ManifestHealthDisplay: React.FC = () => {
   const theme = useTheme();
-  const { data, refetch } = useManifestHealth({
+  const { data, isLoading, error, refetch } = useManifestHealth({
     query: {
       refetchInterval: 10000,
     },
   });
   const { mutateAsync: deleteManifest } = useDeleteManifest();
 
-  if (!data) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
   return (
-    <>
+    <QueryHint
+      isLoading={isLoading}
+      error={error}
+      skeleton={[...Array(3)].map((_, index) => (
+        <Card key={index} sx={{ width: '100%' }}>
+          <Stack p={2} spacing={1} sx={{ width: '100%' }}>
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="h6">
+                <Skeleton width={200} />
+              </Typography>
+            </Stack>
+            <Stack direction="row" gap={1} sx={{ flexWrap: 'wrap' }}>
+              {[...Array(2)].map((_, index) => (
+                <Chip
+                  key={index}
+                  icon={<Skeleton variant="circular" width={24} height={24} />}
+                  label={<Skeleton width={100} />}
+                />
+              ))}
+            </Stack>
+            <Box sx={{ height: 4 }} />
+            <Stack direction="row" justifyContent="space-between">
+              {[...Array(30)].map((_, index) => (
+                <Skeleton
+                  variant="rectangular"
+                  key={index}
+                  height={60}
+                  width={10}
+                />
+              ))}
+            </Stack>
+          </Stack>
+        </Card>
+      ))}
+    >
       {data?.map((heart) => (
         <PopupState
           key={heart.id}
@@ -222,6 +249,6 @@ export const ManifestHealthDisplay: React.FC = () => {
           }}
         </PopupState>
       ))}
-    </>
+    </QueryHint>
   );
 };

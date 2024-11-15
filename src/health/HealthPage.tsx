@@ -2,8 +2,8 @@ import { Masonry } from '@mui/lab';
 import { Box, Card, Stack, Typography } from '@mui/material';
 
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
-import { JobsDisplay } from './Jobs';
-import { ManifestHealthDisplay } from './ManifestHealth';
+import { JobsDisplay } from './jobs';
+import { ManifestHealthDisplay } from './manifests';
 
 export const HealthPage: React.FC = () => {
   return (

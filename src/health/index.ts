@@ -1,2 +1,2 @@
 export * from './HealthPage';
-export * from './ManifestHealth';
+export * from './manifests/ManifestHealth';
