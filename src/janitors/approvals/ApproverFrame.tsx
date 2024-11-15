@@ -1,5 +1,6 @@
-import { CalendarMonth, Sell } from '@mui/icons-material';
+import { Beenhere, CalendarMonth } from '@mui/icons-material';
 import {
+  Avatar,
   Box,
   Card,
   CardActionArea,
@@ -9,15 +10,15 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { TicketHandlerSummary } from '../../api';
-import { UserAvatar, UsernameText } from '../../common';
+import { ApproverSummary } from '../../api';
+import { UsernameText } from '../../common';
 import { RankingText } from '../../common/RankingText';
 
-export interface TicketLeaderboardFrameProps {
-  summary?: TicketHandlerSummary;
+export interface ApprovalLeaderboardFrame {
+  summary?: ApproverSummary;
 }
 
-export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
+export const ApproverFrame: React.FC<ApprovalLeaderboardFrame> = ({
   summary,
 }) => {
   return (
@@ -31,18 +32,28 @@ export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
     >
       <CardActionArea
         component={Link}
-        to={`/users/${summary?.userId}`}
+        to={`/users/${summary?.userId ?? ''}`}
         disabled={!summary}
       >
-        <Box p={2} sx={{ width: '100%' }}>
+        <Box p={2}>
           <Stack direction="row" spacing={2}>
-            <UserAvatar
-              user={
-                summary ? { id: summary.userId, ...summary.head } : undefined
-              }
-              size={64}
-              shape="rounded"
-            />
+            {summary ? (
+              <Avatar
+                variant="rounded"
+                alt={`avatar of ${summary.head?.name ?? `User #${summary.userId}`}`}
+                src={summary.head?.avatar}
+                sx={{
+                  width: 64,
+                  height: 64,
+                  bgcolor: 'background.paper',
+                  color: 'text.primary',
+                }}
+              >
+                {summary.head?.name.split('_').map((part) => part[0]) ?? '?'}
+              </Avatar>
+            ) : (
+              <Skeleton variant="rounded" width={64} height={64} />
+            )}
             <Stack spacing={1} sx={{ flexGrow: 1 }}>
               <Stack
                 direction="row"
@@ -50,24 +61,20 @@ export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <UsernameText user={summary?.head} />
+                <UsernameText user={summary} />
                 {summary && (
                   <RankingText rank={summary.position}>
                     #{summary.position}
                   </RankingText>
                 )}
               </Stack>
-              <Stack
-                direction="row"
-                gap={1}
-                sx={{ flexWrap: 'wrap', maxWidth: 300 }}
-              >
+              <Stack direction="row" spacing={1}>
                 {summary ? (
                   <>
                     <Chip
                       size="small"
-                      avatar={<Sell />}
-                      label={`${summary.total} tickets`}
+                      avatar={<Beenhere />}
+                      label={`${summary.total} approvals`}
                     />
                     {summary.days > 1 && (
                       <Chip
@@ -76,8 +83,6 @@ export const TicketLeaderboardFrame: React.FC<TicketLeaderboardFrameProps> = ({
                         label={`${summary.days} days`}
                       />
                     )}
-                    {/* TODO: actually calculate trends with previous month's data */}
-                    {/* <Chip size="small" label={<TrendingUp />} /> */}
                   </>
                 ) : (
                   <Skeleton width={100} />

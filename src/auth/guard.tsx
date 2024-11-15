@@ -31,14 +31,14 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       const id = ++sentinel.current;
 
       let loginUrl = '/login';
-      let unreadableUrl = '/unreachable';
+      let unreachableUrl = '/unreachable';
       const params = new URLSearchParams();
       if (path.current !== '/') {
         params.append('redirect', path.current);
       }
       if (params.size > 0) {
         loginUrl += `?${params.toString()}`;
-        unreadableUrl += `?${params.toString()}`;
+        unreachableUrl += `?${params.toString()}`;
       }
 
       if (token && session) {
@@ -70,7 +70,7 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       }
 
       if (checkResult === 'error') {
-        navigate(unreadableUrl, { replace: true });
+        navigate(unreachableUrl, { replace: true });
         return;
       }
 
