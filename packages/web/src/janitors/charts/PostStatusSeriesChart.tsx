@@ -10,6 +10,7 @@ import {
 } from '../../api';
 import {
   mergePointSeries,
+  refetchQueryOptions,
   SeriesChartProps,
   useChartDateRange,
 } from '../../utils';
@@ -18,11 +19,17 @@ export const PostStatusCountSeriesChart: React.FC = () => {
   const theme = useTheme();
   const range = useChartDateRange();
 
-  const { data: approvedData } = useApprovalCountSeries(range);
+  const { data: approvedData } = useApprovalCountSeries(
+    range,
+    refetchQueryOptions(),
+  );
 
-  const { data: deletedData } = useDeletionCountSeries(range);
+  const { data: deletedData } = useDeletionCountSeries(
+    range,
+    refetchQueryOptions(),
+  );
 
-  const { data: uploadsData } = useUploadCount(range);
+  const { data: uploadsData } = useUploadCount(range, refetchQueryOptions());
 
   const dataset = useMemo(() => {
     return mergePointSeries({

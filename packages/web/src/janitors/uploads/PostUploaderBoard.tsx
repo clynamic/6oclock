@@ -2,15 +2,15 @@ import { ArrowForward } from '@mui/icons-material';
 import { Button, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { useTicketReporterSummary } from '../../api';
+import { usePostUploaderSummary } from '../../api';
 import { LimitedList, NoDataHint } from '../../common';
 import { refetchQueryOptions, useChartDateRange } from '../../utils';
-import { TicketReporterFrame } from './TicketReporterFrame';
+import { PostUploaderFrame } from './PostUploaderFrame';
 
-export const TicketReporterBoard: React.FC = () => {
+export const PostUploaderBoard: React.FC = () => {
   const range = useChartDateRange();
 
-  const { data } = useTicketReporterSummary(
+  const { data } = usePostUploaderSummary(
     {
       ...range,
       limit: 10,
@@ -28,7 +28,7 @@ export const TicketReporterBoard: React.FC = () => {
             size="small"
             endIcon={<ArrowForward />}
             component={Link}
-            to="/mods/reports"
+            to="/janitors/uploads"
           >
             See All
           </Button>
@@ -37,10 +37,10 @@ export const TicketReporterBoard: React.FC = () => {
     >
       {data
         ? data.map((user) => {
-            return <TicketReporterFrame key={user.userId} summary={user} />;
+            return <PostUploaderFrame key={user.userId} summary={user} />;
           })
         : Array.from({ length: 5 }).map((_, index) => (
-            <TicketReporterFrame key={index} />
+            <PostUploaderFrame key={index} />
           ))}
     </LimitedList>
   );
