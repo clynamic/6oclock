@@ -48,7 +48,7 @@ export const TicketAgeSummaryChart: React.FC = () => {
   }, [data]);
 
   return (
-    <QueryHint isLoading={isLoading} error={error} type="piechart">
+    <QueryHint isLoading={isLoading} error={error} type="pie">
       <PieChart
         sx={{ height: '100%' }}
         series={[
