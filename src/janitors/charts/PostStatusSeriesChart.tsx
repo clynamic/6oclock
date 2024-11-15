@@ -8,6 +8,7 @@ import {
   useDeletionCountSeries,
   useUploadCount,
 } from '../../api';
+import { QueryHint } from '../../common';
 import {
   mergePointSeries,
   refetchQueryOptions,
@@ -19,17 +20,23 @@ export const PostStatusCountSeriesChart: React.FC = () => {
   const theme = useTheme();
   const range = useChartDateRange();
 
-  const { data: approvedData } = useApprovalCountSeries(
-    range,
-    refetchQueryOptions(),
-  );
+  const {
+    data: approvedData,
+    isLoading: approvedLoading,
+    error: approvedError,
+  } = useApprovalCountSeries(range, refetchQueryOptions());
 
-  const { data: deletedData } = useDeletionCountSeries(
-    range,
-    refetchQueryOptions(),
-  );
+  const {
+    data: deletedData,
+    isLoading: deletedLoading,
+    error: deletedError,
+  } = useDeletionCountSeries(range, refetchQueryOptions());
 
-  const { data: uploadsData } = useUploadCount(range, refetchQueryOptions());
+  const {
+    data: uploadsData,
+    isLoading: uploadsLoading,
+    error: uploadsError,
+  } = useUploadCount(range, refetchQueryOptions());
 
   const dataset = useMemo(() => {
     return mergePointSeries({
@@ -40,8 +47,8 @@ export const PostStatusCountSeriesChart: React.FC = () => {
   }, [approvedData, deletedData, uploadsData]);
 
   const chartProps: SeriesChartProps = {
-    loading: !approvedData || !deletedData || !uploadsData,
     dataset,
+    loading: approvedLoading || deletedLoading || uploadsLoading,
     xAxis: [
       {
         scaleType: 'band',
@@ -77,5 +84,13 @@ export const PostStatusCountSeriesChart: React.FC = () => {
     },
   };
 
-  return <BarChart {...chartProps} />;
+  return (
+    <QueryHint
+      isLoading={[approvedLoading, deletedLoading, uploadsLoading]}
+      error={[approvedError, deletedError, uploadsError]}
+      type="bars"
+    >
+      <BarChart {...chartProps} />
+    </QueryHint>
+  );
 };

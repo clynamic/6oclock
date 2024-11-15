@@ -2,6 +2,7 @@ import { PieChart, PieValueType } from '@mui/x-charts';
 import { useMemo } from 'react';
 
 import { TicketAgeSummary, useTicketAgeSummary } from '../../api';
+import { QueryHint } from '../../common';
 import { refetchQueryOptions, useChartDateRange } from '../../utils';
 
 export const TicketAgeColors = {
@@ -24,16 +25,19 @@ export const TicketAgeLabels = {
 
 export const TicketAgeSummaryChart: React.FC = () => {
   const range = useChartDateRange();
-  const { data: summary } = useTicketAgeSummary(range, refetchQueryOptions());
+  const { data, isLoading, error } = useTicketAgeSummary(
+    range,
+    refetchQueryOptions(),
+  );
 
-  const data: PieValueType[] = useMemo(() => {
-    return Object.keys(summary || {})
+  const dataset: PieValueType[] = useMemo(() => {
+    return Object.keys(data || {})
       .map((group) => group as keyof TicketAgeSummary)
-      .filter((group) => summary?.[group] !== 0)
+      .filter((group) => data?.[group] !== 0)
       .map((group, i) => ({
         id: i,
         label: TicketAgeLabels[group],
-        value: summary?.[group] || 0,
+        value: data?.[group] || 0,
         color: TicketAgeColors[group],
       }))
       .sort(
@@ -41,32 +45,34 @@ export const TicketAgeSummaryChart: React.FC = () => {
           Object.keys(TicketAgeLabels).indexOf(a.label) -
           Object.keys(TicketAgeLabels).indexOf(b.label),
       );
-  }, [summary]);
+  }, [data]);
 
   return (
-    <PieChart
-      sx={{ height: '100%' }}
-      series={[
-        {
-          data: data,
-          arcLabel: (item) => `${item.value}`,
-          arcLabelMinAngle: 20,
-          innerRadius: '30%',
-          outerRadius: '90%',
-          paddingAngle: 5,
-          cornerRadius: 5,
-          cx: '50%',
-          cy: '50%',
-        },
-      ]}
-      slotProps={{
-        noDataOverlay: {
-          message: 'No data',
-        },
-      }}
-      margin={{
-        right: 150,
-      }}
-    />
+    <QueryHint isLoading={isLoading} error={error} type="piechart">
+      <PieChart
+        sx={{ height: '100%' }}
+        series={[
+          {
+            data: dataset,
+            arcLabel: (item) => `${item.value}`,
+            arcLabelMinAngle: 20,
+            innerRadius: '30%',
+            outerRadius: '90%',
+            paddingAngle: 5,
+            cornerRadius: 5,
+            cx: '50%',
+            cy: '50%',
+          },
+        ]}
+        slotProps={{
+          noDataOverlay: {
+            message: 'No data',
+          },
+        }}
+        margin={{
+          right: 150,
+        }}
+      />
+    </QueryHint>
   );
 };
