@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
 import { useTicketClosedSeriesByHandler } from '../../api';
+import { QueryHint } from '../../common';
 import {
   refetchQueryOptions,
   SeriesChartProps,
@@ -20,7 +21,7 @@ export const TicketClosedSeriesByHandlerChart: React.FC<
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data } = useTicketClosedSeriesByHandler(
+  const { data, isLoading, error } = useTicketClosedSeriesByHandler(
     userId ?? 0,
     range,
     refetchQueryOptions({
@@ -59,5 +60,9 @@ export const TicketClosedSeriesByHandlerChart: React.FC<
     return variant === 'bars' ? BarChart : LineChart;
   }, [variant]);
 
-  return <Chart {...chartProps} />;
+  return (
+    <QueryHint isLoading={isLoading} error={error} type={variant}>
+      <Chart {...chartProps} />;
+    </QueryHint>
+  );
 };

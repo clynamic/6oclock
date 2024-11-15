@@ -2,6 +2,7 @@ import { PieChart, PieValueType } from '@mui/x-charts';
 import { useMemo } from 'react';
 
 import { TicketTypeSummary, useTicketTypeSummary } from '../../api';
+import { QueryHint } from '../../common';
 import { refetchQueryOptions, useChartDateRange } from '../../utils';
 
 export const TicketTypeColors = {
@@ -18,51 +19,56 @@ export const TicketTypeColors = {
 
 export const TicketTypeSummaryChart: React.FC = () => {
   const range = useChartDateRange();
-  const { data: summary } = useTicketTypeSummary(range, refetchQueryOptions());
+  const { data, isLoading, error } = useTicketTypeSummary(
+    range,
+    refetchQueryOptions(),
+  );
 
   const emptyTypes = useMemo(() => {
-    return Object.keys(summary || {})
+    return Object.keys(data || {})
       .map((qtype) => qtype as keyof TicketTypeSummary)
-      .filter((type) => summary?.[type] === 0);
-  }, [summary]);
+      .filter((type) => data?.[type] === 0);
+  }, [data]);
 
-  const data: PieValueType[] = useMemo(() => {
-    return Object.keys(summary || {})
+  const dataset: PieValueType[] = useMemo(() => {
+    return Object.keys(data || {})
       .map((type) => type as keyof TicketTypeSummary)
       .filter((type) => !emptyTypes.includes(type))
       .map((type, i) => ({
         id: i,
         label: type,
-        value: summary?.[type] || 0,
+        value: data?.[type] || 0,
         color: TicketTypeColors[type],
       }))
       .sort((a, b) => b.value - a.value);
-  }, [emptyTypes, summary]);
+  }, [emptyTypes, data]);
 
   return (
-    <PieChart
-      sx={{ height: '100%' }}
-      series={[
-        {
-          data: data,
-          arcLabel: (item) => `${item.value}`,
-          arcLabelMinAngle: 20,
-          innerRadius: '30%',
-          outerRadius: '90%',
-          paddingAngle: 5,
-          cornerRadius: 5,
-          cx: '50%',
-          cy: '50%',
-        },
-      ]}
-      slotProps={{
-        noDataOverlay: {
-          message: 'No data',
-        },
-      }}
-      margin={{
-        right: 150,
-      }}
-    />
+    <QueryHint isLoading={isLoading} error={error} type="pie">
+      <PieChart
+        sx={{ height: '100%' }}
+        series={[
+          {
+            data: dataset,
+            arcLabel: (item) => `${item.value}`,
+            arcLabelMinAngle: 20,
+            innerRadius: '30%',
+            outerRadius: '90%',
+            paddingAngle: 5,
+            cornerRadius: 5,
+            cx: '50%',
+            cy: '50%',
+          },
+        ]}
+        slotProps={{
+          noDataOverlay: {
+            message: 'No data',
+          },
+        }}
+        margin={{
+          right: 150,
+        }}
+      />
+    </QueryHint>
   );
 };

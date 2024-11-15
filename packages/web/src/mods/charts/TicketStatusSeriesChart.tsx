@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
 import { useTicketClosedSeries, useTicketCreatedSeries } from '../../api';
+import { QueryHint } from '../../common';
 import {
   mergePointSeries,
   refetchQueryOptions,
@@ -21,15 +22,17 @@ export const TicketStatusSeriesChart: React.FC<TicketTurnaroundChartProps> = ({
   const theme = useTheme();
   const range = useChartDateRange();
 
-  const { data: createdData } = useTicketCreatedSeries(
-    range,
-    refetchQueryOptions(),
-  );
+  const {
+    data: createdData,
+    isLoading: createdLoading,
+    error: createdError,
+  } = useTicketCreatedSeries(range, refetchQueryOptions());
 
-  const { data: closedData } = useTicketClosedSeries(
-    range,
-    refetchQueryOptions(),
-  );
+  const {
+    data: closedData,
+    isLoading: closedLoading,
+    error: closedError,
+  } = useTicketClosedSeries(range, refetchQueryOptions());
 
   const dataset = useMemo(() => {
     return mergePointSeries({
@@ -40,6 +43,7 @@ export const TicketStatusSeriesChart: React.FC<TicketTurnaroundChartProps> = ({
 
   const chartProps: SeriesChartProps = {
     dataset,
+    loading: createdLoading || closedLoading,
     xAxis: [
       {
         scaleType: 'band',
@@ -71,5 +75,13 @@ export const TicketStatusSeriesChart: React.FC<TicketTurnaroundChartProps> = ({
     return variant === 'bars' ? BarChart : LineChart;
   }, [variant]);
 
-  return <Chart {...chartProps} />;
+  return (
+    <QueryHint
+      isLoading={[createdLoading, closedLoading]}
+      error={[createdError, closedError]}
+      type={variant}
+    >
+      <Chart {...chartProps} />
+    </QueryHint>
+  );
 };
