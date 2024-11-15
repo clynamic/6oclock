@@ -14,6 +14,7 @@ import { modProfileCatalog } from '../mods';
 import { Page, PageBody, PageFooter, PageTitle } from '../page';
 import { ChartParamsProvider, useChartParamsValue } from '../utils';
 import { ProfilePageHeader } from './ProfilePageHeader';
+import { userProfileCatalog } from './UserProfileCatalog';
 
 export const ProfilePage: React.FC = () => {
   const { id } = useParams();
@@ -40,7 +41,7 @@ export const ProfilePage: React.FC = () => {
       case 'admin':
         return adminProfileCatalog;
       default:
-        return modProfileCatalog; // TODO: default to user profile catalog
+        return userProfileCatalog;
     }
   }, [user]);
 
@@ -57,9 +58,6 @@ export const ProfilePage: React.FC = () => {
             }
           : undefined
       }
-      updateData={async (data) => {
-        console.log(`Update data: ${JSON.stringify(data)}`);
-      }}
     >
       <ChartParamsProvider params={{ ...chartParams, userId: Number(id) }}>
         <Page>
