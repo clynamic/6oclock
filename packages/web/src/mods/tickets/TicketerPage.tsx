@@ -1,15 +1,15 @@
 import { Box, Stack } from '@mui/material';
 
-import { useApproverSummaryInfinite } from '../../api';
-import { LoadMoreHint } from '../../common';
+import { useTicketHandlerSummaryInfinite } from '../../api';
+import { LoadMoreHint, QueryHint } from '../../common';
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
 import { useChartDateRange } from '../../utils';
-import { ApprovalLeaderboardFrame } from './ApprovalLeaderboardFrame';
+import { TicketerFrame } from './TicketerFrame';
 
-export const ApproverPage: React.FC = () => {
+export const TicketerPage: React.FC = () => {
   const range = useChartDateRange();
 
-  const { data, ...query } = useApproverSummaryInfinite(
+  const { data, ...query } = useTicketHandlerSummaryInfinite(
     {
       ...range,
     },
@@ -29,17 +29,17 @@ export const ApproverPage: React.FC = () => {
 
   return (
     <Page>
-      <PageTitle subtitle="Approvers" />
+      <PageTitle subtitle="Ticketers" />
       <PageHeader />
       <PageBody>
         <Box sx={{ width: '100%', maxWidth: 600, margin: 'auto', p: 2 }}>
-          <Stack sx={{ height: '100%', width: '100%', gap: 1 }}>
-            {data?.pages
-              .flat()
-              .map((item, i) => (
-                <ApprovalLeaderboardFrame key={i} summary={item} />
-              ))}
-          </Stack>
+          <QueryHint isLoading={query.isLoading} error={query.error}>
+            <Stack sx={{ height: '100%', width: '100%', gap: 1 }}>
+              {data?.pages
+                .flat()
+                .map((item, i) => <TicketerFrame key={i} summary={item} />)}
+            </Stack>
+          </QueryHint>
           <LoadMoreHint query={query} />
         </Box>
       </PageBody>

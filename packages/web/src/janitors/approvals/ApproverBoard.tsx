@@ -2,15 +2,15 @@ import { ArrowForward } from '@mui/icons-material';
 import { Button, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { useTicketHandlerSummary } from '../../api';
+import { useApproverSummary } from '../../api';
 import { LimitedList, NoDataHint } from '../../common';
 import { refetchQueryOptions, useChartDateRange } from '../../utils';
-import { TicketLeaderboardFrame } from './TicketLeaderboardFrame';
+import { ApproverFrame } from './ApproverFrame';
 
-export const TicketLeaderboard: React.FC = () => {
+export const ApproverBoard: React.FC = () => {
   const range = useChartDateRange();
 
-  const { data: ticketers } = useTicketHandlerSummary(
+  const { data: approvers } = useApproverSummary(
     {
       ...range,
       limit: 10,
@@ -18,7 +18,7 @@ export const TicketLeaderboard: React.FC = () => {
     refetchQueryOptions(),
   );
 
-  if (ticketers?.length === 0) return <NoDataHint />;
+  if (approvers?.length === 0) return <NoDataHint />;
 
   return (
     <LimitedList
@@ -28,25 +28,18 @@ export const TicketLeaderboard: React.FC = () => {
             size="small"
             endIcon={<ArrowForward />}
             component={Link}
-            to="/mods/tickets"
+            to="/janitors/approvals"
           >
             See All
           </Button>
         </Stack>
       )}
     >
-      {ticketers
-        ? ticketers?.map((ticketer) => {
-            return (
-              <TicketLeaderboardFrame
-                key={ticketer.userId}
-                summary={ticketer}
-              />
-            );
+      {approvers
+        ? approvers.map((approver) => {
+            return <ApproverFrame key={approver.userId} summary={approver} />;
           })
-        : Array.from({ length: 5 }).map((_, i) => (
-            <TicketLeaderboardFrame key={i} />
-          ))}
+        : Array.from({ length: 5 }).map((_, i) => <ApproverFrame key={i} />)}
     </LimitedList>
   );
 };
