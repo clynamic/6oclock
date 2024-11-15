@@ -87,6 +87,7 @@ export const ApprovalActivitySummaryByApproverChart: React.FC = () => {
   return (
     <QueryHint
       type="bars"
+      data={[approvalData, deletionData]}
       isLoading={[approvalLoading, deletionLoading]}
       error={[approvalError, deletionError]}
     >

@@ -4,12 +4,15 @@ import { BarChartSkeleton } from './BarChartSkeleton';
 import ErrorBoundary from './ErrorBoundary';
 import { ErrorHint } from './ErrorHint';
 import { LoadingHint } from './LoadingHint';
+import { NoDataHint } from './NoDataHint';
 import { PieChartSkeleton } from './PieChartSkeleton';
 
 export interface QueryHintProps {
   type?: QuerySkeletonType;
   skeleton?: React.ReactNode;
+  data?: unknown[];
   isLoading?: boolean | boolean[];
+  isEmpty?: boolean;
   loadMode?: 'all' | 'any';
   error?: unknown | unknown[];
 }
@@ -19,6 +22,8 @@ export type QuerySkeletonType = 'default' | 'bars' | 'lines' | 'pie';
 export const QueryHint: React.FC<PropsWithChildren<QueryHintProps>> = ({
   type = 'default',
   skeleton,
+  data,
+  isEmpty,
   isLoading: loading = false,
   loadMode = 'all',
   error = null,
@@ -56,6 +61,10 @@ export const QueryHint: React.FC<PropsWithChildren<QueryHintProps>> = ({
       default:
         return <LoadingHint />;
     }
+  }
+
+  if (isEmpty || data?.flat().length === 0) {
+    return <NoDataHint />;
   }
 
   return <ErrorBoundary>{children}</ErrorBoundary>;

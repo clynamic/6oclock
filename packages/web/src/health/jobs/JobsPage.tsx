@@ -25,7 +25,11 @@ export const JobsPage: React.FC = () => {
       <PageHeader />
       <PageBody>
         <Box sx={{ width: '100%', maxWidth: 600, margin: 'auto', p: 2 }}>
-          <QueryHint isLoading={query.isLoading} error={query.error}>
+          <QueryHint
+            data={data?.pages}
+            isLoading={query.isLoading}
+            error={query.error}
+          >
             <Stack sx={{ height: '100%', width: '100%', gap: 1 }}>
               {data?.pages
                 .flat()
