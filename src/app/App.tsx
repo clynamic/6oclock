@@ -6,15 +6,12 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AuthGuard, AuthProvider } from '../auth';
 import { HealthPage } from '../health';
 import { HomePage } from '../home';
-import { ApproverPage, JanitorOverviewPage } from '../janitors';
-import { PostUploaderPage } from '../janitors/uploads';
 import { LoginPage } from '../login';
-import { ModOverviewPage, TicketerPage, TicketReporterPage } from '../mods';
 import { NavigationEntryProvider } from '../page';
 import { ProfilePage } from '../profile';
 import { ChartParamsProvider } from '../utils';
 import { LogoutPage } from './Logout';
-import { navigationEntries } from './navigation';
+import { appNavNodes, createRoutesFromNodes } from './navigation';
 import { NotFoundPage } from './NotFound';
 import { theme } from './theme';
 import { UnreachablePage } from './Unreachable';
@@ -26,7 +23,7 @@ export const App: React.FC = () => {
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
-          <NavigationEntryProvider entries={navigationEntries}>
+          <NavigationEntryProvider entries={appNavNodes}>
             <ChartParamsProvider>
               <CssBaseline />
               <BrowserRouter>
@@ -36,21 +33,9 @@ export const App: React.FC = () => {
 
                   <Route path="/" element={<AuthGuard />}>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/mods" element={<ModOverviewPage />} />
-                    <Route path="/mods/tickets" element={<TicketerPage />} />
-                    <Route
-                      path="/mods/reports"
-                      element={<TicketReporterPage />}
-                    />
-                    <Route path="/janitors" element={<JanitorOverviewPage />} />
-                    <Route
-                      path="/janitors/approvals"
-                      element={<ApproverPage />}
-                    />
-                    <Route
-                      path="/janitors/uploads"
-                      element={<PostUploaderPage />}
-                    />
+
+                    {...createRoutesFromNodes(appNavNodes)}
+
                     <Route path="/users/:id" element={<ProfilePage />} />
                     <Route path="/health" element={<HealthPage />} />
                   </Route>

@@ -7,6 +7,7 @@ export interface NavTopLink {
   label: React.ReactNode;
   href: string;
   children?: SubNavNode[];
+  component?: React.ReactNode;
 }
 
 export type SubNavNode = NavSubLink | NavAction;
@@ -14,6 +15,7 @@ export type SubNavNode = NavSubLink | NavAction;
 export interface NavSubLink {
   label: React.ReactNode;
   href: string;
+  component?: React.ReactNode;
 }
 
 export type NavAction = React.ReactNode;
