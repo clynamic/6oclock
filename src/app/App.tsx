@@ -7,6 +7,7 @@ import { AuthGuard, AuthProvider } from '../auth';
 import { HealthPage } from '../health';
 import { HomePage } from '../home';
 import { ApproverPage, JanitorOverviewPage } from '../janitors';
+import { PostUploaderPage } from '../janitors/uploads';
 import { LoginPage } from '../login';
 import { ModOverviewPage, TicketerPage, TicketReporterPage } from '../mods';
 import { NavigationEntryProvider } from '../page';
@@ -45,6 +46,10 @@ export const App: React.FC = () => {
                     <Route
                       path="/janitors/approvals"
                       element={<ApproverPage />}
+                    />
+                    <Route
+                      path="/janitors/uploads"
+                      element={<PostUploaderPage />}
                     />
                     <Route path="/users/:id" element={<ProfilePage />} />
                     <Route path="/health" element={<HealthPage />} />

@@ -18,21 +18,23 @@ export const ApprovalActivitySummaryByApproverChart: React.FC = () => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data: approvalData } = useApprovalActivitySummaryByApprover(
-    userId ?? 0,
-    range,
-    refetchQueryOptions({
-      enabled: !!userId,
-    }),
-  );
+  const { data: approvalData, isLoading: approvalIsLoading } =
+    useApprovalActivitySummaryByApprover(
+      userId ?? 0,
+      range,
+      refetchQueryOptions({
+        enabled: !!userId,
+      }),
+    );
 
-  const { data: deletionData } = useDeletionActivitySummaryByDeleter(
-    userId ?? 0,
-    range,
-    refetchQueryOptions({
-      enabled: !!userId,
-    }),
-  );
+  const { data: deletionData, isLoading: deletionIsLoading } =
+    useDeletionActivitySummaryByDeleter(
+      userId ?? 0,
+      range,
+      refetchQueryOptions({
+        enabled: !!userId,
+      }),
+    );
 
   const dataset = useMemo(() => {
     return mergePointSeries(

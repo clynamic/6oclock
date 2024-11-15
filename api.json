@@ -2204,6 +2204,87 @@
         "tags": ["Uploads"],
         "security": [{ "bearer": [] }]
       }
+    },
+    "/metrics/uploads/uploader/summary": {
+      "get": {
+        "operationId": "getPostUploaderSummary",
+        "summary": "Uploader summary",
+        "description": "Get a summary of post uploading counts for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number",
+            "schema": { "minimum": 1, "default": 1, "type": "number" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "minimum": 1,
+              "maximum": 320,
+              "default": 80,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostUploaderSummary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Uploads"],
+        "security": [{ "bearer": [] }]
+      }
     }
   },
   "info": {
@@ -2535,6 +2616,17 @@
           "groups": { "$ref": "#/components/schemas/FeedbackCountGroup" }
         },
         "required": ["date", "groups"]
+      },
+      "PostUploaderSummary": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "number" },
+          "head": { "$ref": "#/components/schemas/UserHead" },
+          "total": { "type": "number" },
+          "position": { "type": "number" },
+          "days": { "type": "number" }
+        },
+        "required": ["userId", "total", "position", "days"]
       }
     }
   },
