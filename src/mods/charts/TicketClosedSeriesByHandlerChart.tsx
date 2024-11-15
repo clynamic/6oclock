@@ -62,7 +62,7 @@ export const TicketClosedSeriesByHandlerChart: React.FC<
 
   return (
     <QueryHint isLoading={isLoading} error={error} type={variant}>
-      <Chart {...chartProps} />;
+      <Chart {...chartProps} />
     </QueryHint>
   );
 };

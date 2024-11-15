@@ -88,7 +88,7 @@ export const ApprovalCountSeriesByApproverChart: React.FC = () => {
       error={[approvedError, deletedError]}
       type="bars"
     >
-      <BarChart {...chartProps} />;
+      <BarChart {...chartProps} />
     </QueryHint>
   );
 };
