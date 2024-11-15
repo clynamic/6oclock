@@ -1,8 +1,8 @@
-import { Box, CircularProgress } from '@mui/material';
 import { PropsWithChildren, useMemo } from 'react';
 
 import { BarChartSkeleton } from './BarChartSkeleton';
 import { ErrorHint } from './ErrorHint';
+import { LoadingHint } from './LoadingHint';
 import { PieChartSkeleton } from './PieChartSkeleton';
 
 export interface QueryHintProps {
@@ -39,7 +39,7 @@ export const QueryHint: React.FC<PropsWithChildren<QueryHintProps>> = ({
   }, [loading, loadMode]);
 
   if (errors.length) {
-    return <ErrorHint error={errors} />;
+    return <ErrorHint error={errors.find((e) => e)} />;
   }
 
   if (isLoading) {
@@ -53,20 +53,7 @@ export const QueryHint: React.FC<PropsWithChildren<QueryHintProps>> = ({
       case 'pie':
         return <PieChartSkeleton />;
       default:
-        return (
-          <Box
-            p={4}
-            sx={{
-              height: '100%',
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <CircularProgress />
-          </Box>
-        );
+        return <LoadingHint />;
     }
   }
 
