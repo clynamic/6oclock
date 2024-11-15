@@ -18,6 +18,7 @@ import { useCurrentBreakpoint } from '../utils';
 import { useCurrentLayout } from './current-layout';
 import { DashboardLayout, DashboardLayouts } from './DashboardGrid';
 import { buildCatalogLayout, DashboardCatalog } from './DashboardItem';
+import { extractDashboardLayoutPositions } from './debug';
 
 interface DashboardContextType {
   config?: DashboardConfig;
@@ -72,6 +73,11 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
 
   const saveConfig = useCallback(
     async (update: DashboardUpdate) => {
+      if (import.meta.env.MODE === 'development') {
+        // this is to help us visually build the layout.
+        // the output can be copy pasted back into the catalog.
+        console.log(JSON.stringify(extractDashboardLayoutPositions(update)));
+      }
       if (updateData) {
         updateData(update);
       } else if (config) {
