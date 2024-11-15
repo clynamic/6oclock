@@ -44,11 +44,12 @@ export const TicketAgeSummaryChart: React.FC = () => {
         (a, b) =>
           Object.keys(TicketAgeLabels).indexOf(a.label) -
           Object.keys(TicketAgeLabels).indexOf(b.label),
-      );
+      )
+      .filter((item) => item.value > 0);
   }, [data]);
 
   return (
-    <QueryHint isLoading={isLoading} error={error} type="pie">
+    <QueryHint data={dataset} isLoading={isLoading} error={error} type="pie">
       <PieChart
         sx={{ height: '100%' }}
         series={[

@@ -77,6 +77,7 @@ export const TicketStatusSeriesChart: React.FC<TicketTurnaroundChartProps> = ({
 
   return (
     <QueryHint
+      data={[createdData, closedData]}
       isLoading={[createdLoading, closedLoading]}
       error={[createdError, closedError]}
       type={variant}

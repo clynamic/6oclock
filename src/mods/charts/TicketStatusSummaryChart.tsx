@@ -41,7 +41,7 @@ export const TicketStatusSummaryChart: React.FC = () => {
   }, [theme, data]);
 
   return (
-    <QueryHint isLoading={isLoading} error={error} type="pie">
+    <QueryHint data={dataset} isLoading={isLoading} error={error} type="pie">
       <PieChart
         sx={{ height: '100%' }}
         series={[

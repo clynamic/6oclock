@@ -50,7 +50,7 @@ export const TicketActivitySummaryByHandlerChart: React.FC = () => {
   };
 
   return (
-    <QueryHint isLoading={isLoading} error={error} type="bars">
+    <QueryHint data={data} isLoading={isLoading} error={error} type="bars">
       <BarChart {...chartProps} />
     </QueryHint>
   );

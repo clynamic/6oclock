@@ -61,7 +61,12 @@ export const TicketClosedSeriesByHandlerChart: React.FC<
   }, [variant]);
 
   return (
-    <QueryHint isLoading={isLoading} error={error} type={variant}>
+    <QueryHint
+      isEmpty={data?.map((e) => e.value).reduce((a, b) => a + b, 0) === 0}
+      isLoading={isLoading}
+      error={error}
+      type={variant}
+    >
       <Chart {...chartProps} />
     </QueryHint>
   );

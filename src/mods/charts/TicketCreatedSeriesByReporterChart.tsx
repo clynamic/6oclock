@@ -58,7 +58,7 @@ export const TicketCreatedSeriesByReporterChart: React.FC<
   }, [variant]);
 
   return (
-    <QueryHint isLoading={isLoading} error={error} type={variant}>
+    <QueryHint data={data} isLoading={isLoading} error={error} type={variant}>
       <Chart {...chartProps} />
     </QueryHint>
   );

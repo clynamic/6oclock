@@ -84,6 +84,7 @@ export const ApprovalCountSeriesByApproverChart: React.FC = () => {
 
   return (
     <QueryHint
+      data={[approvedData, deletedData]}
       isLoading={[approvedLoading, deletedLoading]}
       error={[approvedError, deletedError]}
       type="bars"
