@@ -2,6 +2,7 @@ import { ZoomOutMap } from '@mui/icons-material';
 import { Box, Card, CardProps, Stack, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 
+import ErrorBoundary from '../common/ErrorBoundary';
 import { createDashboardChild } from './DashboardChild';
 import { useDashboard } from './DashboardContext';
 
@@ -55,7 +56,7 @@ export const DashboardCard = createDashboardChild<DashboardCardProps>(
             >
               <Typography variant="h6">{title}</Typography>
             </Stack>
-            {children}
+            <ErrorBoundary>{children}</ErrorBoundary>
           </Stack>
 
           {isEditing && (
