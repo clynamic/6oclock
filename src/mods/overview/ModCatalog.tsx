@@ -8,6 +8,8 @@ import {
 import { TicketReporterBoard } from '../reports';
 import { TicketerLeaderboard } from '../tickets';
 
+export const modDashoardCatalogVersion = 2;
+
 export const modDashboardCatalog: DashboardCatalog = {
   ticketLeaderboard: {
     name: 'Top Ticket Handlers',

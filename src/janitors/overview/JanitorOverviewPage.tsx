@@ -7,13 +7,17 @@ import {
   RemoteDashboardProvider,
 } from '../../dashboard';
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
-import { janitorDashboardCatalog } from './JanitorCatalog';
+import {
+  janitorDashboardCatalog,
+  janitorDashboardCatalogVersion,
+} from './JanitorCatalog';
 
 export const JanitorOverviewPage: React.FC = () => {
   return (
     <RemoteDashboardProvider
       type={DashboardConfigType.janitor}
       catalog={janitorDashboardCatalog}
+      version={janitorDashboardCatalogVersion}
     >
       <Page>
         <PageTitle subtitle="Janitors" />

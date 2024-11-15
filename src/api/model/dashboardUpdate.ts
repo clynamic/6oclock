@@ -11,4 +11,5 @@ import type { DashboardPositions } from './dashboardPositions';
 export interface DashboardUpdate {
   meta?: DashboardUpdateMeta;
   positions?: DashboardPositions;
+  version?: number;
 }

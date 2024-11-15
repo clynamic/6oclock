@@ -12,13 +12,14 @@ import { buildCatalogLayouts, DashboardCatalog } from './DashboardItem';
 
 export interface RemoteDashboardProviderProps {
   type: DashboardConfigType;
+  version?: number;
   catalog: DashboardCatalog;
   children: React.ReactNode;
 }
 
 export const RemoteDashboardProvider: React.FC<
   RemoteDashboardProviderProps
-> = ({ children, type, catalog }) => {
+> = ({ children, type, catalog, version }) => {
   const { data, isLoading, isError, error, refetch } = useRemoteDashboard(
     type,
     {
@@ -40,8 +41,9 @@ export const RemoteDashboardProvider: React.FC<
         type,
         data: update,
       });
+      await refetch();
     },
-    [mutateAsync, type],
+    [mutateAsync, refetch, type],
   );
 
   useEffect(() => {
@@ -64,6 +66,7 @@ export const RemoteDashboardProvider: React.FC<
       isError={isError}
       error={error}
       catalog={catalog}
+      version={version}
     >
       {children}
     </DashboardProvider>
