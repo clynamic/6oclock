@@ -101,6 +101,7 @@ export const PostStatusCountSeriesChart: React.FC = () => {
 
   return (
     <QueryHint
+      data={[approvedData, permittedData, deletedData, uploadsData]}
       isLoading={[
         approvedLoading,
         permittedLoading,

@@ -16,7 +16,7 @@ export const TicketOpenSeriesChart: React.FC = () => {
   );
 
   return (
-    <QueryHint isLoading={isLoading} error={error} type="lines">
+    <QueryHint data={data} isLoading={isLoading} error={error} type="lines">
       <LineChart
         dataset={data?.map((e) => ({ ...e })) ?? []}
         xAxis={[

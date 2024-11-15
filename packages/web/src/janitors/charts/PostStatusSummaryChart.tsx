@@ -45,7 +45,7 @@ export const PostStatusSummaryChart: React.FC = () => {
   }, [data, theme]);
 
   return (
-    <QueryHint isLoading={isLoading} error={error} type="pie">
+    <QueryHint data={dataset} isLoading={isLoading} error={error} type="pie">
       <PieChart
         sx={{ height: '100%' }}
         series={[
