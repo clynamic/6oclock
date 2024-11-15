@@ -55,7 +55,7 @@ export const TicketAgeSeriesChart: React.FC = () => {
   };
 
   return (
-    <QueryHint isLoading={isLoading} error={error} type="barchart">
+    <QueryHint isLoading={isLoading} error={error} type="bars">
       <BarChart {...chartProps} />;
     </QueryHint>
   );
