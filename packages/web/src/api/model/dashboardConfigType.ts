@@ -13,4 +13,5 @@ export type DashboardConfigType =
 export const DashboardConfigType = {
   moderator: 'moderator',
   janitor: 'janitor',
+  admin: 'admin',
 } as const;

@@ -2475,16 +2475,21 @@
       "DashboardConfig": {
         "type": "object",
         "properties": {
-          "type": { "type": "string", "enum": ["moderator", "janitor"] },
+          "type": {
+            "type": "string",
+            "enum": ["moderator", "janitor", "admin"]
+          },
           "userId": { "type": "number" },
+          "version": { "type": "number" },
           "positions": { "$ref": "#/components/schemas/DashboardPositions" },
           "meta": { "type": "object" }
         },
-        "required": ["type", "userId", "positions", "meta"]
+        "required": ["type", "userId", "version", "positions", "meta"]
       },
       "DashboardUpdate": {
         "type": "object",
         "properties": {
+          "version": { "type": "number" },
           "positions": { "$ref": "#/components/schemas/DashboardPositions" },
           "meta": { "type": "object" }
         }
