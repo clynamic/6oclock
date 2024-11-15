@@ -7,6 +7,7 @@ import { PieChartSkeleton } from './PieChartSkeleton';
 
 export interface QueryHintProps {
   type?: QuerySkeletonType;
+  skeleton?: React.ReactNode;
   isLoading?: boolean | boolean[];
   loadMode?: 'all' | 'any';
   error?: unknown | unknown[];
@@ -16,6 +17,7 @@ export type QuerySkeletonType = 'default' | 'bars' | 'lines' | 'pie';
 
 export const QueryHint: React.FC<PropsWithChildren<QueryHintProps>> = ({
   type = 'default',
+  skeleton,
   isLoading: loading = false,
   loadMode = 'all',
   error = null,
@@ -41,6 +43,10 @@ export const QueryHint: React.FC<PropsWithChildren<QueryHintProps>> = ({
   }
 
   if (isLoading) {
+    if (skeleton) {
+      return skeleton;
+    }
+
     switch (type) {
       case 'bars':
         return <BarChartSkeleton />;

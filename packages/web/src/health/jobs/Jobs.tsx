@@ -17,8 +17,8 @@ import {
 import { DateTime } from 'luxon';
 import { Link } from 'react-router-dom';
 
-import { useJobs } from '../api';
-import { LimitedList, NoDataHint } from '../common';
+import { useJobs } from '../../api';
+import { LimitedList, NoDataHint } from '../../common';
 
 export const JobsDisplay = () => {
   const { data } = useJobs(
