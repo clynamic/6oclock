@@ -1,13 +1,23 @@
 import { ReactElement } from 'react';
 import { Route } from 'react-router-dom';
 
+import { HealthPage } from '../health';
+import { JobsPage } from '../health/jobs';
+import { HomePage } from '../home';
 import { ApproverPage, JanitorOverviewPage } from '../janitors';
 import { PostUploaderPage } from '../janitors/uploads';
 import { ModOverviewPage, TicketerPage, TicketReporterPage } from '../mods';
 import { NavNode } from '../page';
 import { NavSpacer, NavUser } from '../page';
+import { ProfilePage } from '../profile';
 
 export const appNavNodes: NavNode[] = [
+  {
+    label: 'Home',
+    href: '/',
+    hidden: true,
+    component: <HomePage />,
+  },
   {
     label: 'Mods',
     href: '/mods',
@@ -47,6 +57,36 @@ export const appNavNodes: NavNode[] = [
         label: 'Uploaders',
         href: '/janitors/uploads',
         component: <PostUploaderPage />,
+      },
+    ],
+  },
+  {
+    label: 'Users',
+    href: '/users',
+    hidden: true,
+    children: [
+      {
+        label: 'Profile',
+        href: '/users/:id',
+        hidden: true,
+        component: <ProfilePage />,
+      },
+    ],
+  },
+  {
+    label: 'Health',
+    href: '/health',
+    hidden: true,
+    children: [
+      {
+        label: 'Dashboard',
+        href: '/health',
+        component: <HealthPage />,
+      },
+      {
+        label: 'Jobs',
+        href: '/health/jobs',
+        component: <JobsPage />,
       },
     ],
   },

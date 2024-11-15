@@ -2382,9 +2382,10 @@
           "startedAt": { "format": "date-time", "type": "string" },
           "endedAt": { "format": "date-time", "type": "string" },
           "succeeded": { "type": "boolean" },
+          "failed": { "type": "boolean" },
           "cancelled": { "type": "boolean" }
         },
-        "required": ["id", "title", "succeeded", "cancelled"]
+        "required": ["id", "title", "succeeded", "failed", "cancelled"]
       },
       "ManifestSlice": {
         "type": "object",
