@@ -43,6 +43,8 @@ export * from './getFeedbackCountSeriesScale';
 export * from './getFeedbackTypeSummaryParams';
 export * from './getFeedbackTypeSummaryScale';
 export * from './getJobsParams';
+export * from './getPermitCountParams';
+export * from './getPermitCountScale';
 export * from './getPostPendingSeriesParams';
 export * from './getPostPendingSeriesScale';
 export * from './getPostStatusSummaryParams';

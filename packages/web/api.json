@@ -2285,6 +2285,66 @@
         "tags": ["Uploads"],
         "security": [{ "bearer": [] }]
       }
+    },
+    "/metrics/permits/count": {
+      "get": {
+        "operationId": "getPermitCount",
+        "summary": "Get total permit counts for a given date range",
+        "description": "Get total permit counts for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Permits"],
+        "security": [{ "bearer": [] }]
+      }
     }
   },
   "info": {
