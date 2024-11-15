@@ -1,6 +1,7 @@
 import { PropsWithChildren, useMemo } from 'react';
 
 import { BarChartSkeleton } from './BarChartSkeleton';
+import ErrorBoundary from './ErrorBoundary';
 import { ErrorHint } from './ErrorHint';
 import { LoadingHint } from './LoadingHint';
 import { PieChartSkeleton } from './PieChartSkeleton';
@@ -57,5 +58,5 @@ export const QueryHint: React.FC<PropsWithChildren<QueryHintProps>> = ({
     }
   }
 
-  return <>{children}</>;
+  return <ErrorBoundary>{children}</ErrorBoundary>;
 };
