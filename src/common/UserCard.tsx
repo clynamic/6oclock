@@ -1,4 +1,6 @@
-import { Stack, Typography } from '@mui/material';
+import { OpenInNew } from '@mui/icons-material';
+import { Box, IconButton, Stack, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 import { useUserHead } from '../api';
 import { useChartParamsValue } from '../utils';
@@ -22,6 +24,14 @@ export const UserCard: React.FC = () => {
           {user?.level}
         </Typography>
       </Stack>
+      <Box sx={{ flexGrow: 1 }} />
+      <IconButton
+        component={Link}
+        to={`https://e621.net/users/${user?.id}`}
+        disabled={!user}
+      >
+        <OpenInNew />
+      </IconButton>
     </Stack>
   );
 };
