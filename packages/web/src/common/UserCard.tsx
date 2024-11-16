@@ -28,6 +28,7 @@ export const UserCard: React.FC = () => {
       <IconButton
         component={Link}
         to={`https://e621.net/users/${user?.id}`}
+        target="_blank"
         disabled={!user}
       >
         <OpenInNew />
