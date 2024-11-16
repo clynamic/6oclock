@@ -53,6 +53,7 @@ export const ProfilePage: React.FC = () => {
       data={
         catalog
           ? {
+              version: 1,
               positions: buildCatalogLayouts(catalog),
               meta: {},
             }
