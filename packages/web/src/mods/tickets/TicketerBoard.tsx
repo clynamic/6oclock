@@ -3,14 +3,14 @@ import { Button, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import { useTicketHandlerSummary } from '../../api';
-import { LimitedList, NoDataHint } from '../../common';
+import { LimitedList, QueryHint } from '../../common';
 import { refetchQueryOptions, useChartDateRange } from '../../utils';
 import { TicketerFrame } from './TicketerFrame';
 
 export const TicketerLeaderboard: React.FC = () => {
   const range = useChartDateRange();
 
-  const { data: ticketers } = useTicketHandlerSummary(
+  const { data, isLoading, error } = useTicketHandlerSummary(
     {
       ...range,
       limit: 10,
@@ -18,28 +18,33 @@ export const TicketerLeaderboard: React.FC = () => {
     refetchQueryOptions(),
   );
 
-  if (ticketers?.length === 0) return <NoDataHint />;
-
   return (
-    <LimitedList
-      indicator={() => (
-        <Stack direction="row" justifyContent="flex-end">
-          <Button
-            size="small"
-            endIcon={<ArrowForward />}
-            component={Link}
-            to="/mods/tickets"
-          >
-            See All
-          </Button>
-        </Stack>
-      )}
+    <QueryHint
+      data={data}
+      isLoading={isLoading}
+      error={error}
+      skeleton={Array.from({ length: 5 }).map((_, index) => (
+        <TicketerFrame key={index} />
+      ))}
     >
-      {ticketers
-        ? ticketers?.map((ticketer) => {
-            return <TicketerFrame key={ticketer.userId} summary={ticketer} />;
-          })
-        : Array.from({ length: 5 }).map((_, i) => <TicketerFrame key={i} />)}
-    </LimitedList>
+      <LimitedList
+        indicator={() => (
+          <Stack direction="row" justifyContent="flex-end">
+            <Button
+              size="small"
+              endIcon={<ArrowForward />}
+              component={Link}
+              to="/mods/tickets"
+            >
+              See All
+            </Button>
+          </Stack>
+        )}
+      >
+        {data?.map((ticketer) => {
+          return <TicketerFrame key={ticketer.userId} summary={ticketer} />;
+        })}
+      </LimitedList>
+    </QueryHint>
   );
 };
