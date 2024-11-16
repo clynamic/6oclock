@@ -18,7 +18,7 @@ export const ProfilePageHeader: React.FC<ProfilePageHeaderProps> = ({
   const isOwnProfile = useMemo(() => {
     return payload?.userId === userId;
   }, [payload, userId]);
-  const isAdmin = useIsAdmin({
+  const { data: isAdmin } = useIsAdmin({
     query: {
       enabled: isOwnProfile,
     },
