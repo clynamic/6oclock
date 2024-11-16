@@ -1,13 +1,15 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import {
   DashboardConfigType,
   DashboardUpdate,
+  getDashboardQueryKey,
   useDashboard as useRemoteDashboard,
   useUpdateDashboard,
 } from '../api';
-import { DashboardProvider } from './DashboardContext';
+import { DashboardConfig, DashboardProvider } from './DashboardContext';
 import { buildCatalogLayouts, DashboardCatalog } from './DashboardItem';
 
 export interface RemoteDashboardProviderProps {
@@ -20,20 +22,23 @@ export interface RemoteDashboardProviderProps {
 export const RemoteDashboardProvider: React.FC<
   RemoteDashboardProviderProps
 > = ({ children, type, catalog, version }) => {
-  const { data, isLoading, isError, error, refetch } = useRemoteDashboard(
-    type,
-    {
-      query: {
-        retry: (failureCount, error) => {
-          if (error instanceof AxiosError && error.response?.status === 404) {
-            return false;
-          }
-          return failureCount < 3;
-        },
+  const {
+    data: remoteData,
+    isLoading,
+    error: remoteError,
+    refetch,
+  } = useRemoteDashboard(type, {
+    query: {
+      retry: (failureCount, error) => {
+        if (error instanceof AxiosError && error.response?.status === 404) {
+          return false;
+        }
+        return failureCount < 3;
       },
     },
-  );
+  });
   const { mutateAsync } = useUpdateDashboard();
+  const queryClient = useQueryClient();
 
   const saveConfig = useCallback(
     async (update: DashboardUpdate) => {
@@ -46,24 +51,43 @@ export const RemoteDashboardProvider: React.FC<
     [mutateAsync, refetch, type],
   );
 
-  useEffect(() => {
+  const data = useMemo<DashboardConfig | undefined>(() => {
     if (
-      error &&
-      error instanceof AxiosError &&
-      error.response?.status === 404
+      remoteError &&
+      remoteError instanceof AxiosError &&
+      remoteError.response?.status === 404
     ) {
-      saveConfig({
+      const initial: DashboardConfig = {
+        version: version ?? 1,
         positions: buildCatalogLayouts(catalog),
-      }).then(() => refetch());
+        meta: {},
+      };
+      queryClient.setQueryData(getDashboardQueryKey(type), initial);
+      return initial;
+    } else if (remoteData) {
+      return remoteData;
+    } else {
+      return undefined;
     }
-  }, [catalog, error, refetch, saveConfig]);
+  }, [remoteError, remoteData, version, catalog, queryClient, type]);
+
+  const error = useMemo(() => {
+    if (
+      remoteError &&
+      remoteError instanceof AxiosError &&
+      remoteError.response?.status === 404
+    ) {
+      return undefined;
+    }
+    return remoteError;
+  }, [remoteError]);
 
   return (
     <DashboardProvider
       data={data}
       updateData={saveConfig}
       isLoading={isLoading}
-      isError={isError}
+      isError={!!error}
       error={error}
       catalog={catalog}
       version={version}
