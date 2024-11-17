@@ -3,6 +3,7 @@ import { PropsWithChildren, useMemo } from 'react';
 import { BarChartSkeleton } from './BarChartSkeleton';
 import ErrorBoundary from './ErrorBoundary';
 import { ErrorHint } from './ErrorHint';
+import { LineChartSkeleton } from './LineChartSkeleton';
 import { LoadingHint } from './LoadingHint';
 import { NoDataHint } from './NoDataHint';
 import { PieChartSkeleton } from './PieChartSkeleton';
@@ -56,8 +57,11 @@ export const QueryHint: React.FC<PropsWithChildren<QueryHintProps>> = ({
     switch (type) {
       case 'bars':
         return <BarChartSkeleton />;
+      case 'lines':
+        return <LineChartSkeleton />;
       case 'pie':
         return <PieChartSkeleton />;
+
       default:
         return <LoadingHint />;
     }
