@@ -3,14 +3,14 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.3
+ * OpenAPI spec version: 0.0.4
  */
 
-export type GetFeedbackTypeSummaryScale =
-  (typeof GetFeedbackTypeSummaryScale)[keyof typeof GetFeedbackTypeSummaryScale];
+export type GetFeedbackTypeSeriesScale =
+  (typeof GetFeedbackTypeSeriesScale)[keyof typeof GetFeedbackTypeSeriesScale];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const GetFeedbackTypeSummaryScale = {
+export const GetFeedbackTypeSeriesScale = {
   minute: 'minute',
   hour: 'hour',
   day: 'day',
