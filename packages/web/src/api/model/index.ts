@@ -3,7 +3,7 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.3
+ * OpenAPI spec version: 0.0.4
  */
 
 export * from './approvalCountSummary';
@@ -15,9 +15,7 @@ export * from './dashboardPosition';
 export * from './dashboardPositions';
 export * from './dashboardUpdate';
 export * from './dashboardUpdateMeta';
-export * from './feedbackCountGroup';
-export * from './feedbackCountSeriesPoint';
-export * from './feedbackTypeSummary';
+export * from './feedbackTypeSeriesPoint';
 export * from './getApprovalActivitySeriesParams';
 export * from './getApprovalActivitySeriesScale';
 export * from './getApprovalActivitySummaryByApproverParams';
@@ -38,10 +36,8 @@ export * from './getDeletionCountSeriesParams';
 export * from './getDeletionCountSeriesScale';
 export * from './getDeletionSeriesByDeleterParams';
 export * from './getDeletionSeriesByDeleterScale';
-export * from './getFeedbackCountSeriesParams';
-export * from './getFeedbackCountSeriesScale';
-export * from './getFeedbackTypeSummaryParams';
-export * from './getFeedbackTypeSummaryScale';
+export * from './getFeedbackTypeSeriesParams';
+export * from './getFeedbackTypeSeriesScale';
 export * from './getJobsParams';
 export * from './getPermitCountParams';
 export * from './getPermitCountScale';

@@ -2020,11 +2020,11 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/metrics/feedbacks/type/summary": {
+    "/metrics/feedbacks/type": {
       "get": {
-        "operationId": "getFeedbackTypeSummary",
-        "summary": "Feedback type summary",
-        "description": "Get feedback types counts for a given date range",
+        "operationId": "getFeedbackTypeSeries",
+        "summary": "Feedback Type Series",
+        "description": "Get a time series of feedback types counts for a given range",
         "parameters": [
           {
             "name": "startDate",
@@ -2061,63 +2061,18 @@
               ],
               "type": "string"
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/FeedbackTypeSummary" }
-              }
-            }
-          }
-        },
-        "tags": ["Feedbacks"],
-        "security": [{ "bearer": [] }]
-      }
-    },
-    "/metrics/feedbacks/count/series": {
-      "get": {
-        "operationId": "getFeedbackCountSeries",
-        "summary": "Feedback count series",
-        "description": "Get a time series of feedback counts for a given date range",
-        "parameters": [
-          {
-            "name": "startDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
           },
           {
-            "name": "endDate",
+            "name": "creatorId",
             "required": false,
             "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
+            "schema": { "type": "number" }
           },
           {
-            "name": "timezone",
+            "name": "userId",
             "required": false,
             "in": "query",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
+            "schema": { "type": "number" }
           }
         ],
         "responses": {
@@ -2128,7 +2083,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FeedbackCountSeriesPoint"
+                    "$ref": "#/components/schemas/FeedbackTypeSeriesPoint"
                   }
                 }
               }
@@ -2350,7 +2305,7 @@
   "info": {
     "title": "5-thirty",
     "description": "backend data aggregate for 6 o'clock",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "contact": {}
   },
   "tags": [],
@@ -2657,31 +2612,15 @@
         },
         "required": ["pending", "approved", "deleted", "permitted"]
       },
-      "FeedbackTypeSummary": {
-        "type": "object",
-        "properties": {
-          "negative": { "type": "number" },
-          "neutral": { "type": "number" },
-          "positive": { "type": "number" }
-        },
-        "required": ["negative", "neutral", "positive"]
-      },
-      "FeedbackCountGroup": {
-        "type": "object",
-        "properties": {
-          "negative": { "type": "number" },
-          "neutral": { "type": "number" },
-          "positive": { "type": "number" }
-        },
-        "required": ["negative", "neutral", "positive"]
-      },
-      "FeedbackCountSeriesPoint": {
+      "FeedbackTypeSeriesPoint": {
         "type": "object",
         "properties": {
           "date": { "format": "date-time", "type": "string" },
-          "groups": { "$ref": "#/components/schemas/FeedbackCountGroup" }
+          "negative": { "type": "number" },
+          "neutral": { "type": "number" },
+          "positive": { "type": "number" }
         },
-        "required": ["date", "groups"]
+        "required": ["date", "negative", "neutral", "positive"]
       },
       "PostUploaderSummary": {
         "type": "object",

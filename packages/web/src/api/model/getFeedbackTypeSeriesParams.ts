@@ -5,11 +5,13 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.4
  */
-import type { GetPostPendingSeriesScale } from './getPostPendingSeriesScale';
+import type { GetFeedbackTypeSeriesScale } from './getFeedbackTypeSeriesScale';
 
-export type GetPostPendingSeriesParams = {
+export type GetFeedbackTypeSeriesParams = {
   startDate?: Date;
   endDate?: Date;
   timezone?: string;
-  scale?: GetPostPendingSeriesScale;
+  scale?: GetFeedbackTypeSeriesScale;
+  creatorId?: number;
+  userId?: number;
 };
