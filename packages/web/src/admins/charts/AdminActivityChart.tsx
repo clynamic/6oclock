@@ -44,14 +44,11 @@ export const AdminActivitySummaryByAdminChart: React.FC = () => {
   );
 
   const dataset = useMemo(() => {
-    return mergePointSeries(
-      {
-        tickets: ticketData || [],
-        approved: approvalData || [],
-        deleted: deletionData || [],
-      },
-      'time',
-    ).map((e) => ({
+    return mergePointSeries({
+      tickets: ticketData || [],
+      approved: approvalData || [],
+      deleted: deletionData || [],
+    }).map((e) => ({
       date: e.date,
       value: e.tickets + e.approved + e.deleted,
     }));
