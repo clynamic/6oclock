@@ -206,6 +206,27 @@
         "security": [{ "bearer": [] }]
       }
     },
+    "/dashboards/{type}/delete": {
+      "post": {
+        "operationId": "deleteDashboard",
+        "summary": "Delete dashboard",
+        "description": "Delete dashboard by type, for the current user",
+        "parameters": [
+          {
+            "name": "type",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Dashboard deleted" },
+          "201": { "description": "" }
+        },
+        "tags": ["Dashboards"],
+        "security": [{ "bearer": [] }]
+      }
+    },
     "/manifests/{id}": {
       "get": {
         "operationId": "getManifest",
