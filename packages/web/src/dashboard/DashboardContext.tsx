@@ -32,6 +32,7 @@ interface DashboardContextType {
   error?: unknown;
   setConfig: (config: DashboardConfig) => void;
   saveConfig: (update: DashboardUpdate) => Promise<void>;
+  resetConfig: () => void;
   isEditing: boolean;
   setIsEditing: (isEditing: boolean) => void;
 }
@@ -49,6 +50,7 @@ export interface DashboardConfig {
 export interface DashboardProviderProps {
   data?: DashboardConfig;
   updateData?: (data: DashboardUpdate) => Promise<void>;
+  deleteData?: () => Promise<void>;
   isLoading?: boolean;
   isError?: boolean;
   error?: unknown;
@@ -60,6 +62,7 @@ export interface DashboardProviderProps {
 export const DashboardProvider: React.FC<DashboardProviderProps> = ({
   data,
   updateData,
+  deleteData,
   isLoading,
   isError,
   error,
@@ -68,12 +71,18 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
   version,
 }) => {
   const [config, setConfig] = useState<DashboardConfig | undefined>(data);
+  const [initalConfig, setInitialConfig] = useState<
+    DashboardConfig | undefined
+  >(data);
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   useEffect(() => {
     setConfig(data);
-  }, [data]);
+    if (!initalConfig) {
+      setInitialConfig(data);
+    }
+  }, [data, initalConfig]);
 
   const saveConfig = useCallback(
     async (update: DashboardUpdate) => {
@@ -93,6 +102,14 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
     },
     [config, updateData],
   );
+
+  const resetConfig = useCallback(() => {
+    if (deleteData) {
+      deleteData();
+    } else {
+      setConfig(initalConfig);
+    }
+  }, [deleteData, initalConfig]);
 
   const {
     breakpoints: { keys: breakpoints },
@@ -131,6 +148,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
         error,
         setConfig,
         saveConfig,
+        resetConfig,
         isEditing,
         setIsEditing,
       }}

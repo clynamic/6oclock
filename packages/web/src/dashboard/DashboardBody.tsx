@@ -18,7 +18,6 @@ import { LoadingHint } from '../common/LoadingHint';
 import { DashboardCard } from './DashboardCard';
 import { useDashboard } from './DashboardContext';
 import { DashboardGrid } from './DashboardGrid';
-import { buildCatalogLayouts } from './DashboardItem';
 
 export const DashboardBody = () => {
   const {
@@ -29,16 +28,14 @@ export const DashboardBody = () => {
     version,
     setConfig,
     saveConfig,
+    resetConfig,
     isLoading,
     error,
   } = useDashboard();
 
-  const updateDashboard = useCallback(() => {
-    saveConfig({
-      positions: buildCatalogLayouts(catalog),
-      version: version,
-    });
-  }, [catalog, saveConfig, version]);
+  const resetDashboard = useCallback(() => {
+    resetConfig();
+  }, [resetConfig]);
 
   const ignoreVersionChange = useCallback(() => {
     saveConfig({
@@ -61,7 +58,7 @@ export const DashboardBody = () => {
             icon={<NewReleasesOutlined />}
             action={
               <Stack direction="row" gap={1}>
-                <Button color="inherit" size="small" onClick={updateDashboard}>
+                <Button color="inherit" size="small" onClick={resetDashboard}>
                   Reset
                 </Button>
                 <IconButton size="small" onClick={ignoreVersionChange}>
