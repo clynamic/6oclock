@@ -18,4 +18,5 @@ export const ManifestType = {
   flags: 'flags',
   feedbacks: 'feedbacks',
   post_versions: 'post_versions',
+  post_replacements: 'post_replacements',
 } as const;
