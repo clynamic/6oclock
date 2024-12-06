@@ -44,13 +44,10 @@ export const ApprovalActivitySummaryByApproverChart: React.FC = () => {
   );
 
   const dataset = useMemo(() => {
-    return mergePointSeries(
-      {
-        approved: approvalData || [],
-        deleted: deletionData || [],
-      },
-      'time',
-    ).map((e) => ({
+    return mergePointSeries({
+      approved: approvalData || [],
+      deleted: deletionData || [],
+    }).map((e) => ({
       date: e.date,
       value: e.approved + e.deleted,
     }));

@@ -315,7 +315,8 @@
                   "user_profiles",
                   "flags",
                   "feedbacks",
-                  "post_versions"
+                  "post_versions",
+                  "post_replacements"
                 ]
               }
             }
@@ -2094,6 +2095,128 @@
         "security": [{ "bearer": [] }]
       }
     },
+    "/metrics/post-replacements/created": {
+      "get": {
+        "operationId": "getPostReplacementCreated",
+        "summary": "Post replacements created",
+        "description": "Get post replacements created counts for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Replacements"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/metrics/post-replacements/status": {
+      "get": {
+        "operationId": "getPostReplacementStatus",
+        "summary": "Post replacement status",
+        "description": "Get post replacement status (pending, approved, partial) counts for a given date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "minute",
+                "hour",
+                "day",
+                "week",
+                "month",
+                "year",
+                "decade",
+                "all"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostReplacementStatusPoint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Replacements"],
+        "security": [{ "bearer": [] }]
+      }
+    },
     "/metrics/uploads/count": {
       "get": {
         "operationId": "getUploadCount",
@@ -2367,7 +2490,8 @@
               "user_profiles",
               "flags",
               "feedbacks",
-              "post_versions"
+              "post_versions",
+              "post_replacements"
             ]
           },
           "startDate": { "format": "date-time", "type": "string" },
@@ -2464,7 +2588,8 @@
               "user_profiles",
               "flags",
               "feedbacks",
-              "post_versions"
+              "post_versions",
+              "post_replacements"
             ],
             "type": "string"
           },
@@ -2621,6 +2746,17 @@
           "positive": { "type": "number" }
         },
         "required": ["date", "negative", "neutral", "positive"]
+      },
+      "PostReplacementStatusPoint": {
+        "type": "object",
+        "properties": {
+          "date": { "format": "date-time", "type": "string" },
+          "pending": { "type": "number" },
+          "rejected": { "type": "number" },
+          "approved": { "type": "number" },
+          "promoted": { "type": "number" }
+        },
+        "required": ["date", "pending", "rejected", "approved", "promoted"]
       },
       "PostUploaderSummary": {
         "type": "object",

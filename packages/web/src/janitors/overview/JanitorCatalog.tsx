@@ -1,11 +1,14 @@
 import { createSimpleLayout, DashboardCatalog } from '../../dashboard';
 import { ApproverBoard } from '../approvals';
-import { PostStatusCountSeriesChart } from '../charts';
+import {
+  PostReplacementStatusSeriesChart,
+  PostStatusCountSeriesChart,
+} from '../charts';
 import { PostPendingSeriesChart } from '../charts/PostPendingSeriesChart';
 import { PostStatusSummaryChart } from '../charts/PostStatusSummaryChart';
 import { PostUploaderBoard } from '../uploads';
 
-export const janitorDashboardCatalogVersion = 2;
+export const janitorDashboardCatalogVersion = 3;
 
 export const janitorDashboardCatalog: DashboardCatalog = {
   approvalsLeaderboard: {
@@ -128,5 +131,28 @@ export const janitorDashboardCatalog: DashboardCatalog = {
     ),
     card: { title: 'Frontline' },
     component: PostPendingSeriesChart,
+  },
+  postReplacements: {
+    name: 'Post Replacement Status',
+    defaultLayout: createSimpleLayout(
+      {
+        x: 12,
+        y: 16,
+        w: 4,
+        h: 5,
+        minW: 4,
+        minH: 3,
+        maxH: 9,
+      },
+      {
+        xs: { x: 0, y: 23, w: 4, h: 6 },
+        sm: { x: 0, y: 21, w: 6, h: 5 },
+        md: { x: 0, y: 11, w: 5, h: 6 },
+        lg: { x: 3, y: 6, w: 5, h: 6 },
+        xl: { x: 4, y: 6, w: 7, h: 6 },
+      },
+    ),
+    card: { title: 'Replacements' },
+    component: PostReplacementStatusSeriesChart,
   },
 };
