@@ -222,3 +222,73 @@ export const useUpdateDashboard = <
 
   return useMutation(mutationOptions);
 };
+/**
+ * Delete dashboard by type, for the current user
+ * @summary Delete dashboard
+ */
+export const deleteDashboard = (type: string) => {
+  return makeRequest<void>({
+    url: `/dashboards/${encodeURIComponent(String(type))}/delete`,
+    method: 'POST',
+  });
+};
+
+export const getDeleteDashboardMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteDashboard>>,
+    TError,
+    { type: string },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteDashboard>>,
+  TError,
+  { type: string },
+  TContext
+> => {
+  const { mutation: mutationOptions } = options ?? {};
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteDashboard>>,
+    { type: string }
+  > = (props) => {
+    const { type } = props ?? {};
+
+    return deleteDashboard(type);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteDashboardMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteDashboard>>
+>;
+
+export type DeleteDashboardMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Delete dashboard
+ */
+export const useDeleteDashboard = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteDashboard>>,
+    TError,
+    { type: string },
+    TContext
+  >;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteDashboard>>,
+  TError,
+  { type: string },
+  TContext
+> => {
+  const mutationOptions = getDeleteDashboardMutationOptions(options);
+
+  return useMutation(mutationOptions);
+};

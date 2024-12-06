@@ -7,6 +7,7 @@ import {
   DashboardUpdate,
   getDashboardQueryKey,
   useDashboard as useRemoteDashboard,
+  useDeleteDashboard,
   useUpdateDashboard,
 } from '../api';
 import { DashboardConfig, DashboardProvider } from './DashboardContext';
@@ -37,19 +38,27 @@ export const RemoteDashboardProvider: React.FC<
       },
     },
   });
-  const { mutateAsync } = useUpdateDashboard();
+  const { mutateAsync: updateDashboard } = useUpdateDashboard();
+  const { mutateAsync: deleteDashboard } = useDeleteDashboard();
   const queryClient = useQueryClient();
 
   const saveConfig = useCallback(
     async (update: DashboardUpdate) => {
-      await mutateAsync({
+      await updateDashboard({
         type,
         data: update,
       });
       await refetch();
     },
-    [mutateAsync, refetch, type],
+    [updateDashboard, refetch, type],
   );
+
+  const deleteData = useCallback(async () => {
+    await deleteDashboard({
+      type,
+    });
+    await refetch();
+  }, [deleteDashboard, refetch, type]);
 
   const data = useMemo<DashboardConfig | undefined>(() => {
     if (
@@ -86,6 +95,7 @@ export const RemoteDashboardProvider: React.FC<
     <DashboardProvider
       data={data}
       updateData={saveConfig}
+      deleteData={deleteData}
       isLoading={isLoading}
       isError={!!error}
       error={error}
