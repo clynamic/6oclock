@@ -1,0 +1,98 @@
+import { useTheme } from '@mui/material';
+import { BarChart } from '@mui/x-charts';
+import { DateTime } from 'luxon';
+import { useMemo } from 'react';
+
+import {
+  PostReplacementStatusPoint,
+  usePostReplacementCreated,
+  usePostReplacementStatus,
+} from '../../api';
+import { QueryHint } from '../../common';
+import {
+  addToMergedSeries,
+  refetchQueryOptions,
+  SeriesChartProps,
+  useChartDateRange,
+} from '../../utils';
+
+export const PostReplacementStatusSeriesChart: React.FC = () => {
+  const theme = useTheme();
+  const range = useChartDateRange();
+
+  const {
+    data: statusData,
+    isLoading: statusLoading,
+    error: statusError,
+  } = usePostReplacementStatus(range, refetchQueryOptions());
+
+  const {
+    data: createdData,
+    isLoading: createdLoading,
+    error: createdError,
+  } = usePostReplacementCreated(range, refetchQueryOptions());
+
+  const dataset = useMemo(() => {
+    return addToMergedSeries<
+      // it is inconvenient that we have to define this type manually.
+      // however, we have not found a way to infere it correctly in [addToMergedSeries]
+      keyof Omit<PostReplacementStatusPoint, 'date'>,
+      'created'
+    >(statusData || [], 'created', createdData || []);
+  }, [statusData, createdData]);
+
+  const chartProps: SeriesChartProps = {
+    dataset: dataset,
+    loading: statusLoading || createdLoading,
+    xAxis: [
+      {
+        scaleType: 'band',
+        dataKey: 'date',
+        valueFormatter: (value) =>
+          DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
+      },
+    ],
+    series: [
+      {
+        dataKey: 'created',
+        label: 'Created',
+        color: theme.palette.primary.main,
+        stack: 'created',
+      },
+      {
+        dataKey: 'approved',
+        label: 'Approved',
+        color: theme.palette.success.main,
+        stack: 'handled',
+      },
+      {
+        dataKey: 'promoted',
+        label: 'Promoted',
+        color: theme.palette.success.light,
+        stack: 'handled',
+      },
+      {
+        dataKey: 'rejected',
+        label: 'Rejected',
+        color: theme.palette.error.main,
+        stack: 'handled',
+      },
+    ],
+    slotProps: {
+      noDataOverlay: {
+        message: 'No data',
+      },
+    },
+  };
+
+  return (
+    <QueryHint
+      data={[statusData, createdData]}
+      isLoading={[statusLoading, createdLoading]}
+      error={[statusError, createdError]}
+      type="bars"
+    >
+      <BarChart {...chartProps} />
+    </QueryHint>
+  );
+};

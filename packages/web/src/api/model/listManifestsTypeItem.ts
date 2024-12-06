@@ -19,4 +19,5 @@ export const ListManifestsTypeItem = {
   flags: 'flags',
   feedbacks: 'feedbacks',
   post_versions: 'post_versions',
+  post_replacements: 'post_replacements',
 } as const;

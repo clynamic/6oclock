@@ -1,46 +1,63 @@
-import { DateTime } from 'luxon';
+import { SeriesCountPoint } from '../api';
 
-export interface SeriesPoint {
-  date: Date;
-  value: number;
-}
-
-export type MergedSeriesPoint<T extends string> = { date: Date } & Record<
+export type SeriesRecordPoint<T extends string> = { date: Date } & Record<
   T,
   number
 >;
 
 export const mergePointSeries = <T extends string>(
-  seriesRecord: Record<T, SeriesPoint[]>,
-  granularity: 'time' | 'date' = 'date',
-): MergedSeriesPoint<T>[] => {
-  const dateMap: Record<string, MergedSeriesPoint<T>> = {};
-
-  const dateString = (date: Date) => {
-    if (granularity === 'time') {
-      return DateTime.fromJSDate(date).toISO()!;
-    }
-    return DateTime.fromJSDate(date).toISODate()!;
-  };
+  seriesRecord: Record<T, SeriesCountPoint[]>,
+): SeriesRecordPoint<T>[] => {
+  const result: Record<string, SeriesRecordPoint<T>> = {};
 
   for (const [seriesName, points] of Object.entries(seriesRecord) as [
     T,
-    SeriesPoint[],
+    SeriesCountPoint[],
   ][]) {
     for (const point of points) {
-      const date = dateString(point.date);
-      if (!dateMap[date]) {
-        dateMap[date] = { date: point.date } as MergedSeriesPoint<T>;
+      const key = point.date.toISOString();
+      if (!result[key]) {
+        result[key] = { date: point.date } as SeriesRecordPoint<T>;
       }
       for (const series of Object.keys(seriesRecord) as T[]) {
-        if (dateMap[date][series] === undefined) {
-          dateMap[date][series] = 0 as MergedSeriesPoint<T>[T];
+        if (result[key][series] === undefined) {
+          result[key][series] = 0 as SeriesRecordPoint<T>[T];
         }
       }
-      dateMap[date][seriesName] = (dateMap[date][seriesName] +
-        point.value) as MergedSeriesPoint<T>[T];
+      result[key][seriesName] = (result[key][seriesName] +
+        point.value) as SeriesRecordPoint<T>[T];
     }
   }
 
-  return Object.values(dateMap);
+  return Object.values(result);
+};
+
+export const addToMergedSeries = <O extends string, T extends string>(
+  mergedSeries: SeriesRecordPoint<O>[],
+  seriesName: T,
+  seriesRecord: SeriesCountPoint[],
+): SeriesRecordPoint<O | T>[] => {
+  const result: Record<string, SeriesRecordPoint<O | T>> = {};
+
+  for (const point of mergedSeries) {
+    const key = point.date.toISOString();
+    result[key] = { ...point } as SeriesRecordPoint<O | T>;
+  }
+
+  for (const point of seriesRecord) {
+    const key = point.date.toISOString();
+    if (!result[key]) {
+      result[key] = { date: point.date } as SeriesRecordPoint<O | T>;
+    }
+    (result[key] as Record<string, number>)[seriesName] =
+      ((result[key][seriesName] as number | undefined) || 0) + point.value;
+
+    for (const existingKey of Object.keys(result[key]) as (O | T)[]) {
+      if (existingKey !== 'date' && result[key][existingKey] === undefined) {
+        (result[key] as Record<string, number>)[existingKey] = 0;
+      }
+    }
+  }
+
+  return Object.values(result);
 };

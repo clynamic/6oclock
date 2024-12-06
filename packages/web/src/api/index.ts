@@ -9,6 +9,7 @@ export * from './tickets';
 export * from './posts';
 export * from './deletions';
 export * from './feedbacks';
+export * from './replacements';
 export * from './uploads';
 export * from './permits';
 export * from './model';
