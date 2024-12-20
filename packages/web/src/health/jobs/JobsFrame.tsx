@@ -3,6 +3,7 @@ import {
   Cancel,
   Check,
   ErrorOutline,
+  HourglassDisabled,
   HourglassTop,
   Schedule,
 } from '@mui/icons-material';
@@ -41,6 +42,8 @@ export const JobsFrame: React.FC<JobsFrameProps> = ({ job }) => {
             icon={
               job.succeeded ? (
                 <Check />
+              ) : job.timedOut ? (
+                <HourglassDisabled />
               ) : job.cancelled ? (
                 <Cancel />
               ) : job.failed ? (
@@ -54,13 +57,15 @@ export const JobsFrame: React.FC<JobsFrameProps> = ({ job }) => {
             label={
               job.succeeded
                 ? 'Succeeded'
-                : job.cancelled
-                  ? 'Cancelled'
-                  : job.failed
-                    ? 'Failed'
-                    : job.startedAt
-                      ? 'Running'
-                      : 'Pending'
+                : job.timedOut
+                  ? 'Timed Out'
+                  : job.cancelled
+                    ? 'Cancelled'
+                    : job.failed
+                      ? 'Failed'
+                      : job.startedAt
+                        ? 'Running'
+                        : 'Pending'
             }
             color={
               job.succeeded
