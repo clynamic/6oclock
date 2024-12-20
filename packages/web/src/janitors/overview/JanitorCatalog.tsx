@@ -1,4 +1,4 @@
-import { createSimpleLayout, DashboardCatalog } from '../../dashboard';
+import { createLayout, DashboardCatalog } from '../../dashboard';
 import { ApproverBoard } from '../approvals';
 import {
   PostReplacementStatusSeriesChart,
@@ -14,12 +14,8 @@ export const janitorDashboardCatalog: DashboardCatalog = {
   approvalsLeaderboard: {
     name: 'Top Approvers',
     component: ApproverBoard,
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 0,
-        y: 0,
-        w: 4,
-        h: 18,
         minW: 3,
         maxW: 6,
         minH: 9,
@@ -41,12 +37,8 @@ export const janitorDashboardCatalog: DashboardCatalog = {
   postStatus: {
     name: 'Post Status Summary',
     component: PostStatusSummaryChart,
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 6,
-        y: 0,
-        w: 5,
-        h: 5,
         minW: 3,
         maxW: 8,
         minH: 4,
@@ -65,12 +57,8 @@ export const janitorDashboardCatalog: DashboardCatalog = {
   postTurnaround: {
     name: 'Posts Approved/Deleted',
     component: PostStatusCountSeriesChart,
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 0,
-        y: 11,
-        w: 8,
-        h: 5,
         minW: 4,
         minH: 3,
         maxH: 9,
@@ -87,12 +75,8 @@ export const janitorDashboardCatalog: DashboardCatalog = {
   },
   postUploaders: {
     name: 'Top Post Uploaders',
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 8,
-        y: 11,
-        w: 4,
-        h: 13,
         minW: 2,
         maxW: 4,
         minH: 7,
@@ -111,12 +95,8 @@ export const janitorDashboardCatalog: DashboardCatalog = {
   },
   postsPending: {
     name: 'Posts Pending by Day',
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 12,
-        y: 11,
-        w: 4,
-        h: 5,
         minW: 4,
         minH: 3,
         maxH: 9,
@@ -134,12 +114,8 @@ export const janitorDashboardCatalog: DashboardCatalog = {
   },
   postReplacements: {
     name: 'Post Replacement Status',
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 12,
-        y: 16,
-        w: 4,
-        h: 5,
         minW: 4,
         minH: 3,
         maxH: 9,

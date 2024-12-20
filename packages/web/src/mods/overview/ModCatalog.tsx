@@ -1,4 +1,4 @@
-import { createSimpleLayout, DashboardCatalog } from '../../dashboard';
+import { createLayout, DashboardCatalog } from '../../dashboard';
 import {
   TicketOpenSeriesChart,
   TicketStatusSeriesChart,
@@ -13,12 +13,8 @@ export const modDashoardCatalogVersion = 2;
 export const modDashboardCatalog: DashboardCatalog = {
   ticketLeaderboard: {
     name: 'Top Ticket Handlers',
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 0,
-        y: 0,
-        w: 6,
-        h: 11,
         minW: 3,
         maxW: 6,
         minH: 9,
@@ -40,12 +36,8 @@ export const modDashboardCatalog: DashboardCatalog = {
   },
   ticketStatus: {
     name: 'All Tickets Status',
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 6,
-        y: 0,
-        w: 5,
-        h: 5,
         minW: 3,
         maxW: 8,
         minH: 4,
@@ -64,12 +56,8 @@ export const modDashboardCatalog: DashboardCatalog = {
   },
   ticketType: {
     name: 'All Tickets Type',
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 11,
-        y: 0,
-        w: 5,
-        h: 6,
         minW: 3,
         maxW: 8,
         minH: 4,
@@ -88,12 +76,8 @@ export const modDashboardCatalog: DashboardCatalog = {
   },
   ticketTurnaround: {
     name: 'Tickets Opened/Closed by Day',
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 0,
-        y: 11,
-        w: 8,
-        h: 5,
         minW: 4,
         minH: 3,
         maxH: 9,
@@ -111,12 +95,8 @@ export const modDashboardCatalog: DashboardCatalog = {
   },
   ticketReporters: {
     name: 'Top Ticket Reporters',
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 8,
-        y: 11,
-        w: 4,
-        h: 11,
         minW: 2,
         maxW: 4,
         minH: 7,
@@ -135,12 +115,8 @@ export const modDashboardCatalog: DashboardCatalog = {
   },
   ticketsOpened: {
     name: 'Tickets Open by Day',
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 12,
-        y: 11,
-        w: 4,
-        h: 5,
         minW: 4,
         minH: 3,
         maxH: 9,
