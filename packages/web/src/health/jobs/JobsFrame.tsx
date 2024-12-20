@@ -1,8 +1,8 @@
 import {
-  CalendarMonth,
   Cancel,
   Check,
   ErrorOutline,
+  Event,
   HourglassDisabled,
   HourglassTop,
   Schedule,
@@ -29,7 +29,7 @@ export const JobsFrame: React.FC<JobsFrameProps> = ({ job }) => {
         </Stack>
         <Stack direction="row" gap={1} sx={{ flexWrap: 'wrap' }}>
           <Chip
-            icon={<CalendarMonth />}
+            icon={<Event />}
             label={
               job.endedAt
                 ? DateTime.fromJSDate(job.endedAt).toRelative()
