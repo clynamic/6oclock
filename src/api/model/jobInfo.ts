@@ -3,7 +3,7 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.4
+ * OpenAPI spec version: 0.0.5
  */
 
 export interface JobInfo {
@@ -14,5 +14,6 @@ export interface JobInfo {
   key?: string;
   startedAt?: Date;
   succeeded: boolean;
+  timedOut: boolean;
   title: string;
 }

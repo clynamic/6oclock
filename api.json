@@ -2449,7 +2449,7 @@
   "info": {
     "title": "5-thirty",
     "description": "backend data aggregate for 6 o'clock",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "contact": {}
   },
   "tags": [],
@@ -2482,9 +2482,17 @@
           "endedAt": { "format": "date-time", "type": "string" },
           "succeeded": { "type": "boolean" },
           "failed": { "type": "boolean" },
-          "cancelled": { "type": "boolean" }
+          "cancelled": { "type": "boolean" },
+          "timedOut": { "type": "boolean" }
         },
-        "required": ["id", "title", "succeeded", "failed", "cancelled"]
+        "required": [
+          "id",
+          "title",
+          "succeeded",
+          "failed",
+          "cancelled",
+          "timedOut"
+        ]
       },
       "ManifestSlice": {
         "type": "object",
