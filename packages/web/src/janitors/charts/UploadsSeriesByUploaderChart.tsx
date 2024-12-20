@@ -3,7 +3,7 @@ import { BarChart, LineChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
-import { useTicketCreatedSeriesByReporter } from '../../api';
+import { useUploadCount } from '../../api';
 import { QueryHint } from '../../common';
 import {
   refetchQueryOptions,
@@ -11,19 +11,21 @@ import {
   useChartParamsValue,
 } from '../../utils';
 
-export interface TicketReporterChartProps {
+export interface UploadsUploaderChartProps {
   variant?: 'bars' | 'lines';
 }
 
-export const TicketCreatedSeriesByReporterChart: React.FC<
-  TicketReporterChartProps
+export const UploadsSeriesByUploaderChart: React.FC<
+  UploadsUploaderChartProps
 > = ({ variant = 'bars' }) => {
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data, isLoading, error } = useTicketCreatedSeriesByReporter(
-    userId ?? 0,
-    range,
+  const { data, isLoading, error } = useUploadCount(
+    {
+      uploaderId: userId ?? 0,
+      ...range,
+    },
     refetchQueryOptions({
       enabled: !!userId,
     }),
@@ -42,7 +44,7 @@ export const TicketCreatedSeriesByReporterChart: React.FC<
     series: [
       {
         dataKey: 'value',
-        label: 'Created',
+        label: 'Uploads',
         color: theme.palette.primary.main,
       },
     ],
