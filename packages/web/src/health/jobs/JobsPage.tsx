@@ -8,7 +8,7 @@ import { JobsFrame } from './JobsFrame';
 export const JobsPage: React.FC = () => {
   const { data, ...query } = useJobsInfinite(undefined, {
     query: {
-      refetchInterval: 1000 * 60 * 5,
+      refetchInterval: 10000,
       initialPageParam: 1,
       getNextPageParam: (lastPage, _, i) => {
         if (lastPage.length === 0) {
