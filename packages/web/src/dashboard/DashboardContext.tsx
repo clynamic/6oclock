@@ -122,7 +122,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
           ...acc,
           [breakpoint]: config?.positions[breakpoint]
             ? config.positions[breakpoint].map<DashboardLayout>((position) => ({
-                ...catalog[position.i]?.defaultLayout[breakpoint],
+                ...catalog[position.i]?.layout[breakpoint],
                 ...position,
               }))
             : buildCatalogLayout(catalog, breakpoint),

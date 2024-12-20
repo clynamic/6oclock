@@ -1,3 +1,3 @@
 export * from './ProfilePage';
 export * from './ProfilePageHeader';
-export * from './UserProfileCatalog';
+export * from '../users/UserProfileCatalog';

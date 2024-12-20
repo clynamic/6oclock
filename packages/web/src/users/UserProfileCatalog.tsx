@@ -1,15 +1,11 @@
 import { UserCard } from '../common';
-import { createSimpleLayout, DashboardCatalog } from '../dashboard';
+import { createLayout, DashboardCatalog } from '../dashboard';
 
 export const userProfileCatalog: DashboardCatalog = {
   userHead: {
     name: 'User Head',
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 0,
-        y: 0,
-        w: 5,
-        h: 2,
         minW: 2,
         maxW: 5,
         minH: 2,
