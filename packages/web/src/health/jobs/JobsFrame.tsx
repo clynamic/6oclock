@@ -3,6 +3,7 @@ import {
   Cancel,
   Check,
   ErrorOutline,
+  HourglassTop,
   Schedule,
 } from '@mui/icons-material';
 import { Card, Chip, Stack, Typography } from '@mui/material';
@@ -33,7 +34,7 @@ export const JobsFrame: React.FC<JobsFrameProps> = ({ job }) => {
                 ? DateTime.fromJSDate(job.endedAt).toRelative()
                 : job.startedAt
                   ? DateTime.fromJSDate(job.startedAt).toRelative()
-                  : '...'
+                  : 'Upcoming'
             }
           />
           <Chip
@@ -44,6 +45,8 @@ export const JobsFrame: React.FC<JobsFrameProps> = ({ job }) => {
                 <Cancel />
               ) : job.failed ? (
                 <ErrorOutline />
+              ) : job.startedAt ? (
+                <HourglassTop />
               ) : (
                 <Schedule />
               )
@@ -55,14 +58,18 @@ export const JobsFrame: React.FC<JobsFrameProps> = ({ job }) => {
                   ? 'Cancelled'
                   : job.failed
                     ? 'Failed'
-                    : 'Running'
+                    : job.startedAt
+                      ? 'Running'
+                      : 'Pending'
             }
             color={
               job.succeeded
                 ? 'success'
                 : job.cancelled || job.failed
                   ? 'error'
-                  : 'warning'
+                  : job.startedAt
+                    ? 'warning'
+                    : 'info'
             }
           />
         </Stack>
