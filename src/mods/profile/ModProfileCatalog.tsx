@@ -1,5 +1,5 @@
 import { UserCard } from '../../common';
-import { createSimpleLayout, DashboardCatalog } from '../../dashboard';
+import { createLayout, DashboardCatalog } from '../../dashboard';
 import {
   TicketActivitySummaryByHandlerChart,
   TicketClosedSeriesByHandlerChart,
@@ -9,12 +9,8 @@ import {
 export const modProfileCatalog: DashboardCatalog = {
   userHead: {
     name: 'User Head',
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 0,
-        y: 0,
-        w: 5,
-        h: 2,
         minW: 2,
         maxW: undefined,
         minH: 2,
@@ -32,12 +28,8 @@ export const modProfileCatalog: DashboardCatalog = {
   },
   ticketTypes: {
     name: 'Ticket Types',
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 5,
-        y: 0,
-        w: 5,
-        h: 5,
         minW: 2,
         maxW: 6,
         minH: 2,
@@ -56,12 +48,8 @@ export const modProfileCatalog: DashboardCatalog = {
   },
   ticketsHandled: {
     name: 'Tickets Handled',
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 0,
-        y: 2,
-        w: 5,
-        h: 5,
         minW: 2,
         maxW: 6,
         minH: 2,
@@ -80,12 +68,8 @@ export const modProfileCatalog: DashboardCatalog = {
   },
   userActivity: {
     name: 'User Activity',
-    defaultLayout: createSimpleLayout(
+    layout: createLayout(
       {
-        x: 0,
-        y: 7,
-        w: 5,
-        h: 5,
         minW: 2,
         maxW: 6,
         minH: 2,

@@ -12,9 +12,9 @@ import {
 import { janitorProfileCatalog } from '../janitors';
 import { modProfileCatalog } from '../mods';
 import { Page, PageBody, PageFooter, PageTitle } from '../page';
+import { userProfileCatalog } from '../users';
 import { ChartParamsProvider, useChartParamsValue } from '../utils';
 import { ProfilePageHeader } from './ProfilePageHeader';
-import { userProfileCatalog } from './UserProfileCatalog';
 
 export const ProfilePage: React.FC = () => {
   const { id } = useParams();

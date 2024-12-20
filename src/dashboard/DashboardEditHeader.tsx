@@ -106,9 +106,7 @@ export const DashboardEditHeader: React.FC = () => {
                                       ...items,
                                       {
                                         i: key,
-                                        ...catalog[key].defaultLayout[
-                                          breakpoint!
-                                        ],
+                                        ...catalog[key].layout[breakpoint!],
                                       },
                                     ],
                                   };

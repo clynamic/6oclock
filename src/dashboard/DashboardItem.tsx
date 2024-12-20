@@ -23,7 +23,7 @@ export type DashboardItemLayouts = Record<string, DashboardItemLayout>;
 
 export type DashboardItemConfig = {
   name: string;
-  defaultLayout: DashboardItemLayouts;
+  layout: DashboardItemLayouts;
   card?: Omit<DashboardCardProps, 'children'>;
   component: React.FC;
 };
@@ -40,15 +40,28 @@ export const createSimpleLayout = (
   }, {} as DashboardItemLayouts);
 };
 
+export const createLayout = (
+  constraints: DashboardConstraints,
+  layouts: DashboardItemLayouts,
+) => {
+  return breakpoints.reduce((acc, breakpoint) => {
+    acc[breakpoint] = { ...constraints, ...layouts[breakpoint] };
+    return acc;
+  }, {} as DashboardItemLayouts);
+};
+
 export const buildCatalogLayout = (
   catalog: DashboardCatalog,
   breakpoint: Breakpoint,
 ): DashboardLayout[] => {
-  return Object.entries(catalog).reduce((acc, [key, { defaultLayout }]) => {
-    const layout = defaultLayout[breakpoint];
-    if (!layout) return acc;
-    return [...acc, { i: key, ...layout }];
-  }, [] as DashboardLayout[]);
+  return Object.entries(catalog).reduce(
+    (acc, [key, { layout: defaultLayout }]) => {
+      const layout = defaultLayout[breakpoint];
+      if (!layout) return acc;
+      return [...acc, { i: key, ...layout }];
+    },
+    [] as DashboardLayout[],
+  );
 };
 
 export const buildCatalogLayouts = (
