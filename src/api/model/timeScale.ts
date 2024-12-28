@@ -6,11 +6,10 @@
  * OpenAPI spec version: 0.0.5
  */
 
-export type GetDeletionActivitySummaryByDeleterScale =
-  (typeof GetDeletionActivitySummaryByDeleterScale)[keyof typeof GetDeletionActivitySummaryByDeleterScale];
+export type TimeScale = (typeof TimeScale)[keyof typeof TimeScale];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const GetDeletionActivitySummaryByDeleterScale = {
+export const TimeScale = {
   minute: 'minute',
   hour: 'hour',
   day: 'day',

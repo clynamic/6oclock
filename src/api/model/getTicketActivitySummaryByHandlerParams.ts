@@ -5,11 +5,12 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.5
  */
-import type { GetTicketActivitySummaryByHandlerScale } from './getTicketActivitySummaryByHandlerScale';
+import type { TimeScale } from './timeScale';
 
 export type GetTicketActivitySummaryByHandlerParams = {
+  scale?: TimeScale;
+  cycle?: TimeScale;
   startDate?: Date;
   endDate?: Date;
   timezone?: string;
-  scale?: GetTicketActivitySummaryByHandlerScale;
 };
