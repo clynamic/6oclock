@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.0.5
  */
 
+export * from './activitySeriesPoint';
 export * from './approvalCountSummary';
 export * from './approverSummary';
 export * from './dashboardConfig';
@@ -16,6 +17,9 @@ export * from './dashboardPositions';
 export * from './dashboardUpdate';
 export * from './dashboardUpdateMeta';
 export * from './feedbackTypeSeriesPoint';
+export * from './getActivitySeriesArea';
+export * from './getActivitySeriesParams';
+export * from './getActivitySeriesScale';
 export * from './getApprovalActivitySeriesParams';
 export * from './getApprovalActivitySeriesScale';
 export * from './getApprovalActivitySummaryByApproverParams';

@@ -1,7 +1,7 @@
 import { UserCard } from '../../common';
 import { createLayout, DashboardCatalog } from '../../dashboard';
+import { UserActivitySeriesChart } from '../../users';
 import {
-  TicketActivitySummaryByHandlerChart,
   TicketClosedSeriesByHandlerChart,
   TicketTypeSummaryByHandlerTypeChart,
 } from '../charts';
@@ -84,6 +84,6 @@ export const modProfileCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'User Activity' },
-    component: TicketActivitySummaryByHandlerChart,
+    component: () => <UserActivitySeriesChart area="moderator" />,
   },
 };

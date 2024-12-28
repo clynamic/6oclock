@@ -5,7 +5,7 @@ import {
   TicketClosedSeriesByHandlerChart,
   TicketTypeSummaryByHandlerTypeChart,
 } from '../../mods';
-import { AdminActivitySummaryByAdminChart } from '../charts';
+import { UserActivitySeriesChart } from '../../users';
 
 export const adminProfileCatalog: DashboardCatalog = {
   userHead: {
@@ -105,6 +105,6 @@ export const adminProfileCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'User Activity' },
-    component: AdminActivitySummaryByAdminChart,
+    component: () => <UserActivitySeriesChart area="admin" />,
   },
 };
