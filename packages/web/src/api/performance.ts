@@ -15,18 +15,15 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query';
-import type { ActivitySeriesPoint, GetActivitySeriesParams } from './model';
+import type { ActivitySeriesPoint, GetActivityParams } from './model';
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
 
 /**
- * Get activity series for a given date range
- * @summary Activity Series
+ * Get activity data for the specified range, scale, and cycle.
+ * @summary Activity
  */
-export const activitySeries = (
-  params?: GetActivitySeriesParams,
-  signal?: AbortSignal,
-) => {
+export const activity = (params?: GetActivityParams, signal?: AbortSignal) => {
   return makeRequest<ActivitySeriesPoint[]>({
     url: `/metrics/performance/activity`,
     method: 'GET',
@@ -35,56 +32,56 @@ export const activitySeries = (
   });
 };
 
-export const getActivitySeriesQueryKey = (params?: GetActivitySeriesParams) => {
+export const getActivityQueryKey = (params?: GetActivityParams) => {
   return [
     `/metrics/performance/activity`,
     ...(params ? [params] : []),
   ] as const;
 };
 
-export const getActivitySeriesQueryOptions = <
-  TData = Awaited<ReturnType<typeof activitySeries>>,
+export const getActivityQueryOptions = <
+  TData = Awaited<ReturnType<typeof activity>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetActivitySeriesParams,
+  params?: GetActivityParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof activitySeries>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
     >;
   },
 ) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getActivitySeriesQueryKey(params);
+  const queryKey = queryOptions?.queryKey ?? getActivityQueryKey(params);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof activitySeries>>> = ({
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof activity>>> = ({
     signal,
-  }) => activitySeries(params, signal);
+  }) => activity(params, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof activitySeries>>,
+    Awaited<ReturnType<typeof activity>>,
     TError,
     TData
   > & { queryKey: QueryKey };
 };
 
-export type ActivitySeriesQueryResult = NonNullable<
-  Awaited<ReturnType<typeof activitySeries>>
+export type ActivityQueryResult = NonNullable<
+  Awaited<ReturnType<typeof activity>>
 >;
-export type ActivitySeriesQueryError = ErrorType<unknown>;
+export type ActivityQueryError = ErrorType<unknown>;
 
-export function useActivitySeries<
-  TData = Awaited<ReturnType<typeof activitySeries>>,
+export function useActivity<
+  TData = Awaited<ReturnType<typeof activity>>,
   TError = ErrorType<unknown>,
 >(
-  params: undefined | GetActivitySeriesParams,
+  params: undefined | GetActivityParams,
   options: {
     query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof activitySeries>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof activitySeries>>,
+          Awaited<ReturnType<typeof activity>>,
           TError,
           TData
         >,
@@ -92,18 +89,18 @@ export function useActivitySeries<
       >;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useActivitySeries<
-  TData = Awaited<ReturnType<typeof activitySeries>>,
+export function useActivity<
+  TData = Awaited<ReturnType<typeof activity>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetActivitySeriesParams,
+  params?: GetActivityParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof activitySeries>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof activitySeries>>,
+          Awaited<ReturnType<typeof activity>>,
           TError,
           TData
         >,
@@ -111,33 +108,33 @@ export function useActivitySeries<
       >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useActivitySeries<
-  TData = Awaited<ReturnType<typeof activitySeries>>,
+export function useActivity<
+  TData = Awaited<ReturnType<typeof activity>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetActivitySeriesParams,
+  params?: GetActivityParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof activitySeries>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey };
 /**
- * @summary Activity Series
+ * @summary Activity
  */
 
-export function useActivitySeries<
-  TData = Awaited<ReturnType<typeof activitySeries>>,
+export function useActivity<
+  TData = Awaited<ReturnType<typeof activity>>,
   TError = ErrorType<unknown>,
 >(
-  params?: GetActivitySeriesParams,
+  params?: GetActivityParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof activitySeries>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
     >;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getActivitySeriesQueryOptions(params, options);
+  const queryOptions = getActivityQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

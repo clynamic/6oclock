@@ -5,11 +5,12 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.5
  */
-import type { GetTicketClosedSeriesScale } from './getTicketClosedSeriesScale';
+import type { TimeScale } from './timeScale';
 
 export type GetTicketClosedSeriesParams = {
+  scale?: TimeScale;
+  cycle?: TimeScale;
   startDate?: Date;
   endDate?: Date;
   timezone?: string;
-  scale?: GetTicketClosedSeriesScale;
 };

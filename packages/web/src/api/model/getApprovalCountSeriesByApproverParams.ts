@@ -5,11 +5,12 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.5
  */
-import type { GetApprovalCountSeriesByApproverScale } from './getApprovalCountSeriesByApproverScale';
+import type { TimeScale } from './timeScale';
 
 export type GetApprovalCountSeriesByApproverParams = {
+  scale?: TimeScale;
+  cycle?: TimeScale;
   startDate?: Date;
   endDate?: Date;
   timezone?: string;
-  scale?: GetApprovalCountSeriesByApproverScale;
 };

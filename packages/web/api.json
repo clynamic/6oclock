@@ -280,6 +280,18 @@
         "parameters": [
           {
             "required": true,
+            "name": "scale",
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "required": true,
+            "name": "cycle",
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "required": true,
             "name": "startDate",
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
@@ -295,24 +307,6 @@
             "name": "timezone",
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "required": true,
-            "name": "scale",
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           },
           {
             "required": false,
@@ -368,6 +362,18 @@
         "description": "Get total approval counts for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -384,24 +390,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -427,6 +415,18 @@
         "description": "Get a time series of approval counts for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -443,24 +443,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -493,6 +475,18 @@
             "schema": { "type": "number" }
           },
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -509,24 +503,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -553,6 +529,18 @@
         "description": "Get a hourly summary of approval activity for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -569,24 +557,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -619,6 +589,18 @@
             "schema": { "type": "number" }
           },
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -635,24 +617,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -679,6 +643,18 @@
         "description": "Get a summary of approvals by approver for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -695,24 +671,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           },
           {
             "name": "page",
@@ -785,6 +743,18 @@
         "description": "Get ticket status (pending, approved, partial) counts for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -801,24 +771,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -842,6 +794,18 @@
         "description": "Get ticket types counts for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -858,24 +822,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -905,6 +851,18 @@
             "schema": { "type": "number" }
           },
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -921,24 +879,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -962,6 +902,18 @@
         "description": "Get a time series of open tickets for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -978,24 +930,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1022,6 +956,18 @@
         "description": "Get a time series of created tickets for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1038,24 +984,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1088,6 +1016,18 @@
             "schema": { "type": "number" }
           },
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1104,24 +1044,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1148,6 +1070,18 @@
         "description": "Get a time series of closed tickets for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1164,24 +1098,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1214,6 +1130,18 @@
             "schema": { "type": "number" }
           },
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1230,24 +1158,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1274,6 +1184,18 @@
         "description": "Get a hourly summary of ticket activity for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1290,24 +1212,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1340,6 +1244,18 @@
             "schema": { "type": "number" }
           },
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1356,24 +1272,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1400,6 +1298,18 @@
         "description": "Get a time series of ticket ages for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1416,24 +1326,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1462,6 +1354,18 @@
         "description": "Get a summary of ticket ages for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1478,24 +1382,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1519,6 +1405,18 @@
         "description": "Get a summary of ticket handling counts for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1535,24 +1433,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           },
           {
             "name": "page",
@@ -1600,6 +1480,18 @@
         "description": "Get a summary of ticket reporting counts for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1616,24 +1508,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           },
           {
             "name": "page",
@@ -1681,6 +1555,18 @@
         "description": "Get post status (approved, deleted, permitted) counts for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1697,24 +1583,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1738,6 +1606,18 @@
         "description": "Get post pending series for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1754,24 +1634,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1798,6 +1660,18 @@
         "description": "Get a time series of post deletion counts for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1814,24 +1688,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1864,6 +1720,18 @@
             "schema": { "type": "number" }
           },
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1880,24 +1748,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1924,6 +1774,18 @@
         "description": "Get a hourly summary of post deletion counts for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -1940,24 +1802,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1990,6 +1834,18 @@
             "schema": { "type": "number" }
           },
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -2006,24 +1862,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -2050,6 +1888,18 @@
         "description": "Get a time series of feedback types counts for a given range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -2066,24 +1916,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           },
           {
             "name": "creatorId",
@@ -2124,6 +1956,18 @@
         "description": "Get post replacements created counts for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -2140,24 +1984,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -2184,6 +2010,18 @@
         "description": "Get post replacement status (pending, approved, partial) counts for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -2200,24 +2038,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -2246,6 +2066,18 @@
         "description": "Get a time series of upload counts for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -2262,24 +2094,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           },
           {
             "name": "uploaderId",
@@ -2312,6 +2126,18 @@
         "description": "Get a summary of post uploading counts for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -2328,24 +2154,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           },
           {
             "name": "page",
@@ -2393,6 +2201,18 @@
         "description": "Get total permit counts for a given date range",
         "parameters": [
           {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
             "name": "startDate",
             "required": false,
             "in": "query",
@@ -2409,24 +2229,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -2448,10 +2250,22 @@
     },
     "/metrics/performance/activity": {
       "get": {
-        "operationId": "getActivitySeries",
-        "summary": "Activity Series",
-        "description": "Get activity series for a given date range",
+        "operationId": "getActivity",
+        "summary": "Activity",
+        "description": "Get activity data for the specified range, scale, and cycle.",
         "parameters": [
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
           {
             "name": "startDate",
             "required": false,
@@ -2469,24 +2283,6 @@
             "required": false,
             "in": "query",
             "schema": { "type": "string" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": [
-                "minute",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year",
-                "decade",
-                "all"
-              ],
-              "type": "string"
-            }
           },
           {
             "name": "userId",
@@ -2706,6 +2502,19 @@
           "upperId": { "type": "number" }
         },
         "required": ["id", "startDate", "endDate", "type", "lowerId", "upperId"]
+      },
+      "TimeScale": {
+        "type": "string",
+        "enum": [
+          "minute",
+          "hour",
+          "day",
+          "week",
+          "month",
+          "year",
+          "decade",
+          "all"
+        ]
       },
       "ApprovalCountSummary": {
         "type": "object",

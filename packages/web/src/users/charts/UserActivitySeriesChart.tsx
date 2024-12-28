@@ -2,7 +2,7 @@ import { useTheme } from '@mui/material';
 import { BarChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
 
-import { GetActivitySeriesArea, useActivitySeries } from '../../api';
+import { GetActivityArea, TimeScale, useActivity } from '../../api';
 import { QueryHint } from '../../common';
 import {
   refetchQueryOptions,
@@ -11,7 +11,7 @@ import {
 } from '../../utils';
 
 export interface UserActivitySeriesChartProps {
-  area: GetActivitySeriesArea;
+  area: GetActivityArea;
 }
 
 export const UserActivitySeriesChart: React.FC<
@@ -20,8 +20,8 @@ export const UserActivitySeriesChart: React.FC<
   const theme = useTheme();
   const { range, userId } = useChartParamsValue();
 
-  const { data, isLoading, error } = useActivitySeries(
-    { ...range, userId: userId ?? 0, area },
+  const { data, isLoading, error } = useActivity(
+    { ...range, cycle: TimeScale.day, userId: userId ?? 0, area },
     refetchQueryOptions({
       enabled: !!userId,
     }),
