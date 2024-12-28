@@ -12,4 +12,5 @@ export * from './feedbacks';
 export * from './replacements';
 export * from './uploads';
 export * from './permits';
+export * from './performance';
 export * from './model';

@@ -61,3 +61,19 @@ export const addToMergedSeries = <O extends string, T extends string>(
 
   return Object.values(result);
 };
+
+export const flattenPointSeries = <T extends string>(
+  series: SeriesRecordPoint<T>[],
+): SeriesCountPoint[] => {
+  const result: SeriesCountPoint[] = [];
+
+  for (const point of series) {
+    const value = Object.values(point).reduce(
+      (acc, v) => (typeof v === 'number' ? acc + v : acc),
+      0,
+    );
+    result.push({ date: point.date, value });
+  }
+
+  return result;
+};
