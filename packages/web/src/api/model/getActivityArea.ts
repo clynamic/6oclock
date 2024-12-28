@@ -6,11 +6,11 @@
  * OpenAPI spec version: 0.0.5
  */
 
-export type GetActivitySeriesArea =
-  (typeof GetActivitySeriesArea)[keyof typeof GetActivitySeriesArea];
+export type GetActivityArea =
+  (typeof GetActivityArea)[keyof typeof GetActivityArea];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const GetActivitySeriesArea = {
+export const GetActivityArea = {
   admin: 'admin',
   moderator: 'moderator',
   janitor: 'janitor',
