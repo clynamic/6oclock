@@ -5,8 +5,8 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.5
  */
-import type { ListManifestsTypeItem } from './listManifestsTypeItem';
 import type { TimeScale } from './timeScale';
+import type { ListManifestsTypeItem } from './listManifestsTypeItem';
 
 export type ListManifestsParams = {
   scale: TimeScale;

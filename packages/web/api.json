@@ -622,10 +622,10 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/metrics/tickets/status/summary": {
+    "/metrics/tickets/status": {
       "get": {
-        "operationId": "getTicketStatusSummary",
-        "summary": "Ticket status summary",
+        "operationId": "getTicketStatus",
+        "summary": "Ticket status",
         "description": "Get ticket status (pending, approved, partial) counts for a given date range",
         "parameters": [
           {
@@ -664,7 +664,12 @@
             "description": "",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/TicketStatusSummary" }
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TicketStatusSeriesPoint"
+                  }
+                }
               }
             }
           }
@@ -2322,14 +2327,15 @@
         },
         "required": ["userId", "total", "position", "days"]
       },
-      "TicketStatusSummary": {
+      "TicketStatusSeriesPoint": {
         "type": "object",
         "properties": {
+          "date": { "format": "date-time", "type": "string" },
           "pending": { "type": "number" },
           "approved": { "type": "number" },
           "partial": { "type": "number" }
         },
-        "required": ["pending", "approved", "partial"]
+        "required": ["date", "pending", "approved", "partial"]
       },
       "TicketTypeSummary": {
         "type": "object",

@@ -2,7 +2,7 @@ import { useTheme } from '@mui/material';
 import { PieChart, PieValueType } from '@mui/x-charts';
 import { useMemo } from 'react';
 
-import { useTicketStatusSummary } from '../../api';
+import { TimeScale, useTicketStatus } from '../../api';
 import { QueryHint } from '../../common';
 import { refetchQueryOptions, useChartDateRange } from '../../utils';
 
@@ -10,9 +10,14 @@ export const TicketStatusSummaryChart: React.FC = () => {
   const theme = useTheme();
   const range = useChartDateRange();
 
-  const { data, isLoading, error } = useTicketStatusSummary(
-    range,
-    refetchQueryOptions(),
+  const { data, isLoading, error } = useTicketStatus(
+    { ...range, scale: TimeScale.all },
+    {
+      query: {
+        ...refetchQueryOptions(),
+        select: (data) => data?.[0],
+      },
+    },
   );
 
   const dataset: PieValueType[] = useMemo(() => {

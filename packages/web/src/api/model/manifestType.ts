@@ -8,7 +8,7 @@
 
 export type ManifestType = (typeof ManifestType)[keyof typeof ManifestType];
 
- 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ManifestType = {
   approvals: 'approvals',
   tickets: 'tickets',

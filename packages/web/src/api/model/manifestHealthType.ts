@@ -9,7 +9,7 @@
 export type ManifestHealthType =
   (typeof ManifestHealthType)[keyof typeof ManifestHealthType];
 
- 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ManifestHealthType = {
   approvals: 'approvals',
   tickets: 'tickets',
