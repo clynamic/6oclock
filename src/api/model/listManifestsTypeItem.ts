@@ -20,4 +20,5 @@ export const ListManifestsTypeItem = {
   feedbacks: 'feedbacks',
   post_versions: 'post_versions',
   post_replacements: 'post_replacements',
+  mod_actions: 'mod_actions',
 } as const;
