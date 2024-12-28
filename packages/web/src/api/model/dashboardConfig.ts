@@ -6,8 +6,8 @@
  * OpenAPI spec version: 0.0.5
  */
 import type { DashboardConfigMeta } from './dashboardConfigMeta';
-import type { DashboardPositions } from './dashboardPositions';
 import type { DashboardConfigType } from './dashboardConfigType';
+import type { DashboardPositions } from './dashboardPositions';
 
 export interface DashboardConfig {
   meta: DashboardConfigMeta;
