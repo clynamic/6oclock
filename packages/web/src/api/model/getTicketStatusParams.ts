@@ -7,7 +7,7 @@
  */
 import type { TimeScale } from './timeScale';
 
-export type GetTicketStatusSummaryParams = {
+export type GetTicketStatusParams = {
   scale?: TimeScale;
   cycle?: TimeScale;
   startDate?: Date;

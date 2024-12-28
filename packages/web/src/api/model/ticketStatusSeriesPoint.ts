@@ -6,8 +6,9 @@
  * OpenAPI spec version: 0.0.5
  */
 
-export interface TicketStatusSummary {
+export interface TicketStatusSeriesPoint {
   approved: number;
+  date: Date;
   partial: number;
   pending: number;
 }
