@@ -2,9 +2,15 @@ import { useTheme } from '@mui/material';
 import { BarChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
 
-import { GetActivityArea, TimeScale, useActivity } from '../../api';
+import {
+  ActivitySeriesPoint,
+  GetActivityArea,
+  TimeScale,
+  useActivity,
+} from '../../api';
 import { QueryHint } from '../../common';
 import {
+  flattenPointSeries,
   refetchQueryOptions,
   SeriesChartProps,
   useChartParamsValue,
@@ -58,7 +64,19 @@ export const UserActivitySeriesChart: React.FC<
   };
 
   return (
-    <QueryHint data={data} isLoading={isLoading} error={error} type="bars">
+    <QueryHint
+      data={data}
+      isLoading={isLoading}
+      error={error}
+      isEmpty={
+        data
+          ? flattenPointSeries<keyof Omit<ActivitySeriesPoint, 'date'>>(
+              data,
+            ).every((e) => e.value === 0)
+          : false
+      }
+      type="bars"
+    >
       <BarChart {...chartProps} />
     </QueryHint>
   );
