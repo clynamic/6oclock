@@ -5,8 +5,8 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.5
  */
-import type { TimeScale } from './timeScale';
 import type { GetActivityArea } from './getActivityArea';
+import type { TimeScale } from './timeScale';
 
 export type GetActivityParams = {
   scale?: TimeScale;

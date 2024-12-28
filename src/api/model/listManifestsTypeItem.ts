@@ -9,7 +9,7 @@
 export type ListManifestsTypeItem =
   (typeof ListManifestsTypeItem)[keyof typeof ListManifestsTypeItem];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+ 
 export const ListManifestsTypeItem = {
   approvals: 'approvals',
   tickets: 'tickets',

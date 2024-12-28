@@ -1,4 +1,3 @@
-export * from './ApprovalActivitySummaryByApproverChart';
 export * from './ApprovalCountSeriesByApproverChart';
 export * from './PostPendingSeriesChart';
 export * from './PostStatusSeriesChart';
