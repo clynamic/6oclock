@@ -5,7 +5,6 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.5
  */
-import { useMutation, useQuery } from '@tanstack/react-query';
 import type {
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
@@ -18,9 +17,11 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query';
-import type { TokenValidation, UserCredentials } from './model';
-import { makeRequest } from '../http/axios';
+import { useMutation, useQuery } from '@tanstack/react-query';
+
 import type { ErrorType } from '../http/axios';
+import { makeRequest } from '../http/axios';
+import type { TokenValidation, UserCredentials } from './model';
 
 /**
  * Login with username and api key

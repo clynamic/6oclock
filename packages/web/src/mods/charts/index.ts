@@ -1,4 +1,3 @@
-export * from './TicketActivitySummaryByHandlerChart';
 export * from './TicketAgeSeriesChart';
 export * from './TicketAgeSummaryChart';
 export * from './TicketClosedSeriesByHandlerChart';
