@@ -5,8 +5,8 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.5
  */
-import type { ManifestHealthType } from './manifestHealthType';
 import type { ManifestSlice } from './manifestSlice';
+import type { ManifestHealthType } from './manifestHealthType';
 
 export interface ManifestHealth {
   count: number;

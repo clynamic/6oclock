@@ -8,7 +8,7 @@
 
 export type TimeScale = (typeof TimeScale)[keyof typeof TimeScale];
 
- 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TimeScale = {
   minute: 'minute',
   hour: 'hour',

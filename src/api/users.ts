@@ -5,6 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.5
  */
+import { useQuery } from '@tanstack/react-query';
 import type {
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
@@ -14,11 +15,9 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query';
-import { useQuery } from '@tanstack/react-query';
-
-import type { ErrorType } from '../http/axios';
-import { makeRequest } from '../http/axios';
 import type { UserHead } from './model';
+import { makeRequest } from '../http/axios';
+import type { ErrorType } from '../http/axios';
 
 /**
  * Get user head by user id

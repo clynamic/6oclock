@@ -9,7 +9,7 @@
 export type GetActivityArea =
   (typeof GetActivityArea)[keyof typeof GetActivityArea];
 
- 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetActivityArea = {
   admin: 'admin',
   moderator: 'moderator',
