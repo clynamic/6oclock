@@ -5,13 +5,13 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.5
  */
-import type { ManifestType } from './manifestType';
+import type { ItemType } from './itemType';
 
 export interface Manifest {
   endDate: Date;
   id: number;
   lowerId: number;
   startDate: Date;
-  type: ManifestType;
+  type: ItemType;
   upperId: number;
 }
