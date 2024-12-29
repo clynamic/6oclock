@@ -6,7 +6,7 @@
  * OpenAPI spec version: 0.0.5
  */
 import type { TimeScale } from './timeScale';
-import type { GetActivityArea } from './getActivityArea';
+import type { UserArea } from './userArea';
 
 export type GetActivityParams = {
   scale?: TimeScale;
@@ -14,6 +14,6 @@ export type GetActivityParams = {
   startDate?: Date;
   endDate?: Date;
   timezone?: string;
+  area?: UserArea;
   userId?: number;
-  area?: GetActivityArea;
 };

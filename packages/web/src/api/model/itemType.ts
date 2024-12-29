@@ -6,10 +6,10 @@
  * OpenAPI spec version: 0.0.5
  */
 
-export type ManifestType = (typeof ManifestType)[keyof typeof ManifestType];
+export type ItemType = (typeof ItemType)[keyof typeof ItemType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const ManifestType = {
+export const ItemType = {
   approvals: 'approvals',
   tickets: 'tickets',
   posts: 'posts',

@@ -310,32 +310,18 @@
           },
           {
             "required": false,
-            "name": "id",
-            "in": "query",
-            "schema": { "type": "number" }
-          },
-          {
-            "required": false,
             "name": "type",
             "in": "query",
             "schema": {
               "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "approvals",
-                  "tickets",
-                  "posts",
-                  "users",
-                  "user_profiles",
-                  "flags",
-                  "feedbacks",
-                  "post_versions",
-                  "post_replacements",
-                  "mod_actions"
-                ]
-              }
+              "items": { "$ref": "#/components/schemas/ItemType" }
             }
+          },
+          {
+            "required": false,
+            "name": "id",
+            "in": "query",
+            "schema": { "type": "number" }
           }
         ],
         "responses": {
@@ -2062,19 +2048,16 @@
             "schema": { "type": "string" }
           },
           {
+            "name": "area",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/UserArea" }
+          },
+          {
             "name": "userId",
             "required": false,
             "in": "query",
             "schema": { "type": "number" }
-          },
-          {
-            "name": "area",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "enum": ["admin", "moderator", "janitor", "member"],
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -2145,6 +2128,21 @@
           "timedOut"
         ]
       },
+      "ItemType": {
+        "type": "string",
+        "enum": [
+          "approvals",
+          "tickets",
+          "posts",
+          "users",
+          "user_profiles",
+          "flags",
+          "feedbacks",
+          "post_versions",
+          "post_replacements",
+          "mod_actions"
+        ]
+      },
       "ManifestSlice": {
         "type": "object",
         "properties": {
@@ -2159,22 +2157,8 @@
       "ManifestHealth": {
         "type": "object",
         "properties": {
+          "type": { "$ref": "#/components/schemas/ItemType" },
           "id": { "type": "number" },
-          "type": {
-            "type": "string",
-            "enum": [
-              "approvals",
-              "tickets",
-              "posts",
-              "users",
-              "user_profiles",
-              "flags",
-              "feedbacks",
-              "post_versions",
-              "post_replacements",
-              "mod_actions"
-            ]
-          },
           "startDate": { "format": "date-time", "type": "string" },
           "endDate": { "format": "date-time", "type": "string" },
           "startId": { "type": "number" },
@@ -2186,8 +2170,8 @@
           }
         },
         "required": [
-          "id",
           "type",
+          "id",
           "startDate",
           "endDate",
           "startId",
@@ -2257,28 +2241,14 @@
       "Manifest": {
         "type": "object",
         "properties": {
+          "type": { "$ref": "#/components/schemas/ItemType" },
           "id": { "type": "number" },
           "startDate": { "format": "date-time", "type": "string" },
           "endDate": { "format": "date-time", "type": "string" },
-          "type": {
-            "enum": [
-              "approvals",
-              "tickets",
-              "posts",
-              "users",
-              "user_profiles",
-              "flags",
-              "feedbacks",
-              "post_versions",
-              "post_replacements",
-              "mod_actions"
-            ],
-            "type": "string"
-          },
           "lowerId": { "type": "number" },
           "upperId": { "type": "number" }
         },
-        "required": ["id", "startDate", "endDate", "type", "lowerId", "upperId"]
+        "required": ["type", "id", "startDate", "endDate", "lowerId", "upperId"]
       },
       "TimeScale": {
         "type": "string",
@@ -2464,6 +2434,10 @@
           "days": { "type": "number" }
         },
         "required": ["userId", "total", "position", "days"]
+      },
+      "UserArea": {
+        "type": "string",
+        "enum": ["admin", "moderator", "janitor", "member"]
       },
       "ActivitySeriesPoint": {
         "type": "object",

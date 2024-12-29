@@ -4,9 +4,9 @@ import { DateTime } from 'luxon';
 
 import {
   ActivitySeriesPoint,
-  GetActivityArea,
   TimeScale,
   useActivity,
+  UserArea,
 } from '../../api';
 import { QueryHint } from '../../common';
 import {
@@ -17,7 +17,7 @@ import {
 } from '../../utils';
 
 export interface UserActivitySeriesChartProps {
-  area: GetActivityArea;
+  area: UserArea;
 }
 
 export const UserActivitySeriesChart: React.FC<

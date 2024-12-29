@@ -6,7 +6,7 @@
  * OpenAPI spec version: 0.0.5
  */
 import type { ManifestSlice } from './manifestSlice';
-import type { ManifestHealthType } from './manifestHealthType';
+import type { ItemType } from './itemType';
 
 export interface ManifestHealth {
   count: number;
@@ -16,5 +16,5 @@ export interface ManifestHealth {
   slices: ManifestSlice[];
   startDate: Date;
   startId: number;
-  type: ManifestHealthType;
+  type: ItemType;
 }
