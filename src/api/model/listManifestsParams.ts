@@ -6,7 +6,7 @@
  * OpenAPI spec version: 0.0.5
  */
 import type { TimeScale } from './timeScale';
-import type { ListManifestsTypeItem } from './listManifestsTypeItem';
+import type { ItemType } from './itemType';
 
 export type ListManifestsParams = {
   scale: TimeScale;
@@ -14,6 +14,6 @@ export type ListManifestsParams = {
   startDate: Date;
   endDate: Date;
   timezone: string;
+  type?: ItemType[];
   id?: number;
-  type?: ListManifestsTypeItem[];
 };
