@@ -2443,23 +2443,23 @@
         "type": "object",
         "properties": {
           "date": { "format": "date-time", "type": "string" },
-          "uploadPost": { "type": "number" },
-          "approvePost": { "type": "number" },
-          "deletePost": { "type": "number" },
-          "createReplacement": { "type": "number" },
-          "approveReplacement": { "type": "number" },
-          "createTicket": { "type": "number" },
-          "closeTicket": { "type": "number" }
+          "postCreate": { "type": "number" },
+          "postDelete": { "type": "number" },
+          "postApprove": { "type": "number" },
+          "postReplacementCreate": { "type": "number" },
+          "postReplacementApprove": { "type": "number" },
+          "ticketCreate": { "type": "number" },
+          "ticketHandle": { "type": "number" }
         },
         "required": [
           "date",
-          "uploadPost",
-          "approvePost",
-          "deletePost",
-          "createReplacement",
-          "approveReplacement",
-          "createTicket",
-          "closeTicket"
+          "postCreate",
+          "postDelete",
+          "postApprove",
+          "postReplacementCreate",
+          "postReplacementApprove",
+          "ticketCreate",
+          "ticketHandle"
         ]
       }
     }

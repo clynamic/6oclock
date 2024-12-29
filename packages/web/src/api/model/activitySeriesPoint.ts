@@ -7,12 +7,12 @@
  */
 
 export interface ActivitySeriesPoint {
-  approvePost: number;
-  approveReplacement: number;
-  closeTicket: number;
-  createReplacement: number;
-  createTicket: number;
   date: Date;
-  deletePost: number;
-  uploadPost: number;
+  postApprove: number;
+  postCreate: number;
+  postDelete: number;
+  postReplacementApprove: number;
+  postReplacementCreate: number;
+  ticketCreate: number;
+  ticketHandle: number;
 }
