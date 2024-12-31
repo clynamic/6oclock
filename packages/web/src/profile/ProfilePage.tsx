@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { adminProfileCatalog } from '../admins';
-import { useUserHead } from '../api';
+import { UserArea, useUserHead } from '../api';
 import {
   buildCatalogLayouts,
   DashboardBody,
@@ -45,6 +45,21 @@ export const ProfilePage: React.FC = () => {
     }
   }, [user]);
 
+  const area = useMemo(() => {
+    if (!user) return undefined;
+
+    switch (user.level.toLowerCase()) {
+      case 'janitor':
+        return UserArea.janitor;
+      case 'moderator':
+        return UserArea.moderator;
+      case 'admin':
+        return UserArea.admin;
+      default:
+        return UserArea.member;
+    }
+  }, [user]);
+
   return (
     <DashboardProvider
       catalog={catalog || {}}
@@ -60,7 +75,9 @@ export const ProfilePage: React.FC = () => {
           : undefined
       }
     >
-      <ChartParamsProvider params={{ ...chartParams, userId: Number(id) }}>
+      <ChartParamsProvider
+        params={{ ...chartParams, userId: Number(id), area }}
+      >
         <Page>
           <PageTitle subtitle={user?.name ?? `User #${id}`} />
           <ProfilePageHeader userId={userId} />

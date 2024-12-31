@@ -8,6 +8,7 @@ import {
   useState,
 } from 'react';
 
+import { UserArea } from '../api';
 import { DateRange, getCurrentMonthRange } from './months';
 
 export type SeriesChartProps = Parameters<typeof BarChart>[0] &
@@ -16,6 +17,7 @@ export type SeriesChartProps = Parameters<typeof BarChart>[0] &
 export interface ChartParams {
   range: DateRange;
   userId?: number;
+  area?: UserArea;
 }
 
 interface ChartParamsContextValue {

@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 
 import { TicketReporterSummary } from '../../api';
 import { UserAvatar, UsernameText } from '../../common';
+import { formatNumber } from '../../utils';
 
 export interface TicketReporterFrameProps {
   summary?: TicketReporterSummary;
@@ -38,7 +39,11 @@ export const TicketReporterFrame: React.FC<TicketReporterFrameProps> = ({
           <Stack sx={{ flex: 1, minWidth: 0 }}>
             <UsernameText user={summary} />
             <Typography variant="body2" color="text.secondary">
-              {summary ? `${summary.total} reports` : <Skeleton width={50} />}
+              {summary ? (
+                `${formatNumber(summary.total)} reports`
+              ) : (
+                <Skeleton width={50} />
+              )}
             </Typography>
           </Stack>
         </Stack>

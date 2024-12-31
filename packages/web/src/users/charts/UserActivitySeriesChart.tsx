@@ -2,12 +2,7 @@ import { useTheme } from '@mui/material';
 import { BarChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
 
-import {
-  ActivitySeriesPoint,
-  TimeScale,
-  useActivity,
-  UserArea,
-} from '../../api';
+import { ActivitySeriesPoint, TimeScale, useActivity } from '../../api';
 import { QueryHint } from '../../common';
 import {
   flattenPointSeries,
@@ -16,15 +11,9 @@ import {
   useChartParamsValue,
 } from '../../utils';
 
-export interface UserActivitySeriesChartProps {
-  area: UserArea;
-}
-
-export const UserActivitySeriesChart: React.FC<
-  UserActivitySeriesChartProps
-> = ({ area }) => {
+export const UserActivitySeriesChart: React.FC = () => {
   const theme = useTheme();
-  const { range, userId } = useChartParamsValue();
+  const { range, userId, area } = useChartParamsValue();
 
   const { data, isLoading, error } = useActivity(
     { ...range, cycle: TimeScale.day, userId: userId ?? 0, area },
