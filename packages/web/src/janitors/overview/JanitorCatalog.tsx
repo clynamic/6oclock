@@ -13,7 +13,7 @@ export const janitorDashboardCatalogVersion = 3;
 export const janitorDashboardCatalog: DashboardCatalog = {
   performanceLeaderboard: {
     name: 'Performance Leaderboard',
-    component: () => <PerformanceLeaderboard area="janitor" />,
+    component: PerformanceLeaderboard,
     layout: createLayout(
       {
         minW: 3,
