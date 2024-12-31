@@ -6,7 +6,6 @@ import {
   Divider,
   Skeleton,
   Stack,
-  Tooltip,
   Typography,
   useTheme,
 } from '@mui/material';
@@ -15,7 +14,7 @@ import { DateTime } from 'luxon';
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { Activity, usePerformance } from '../../api';
+import { usePerformance } from '../../api';
 import {
   QueryHint,
   RankingText,
@@ -34,15 +33,17 @@ import {
 } from '../../page';
 import {
   DateRange,
+  formatNumber,
+  getActivityFromKey,
   getActivityName,
   refetchQueryOptions,
   useChartDateRange,
 } from '../../utils';
-import { getScoreGradeColor } from './color';
+import { getScoreGradeColor, getTrendGradeColor } from './color';
 
 export const PerformanceDetailPage: React.FC = () => {
   const range = useChartDateRange();
-  const { id } = useParams<{ id: string }>();
+  const { id: userId } = useParams<{ id: string }>();
   const theme = useTheme();
   const [lastMonth, setLastMonth] = useState<boolean>(false);
 
@@ -68,13 +69,13 @@ export const PerformanceDetailPage: React.FC = () => {
   } = usePerformance(
     {
       ...selectedRange,
-      userId: Number(id ?? 0),
+      userId: Number(userId ?? 0),
       head: true,
     },
     {
       query: {
         ...refetchQueryOptions(),
-        enabled: id !== undefined,
+        enabled: userId !== undefined,
         select: (data) => data?.[0],
       },
     },
@@ -219,7 +220,7 @@ export const PerformanceDetailPage: React.FC = () => {
                           <Typography
                             variant="h4"
                             sx={{
-                              color: getScoreGradeColor(summary?.scoreGrade),
+                              color: getTrendGradeColor(summary?.trendGrade),
                             }}
                           >
                             {summary ? (
@@ -242,7 +243,7 @@ export const PerformanceDetailPage: React.FC = () => {
                           {summary ? (
                             <SparkLineChart
                               data={[
-                                ...summary.previousScores.reverse(),
+                                ...[...summary.previousScores].reverse(),
                                 summary.score,
                               ]}
                               area
@@ -297,18 +298,12 @@ export const PerformanceDetailPage: React.FC = () => {
                                     >
                                       <Typography variant="caption">
                                         {getActivityName(
-                                          Object.values(Activity).find(
-                                            (activity) =>
-                                              activity.replace(/_/g, '') ===
-                                              type.toLowerCase(),
-                                          ) as Activity,
+                                          getActivityFromKey(type),
                                         )}
                                       </Typography>
-                                      <Tooltip title={type}>
-                                        <Typography variant="caption">
-                                          {value}
-                                        </Typography>
-                                      </Tooltip>
+                                      <Typography variant="caption">
+                                        {formatNumber(value)}
+                                      </Typography>
                                     </Stack>
                                   ),
                                 )

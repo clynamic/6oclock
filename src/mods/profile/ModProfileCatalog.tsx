@@ -1,6 +1,6 @@
 import { UserCard } from '../../common';
 import { createLayout, DashboardCatalog } from '../../dashboard';
-import { UserActivitySeriesChart } from '../../users';
+import { PerformanceCard, UserActivitySeriesChart } from '../../users';
 import {
   TicketClosedSeriesByHandlerChart,
   TicketTypeSummaryByHandlerTypeChart,
@@ -66,6 +66,26 @@ export const modProfileCatalog: DashboardCatalog = {
     card: { title: 'Tickets Handled' },
     component: TicketClosedSeriesByHandlerChart,
   },
+  userPerformance: {
+    name: 'User Performance',
+    layout: createLayout(
+      {
+        minW: 2,
+        maxW: 6,
+        minH: 2,
+        maxH: 5,
+      },
+      {
+        xs: { x: 0, y: 2, w: 4, h: 4 },
+        sm: { x: 0, y: 2, w: 6, h: 4 },
+        md: { x: 2, y: 2, w: 5, h: 4 },
+        lg: { x: 0, y: 2, w: 5, h: 4 },
+        xl: { x: 0, y: 2, w: 5, h: 4 },
+      },
+    ),
+    card: { title: 'Performance' },
+    component: PerformanceCard,
+  },
   userActivity: {
     name: 'User Activity',
     layout: createLayout(
@@ -76,14 +96,14 @@ export const modProfileCatalog: DashboardCatalog = {
         maxH: 5,
       },
       {
-        xs: { x: 0, y: 2, w: 4, h: 5 },
-        sm: { x: 0, y: 2, w: 6, h: 5 },
-        md: { x: 2, y: 2, w: 5, h: 5 },
-        lg: { x: 0, y: 2, w: 5, h: 5 },
-        xl: { x: 0, y: 2, w: 5, h: 5 },
+        xs: { x: 0, y: 6, w: 4, h: 5 },
+        sm: { x: 0, y: 6, w: 6, h: 5 },
+        md: { x: 2, y: 6, w: 5, h: 5 },
+        lg: { x: 0, y: 6, w: 5, h: 5 },
+        xl: { x: 0, y: 6, w: 5, h: 5 },
       },
     ),
-    card: { title: 'User Activity' },
-    component: () => <UserActivitySeriesChart area="moderator" />,
+    card: { title: 'Activity' },
+    component: UserActivitySeriesChart,
   },
 };
