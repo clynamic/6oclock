@@ -1,12 +1,17 @@
-import { Typography } from '@mui/material';
+import { Typography, TypographyOwnProps } from '@mui/material';
 import { ReactNode } from 'react';
 
 export interface RankingTextProps {
   children: ReactNode;
   rank: number;
+  variant?: TypographyOwnProps['variant'];
 }
 
-export const RankingText: React.FC<RankingTextProps> = ({ children, rank }) => {
+export const RankingText: React.FC<RankingTextProps> = ({
+  children,
+  rank,
+  variant,
+}) => {
   const gradients = [
     'linear-gradient(45deg, #ffd700, #ffec99, #ffd700)', // gold
     'linear-gradient(45deg, #c0c0c0, #e0e0e0, #c0c0c0)', // silver
@@ -28,7 +33,10 @@ export const RankingText: React.FC<RankingTextProps> = ({ children, rank }) => {
   };
 
   return (
-    <Typography variant={rank < 4 ? 'h6' : 'body1'} sx={getGradientStyle(rank)}>
+    <Typography
+      variant={variant ?? (rank < 4 ? 'h6' : 'body1')}
+      sx={getGradientStyle(rank)}
+    >
       {children}
     </Typography>
   );

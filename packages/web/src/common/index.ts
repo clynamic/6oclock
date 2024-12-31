@@ -10,6 +10,7 @@ export * from './NoDataHint';
 export * from './PieChartSkeleton';
 export * from './QueryHint';
 export * from './RankingText';
+export * from './Stamp';
 export * from './TrendIcon';
 export * from './UserAvatar';
 export * from './UserCard';
