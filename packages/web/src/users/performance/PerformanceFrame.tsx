@@ -1,7 +1,8 @@
 import {
   Beenhere,
   CalendarMonth,
-  Leaderboard,
+  Flag,
+  RestartAlt,
   Sell,
   Whatshot,
 } from '@mui/icons-material';
@@ -17,18 +18,9 @@ import {
 import { Link } from 'react-router-dom';
 
 import { PerformanceSummary } from '../../api';
-import { TrendIcon, UserAvatar, UsernameText } from '../../common';
+import { UserAvatar, UsernameText } from '../../common';
 import { RankingText } from '../../common/RankingText';
-
-const getPointsColor = (score: number) => {
-  if (score < 0) {
-    return 'error.main';
-  }
-  if (score < 100) {
-    return 'warning.main';
-  }
-  return 'success.main';
-};
+import { getScoreGradeColor } from './color';
 
 export interface PerformanceLeaderboardFrameProps {
   summary?: PerformanceSummary;
@@ -62,98 +54,97 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
               size={64}
               shape="rounded"
             />
-            <Stack spacing={1} sx={{ flexGrow: 1 }}>
-              <Stack
-                direction="row"
-                spacing={1}
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <UsernameText user={summary?.userHead} />
-                {summary && (
-                  <RankingText rank={summary.position}>
-                    #{summary.position}
-                  </RankingText>
-                )}
+            <Stack direction="row" spacing={1} sx={{ flexGrow: 1 }}>
+              <Stack direction="column" spacing={1} sx={{ flexGrow: 1 }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <UsernameText user={summary?.userHead} />
+                </Stack>
+                <Stack direction="row" gap={1} sx={{ flexWrap: 'wrap' }}>
+                  {summary ? (
+                    <>
+                      {summary.activitySummary.postApprove ? (
+                        <Tooltip arrow title="Posts Approved">
+                          <Chip
+                            size="small"
+                            avatar={<Beenhere />}
+                            label={`${summary.activitySummary.postApprove}`}
+                          />
+                        </Tooltip>
+                      ) : (
+                        <></>
+                      )}
+                      {summary.activitySummary.postReplacementApprove ? (
+                        <Tooltip arrow title="Replacements Approved">
+                          <Chip
+                            size="small"
+                            avatar={<RestartAlt />}
+                            label={`${summary.activitySummary.postReplacementApprove}`}
+                          />
+                        </Tooltip>
+                      ) : (
+                        <></>
+                      )}
+                      {summary.activitySummary.postDelete ? (
+                        <Tooltip arrow title="Posts Deleted">
+                          <Chip
+                            size="small"
+                            avatar={<Flag />}
+                            label={`${summary.activitySummary.postDelete}`}
+                          />
+                        </Tooltip>
+                      ) : (
+                        <></>
+                      )}
+                      {summary.activitySummary.ticketHandle ? (
+                        <Tooltip arrow title="Tickets Handled">
+                          <Chip
+                            size="small"
+                            avatar={<Sell />}
+                            label={`${summary.activitySummary.ticketHandle}`}
+                          />
+                        </Tooltip>
+                      ) : (
+                        <></>
+                      )}
+                      {summary.days > 1 && (
+                        <Tooltip arrow title="Days Active">
+                          <Chip
+                            size="small"
+                            avatar={<CalendarMonth />}
+                            label={`${summary.days}`}
+                          />
+                        </Tooltip>
+                      )}
+                    </>
+                  ) : (
+                    <Skeleton width={100} />
+                  )}
+                </Stack>
               </Stack>
-              <Stack direction="row" gap={1} sx={{ flexWrap: 'wrap' }}>
-                {summary ? (
-                  <>
-                    <Tooltip arrow title="Performance Score">
-                      <Chip
-                        size="small"
-                        avatar={<Whatshot />}
-                        label={`${summary.score}`}
-                        sx={{
-                          color: getPointsColor(summary.score),
-                        }}
-                      />
-                    </Tooltip>
-                    <Tooltip arrow title="Performance Grade">
-                      <Chip
-                        size="small"
-                        avatar={<Leaderboard />}
-                        label={`${summary.scoreGrade}`}
-                        sx={{
-                          color: getPointsColor(summary.score),
-                        }}
-                      />
-                    </Tooltip>
-                    <Tooltip arrow title="Performance Trend">
-                      <Chip
-                        size="small"
-                        icon={
-                          <Box
-                            component="span"
-                            sx={(theme) => ({
-                              color: theme.palette.text.primary,
-                            })}
-                          >
-                            <TrendIcon grade={summary.trendGrade} />
-                          </Box>
-                        }
-                        label={`${summary.trend}`}
-                        sx={{
-                          color: getPointsColor(summary.trend),
-                        }}
-                      />
-                    </Tooltip>
-                    {summary.activitySummary.postApprove ? (
-                      <Tooltip arrow title="Posts Approved">
-                        <Chip
-                          size="small"
-                          avatar={<Beenhere />}
-                          label={`${summary.activitySummary.postApprove}`}
-                        />
-                      </Tooltip>
-                    ) : (
-                      <></>
-                    )}
-                    {summary.activitySummary.ticketHandle ? (
-                      <Tooltip arrow title="Tickets Handled">
-                        <Chip
-                          size="small"
-                          avatar={<Sell />}
-                          label={`${summary.activitySummary.ticketHandle}`}
-                        />
-                      </Tooltip>
-                    ) : (
-                      <></>
-                    )}
-                    {summary.days > 1 && (
-                      <Tooltip arrow title="Days Active">
-                        <Chip
-                          size="small"
-                          avatar={<CalendarMonth />}
-                          label={`${summary.days}`}
-                        />
-                      </Tooltip>
-                    )}
-                  </>
-                ) : (
-                  <Skeleton width={100} />
-                )}
-              </Stack>
+              {summary && (
+                <Stack direction="column" alignItems="flex-end" gap={1}>
+                  <Box sx={{ minHeight: 32 }}>
+                    <RankingText rank={summary.position}>
+                      #{summary.position}
+                    </RankingText>
+                  </Box>
+                  <Tooltip arrow title="Performance Score">
+                    <Chip
+                      size="small"
+                      avatar={<Whatshot />}
+                      label={`${summary.score}`}
+                      sx={{
+                        color: getScoreGradeColor(summary.scoreGrade),
+                      }}
+                    />
+                  </Tooltip>
+                </Stack>
+              )}
             </Stack>
           </Stack>
         </Box>

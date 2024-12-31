@@ -7,6 +7,7 @@
  */
 import type { TimeScale } from './timeScale';
 import type { UserArea } from './userArea';
+import type { Activity } from './activity';
 
 export type GetActivityParams = {
   scale?: TimeScale;
@@ -15,5 +16,6 @@ export type GetActivityParams = {
   endDate?: Date;
   timezone?: string;
   area?: UserArea;
+  activities?: Activity[];
   userId?: number;
 };

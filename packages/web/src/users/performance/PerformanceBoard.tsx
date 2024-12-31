@@ -41,7 +41,13 @@ export const PerformanceLeaderboard: React.FC<PerformanceLeaderboardProps> = ({
               size="small"
               endIcon={<ArrowForward />}
               component={Link}
-              to="/mods/tickets"
+              to={
+                area === UserArea.moderator
+                  ? '/mods/performance'
+                  : area === UserArea.janitor
+                    ? '/janitors/performance'
+                    : '/users/performance'
+              }
             >
               See All
             </Button>

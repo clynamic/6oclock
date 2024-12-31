@@ -1,4 +1,4 @@
-import { Skeleton, Typography } from '@mui/material';
+import { Skeleton, Typography, TypographyOwnProps } from '@mui/material';
 import { useMemo } from 'react';
 
 import { UserHead } from '../api';
@@ -13,6 +13,7 @@ export interface UsernameTextProps {
         head?: UsernameInfo;
       }
     | undefined;
+  variant?: TypographyOwnProps['variant'];
 }
 
 /**
@@ -45,7 +46,7 @@ const UsernameColors: Record<string, string> = {
   admin: '#e69500',
 };
 
-export const UsernameText = ({ user }: UsernameTextProps) => {
+export const UsernameText = ({ user, variant }: UsernameTextProps) => {
   const head = useMemo(() => {
     if (!user) return undefined;
     if ('userId' in user)
@@ -58,7 +59,13 @@ export const UsernameText = ({ user }: UsernameTextProps) => {
     return user as UsernameInfo;
   }, [user]);
 
-  if (!head) return <Skeleton width={120} />;
+  if (!head) {
+    return (
+      <Typography variant={variant ?? 'h6'}>
+        <Skeleton width={120} />
+      </Typography>
+    );
+  }
 
   const { name, level } = head;
   const color =
@@ -66,7 +73,7 @@ export const UsernameText = ({ user }: UsernameTextProps) => {
 
   return (
     <Typography
-      variant="h6"
+      variant={variant ?? 'h6'}
       sx={{ color }}
       noWrap
       textOverflow={'ellipsis'}

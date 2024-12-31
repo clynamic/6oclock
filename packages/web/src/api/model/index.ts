@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.0.5
  */
 
+export * from './activity';
 export * from './activitySeriesPoint';
 export * from './activitySummary';
 export * from './approvalCountSummary';

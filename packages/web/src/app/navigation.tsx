@@ -10,6 +10,7 @@ import { ModOverviewPage, TicketerPage, TicketReporterPage } from '../mods';
 import { NavNode } from '../page';
 import { NavSpacer, NavUser } from '../page';
 import { ProfilePage } from '../profile';
+import { PerformanceDetailPage, PerformancePage } from '../users';
 
 export const appNavNodes: NavNode[] = [
   {
@@ -26,6 +27,11 @@ export const appNavNodes: NavNode[] = [
         label: 'Dashboard',
         href: '/mods',
         component: <ModOverviewPage />,
+      },
+      {
+        label: 'Performance',
+        href: '/mods/performance',
+        component: <PerformancePage area="moderator" />,
       },
       {
         label: 'Tickets',
@@ -49,6 +55,11 @@ export const appNavNodes: NavNode[] = [
         component: <JanitorOverviewPage />,
       },
       {
+        label: 'Performance',
+        href: '/janitors/performance',
+        component: <PerformancePage area="janitor" />,
+      },
+      {
         label: 'Approvals',
         href: '/janitors/approvals',
         component: <ApproverPage />,
@@ -70,6 +81,12 @@ export const appNavNodes: NavNode[] = [
         href: '/users/:id',
         hidden: true,
         component: <ProfilePage />,
+      },
+      {
+        label: 'Performance',
+        href: '/users/:id/performance',
+        hidden: true,
+        component: <PerformanceDetailPage />,
       },
     ],
   },
