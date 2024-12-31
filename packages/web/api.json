@@ -2011,6 +2011,78 @@
         "security": [{ "bearer": [] }]
       }
     },
+    "/metrics/performance/performance": {
+      "get": {
+        "operationId": "getPerformance",
+        "summary": "Performance",
+        "description": "Get performance data for an area.",
+        "parameters": [
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "area",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/UserArea" }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "head",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "boolean" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PerformanceSummary" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Performance"],
+        "security": [{ "bearer": [] }]
+      }
+    },
     "/metrics/performance/activity": {
       "get": {
         "operationId": "getActivity",
@@ -2439,27 +2511,107 @@
         "type": "string",
         "enum": ["admin", "moderator", "janitor", "member"]
       },
-      "ActivitySeriesPoint": {
+      "PerformanceGrade": {
+        "type": "string",
+        "enum": [
+          "F",
+          "E",
+          "D",
+          "C",
+          "B",
+          "A",
+          "S",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6"
+        ]
+      },
+      "TrendGrade": {
+        "type": "string",
+        "enum": [
+          "plummet",
+          "drop",
+          "decline",
+          "neutral",
+          "rise",
+          "climb",
+          "surge"
+        ]
+      },
+      "ActivitySummary": {
         "type": "object",
         "properties": {
-          "date": { "format": "date-time", "type": "string" },
           "postCreate": { "type": "number" },
           "postDelete": { "type": "number" },
           "postApprove": { "type": "number" },
           "postReplacementCreate": { "type": "number" },
           "postReplacementApprove": { "type": "number" },
+          "postReplacementReject": { "type": "number" },
           "ticketCreate": { "type": "number" },
           "ticketHandle": { "type": "number" }
         },
         "required": [
-          "date",
           "postCreate",
           "postDelete",
           "postApprove",
           "postReplacementCreate",
           "postReplacementApprove",
+          "postReplacementReject",
           "ticketCreate",
           "ticketHandle"
+        ]
+      },
+      "PerformanceSummary": {
+        "type": "object",
+        "properties": {
+          "scoreGrade": { "$ref": "#/components/schemas/PerformanceGrade" },
+          "trendGrade": { "$ref": "#/components/schemas/TrendGrade" },
+          "userId": { "type": "number" },
+          "userHead": { "$ref": "#/components/schemas/UserHead" },
+          "position": { "type": "number" },
+          "score": { "type": "number" },
+          "trend": { "type": "number" },
+          "previousScores": { "type": "array", "items": { "type": "number" } },
+          "activitySummary": { "$ref": "#/components/schemas/ActivitySummary" },
+          "days": { "type": "number" }
+        },
+        "required": [
+          "scoreGrade",
+          "trendGrade",
+          "userId",
+          "position",
+          "score",
+          "trend",
+          "previousScores",
+          "activitySummary",
+          "days"
+        ]
+      },
+      "ActivitySeriesPoint": {
+        "type": "object",
+        "properties": {
+          "postCreate": { "type": "number" },
+          "postDelete": { "type": "number" },
+          "postApprove": { "type": "number" },
+          "postReplacementCreate": { "type": "number" },
+          "postReplacementApprove": { "type": "number" },
+          "postReplacementReject": { "type": "number" },
+          "ticketCreate": { "type": "number" },
+          "ticketHandle": { "type": "number" },
+          "date": { "format": "date-time", "type": "string" }
+        },
+        "required": [
+          "postCreate",
+          "postDelete",
+          "postApprove",
+          "postReplacementCreate",
+          "postReplacementApprove",
+          "postReplacementReject",
+          "ticketCreate",
+          "ticketHandle",
+          "date"
         ]
       }
     }

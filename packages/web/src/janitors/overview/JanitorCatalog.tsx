@@ -1,5 +1,5 @@
 import { createLayout, DashboardCatalog } from '../../dashboard';
-import { ApproverBoard } from '../approvals';
+import { PerformanceLeaderboard } from '../../users';
 import {
   PostReplacementStatusSeriesChart,
   PostStatusCountSeriesChart,
@@ -11,9 +11,9 @@ import { PostUploaderBoard } from '../uploads';
 export const janitorDashboardCatalogVersion = 3;
 
 export const janitorDashboardCatalog: DashboardCatalog = {
-  approvalsLeaderboard: {
-    name: 'Top Approvers',
-    component: ApproverBoard,
+  performanceLeaderboard: {
+    name: 'Performance Leaderboard',
+    component: () => <PerformanceLeaderboard area="janitor" />,
     layout: createLayout(
       {
         minW: 3,
@@ -30,7 +30,7 @@ export const janitorDashboardCatalog: DashboardCatalog = {
       },
     ),
     card: {
-      title: 'Approvals',
+      title: 'Performance',
       variant: 'outlined',
     },
   },
