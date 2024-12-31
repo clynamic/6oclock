@@ -241,7 +241,10 @@ export const PerformanceDetailPage: React.FC = () => {
                           <Typography variant="h6">Scores</Typography>
                           {summary ? (
                             <SparkLineChart
-                              data={[...summary.previousScores, summary.score]}
+                              data={[
+                                ...summary.previousScores.reverse(),
+                                summary.score,
+                              ]}
                               area
                               height={116}
                               showTooltip
