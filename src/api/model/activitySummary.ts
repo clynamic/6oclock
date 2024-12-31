@@ -6,8 +6,7 @@
  * OpenAPI spec version: 0.0.5
  */
 
-export interface ActivitySeriesPoint {
-  date: Date;
+export interface ActivitySummary {
   postApprove: number;
   postCreate: number;
   postDelete: number;

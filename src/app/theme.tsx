@@ -47,6 +47,17 @@ export const theme = createTheme({
         },
       },
     },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: '#000',
+          color: '#fff',
+        },
+        arrow: {
+          color: '#000',
+        },
+      },
+    },
   },
   typography: {
     fontFamily: 'Verdana, Noto Sans, sans-serif',
