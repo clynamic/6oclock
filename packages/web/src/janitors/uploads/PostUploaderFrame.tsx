@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 
 import { PostUploaderSummary } from '../../api';
 import { UserAvatar, UsernameText } from '../../common';
+import { formatNumber } from '../../utils';
 
 export interface PostUploaderFrame {
   summary?: PostUploaderSummary;
@@ -36,7 +37,11 @@ export const PostUploaderFrame: React.FC<PostUploaderFrame> = ({ summary }) => {
           <Stack sx={{ flex: 1, minWidth: 0 }}>
             <UsernameText user={summary} />
             <Typography variant="body2" color="text.secondary">
-              {summary ? `${summary.total} posts` : <Skeleton width={50} />}
+              {summary ? (
+                `${formatNumber(summary.total)} posts`
+              ) : (
+                <Skeleton width={50} />
+              )}
             </Typography>
           </Stack>
         </Stack>

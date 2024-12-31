@@ -32,7 +32,7 @@ export const modDashboardCatalog: DashboardCatalog = {
       title: 'Performance',
       variant: 'outlined',
     },
-    component: () => <PerformanceLeaderboard area="moderator" />,
+    component: PerformanceLeaderboard,
   },
   ticketStatus: {
     name: 'All Tickets Status',

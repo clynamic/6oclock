@@ -3,7 +3,7 @@ import { PropsWithChildren } from 'react';
 import { TruncatedList, TruncatedListProps } from 'react-truncate-list';
 
 export interface LimitedListProps extends PropsWithChildren {
-  indicator: TruncatedListProps['renderTruncator'];
+  indicator?: TruncatedListProps['renderTruncator'];
 }
 
 export const LimitedList: React.FC<LimitedListProps> = ({
@@ -21,7 +21,7 @@ export const LimitedList: React.FC<LimitedListProps> = ({
         paddingInline: 0,
         marginBlock: 0,
       }}
-      renderTruncator={indicator}
+      renderTruncator={indicator ?? (() => <></>)}
       component={TruncatedList}
     >
       {children}

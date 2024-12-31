@@ -1,6 +1,6 @@
 import { UserCard } from '../../common';
 import { createLayout, DashboardCatalog } from '../../dashboard';
-import { UserActivitySeriesChart } from '../../users';
+import { PerformanceCard, UserActivitySeriesChart } from '../../users';
 import { ApprovalCountSeriesByApproverChart } from '../charts';
 
 export const janitorProfileCatalog: DashboardCatalog = {
@@ -43,14 +43,14 @@ export const janitorProfileCatalog: DashboardCatalog = {
     card: { title: 'Posts Handled' },
     component: ApprovalCountSeriesByApproverChart,
   },
-  userActivity: {
-    name: 'User Activity',
+  userPerformance: {
+    name: 'User Performance',
     layout: createLayout(
       {
         minW: 2,
-        maxW: undefined,
+        maxW: 6,
         minH: 2,
-        maxH: 6,
+        maxH: 5,
       },
       {
         xs: { x: 0, y: 2, w: 4, h: 5 },
@@ -60,7 +60,27 @@ export const janitorProfileCatalog: DashboardCatalog = {
         xl: { x: 0, y: 2, w: 5, h: 5 },
       },
     ),
-    card: { title: 'User Activity' },
-    component: () => <UserActivitySeriesChart area="janitor" />,
+    card: { title: 'Performance' },
+    component: PerformanceCard,
+  },
+  userActivity: {
+    name: 'User Activity',
+    layout: createLayout(
+      {
+        minW: 2,
+        maxW: 6,
+        minH: 2,
+        maxH: 5,
+      },
+      {
+        xs: { x: 0, y: 7, w: 4, h: 5 },
+        sm: { x: 0, y: 7, w: 6, h: 5 },
+        md: { x: 2, y: 7, w: 5, h: 5 },
+        lg: { x: 0, y: 7, w: 5, h: 5 },
+        xl: { x: 0, y: 7, w: 5, h: 5 },
+      },
+    ),
+    card: { title: 'Activity' },
+    component: UserActivitySeriesChart,
   },
 };

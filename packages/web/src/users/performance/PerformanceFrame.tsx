@@ -1,11 +1,4 @@
-import {
-  Beenhere,
-  CalendarMonth,
-  Flag,
-  RestartAlt,
-  Sell,
-  Whatshot,
-} from '@mui/icons-material';
+import { CalendarMonth, Whatshot } from '@mui/icons-material';
 import {
   Box,
   Card,
@@ -17,9 +10,15 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { PerformanceSummary } from '../../api';
+import { ActivitySummary, PerformanceSummary } from '../../api';
 import { UserAvatar, UsernameText } from '../../common';
 import { RankingText } from '../../common/RankingText';
+import {
+  formatNumber,
+  getActivityFromKey,
+  getActivityIcon,
+  getActivityName,
+} from '../../utils';
 import { getScoreGradeColor } from './color';
 
 export interface PerformanceLeaderboardFrameProps {
@@ -67,50 +66,26 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
                 <Stack direction="row" gap={1} sx={{ flexWrap: 'wrap' }}>
                   {summary ? (
                     <>
-                      {summary.activitySummary.postApprove ? (
-                        <Tooltip arrow title="Posts Approved">
-                          <Chip
-                            size="small"
-                            avatar={<Beenhere />}
-                            label={`${summary.activitySummary.postApprove}`}
-                          />
-                        </Tooltip>
-                      ) : (
-                        <></>
-                      )}
-                      {summary.activitySummary.postReplacementApprove ? (
-                        <Tooltip arrow title="Replacements Approved">
-                          <Chip
-                            size="small"
-                            avatar={<RestartAlt />}
-                            label={`${summary.activitySummary.postReplacementApprove}`}
-                          />
-                        </Tooltip>
-                      ) : (
-                        <></>
-                      )}
-                      {summary.activitySummary.postDelete ? (
-                        <Tooltip arrow title="Posts Deleted">
-                          <Chip
-                            size="small"
-                            avatar={<Flag />}
-                            label={`${summary.activitySummary.postDelete}`}
-                          />
-                        </Tooltip>
-                      ) : (
-                        <></>
-                      )}
-                      {summary.activitySummary.ticketHandle ? (
-                        <Tooltip arrow title="Tickets Handled">
-                          <Chip
-                            size="small"
-                            avatar={<Sell />}
-                            label={`${summary.activitySummary.ticketHandle}`}
-                          />
-                        </Tooltip>
-                      ) : (
-                        <></>
-                      )}
+                      {Object.keys(summary.activitySummary).map((key) => {
+                        const activity = getActivityFromKey(key);
+                        const count =
+                          summary.activitySummary[key as keyof ActivitySummary];
+                        if (!count) return null;
+
+                        return (
+                          <Tooltip
+                            key={key}
+                            arrow
+                            title={getActivityName(activity)}
+                          >
+                            <Chip
+                              size="small"
+                              avatar={getActivityIcon(activity)}
+                              label={`${formatNumber(count)}`}
+                            />
+                          </Tooltip>
+                        );
+                      })}
                       {summary.days > 1 && (
                         <Tooltip arrow title="Days Active">
                           <Chip

@@ -42,7 +42,7 @@ export const userProfileCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'User Activity' },
-    component: () => <UserActivitySeriesChart area="member" />,
+    component: UserActivitySeriesChart,
   },
   ticketsHandled: {
     name: 'Tickets Created',
