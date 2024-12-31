@@ -1,4 +1,5 @@
 import { createLayout, DashboardCatalog } from '../../dashboard';
+import { PerformanceLeaderboard } from '../../users';
 import {
   TicketOpenSeriesChart,
   TicketStatusSeriesChart,
@@ -6,13 +7,12 @@ import {
   TicketTypeSummaryChart,
 } from '../charts';
 import { TicketReporterBoard } from '../reports';
-import { TicketerLeaderboard } from '../tickets';
 
 export const modDashoardCatalogVersion = 2;
 
 export const modDashboardCatalog: DashboardCatalog = {
-  ticketLeaderboard: {
-    name: 'Top Ticket Handlers',
+  performanceLeaderboard: {
+    name: 'Performance Leaderboard',
     layout: createLayout(
       {
         minW: 3,
@@ -29,10 +29,10 @@ export const modDashboardCatalog: DashboardCatalog = {
       },
     ),
     card: {
-      title: 'Tickets',
+      title: 'Performance',
       variant: 'outlined',
     },
-    component: TicketerLeaderboard,
+    component: () => <PerformanceLeaderboard area="moderator" />,
   },
   ticketStatus: {
     name: 'All Tickets Status',

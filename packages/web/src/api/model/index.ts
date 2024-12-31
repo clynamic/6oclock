@@ -7,6 +7,7 @@
  */
 
 export * from './activitySeriesPoint';
+export * from './activitySummary';
 export * from './approvalCountSummary';
 export * from './approverSummary';
 export * from './dashboardConfig';
@@ -28,6 +29,7 @@ export * from './getDeletionCountSeriesParams';
 export * from './getDeletionSeriesByDeleterParams';
 export * from './getFeedbackTypeSeriesParams';
 export * from './getJobsParams';
+export * from './getPerformanceParams';
 export * from './getPermitCountParams';
 export * from './getPostPendingSeriesParams';
 export * from './getPostReplacementCreatedParams';
@@ -53,6 +55,8 @@ export * from './listManifestsParams';
 export * from './manifest';
 export * from './manifestHealth';
 export * from './manifestSlice';
+export * from './performanceGrade';
+export * from './performanceSummary';
 export * from './postReplacementStatusPoint';
 export * from './postStatusSummary';
 export * from './postUploaderSummary';
@@ -65,6 +69,7 @@ export * from './ticketStatusSeriesPoint';
 export * from './ticketTypeSummary';
 export * from './timeScale';
 export * from './tokenValidation';
+export * from './trendGrade';
 export * from './userArea';
 export * from './userCredentials';
 export * from './userHead';

@@ -15,9 +15,143 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query';
-import type { ActivitySeriesPoint, GetActivityParams } from './model';
+import type {
+  ActivitySeriesPoint,
+  GetActivityParams,
+  GetPerformanceParams,
+  PerformanceSummary,
+} from './model';
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
+
+/**
+ * Get performance data for an area.
+ * @summary Performance
+ */
+export const performance = (
+  params?: GetPerformanceParams,
+  signal?: AbortSignal,
+) => {
+  return makeRequest<PerformanceSummary[]>({
+    url: `/metrics/performance/performance`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
+
+export const getPerformanceQueryKey = (params?: GetPerformanceParams) => {
+  return [
+    `/metrics/performance/performance`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getPerformanceQueryOptions = <
+  TData = Awaited<ReturnType<typeof performance>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPerformanceQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof performance>>> = ({
+    signal,
+  }) => performance(params, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof performance>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type PerformanceQueryResult = NonNullable<
+  Awaited<ReturnType<typeof performance>>
+>;
+export type PerformanceQueryError = ErrorType<unknown>;
+
+export function usePerformance<
+  TData = Awaited<ReturnType<typeof performance>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetPerformanceParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof performance>>,
+          TError,
+          TData
+        >,
+        'initialData'
+      >;
+  },
+): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function usePerformance<
+  TData = Awaited<ReturnType<typeof performance>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof performance>>,
+          TError,
+          TData
+        >,
+        'initialData'
+      >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function usePerformance<
+  TData = Awaited<ReturnType<typeof performance>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+/**
+ * @summary Performance
+ */
+
+export function usePerformance<
+  TData = Awaited<ReturnType<typeof performance>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getPerformanceQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
 
 /**
  * Get activity data for the specified range, scale, and cycle.
