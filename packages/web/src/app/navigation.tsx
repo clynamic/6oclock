@@ -82,10 +82,21 @@ export const appNavNodes: NavNode[] = [
         hidden: true,
         component: <ProfilePage />,
       },
+      // TODO: me redirects work for now, but we should resolve the paths instead
+      {
+        label: 'Profile',
+        href: '/users/me',
+        component: <ProfilePage />,
+      },
       {
         label: 'Performance',
         href: '/users/:id/performance',
         hidden: true,
+        component: <PerformanceDetailPage />,
+      },
+      {
+        label: 'Performance',
+        href: '/users/me/performance',
         component: <PerformanceDetailPage />,
       },
     ],
