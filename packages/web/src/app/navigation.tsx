@@ -1,6 +1,7 @@
 import { ReactElement } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, useParams } from 'react-router-dom';
 
+import { useAuth } from '../auth';
 import { HealthPage } from '../health';
 import { JobsPage } from '../health/jobs';
 import { HomePage } from '../home';
@@ -11,6 +12,15 @@ import { NavNode } from '../page';
 import { NavSpacer, NavUser } from '../page';
 import { ProfilePage } from '../profile';
 import { PerformanceDetailPage, PerformancePage } from '../users';
+
+export const useResolveUserId = (): Record<string, string> => {
+  const { id } = useParams<{ id: string }>();
+  const { payload } = useAuth();
+
+  return {
+    id: id || payload?.userId?.toString() || '',
+  };
+};
 
 export const appNavNodes: NavNode[] = [
   {
@@ -79,25 +89,14 @@ export const appNavNodes: NavNode[] = [
       {
         label: 'Profile',
         href: '/users/:id',
-        hidden: true,
         component: <ProfilePage />,
-      },
-      // TODO: me redirects work for now, but we should resolve the paths instead
-      {
-        label: 'Profile',
-        href: '/users/me',
-        component: <ProfilePage />,
+        resolve: useResolveUserId,
       },
       {
         label: 'Performance',
         href: '/users/:id/performance',
-        hidden: true,
         component: <PerformanceDetailPage />,
-      },
-      {
-        label: 'Performance',
-        href: '/users/me/performance',
-        component: <PerformanceDetailPage />,
+        resolve: useResolveUserId,
       },
     ],
   },

@@ -18,7 +18,11 @@ import { Fragment } from 'react/jsx-runtime';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { AppLogo } from '../../common';
-import { NavAction, useNavigationEntries } from '../navigation';
+import {
+  NavAction,
+  resolveNavLinks,
+  useNavigationEntries,
+} from '../navigation';
 import { PageHeaderProvider, usePageHeaderContext } from './PageHeaderContext';
 
 export interface PageHeaderProps {
@@ -26,10 +30,11 @@ export interface PageHeaderProps {
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ actions }) => {
-  const navigationEntries = useNavigationEntries();
+  const allEntries = useNavigationEntries();
+  const entries = resolveNavLinks(allEntries);
 
   return (
-    <PageHeaderProvider navigation={navigationEntries} actions={actions}>
+    <PageHeaderProvider navigation={entries} actions={actions}>
       <PageHeaderBar />
     </PageHeaderProvider>
   );
