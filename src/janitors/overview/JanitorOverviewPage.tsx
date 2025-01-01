@@ -7,22 +7,20 @@ import {
   RemoteDashboardProvider,
 } from '../../dashboard';
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
-import { ChartParamsProvider, useChartParamsValue } from '../../utils';
+import { ChartParamsExtraProvider } from '../../utils';
 import {
   janitorDashboardCatalog,
   janitorDashboardCatalogVersion,
 } from './JanitorCatalog';
 
 export const JanitorOverviewPage: React.FC = () => {
-  const chartParams = useChartParamsValue();
-
   return (
     <RemoteDashboardProvider
       type={DashboardConfigType.janitor}
       catalog={janitorDashboardCatalog}
       version={janitorDashboardCatalogVersion}
     >
-      <ChartParamsProvider params={{ ...chartParams, area: UserArea.janitor }}>
+      <ChartParamsExtraProvider params={{ area: UserArea.janitor }}>
         <Page>
           <PageTitle subtitle="Janitors" />
           <PageHeader actions={[<DashboardEditHeader />]} />
@@ -33,7 +31,7 @@ export const JanitorOverviewPage: React.FC = () => {
           </PageBody>
           <PageFooter />
         </Page>
-      </ChartParamsProvider>
+      </ChartParamsExtraProvider>
     </RemoteDashboardProvider>
   );
 };
