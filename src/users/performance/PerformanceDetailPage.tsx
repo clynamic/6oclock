@@ -114,11 +114,11 @@ export const PerformanceDetailPage: React.FC = () => {
       />
       <PageBody>
         <Box sx={{ width: '100%', maxWidth: 800, margin: 'auto', p: 2 }}>
-          <QueryHint error={error} isEmpty={!summary && !isLoading}>
-            <Stack sx={{ height: '100%', width: '100%', gap: 1 }}>
-              <Stack direction="column">
-                <Card>
-                  <Box p={4} sx={{ width: '100%' }}>
+          <Stack sx={{ height: '100%', width: '100%', gap: 1 }}>
+            <Stack direction="column">
+              <Card>
+                <Box p={4} sx={{ width: '100%' }}>
+                  <QueryHint error={error} isEmpty={!summary && !isLoading}>
                     <Stack direction="column" spacing={2}>
                       <Stack direction="row" spacing={2}>
                         <UserAvatar
@@ -322,26 +322,26 @@ export const PerformanceDetailPage: React.FC = () => {
                         </Stack>
                       </Stack>
                     </Stack>
-                  </Box>
-                </Card>
-                <Stack
-                  direction="row"
-                  justifyContent="flex-end"
-                  sx={{
-                    marginTop: 2,
-                  }}
+                  </QueryHint>
+                </Box>
+              </Card>
+              <Stack
+                direction="row"
+                justifyContent="flex-end"
+                sx={{
+                  marginTop: 2,
+                }}
+              >
+                <Button
+                  size="small"
+                  endIcon={<SwapHoriz />}
+                  onClick={() => setLastMonth(!lastMonth)}
                 >
-                  <Button
-                    size="small"
-                    endIcon={<SwapHoriz />}
-                    onClick={() => setLastMonth(!lastMonth)}
-                  >
-                    {lastMonth ? 'View This Month' : 'View Last Month'}
-                  </Button>
-                </Stack>
+                  {lastMonth ? 'View This Month' : 'View Last Month'}
+                </Button>
               </Stack>
             </Stack>
-          </QueryHint>
+          </Stack>
         </Box>
       </PageBody>
       <PageFooter />
