@@ -30,7 +30,7 @@ const ChartParamsContext = createContext<ChartParamsContextValue | undefined>(
 );
 
 export type ChartParamsProviderProps = PropsWithChildren & {
-  params?: Partial<ChartParams>;
+  params?: ChartParams;
 };
 
 export const ChartParamsProvider: React.FC<ChartParamsProviderProps> = ({
@@ -58,6 +58,22 @@ export const ChartParamsProvider: React.FC<ChartParamsProviderProps> = ({
     >
       {children}
     </ChartParamsContext.Provider>
+  );
+};
+
+export type ChartParamsExtraProviderProps = PropsWithChildren & {
+  params?: Partial<ChartParams>;
+};
+
+export const ChartParamsExtraProvider: React.FC<
+  ChartParamsExtraProviderProps
+> = ({ params, children }) => {
+  const value = useChartParamsValue();
+
+  return (
+    <ChartParamsProvider params={{ ...value, ...params }}>
+      {children}
+    </ChartParamsProvider>
   );
 };
 
