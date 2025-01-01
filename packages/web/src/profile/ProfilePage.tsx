@@ -13,7 +13,7 @@ import { janitorProfileCatalog } from '../janitors';
 import { modProfileCatalog } from '../mods';
 import { Page, PageBody, PageFooter, PageTitle } from '../page';
 import { userProfileCatalog } from '../users';
-import { ChartParamsProvider, useChartParamsValue } from '../utils';
+import { ChartParamsExtraProvider } from '../utils';
 import { ProfilePageHeader } from './ProfilePageHeader';
 
 export const ProfilePage: React.FC = () => {
@@ -28,7 +28,6 @@ export const ProfilePage: React.FC = () => {
       enabled: !!userId,
     },
   });
-  const chartParams = useChartParamsValue();
 
   const catalog = useMemo<DashboardCatalog | undefined>(() => {
     if (!user) return undefined;
@@ -75,9 +74,7 @@ export const ProfilePage: React.FC = () => {
           : undefined
       }
     >
-      <ChartParamsProvider
-        params={{ ...chartParams, userId: Number(id), area }}
-      >
+      <ChartParamsExtraProvider params={{ userId: Number(id), area }}>
         <Page>
           <PageTitle subtitle={user?.name ?? `User #${id}`} />
           <ProfilePageHeader userId={userId} />
@@ -86,7 +83,7 @@ export const ProfilePage: React.FC = () => {
           </PageBody>
           <PageFooter />
         </Page>
-      </ChartParamsProvider>
+      </ChartParamsExtraProvider>
     </DashboardProvider>
   );
 };
