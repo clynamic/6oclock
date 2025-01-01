@@ -12,7 +12,7 @@ import {
 import { SparkLineChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
 import { useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { usePerformance } from '../../api';
 import {
@@ -23,14 +23,7 @@ import {
   UserAvatar,
   UsernameText,
 } from '../../common';
-import {
-  NavButton,
-  Page,
-  PageBody,
-  PageFooter,
-  PageHeader,
-  PageTitle,
-} from '../../page';
+import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
 import {
   DateRange,
   formatNumber,
@@ -90,28 +83,7 @@ export const PerformanceDetailPage: React.FC = () => {
             : 'Performance'
         }
       />
-      <PageHeader
-        actions={
-          // TODO: these are terribly hardcoded. We should expand our nav logic to dynamically generate these.
-          (summary?.userId && [
-            <NavButton
-              key="profile"
-              component={Link}
-              {...{ to: `/users/${summary?.userId}` }}
-            >
-              Profile
-            </NavButton>,
-            <NavButton
-              key="performance"
-              component={Link}
-              {...{ to: `/users/${summary?.userId}/performance` }}
-            >
-              Performance
-            </NavButton>,
-          ]) ||
-          []
-        }
-      />
+      <PageHeader />
       <PageBody>
         <Box sx={{ width: '100%', maxWidth: 800, margin: 'auto', p: 2 }}>
           <Stack sx={{ height: '100%', width: '100%', gap: 1 }}>

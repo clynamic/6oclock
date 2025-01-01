@@ -2,7 +2,7 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import { MD5 } from 'crypto-js';
 import { DateTime } from 'luxon';
 import React, { useEffect, useMemo, useRef } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { matchPath, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { checkAuthToken } from '../http';
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
@@ -13,7 +13,8 @@ export interface AuthGuardProps {
 }
 
 export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
-  const { token, clearToken, session, saveSession, clearSession } = useAuth();
+  const { token, clearToken, session, saveSession, clearSession, payload } =
+    useAuth();
   const hasSession = useMemo(() => !!session, [session]);
 
   const sentinel = useRef(0);
@@ -79,6 +80,20 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
 
     runCheck();
   }, [clearSession, clearToken, navigate, saveSession, session, token]);
+
+  useEffect(() => {
+    if (payload?.userId) {
+      const isUserMePath = matchPath('/users/me/*', location.pathname);
+
+      if (isUserMePath) {
+        const newPath = location.pathname.replace(
+          '/users/me',
+          `/users/${payload.userId}`,
+        );
+        navigate(newPath, { replace: true });
+      }
+    }
+  }, [location.pathname, navigate, payload?.userId]);
 
   if (!hasSession) {
     return (

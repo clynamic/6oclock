@@ -27,20 +27,6 @@ export const ProfilePageHeader: React.FC<ProfilePageHeaderProps> = ({
   return (
     <PageHeader
       actions={[
-        <NavButton
-          key="profile"
-          component={Link}
-          {...{ to: `/users/${userId}` }}
-        >
-          Profile
-        </NavButton>,
-        <NavButton
-          key="performance"
-          component={Link}
-          {...{ to: `/users/${userId}/performance` }}
-        >
-          Performance
-        </NavButton>,
         // if in debug mode, show Edit Header
         (import.meta.env.MODE === 'development' && [
           <DashboardEditHeader key="edit-dashboard" />,
