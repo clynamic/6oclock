@@ -61,7 +61,16 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
                   justifyContent="space-between"
                   alignItems="center"
                 >
-                  <UsernameText user={summary?.userHead} />
+                  <UsernameText
+                    user={
+                      summary
+                        ? {
+                            userId: summary.userId,
+                            head: summary.userHead,
+                          }
+                        : undefined
+                    }
+                  />
                 </Stack>
                 <Stack direction="row" gap={1} sx={{ flexWrap: 'wrap' }}>
                   {summary ? (
