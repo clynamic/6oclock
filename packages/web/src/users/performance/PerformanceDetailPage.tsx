@@ -11,8 +11,8 @@ import {
 } from '@mui/material';
 import { SparkLineChart } from '@mui/x-charts';
 import { DateTime } from 'luxon';
-import { useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useMemo } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { usePerformance } from '../../api';
 import {
@@ -37,8 +37,10 @@ import { getScoreGradeColor, getTrendGradeColor } from './color';
 export const PerformanceDetailPage: React.FC = () => {
   const range = useChartDateRange();
   const { id: userId } = useParams<{ id: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const theme = useTheme();
-  const [lastMonth, setLastMonth] = useState<boolean>(false);
+
+  const lastMonth = searchParams.get('lastMonth') === 'true';
 
   const selectedRange = useMemo<DateRange>(() => {
     if (lastMonth) {
@@ -73,6 +75,18 @@ export const PerformanceDetailPage: React.FC = () => {
       },
     },
   );
+
+  const toggleLastMonth = () => {
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      if (lastMonth) {
+        newParams.delete('lastMonth');
+      } else {
+        newParams.set('lastMonth', 'true');
+      }
+      return newParams;
+    });
+  };
 
   return (
     <Page>
@@ -307,7 +321,7 @@ export const PerformanceDetailPage: React.FC = () => {
                 <Button
                   size="small"
                   endIcon={<SwapHoriz />}
-                  onClick={() => setLastMonth(!lastMonth)}
+                  onClick={toggleLastMonth}
                 >
                   {lastMonth ? 'View This Month' : 'View Last Month'}
                 </Button>
