@@ -39,7 +39,7 @@ export const adminProfileCatalog: DashboardCatalog = {
       },
       {
         xs: { x: 0, y: 12, w: 4, h: 5 },
-        sm: { x: 0, y: 12, w: 6, h: 5 },
+        sm: { x: 0, y: 16, w: 6, h: 5 },
         md: { x: 4, y: 5, w: 5, h: 5 },
         lg: { x: 4, y: 5, w: 4, h: 5 },
         xl: { x: 6, y: 5, w: 5, h: 5 },
@@ -59,7 +59,7 @@ export const adminProfileCatalog: DashboardCatalog = {
       },
       {
         xs: { x: 0, y: 7, w: 4, h: 5 },
-        sm: { x: 0, y: 7, w: 6, h: 5 },
+        sm: { x: 0, y: 11, w: 6, h: 5 },
         md: { x: 4, y: 0, w: 5, h: 5 },
         lg: { x: 4, y: 0, w: 4, h: 5 },
         xl: { x: 6, y: 0, w: 5, h: 5 },
@@ -79,7 +79,7 @@ export const adminProfileCatalog: DashboardCatalog = {
       },
       {
         xs: { x: 0, y: 17, w: 4, h: 5 },
-        sm: { x: 0, y: 17, w: 6, h: 5 },
+        sm: { x: 0, y: 21, w: 6, h: 5 },
         md: { x: 4, y: 10, w: 5, h: 5 },
         lg: { x: 8, y: 0, w: 4, h: 5 },
         xl: { x: 11, y: 0, w: 5, h: 5 },
@@ -100,8 +100,8 @@ export const adminProfileCatalog: DashboardCatalog = {
       {
         xs: { x: 0, y: 2, w: 4, h: 4 },
         sm: { x: 0, y: 2, w: 6, h: 4 },
-        md: { x: 2, y: 2, w: 6, h: 4 },
-        lg: { x: 0, y: 2, w: 6, h: 4 },
+        md: { x: 0, y: 2, w: 4, h: 4 },
+        lg: { x: 0, y: 2, w: 4, h: 4 },
         xl: { x: 0, y: 2, w: 6, h: 4 },
       },
     ),
@@ -120,8 +120,8 @@ export const adminProfileCatalog: DashboardCatalog = {
       {
         xs: { x: 0, y: 6, w: 4, h: 5 },
         sm: { x: 0, y: 6, w: 6, h: 5 },
-        md: { x: 2, y: 6, w: 6, h: 5 },
-        lg: { x: 0, y: 6, w: 6, h: 5 },
+        md: { x: 0, y: 6, w: 4, h: 5 },
+        lg: { x: 0, y: 6, w: 4, h: 5 },
         xl: { x: 0, y: 6, w: 6, h: 5 },
       },
     ),

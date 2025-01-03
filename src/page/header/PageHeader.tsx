@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   Divider,
-  ListItemText,
   Menu,
   MenuItem,
   Stack,
@@ -23,6 +22,7 @@ import {
   resolveNavLinks,
   useNavigationEntries,
 } from '../navigation';
+import { NavLink } from './NavLink';
 import { PageHeaderProvider, usePageHeaderContext } from './PageHeaderContext';
 
 export interface PageHeaderProps {
@@ -162,15 +162,11 @@ const PageHeaderBar: React.FC = () => {
                   .map((entry) => {
                     if (entry instanceof Object && 'href' in entry) {
                       return (
-                        <MenuItem
+                        <NavLink
                           key={`subnav-${entry.href}`}
-                          onClick={() => {
-                            navigate(entry.href!);
-                            popupState.close();
-                          }}
-                        >
-                          <ListItemText>{entry.label}</ListItemText>
-                        </MenuItem>
+                          href={entry.href}
+                          label={entry.label}
+                        />
                       );
                     }
                     return entry;
@@ -306,21 +302,11 @@ const PageHeaderBar: React.FC = () => {
                     .map((entry, i) => {
                       if (entry instanceof Object && 'href' in entry) {
                         return (
-                          <Button
+                          <NavLink
                             key={`subnav-${entry.href}`}
-                            component={RouterLink}
-                            to={entry.href}
-                            variant="text"
-                            size="small"
-                            color="secondary"
-                            sx={{
-                              p: 0.2,
-                              borderBottomLeftRadius: 0,
-                              borderBottomRightRadius: 0,
-                            }}
-                          >
-                            <Typography>{entry.label}</Typography>
-                          </Button>
+                            href={entry.href}
+                            label={entry.label}
+                          />
                         );
                       }
                       return (
