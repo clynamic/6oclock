@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 
 import { usePerformance, UserArea } from '../../api';
 import { LimitedList, QueryHint } from '../../common';
-import { refetchQueryOptions, useChartParamsValue } from '../../utils';
+import { refetchQueryOptions, useChartValue } from '../../utils';
 import { PerformanceFrame } from './PerformanceFrame';
 
 export const PerformanceLeaderboard: React.FC = () => {
-  const { range, area } = useChartParamsValue();
+  const { range, area } = useChartValue();
 
   const { data, isLoading, error } = usePerformance(
     {

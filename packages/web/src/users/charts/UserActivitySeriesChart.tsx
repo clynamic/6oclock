@@ -8,12 +8,12 @@ import {
   flattenPointSeries,
   refetchQueryOptions,
   SeriesChartProps,
-  useChartParamsValue,
+  useChartValue,
 } from '../../utils';
 
 export const UserActivitySeriesChart: React.FC = () => {
   const theme = useTheme();
-  const { range, userId, area } = useChartParamsValue();
+  const { range, userId, area } = useChartValue();
 
   const { data, isLoading, error } = useActivity(
     { ...range, cycle: TimeScale.day, userId: userId ?? 0, area },

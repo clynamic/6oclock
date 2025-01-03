@@ -3,11 +3,11 @@ import { useMemo } from 'react';
 
 import { TicketTypeSummary, useTicketTypeSummaryByHandler } from '../../api';
 import { QueryHint } from '../../common';
-import { refetchQueryOptions, useChartParamsValue } from '../../utils';
+import { refetchQueryOptions, useChartValue } from '../../utils';
 import { TicketTypeColors } from './TicketTypeSummaryChart';
 
 export const TicketTypeSummaryByHandlerTypeChart: React.FC = () => {
-  const { range, userId } = useChartParamsValue();
+  const { range, userId } = useChartValue();
   const { data, isLoading, error } = useTicketTypeSummaryByHandler(
     userId ?? 0,
     range,

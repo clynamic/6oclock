@@ -4,11 +4,11 @@ import { useMemo } from 'react';
 
 import { TimeScale, useTicketStatus } from '../../api';
 import { QueryHint } from '../../common';
-import { refetchQueryOptions, useChartDateRange } from '../../utils';
+import { refetchQueryOptions, useChartRange } from '../../utils';
 
 export const TicketStatusSummaryChart: React.FC = () => {
   const theme = useTheme();
-  const range = useChartDateRange();
+  const range = useChartRange();
 
   const { data, isLoading, error } = useTicketStatus(
     { ...range, scale: TimeScale.all },

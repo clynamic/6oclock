@@ -57,6 +57,7 @@ export * from './manifest';
 export * from './manifestHealth';
 export * from './manifestSlice';
 export * from './performanceGrade';
+export * from './performanceRecord';
 export * from './performanceSummary';
 export * from './postReplacementStatusPoint';
 export * from './postStatusSummary';

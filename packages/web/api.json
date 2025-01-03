@@ -2571,6 +2571,14 @@
           "surge"
         ]
       },
+      "PerformanceRecord": {
+        "type": "object",
+        "properties": {
+          "grade": { "$ref": "#/components/schemas/PerformanceGrade" },
+          "score": { "type": "number" }
+        },
+        "required": ["grade", "score"]
+      },
       "ActivitySummary": {
         "type": "object",
         "properties": {
@@ -2604,8 +2612,11 @@
           "position": { "type": "number" },
           "score": { "type": "number" },
           "trend": { "type": "number" },
-          "previousScores": { "type": "array", "items": { "type": "number" } },
-          "activitySummary": { "$ref": "#/components/schemas/ActivitySummary" },
+          "history": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PerformanceRecord" }
+          },
+          "activity": { "$ref": "#/components/schemas/ActivitySummary" },
           "days": { "type": "number" }
         },
         "required": [
@@ -2615,8 +2626,8 @@
           "position",
           "score",
           "trend",
-          "previousScores",
-          "activitySummary",
+          "history",
+          "activity",
           "days"
         ]
       },

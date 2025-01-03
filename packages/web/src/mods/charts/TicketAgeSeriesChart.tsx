@@ -4,11 +4,11 @@ import { useMemo } from 'react';
 
 import { useTicketAgeSeries } from '../../api';
 import { QueryHint } from '../../common';
-import { SeriesChartProps, useChartDateRange } from '../../utils';
+import { SeriesChartProps, useChartRange } from '../../utils';
 import { TicketAgeColors, TicketAgeLabels } from './TicketAgeSummaryChart';
 
 export const TicketAgeSeriesChart: React.FC = () => {
-  const range = useChartDateRange();
+  const range = useChartRange();
 
   const { data, isLoading, error } = useTicketAgeSeries(range);
 

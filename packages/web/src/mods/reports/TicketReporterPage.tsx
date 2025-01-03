@@ -3,11 +3,11 @@ import { Box, Stack } from '@mui/material';
 import { useTicketReporterSummaryInfinite } from '../../api';
 import { LoadMoreHint, QueryHint } from '../../common';
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
-import { useChartDateRange } from '../../utils';
+import { useChartRange } from '../../utils';
 import { TicketReporterFrame } from './TicketReporterFrame';
 
 export const TicketReporterPage: React.FC = () => {
-  const range = useChartDateRange();
+  const range = useChartRange();
 
   const { data, ...query } = useTicketReporterSummaryInfinite(
     {

@@ -68,7 +68,7 @@ export type ChartParamsExtraProviderProps = PropsWithChildren & {
 export const ChartParamsExtraProvider: React.FC<
   ChartParamsExtraProviderProps
 > = ({ params, children }) => {
-  const value = useChartParamsValue();
+  const value = useChartValue();
 
   return (
     <ChartParamsProvider params={{ ...value, ...params }}>
@@ -77,7 +77,7 @@ export const ChartParamsExtraProvider: React.FC<
   );
 };
 
-export const useChartParams = (): ChartParamsContextValue => {
+export const useChartContext = (): ChartParamsContextValue => {
   const context = useContext(ChartParamsContext);
   if (!context) {
     throw new Error('useChartDate must be used within a ChartDateProvider');
@@ -85,10 +85,10 @@ export const useChartParams = (): ChartParamsContextValue => {
   return context;
 };
 
-export const useChartParamsValue = (): ChartParams => {
-  return useChartParams().params;
+export const useChartValue = (): ChartParams => {
+  return useChartContext().params;
 };
 
-export const useChartDateRange = (): DateRange => {
-  return useChartParams().params.range;
+export const useChartRange = (): DateRange => {
+  return useChartContext().params.range;
 };

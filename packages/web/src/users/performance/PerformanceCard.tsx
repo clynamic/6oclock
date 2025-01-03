@@ -10,12 +10,12 @@ import {
   getActivityFromKey,
   getActivityName,
   refetchQueryOptions,
-  useChartParamsValue,
+  useChartValue,
 } from '../../utils';
 import { getScoreGradeColor } from './color';
 
 export const PerformanceCard: React.FC = () => {
-  const { range, userId, area } = useChartParamsValue();
+  const { range, userId, area } = useChartValue();
 
   const { data, isLoading, error } = usePerformance(
     {

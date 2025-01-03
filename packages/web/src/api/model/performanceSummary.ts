@@ -6,15 +6,16 @@
  * OpenAPI spec version: 0.0.6
  */
 import type { ActivitySummary } from './activitySummary';
+import type { PerformanceRecord } from './performanceRecord';
 import type { PerformanceGrade } from './performanceGrade';
 import type { TrendGrade } from './trendGrade';
 import type { UserHead } from './userHead';
 
 export interface PerformanceSummary {
-  activitySummary: ActivitySummary;
+  activity: ActivitySummary;
   days: number;
+  history: PerformanceRecord[];
   position: number;
-  previousScores: number[];
   score: number;
   scoreGrade: PerformanceGrade;
   trend: number;
