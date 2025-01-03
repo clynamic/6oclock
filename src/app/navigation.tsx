@@ -10,8 +10,10 @@ import { PostUploaderPage } from '../janitors/uploads';
 import { ModOverviewPage, TicketerPage, TicketReporterPage } from '../mods';
 import { NavNode } from '../page';
 import { NavSpacer, NavUser } from '../page';
+import { PerformanceTable } from '../performance';
 import { ProfilePage } from '../profile';
 import { PerformanceDetailPage, PerformancePage } from '../users';
+import { ChartParamsExtraProvider } from '../utils';
 
 export const useResolveUserId = (): Record<string, string> => {
   const { id } = useParams<{ id: string }>();
@@ -94,9 +96,39 @@ export const appNavNodes: NavNode[] = [
       },
       {
         label: 'Performance',
-        href: '/users/:id/performance',
-        component: <PerformanceDetailPage />,
+        href: '/performance/:id',
         resolve: useResolveUserId,
+      },
+    ],
+  },
+  {
+    label: 'Performance',
+    href: '/performance',
+    hidden: true,
+    children: [
+      {
+        label: 'Mods',
+        href: '/performance/mods',
+        component: (
+          <ChartParamsExtraProvider params={{ area: 'moderator' }}>
+            <PerformanceTable />
+          </ChartParamsExtraProvider>
+        ),
+      },
+      {
+        label: 'Janitors',
+        href: '/performance/janitors',
+        component: (
+          <ChartParamsExtraProvider params={{ area: 'janitor' }}>
+            <PerformanceTable />
+          </ChartParamsExtraProvider>
+        ),
+      },
+      {
+        label: 'Performance',
+        href: '/performance/:id',
+        component: <PerformanceDetailPage />,
+        hidden: true,
       },
     ],
   },

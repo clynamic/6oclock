@@ -14,12 +14,12 @@ import {
   mergePointSeries,
   refetchQueryOptions,
   SeriesChartProps,
-  useChartDateRange,
+  useChartRange,
 } from '../../utils';
 
 export const PostStatusCountSeriesChart: React.FC = () => {
   const theme = useTheme();
-  const range = useChartDateRange();
+  const range = useChartRange();
 
   const {
     data: approvedData,

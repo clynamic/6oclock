@@ -34,6 +34,7 @@ export const TrendIcon: React.FC<TrendIconProps> = ({ grade, size = 20 }) => {
             grade.includes('surge')
           ? TrendingUp
           : TrendingDown;
+    const text = grade === 'neutral' ? '→' : grade === 'rise' ? '↗' : '↘';
     const spacing = size * 0.8;
 
     return (
@@ -54,6 +55,11 @@ export const TrendIcon: React.FC<TrendIconProps> = ({ grade, size = 20 }) => {
             }}
           />
         ))}
+        <Box component="span" sx={{ ...iconStyle, opacity: 0 }}>
+          {Array.from({ length: count })
+            .map(() => text)
+            .join('')}
+        </Box>
       </Box>
     );
   };

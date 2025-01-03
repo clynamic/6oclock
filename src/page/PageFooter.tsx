@@ -12,11 +12,14 @@ export const PageFooter: React.FC = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 1,
         padding: 1,
-        backgroundColor: 'background.paper',
+
         borderTopLeftRadius: (theme) => theme.shape.borderRadius,
         borderTopRightRadius: (theme) => theme.shape.borderRadius,
-        marginTop: 1,
+
+        backgroundColor: 'background.paper',
+        userSelect: 'none',
       }}
     >
       <Stack

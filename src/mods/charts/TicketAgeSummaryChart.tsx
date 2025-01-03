@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 
 import { TicketAgeSummary, useTicketAgeSummary } from '../../api';
 import { QueryHint } from '../../common';
-import { refetchQueryOptions, useChartDateRange } from '../../utils';
+import { refetchQueryOptions, useChartRange } from '../../utils';
 
 export const TicketAgeColors = {
   oneDay: '#82b74b', // Moss green
@@ -24,7 +24,7 @@ export const TicketAgeLabels = {
 } as const;
 
 export const TicketAgeSummaryChart: React.FC = () => {
-  const range = useChartDateRange();
+  const range = useChartRange();
   const { data, isLoading, error } = useTicketAgeSummary(
     range,
     refetchQueryOptions(),

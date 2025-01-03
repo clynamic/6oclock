@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 
 import { useApproverSummary } from '../../api';
 import { LimitedList, QueryHint } from '../../common';
-import { refetchQueryOptions, useChartDateRange } from '../../utils';
+import { refetchQueryOptions, useChartRange } from '../../utils';
 import { ApproverFrame } from './ApproverFrame';
 
 export const ApproverBoard: React.FC = () => {
-  const range = useChartDateRange();
+  const range = useChartRange();
 
   const { data, isLoading, error } = useApproverSummary(
     {

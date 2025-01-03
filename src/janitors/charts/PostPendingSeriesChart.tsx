@@ -4,11 +4,11 @@ import { DateTime } from 'luxon';
 
 import { usePostPendingSeries } from '../../api';
 import { QueryHint } from '../../common';
-import { refetchQueryOptions, useChartDateRange } from '../../utils';
+import { refetchQueryOptions, useChartRange } from '../../utils';
 
 export const PostPendingSeriesChart: React.FC = () => {
   const theme = useTheme();
-  const range = useChartDateRange();
+  const range = useChartRange();
 
   const { data, isLoading, error } = usePostPendingSeries(
     range,

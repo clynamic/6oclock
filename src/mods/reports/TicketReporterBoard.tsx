@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 
 import { useTicketReporterSummary } from '../../api';
 import { LimitedList, QueryHint } from '../../common';
-import { refetchQueryOptions, useChartDateRange } from '../../utils';
+import { refetchQueryOptions, useChartRange } from '../../utils';
 import { TicketReporterFrame } from './TicketReporterFrame';
 
 export const TicketReporterBoard: React.FC = () => {
-  const range = useChartDateRange();
+  const range = useChartRange();
 
   const { data, isLoading, error } = useTicketReporterSummary(
     {

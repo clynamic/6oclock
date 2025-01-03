@@ -3,12 +3,12 @@ import { Box, IconButton, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import { useUserHead } from '../api';
-import { useChartParamsValue } from '../utils';
+import { useChartValue } from '../utils';
 import { UserAvatar } from './UserAvatar';
 import { UsernameText } from './UsernameText';
 
 export const UserCard: React.FC = () => {
-  const { userId } = useChartParamsValue();
+  const { userId } = useChartValue();
   const { data: user } = useUserHead(userId ?? 0, {
     query: {
       enabled: !!userId,

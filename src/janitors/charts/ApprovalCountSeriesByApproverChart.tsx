@@ -12,12 +12,12 @@ import {
   mergePointSeries,
   refetchQueryOptions,
   SeriesChartProps,
-  useChartParamsValue,
+  useChartValue,
 } from '../../utils';
 
 export const ApprovalCountSeriesByApproverChart: React.FC = () => {
   const theme = useTheme();
-  const { range, userId } = useChartParamsValue();
+  const { range, userId } = useChartValue();
 
   const {
     data: approvedData,

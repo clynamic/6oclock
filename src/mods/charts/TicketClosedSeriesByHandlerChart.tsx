@@ -8,7 +8,7 @@ import { QueryHint } from '../../common';
 import {
   refetchQueryOptions,
   SeriesChartProps,
-  useChartParamsValue,
+  useChartValue,
 } from '../../utils';
 
 export interface TicketHandlerChartProps {
@@ -19,7 +19,7 @@ export const TicketClosedSeriesByHandlerChart: React.FC<
   TicketHandlerChartProps
 > = ({ variant = 'bars' }) => {
   const theme = useTheme();
-  const { range, userId } = useChartParamsValue();
+  const { range, userId } = useChartValue();
 
   const { data, isLoading, error } = useTicketClosedSeriesByHandler(
     userId ?? 0,
