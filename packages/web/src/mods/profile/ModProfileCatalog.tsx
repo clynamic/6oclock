@@ -1,6 +1,7 @@
 import { UserCard } from '../../common';
 import { createLayout, DashboardCatalog } from '../../dashboard';
-import { PerformanceCard, UserActivitySeriesChart } from '../../users';
+import { PerformanceCard } from '../../performance';
+import { UserActivitySeriesChart } from '../../users';
 import {
   TicketClosedSeriesByHandlerChart,
   TicketTypeSummaryByHandlerTypeChart,

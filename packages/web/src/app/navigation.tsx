@@ -10,9 +10,12 @@ import { PostUploaderPage } from '../janitors/uploads';
 import { ModOverviewPage, TicketerPage, TicketReporterPage } from '../mods';
 import { NavNode } from '../page';
 import { NavSpacer, NavUser } from '../page';
-import { PerformanceTable } from '../performance';
+import {
+  PerformanceDetailPage,
+  PerformancePage,
+  PerformanceTable,
+} from '../performance';
 import { ProfilePage } from '../profile';
-import { PerformanceDetailPage, PerformancePage } from '../users';
 import { ChartParamsExtraProvider } from '../utils';
 
 export const useResolveUserId = (): Record<string, string> => {

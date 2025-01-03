@@ -2,9 +2,9 @@ import { ArrowForward } from '@mui/icons-material';
 import { Button, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { usePerformance, UserArea } from '../../api';
-import { LimitedList, QueryHint } from '../../common';
-import { refetchQueryOptions, useChartValue } from '../../utils';
+import { usePerformance, UserArea } from '../api';
+import { LimitedList, QueryHint } from '../common';
+import { refetchQueryOptions, useChartValue } from '../utils';
 import { PerformanceFrame } from './PerformanceFrame';
 
 export const PerformanceLeaderboard: React.FC = () => {
