@@ -23,7 +23,15 @@ import {
   UserAvatar,
   UsernameText,
 } from '../common';
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
+import {
+  NavDivider,
+  NavLink,
+  Page,
+  PageBody,
+  PageFooter,
+  PageHeader,
+  PageTitle,
+} from '../page';
 import {
   DateRange,
   formatNumber,
@@ -97,7 +105,12 @@ export const PerformanceDetailPage: React.FC = () => {
             : 'Performance'
         }
       />
-      <PageHeader />
+      <PageHeader
+        actions={[
+          <NavDivider />,
+          <NavLink href={`/users/${userId}`} label="Profile" />,
+        ]}
+      />
       <PageBody>
         <Box sx={{ width: '100%', maxWidth: 800, margin: 'auto', p: 2 }}>
           <Stack sx={{ height: '100%', width: '100%', gap: 1 }}>
@@ -225,7 +238,9 @@ export const PerformanceDetailPage: React.FC = () => {
                             flex: 1,
                           }}
                         >
-                          <Typography variant="h6">Scores</Typography>
+                          <Typography variant="h6" sx={{ userSelect: 'none' }}>
+                            Scores
+                          </Typography>
                           {summary ? (
                             <SparkLineChart
                               data={[...summary.history]
