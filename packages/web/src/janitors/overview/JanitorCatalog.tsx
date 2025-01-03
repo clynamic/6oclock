@@ -1,5 +1,5 @@
 import { createLayout, DashboardCatalog } from '../../dashboard';
-import { PerformanceLeaderboard } from '../../users';
+import { PerformanceLeaderboard } from '../../performance';
 import {
   PostReplacementStatusSeriesChart,
   PostStatusCountSeriesChart,

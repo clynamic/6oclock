@@ -1,9 +1,9 @@
 import { Box, Stack } from '@mui/material';
 
-import { usePerformance, UserArea } from '../../api';
-import { QueryHint } from '../../common';
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
-import { refetchQueryOptions, useChartRange } from '../../utils';
+import { usePerformance, UserArea } from '../api';
+import { QueryHint } from '../common';
+import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
+import { refetchQueryOptions, useChartRange } from '../utils';
 import { PerformanceFrame } from './PerformanceFrame';
 
 export interface PerformancePageProps {

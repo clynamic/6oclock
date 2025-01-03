@@ -5,7 +5,8 @@ import {
   TicketClosedSeriesByHandlerChart,
   TicketTypeSummaryByHandlerTypeChart,
 } from '../../mods';
-import { PerformanceCard, UserActivitySeriesChart } from '../../users';
+import { PerformanceCard } from '../../performance';
+import { UserActivitySeriesChart } from '../../users';
 
 export const adminProfileCatalog: DashboardCatalog = {
   userHead: {

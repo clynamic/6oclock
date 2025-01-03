@@ -19,7 +19,6 @@ import {
   UsernameText,
 } from '../common';
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
-import { getScoreGradeColor, getTrendGradeColor } from '../users';
 import {
   DateRange,
   formatNumber,
@@ -28,6 +27,7 @@ import {
   refetchQueryOptions,
   useChartValue,
 } from '../utils';
+import { getScoreGradeColor, getTrendGradeColor } from './color';
 
 const SpaceCell: React.FC = () => (
   <TableCell>

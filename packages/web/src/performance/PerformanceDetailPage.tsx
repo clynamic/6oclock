@@ -14,7 +14,7 @@ import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import { usePerformance } from '../../api';
+import { usePerformance } from '../api';
 import {
   QueryHint,
   RankingText,
@@ -22,8 +22,8 @@ import {
   TrendIcon,
   UserAvatar,
   UsernameText,
-} from '../../common';
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
+} from '../common';
+import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
 import {
   DateRange,
   formatNumber,
@@ -31,7 +31,7 @@ import {
   getActivityName,
   refetchQueryOptions,
   useChartRange,
-} from '../../utils';
+} from '../utils';
 import { getScoreGradeColor, getTrendGradeColor } from './color';
 
 export const PerformanceDetailPage: React.FC = () => {
