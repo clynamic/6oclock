@@ -92,7 +92,7 @@ export const PerformanceCard: React.FC = () => {
               size="small"
               endIcon={<ArrowForward />}
               component={Link}
-              to={`/users/${userId}/performance`}
+              to={`/performance/${userId}`}
             >
               See Full Report
             </Button>
