@@ -8,7 +8,7 @@ import { QueryHint } from '../../common';
 import {
   refetchQueryOptions,
   SeriesChartProps,
-  useChartParamsValue,
+  useChartValue,
 } from '../../utils';
 
 export interface UploadsUploaderChartProps {
@@ -19,7 +19,7 @@ export const UploadsSeriesByUploaderChart: React.FC<
   UploadsUploaderChartProps
 > = ({ variant = 'bars' }) => {
   const theme = useTheme();
-  const { range, userId } = useChartParamsValue();
+  const { range, userId } = useChartValue();
 
   const { data, isLoading, error } = useUploadCount(
     {

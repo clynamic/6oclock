@@ -13,12 +13,12 @@ import {
   addToMergedSeries,
   refetchQueryOptions,
   SeriesChartProps,
-  useChartDateRange,
+  useChartRange,
 } from '../../utils';
 
 export const PostReplacementStatusSeriesChart: React.FC = () => {
   const theme = useTheme();
-  const range = useChartDateRange();
+  const range = useChartRange();
 
   const {
     data: statusData,

@@ -36,6 +36,27 @@ export const getActivityName = (activity: Activity): string => {
   }
 };
 
+export const getActivityNoun = (activity: Activity): string => {
+  switch (activity) {
+    case Activity.post_create:
+      return 'Uploads';
+    case Activity.post_approve:
+      return 'Approvals';
+    case Activity.post_delete:
+      return 'Deletions';
+    case Activity.post_replacement_create:
+      return 'Replacements';
+    case Activity.post_replacement_approve:
+      return 'Replacements';
+    case Activity.post_replacement_reject:
+      return 'Rejections';
+    case Activity.ticket_create:
+      return 'Reports';
+    case Activity.ticket_handle:
+      return 'Tickets';
+  }
+};
+
 export const getActivityIcon = (
   activity: Activity,
 ): ReactElement | undefined => {

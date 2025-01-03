@@ -30,12 +30,12 @@ import {
   getActivityFromKey,
   getActivityName,
   refetchQueryOptions,
-  useChartDateRange,
+  useChartRange,
 } from '../../utils';
 import { getScoreGradeColor, getTrendGradeColor } from './color';
 
 export const PerformanceDetailPage: React.FC = () => {
-  const range = useChartDateRange();
+  const range = useChartRange();
   const { id: userId } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const theme = useTheme();
@@ -228,10 +228,9 @@ export const PerformanceDetailPage: React.FC = () => {
                           <Typography variant="h6">Scores</Typography>
                           {summary ? (
                             <SparkLineChart
-                              data={[
-                                ...[...summary.previousScores].reverse(),
-                                summary.score,
-                              ]}
+                              data={[...summary.history]
+                                .reverse()
+                                .map((e) => e.score)}
                               area
                               height={116}
                               showTooltip
@@ -274,7 +273,7 @@ export const PerformanceDetailPage: React.FC = () => {
                           )}
                           <Stack direction="column" spacing={1}>
                             {summary
-                              ? Object.entries(summary.activitySummary).map(
+                              ? Object.entries(summary.activity).map(
                                   ([type, value]) => (
                                     <Stack
                                       key={type}

@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 
 import { TicketTypeSummary, useTicketTypeSummary } from '../../api';
 import { QueryHint } from '../../common';
-import { refetchQueryOptions, useChartDateRange } from '../../utils';
+import { refetchQueryOptions, useChartRange } from '../../utils';
 
 export const TicketTypeColors = {
   user: '#e1675d', // Vibrant coral
@@ -18,7 +18,7 @@ export const TicketTypeColors = {
 } as const;
 
 export const TicketTypeSummaryChart: React.FC = () => {
-  const range = useChartDateRange();
+  const range = useChartRange();
   const { data, isLoading, error } = useTicketTypeSummary(
     range,
     refetchQueryOptions(),

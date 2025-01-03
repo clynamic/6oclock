@@ -9,7 +9,7 @@ import {
   mergePointSeries,
   refetchQueryOptions,
   SeriesChartProps,
-  useChartDateRange,
+  useChartRange,
 } from '../../utils';
 
 export interface TicketTurnaroundChartProps {
@@ -20,7 +20,7 @@ export const TicketStatusSeriesChart: React.FC<TicketTurnaroundChartProps> = ({
   variant = 'bars',
 }) => {
   const theme = useTheme();
-  const range = useChartDateRange();
+  const range = useChartRange();
 
   const {
     data: createdData,

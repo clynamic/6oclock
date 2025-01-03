@@ -75,10 +75,10 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
                 <Stack direction="row" gap={1} sx={{ flexWrap: 'wrap' }}>
                   {summary ? (
                     <>
-                      {Object.keys(summary.activitySummary).map((key) => {
+                      {Object.keys(summary.activity).map((key) => {
                         const activity = getActivityFromKey(key);
                         const count =
-                          summary.activitySummary[key as keyof ActivitySummary];
+                          summary.activity[key as keyof ActivitySummary];
                         if (!count) return null;
 
                         return (

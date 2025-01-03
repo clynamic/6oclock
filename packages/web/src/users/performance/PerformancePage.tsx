@@ -3,7 +3,7 @@ import { Box, Stack } from '@mui/material';
 import { usePerformance, UserArea } from '../../api';
 import { QueryHint } from '../../common';
 import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
-import { refetchQueryOptions, useChartDateRange } from '../../utils';
+import { refetchQueryOptions, useChartRange } from '../../utils';
 import { PerformanceFrame } from './PerformanceFrame';
 
 export interface PerformancePageProps {
@@ -11,7 +11,7 @@ export interface PerformancePageProps {
 }
 
 export const PerformancePage: React.FC<PerformancePageProps> = ({ area }) => {
-  const range = useChartDateRange();
+  const range = useChartRange();
 
   const { data, isLoading, error } = usePerformance(
     {

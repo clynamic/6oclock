@@ -58,6 +58,20 @@ export const theme = createTheme({
         },
       },
     },
+    MuiDivider: {
+      styleOverrides: {
+        root: {
+          backgroundColor: hexagonColors.section,
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderBottom: `1px solid ${hexagonColors.section}`,
+        },
+      },
+    },
   },
   typography: {
     fontFamily: 'Verdana, Noto Sans, sans-serif',
