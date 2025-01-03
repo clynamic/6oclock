@@ -1,4 +1,4 @@
-import { PerformanceGrade, TrendGrade } from '../../api';
+import { PerformanceGrade, TrendGrade } from '../api';
 
 export const getScoreGradeColor = (
   grade?: PerformanceGrade,

@@ -10,15 +10,15 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { ActivitySummary, PerformanceSummary } from '../../api';
-import { UserAvatar, UsernameText } from '../../common';
-import { RankingText } from '../../common/RankingText';
+import { ActivitySummary, PerformanceSummary } from '../api';
+import { UserAvatar, UsernameText } from '../common';
+import { RankingText } from '../common/RankingText';
 import {
   formatNumber,
   getActivityFromKey,
   getActivityIcon,
   getActivityName,
-} from '../../utils';
+} from '../utils';
 import { getScoreGradeColor } from './color';
 
 export interface PerformanceLeaderboardFrameProps {

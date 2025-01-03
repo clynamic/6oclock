@@ -2,16 +2,15 @@ import { ArrowForward, Whatshot } from '@mui/icons-material';
 import { Box, Button, Skeleton, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { usePerformance } from '../../api';
-import { LimitedList, QueryHint } from '../../common';
-import { RankingText } from '../../common/RankingText';
+import { usePerformance } from '../api';
+import { LimitedList, QueryHint, RankingText } from '../common';
 import {
   formatNumber,
   getActivityFromKey,
   getActivityName,
   refetchQueryOptions,
   useChartValue,
-} from '../../utils';
+} from '../utils';
 import { getScoreGradeColor } from './color';
 
 export const PerformanceCard: React.FC = () => {
@@ -60,7 +59,7 @@ export const PerformanceCard: React.FC = () => {
           <Stack direction="column" spacing={1} flex={1} overflow="hidden">
             <LimitedList>
               {data
-                ? Object.entries(data.activitySummary).map(([type, value]) => (
+                ? Object.entries(data.activity).map(([type, value]) => (
                     <Stack
                       key={type}
                       direction="row"
