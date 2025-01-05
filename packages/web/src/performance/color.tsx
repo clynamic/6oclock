@@ -1,6 +1,9 @@
+import { Theme, useTheme } from '@mui/material';
+
 import { PerformanceGrade, TrendGrade } from '../api';
 
 export const getScoreGradeColor = (
+  theme: Theme,
   grade?: PerformanceGrade,
 ): string | undefined => {
   if (!grade) return undefined;
@@ -21,35 +24,49 @@ export const getScoreGradeColor = (
     return '#9e66bb';
     // return 'info.main';
   } else if (grade == PerformanceGrade.A) {
-    return 'success.main';
+    return theme.palette.success.main;
   } else if (grade == PerformanceGrade.B) {
-    return 'success.light';
+    return theme.palette.success.light;
   } else if (grade == PerformanceGrade.C) {
-    return 'warning.light';
+    return theme.palette.warning.main;
   } else if (grade == PerformanceGrade.D) {
-    return 'warning.main';
+    return theme.palette.warning.light;
   } else if (grade == PerformanceGrade.E) {
-    return 'error.light';
+    return theme.palette.error.light;
   } else if (grade == PerformanceGrade.F) {
-    return 'error.main';
+    return theme.palette.error.main;
   }
 };
 
-export const getTrendGradeColor = (grade?: TrendGrade): string | undefined => {
+export const getTrendGradeColor = (
+  theme: Theme,
+  grade?: TrendGrade,
+): string | undefined => {
   if (!grade) return undefined;
   if (grade == TrendGrade.surge) {
-    return 'success.main';
+    return theme.palette.success.main;
   } else if (grade == TrendGrade.climb) {
-    return 'success.light';
+    return theme.palette.success.light;
   } else if (grade == TrendGrade.rise) {
-    return 'success.light';
+    return theme.palette.success.light;
   } else if (grade == TrendGrade.neutral) {
-    return 'warning.light';
+    return theme.palette.warning.main;
   } else if (grade == TrendGrade.decline) {
-    return 'warning.main';
+    return theme.palette.warning.light;
   } else if (grade == TrendGrade.drop) {
-    return 'error.light';
+    return theme.palette.error.light;
   } else if (grade == TrendGrade.plummet) {
-    return 'error.main';
+    return theme.palette.error.main;
   }
+};
+
+export const useGradeColors = () => {
+  const theme = useTheme();
+
+  return {
+    getScoreGradeColor: (grade?: PerformanceGrade) =>
+      getScoreGradeColor(theme, grade),
+    getTrendGradeColor: (grade?: TrendGrade) =>
+      getTrendGradeColor(theme, grade),
+  };
 };
