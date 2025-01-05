@@ -3,14 +3,16 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableCellProps,
   TableHead,
   TableRow,
 } from '@mui/material';
 import { DateTime } from 'luxon';
-import React, { useMemo } from 'react';
+import { mix } from 'polished';
+import React, { PropsWithChildren, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { usePerformance } from '../api';
+import { PerformanceGrade, TrendGrade, usePerformance } from '../api';
 import {
   QueryHint,
   RankingText,
@@ -27,7 +29,7 @@ import {
   refetchQueryOptions,
   useChartValue,
 } from '../utils';
-import { getScoreGradeColor, getTrendGradeColor } from './color';
+import { useGradeColors } from './color';
 
 const SpaceCell: React.FC = () => (
   <TableCell>
@@ -41,9 +43,37 @@ const SpaceCell: React.FC = () => (
   </TableCell>
 );
 
+const GradeCell: React.FC<
+  PropsWithChildren<
+    {
+      grade: TrendGrade | PerformanceGrade;
+    } & TableCellProps
+  >
+> = ({ grade, children, ...props }) => {
+  const { getScoreGradeColor, getTrendGradeColor } = useGradeColors();
+  return (
+    <TableCell
+      {...props}
+      align="center"
+      sx={{
+        backgroundColor: mix(
+          0.25,
+          '#808080',
+          (grade in PerformanceGrade
+            ? getScoreGradeColor(grade as PerformanceGrade)
+            : getTrendGradeColor(grade as TrendGrade)) ?? 'transparent',
+        ),
+      }}
+    >
+      {children}
+    </TableCell>
+  );
+};
+
 export const PerformanceTable: React.FC = () => {
   const { range, area } = useChartValue();
   const navigate = useNavigate();
+
   const tableRef = React.useRef<HTMLTableElement>(null);
 
   const lastMonth = true;
@@ -190,49 +220,26 @@ export const PerformanceTable: React.FC = () => {
                     {[...summary.history.slice(1)]
                       .reverse()
                       .map((record, i) => (
-                        <TableCell
-                          align="center"
-                          sx={{
-                            backgroundColor: getScoreGradeColor(record.grade),
-                          }}
+                        <GradeCell
+                          grade={record.grade}
                           key={`${summary.userId}-${i}`}
                         >
                           {record.score}
-                        </TableCell>
+                        </GradeCell>
                       ))}
                     <SpaceCell />
-                    <TableCell
-                      align="center"
-                      sx={{
-                        backgroundColor: getScoreGradeColor(summary.scoreGrade),
-                      }}
-                    >
+                    <GradeCell grade={summary.scoreGrade}>
                       {formatNumber(summary.score)}
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      sx={{
-                        backgroundColor: getScoreGradeColor(summary.scoreGrade),
-                      }}
-                    >
+                    </GradeCell>
+                    <GradeCell grade={summary.scoreGrade}>
                       {summary.scoreGrade}
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      sx={{
-                        backgroundColor: getTrendGradeColor(summary.trendGrade),
-                      }}
-                    >
+                    </GradeCell>
+                    <GradeCell grade={summary.trendGrade}>
                       <TrendIcon grade={summary.trendGrade} />
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      sx={{
-                        backgroundColor: getTrendGradeColor(summary.trendGrade),
-                      }}
-                    >
+                    </GradeCell>
+                    <GradeCell grade={summary.trendGrade}>
                       {summary.trend}
-                    </TableCell>
+                    </GradeCell>
                   </TableRow>
                 ))}
               </TableBody>
