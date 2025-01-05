@@ -5,16 +5,12 @@ import { useAuth } from '../auth';
 import { HealthPage } from '../health';
 import { JobsPage } from '../health/jobs';
 import { HomePage } from '../home';
-import { ApproverPage, JanitorOverviewPage } from '../janitors';
+import { JanitorOverviewPage } from '../janitors';
 import { PostUploaderPage } from '../janitors/uploads';
-import { ModOverviewPage, TicketerPage, TicketReporterPage } from '../mods';
+import { ModOverviewPage, TicketReporterPage } from '../mods';
 import { NavNode } from '../page';
 import { NavSpacer, NavUser } from '../page';
-import {
-  PerformanceDetailPage,
-  PerformancePage,
-  PerformanceTable,
-} from '../performance';
+import { PerformanceDetailPage, PerformanceTable } from '../performance';
 import { ProfilePage } from '../profile';
 import { ChartParamsExtraProvider } from '../utils';
 
@@ -46,12 +42,11 @@ export const appNavNodes: NavNode[] = [
       {
         label: 'Performance',
         href: '/mods/performance',
-        component: <PerformancePage area="moderator" />,
-      },
-      {
-        label: 'Tickets',
-        href: '/mods/tickets',
-        component: <TicketerPage />,
+        component: (
+          <ChartParamsExtraProvider params={{ area: 'moderator' }}>
+            <PerformanceTable />
+          </ChartParamsExtraProvider>
+        ),
       },
       {
         label: 'Reports',
@@ -72,12 +67,11 @@ export const appNavNodes: NavNode[] = [
       {
         label: 'Performance',
         href: '/janitors/performance',
-        component: <PerformancePage area="janitor" />,
-      },
-      {
-        label: 'Approvals',
-        href: '/janitors/approvals',
-        component: <ApproverPage />,
+        component: (
+          <ChartParamsExtraProvider params={{ area: 'janitor' }}>
+            <PerformanceTable />
+          </ChartParamsExtraProvider>
+        ),
       },
       {
         label: 'Uploaders',
@@ -109,24 +103,6 @@ export const appNavNodes: NavNode[] = [
     href: '/performance',
     hidden: true,
     children: [
-      {
-        label: 'Mods',
-        href: '/performance/mods',
-        component: (
-          <ChartParamsExtraProvider params={{ area: 'moderator' }}>
-            <PerformanceTable />
-          </ChartParamsExtraProvider>
-        ),
-      },
-      {
-        label: 'Janitors',
-        href: '/performance/janitors',
-        component: (
-          <ChartParamsExtraProvider params={{ area: 'janitor' }}>
-            <PerformanceTable />
-          </ChartParamsExtraProvider>
-        ),
-      },
       {
         label: 'Performance',
         href: '/performance/:id',
