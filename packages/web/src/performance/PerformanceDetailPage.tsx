@@ -24,7 +24,6 @@ import {
   UsernameText,
 } from '../common';
 import {
-  NavDivider,
   NavLink,
   Page,
   PageBody,
@@ -40,13 +39,14 @@ import {
   refetchQueryOptions,
   useChartRange,
 } from '../utils';
-import { getScoreGradeColor, getTrendGradeColor } from './color';
+import { useGradeColors } from './color';
 
 export const PerformanceDetailPage: React.FC = () => {
   const range = useChartRange();
   const { id: userId } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const theme = useTheme();
+  const { getScoreGradeColor, getTrendGradeColor } = useGradeColors();
 
   const lastMonth = searchParams.get('lastMonth') === 'true';
 
@@ -106,10 +106,7 @@ export const PerformanceDetailPage: React.FC = () => {
         }
       />
       <PageHeader
-        actions={[
-          <NavDivider />,
-          <NavLink href={`/users/${userId}`} label="Profile" />,
-        ]}
+        actions={[<NavLink href={`/users/${userId}`} label="Profile" />]}
       />
       <PageBody>
         <Box sx={{ width: '100%', maxWidth: 800, margin: 'auto', p: 2 }}>
