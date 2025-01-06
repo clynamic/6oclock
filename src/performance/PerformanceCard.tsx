@@ -11,10 +11,11 @@ import {
   refetchQueryOptions,
   useChartValue,
 } from '../utils';
-import { getScoreGradeColor } from './color';
+import { useGradeColors } from './color';
 
 export const PerformanceCard: React.FC = () => {
   const { range, userId, area } = useChartValue();
+  const { getScoreGradeColor } = useGradeColors();
 
   const { data, isLoading, error } = usePerformance(
     {
