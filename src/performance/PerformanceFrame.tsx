@@ -19,7 +19,7 @@ import {
   getActivityIcon,
   getActivityName,
 } from '../utils';
-import { getScoreGradeColor } from './color';
+import { useGradeColors } from './color';
 
 export interface PerformanceLeaderboardFrameProps {
   summary?: PerformanceSummary;
@@ -28,6 +28,8 @@ export interface PerformanceLeaderboardFrameProps {
 export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
   summary,
 }) => {
+  const { getScoreGradeColor } = useGradeColors();
+
   return (
     <Card
       sx={{
