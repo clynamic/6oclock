@@ -6,18 +6,16 @@ import {
   Chip,
   Skeleton,
   Stack,
-  Tooltip,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { ActivitySummary, PerformanceSummary } from '../api';
-import { UserAvatar, UsernameText } from '../common';
-import { RankingText } from '../common/RankingText';
+import { PerformanceSummary } from '../api';
+import { RankingText, UserAvatar, UsernameText } from '../common';
 import {
   formatNumber,
   getActivityFromKey,
   getActivityIcon,
-  getActivityName,
+  getActivityNoun,
 } from '../utils';
 import { useGradeColors } from './color';
 
@@ -77,34 +75,27 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
                 <Stack direction="row" gap={1} sx={{ flexWrap: 'wrap' }}>
                   {summary ? (
                     <>
-                      {Object.keys(summary.activity).map((key) => {
-                        const activity = getActivityFromKey(key);
-                        const count =
-                          summary.activity[key as keyof ActivitySummary];
-                        if (!count) return null;
-
-                        return (
-                          <Tooltip
-                            key={key}
-                            arrow
-                            title={getActivityName(activity)}
-                          >
-                            <Chip
-                              size="small"
-                              avatar={getActivityIcon(activity)}
-                              label={`${formatNumber(count)}`}
-                            />
-                          </Tooltip>
-                        );
-                      })}
-                      {summary.days > 1 && (
-                        <Tooltip arrow title="Days Active">
+                      {Object.entries(summary.activity)
+                        .map(([key, count]) => ({
+                          key,
+                          activity: getActivityFromKey(key),
+                          count: count as number,
+                        }))
+                        .sort((a, b) => b.count - a.count)
+                        .map(({ key, activity, count }) => (
                           <Chip
+                            key={key}
                             size="small"
-                            avatar={<CalendarMonth />}
-                            label={`${summary.days}`}
+                            avatar={getActivityIcon(activity)}
+                            label={`${formatNumber(count)} ${getActivityNoun(activity)}`}
                           />
-                        </Tooltip>
+                        ))}
+                      {summary.days > 1 && (
+                        <Chip
+                          size="small"
+                          avatar={<CalendarMonth />}
+                          label={`${summary.days} Days`}
+                        />
                       )}
                     </>
                   ) : (
@@ -119,16 +110,14 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
                       #{summary.position}
                     </RankingText>
                   </Box>
-                  <Tooltip arrow title="Performance Score">
-                    <Chip
-                      size="small"
-                      avatar={<Whatshot />}
-                      label={`${summary.score}`}
-                      sx={{
-                        color: getScoreGradeColor(summary.scoreGrade),
-                      }}
-                    />
-                  </Tooltip>
+                  <Chip
+                    size="small"
+                    avatar={<Whatshot />}
+                    label={`${summary.score}`}
+                    sx={{
+                      color: getScoreGradeColor(summary.scoreGrade),
+                    }}
+                  />
                 </Stack>
               )}
             </Stack>
