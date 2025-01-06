@@ -11,7 +11,6 @@ type TrendIconProps = {
 export const TrendIcon: React.FC<TrendIconProps> = ({ grade, size = 20 }) => {
   const iconStyle = {
     fontSize: size,
-    position: 'absolute' as const,
   };
 
   const iconMap = {
@@ -34,16 +33,16 @@ export const TrendIcon: React.FC<TrendIconProps> = ({ grade, size = 20 }) => {
             grade.includes('surge')
           ? TrendingUp
           : TrendingDown;
+
     const text = grade === 'neutral' ? '→' : grade === 'rise' ? '↗' : '↘';
-    const spacing = size * 0.8;
+    const overlap = -size * 0.2;
 
     return (
       <Box
         component="span"
         sx={{
-          position: 'relative',
-          width: size + spacing * (count - 1),
-          height: size,
+          display: 'inline-flex',
+          flexDirection: 'row',
         }}
       >
         {Array.from({ length: count }).map((_, index) => (
@@ -51,11 +50,19 @@ export const TrendIcon: React.FC<TrendIconProps> = ({ grade, size = 20 }) => {
             key={index}
             style={{
               ...iconStyle,
-              left: index * spacing,
+              marginRight: index < count - 1 ? overlap : 0,
             }}
           />
         ))}
-        <Box component="span" sx={{ ...iconStyle, opacity: 0 }}>
+        <Box
+          component="span"
+          sx={{
+            ...iconStyle,
+            opacity: 0,
+            position: 'absolute',
+            whiteSpace: 'nowrap',
+          }}
+        >
           {Array.from({ length: count })
             .map(() => text)
             .join('')}
@@ -71,7 +78,6 @@ export const TrendIcon: React.FC<TrendIconProps> = ({ grade, size = 20 }) => {
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-
         verticalAlign: 'middle',
       }}
     >

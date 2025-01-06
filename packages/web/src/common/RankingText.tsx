@@ -22,8 +22,8 @@ export const RankingText: React.FC<RankingTextProps> = ({
     if (rank < 4) {
       return {
         backgroundImage: gradients[rank - 1],
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        color: 'transparent',
       };
     } else {
       return {
