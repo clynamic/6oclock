@@ -1,7 +1,5 @@
-import { SwapHoriz } from '@mui/icons-material';
 import {
   Box,
-  Button,
   Card,
   Divider,
   Skeleton,
@@ -25,6 +23,7 @@ import {
 } from '../common';
 import {
   NavLink,
+  NavSpacer,
   Page,
   PageBody,
   PageFooter,
@@ -44,7 +43,7 @@ import { useGradeColors } from './color';
 export const PerformanceDetailPage: React.FC = () => {
   const range = useChartRange();
   const { id: userId } = useParams<{ id: string }>();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const theme = useTheme();
   const { getScoreGradeColor, getTrendGradeColor } = useGradeColors();
 
@@ -84,18 +83,6 @@ export const PerformanceDetailPage: React.FC = () => {
     },
   );
 
-  const toggleLastMonth = () => {
-    setSearchParams((prev) => {
-      const newParams = new URLSearchParams(prev);
-      if (lastMonth) {
-        newParams.delete('lastMonth');
-      } else {
-        newParams.set('lastMonth', 'true');
-      }
-      return newParams;
-    });
-  };
-
   return (
     <Page>
       <PageTitle
@@ -106,7 +93,18 @@ export const PerformanceDetailPage: React.FC = () => {
         }
       />
       <PageHeader
-        actions={[<NavLink href={`/users/${userId}`} label="Profile" />]}
+        actions={[
+          <NavLink href={`/users/${userId}`} label="Profile" />,
+          <NavSpacer />,
+          <NavLink
+            href={
+              lastMonth
+                ? `/performance/${userId}`
+                : `/performance/${userId}?lastMonth=true`
+            }
+            label={lastMonth ? 'This Month' : 'Last Month'}
+          />,
+        ]}
       />
       <PageBody>
         <Box sx={{ width: '100%', maxWidth: 800, margin: 'auto', p: 2 }}>
@@ -322,21 +320,6 @@ export const PerformanceDetailPage: React.FC = () => {
                   </QueryHint>
                 </Box>
               </Card>
-              <Stack
-                direction="row"
-                justifyContent="flex-end"
-                sx={{
-                  marginTop: 2,
-                }}
-              >
-                <Button
-                  size="small"
-                  endIcon={<SwapHoriz />}
-                  onClick={toggleLastMonth}
-                >
-                  {lastMonth ? 'View This Month' : 'View Last Month'}
-                </Button>
-              </Stack>
             </Stack>
           </Stack>
         </Box>

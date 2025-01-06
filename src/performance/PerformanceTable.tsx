@@ -10,7 +10,7 @@ import {
 import { DateTime } from 'luxon';
 import { mix } from 'polished';
 import React, { PropsWithChildren, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PerformanceGrade, TrendGrade, usePerformance } from '../api';
 import {
@@ -20,7 +20,15 @@ import {
   UserAvatar,
   UsernameText,
 } from '../common';
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
+import {
+  NavLink,
+  NavSpacer,
+  Page,
+  PageBody,
+  PageFooter,
+  PageHeader,
+  PageTitle,
+} from '../page';
 import {
   DateRange,
   formatNumber,
@@ -73,10 +81,12 @@ const GradeCell: React.FC<
 export const PerformanceTable: React.FC = () => {
   const { range, area } = useChartValue();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
 
   const tableRef = React.useRef<HTMLTableElement>(null);
 
-  const lastMonth = true;
+  const lastMonth = searchParams.get('lastMonth') === 'true';
 
   const selectedRange = useMemo<DateRange>(() => {
     if (lastMonth) {
@@ -125,7 +135,19 @@ export const PerformanceTable: React.FC = () => {
   return (
     <Page>
       <PageTitle subtitle="Performance" />
-      <PageHeader />
+      <PageHeader
+        actions={[
+          <NavSpacer />,
+          <NavLink
+            href={
+              lastMonth
+                ? location.pathname
+                : `${location.pathname}?lastMonth=true`
+            }
+            label={lastMonth ? 'This Month' : 'Last Month'}
+          />,
+        ]}
+      />
       <PageBody>
         <Box
           sx={{
@@ -170,7 +192,9 @@ export const PerformanceTable: React.FC = () => {
                       cursor: 'pointer',
                     }}
                     onClick={() => {
-                      navigate(`/performance/${summary.userId}`);
+                      navigate(
+                        `/performance/${summary.userId}${location.search}`,
+                      );
                     }}
                   >
                     <TableCell
