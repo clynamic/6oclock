@@ -19,7 +19,11 @@ export const RankingText: React.FC<RankingTextProps> = ({
   ];
 
   const getGradientStyle = (rank: number) => {
-    if (rank < 4) {
+    if (rank < 1) {
+      return {
+        color: 'inherit',
+      };
+    } else if (rank < 4) {
       return {
         backgroundImage: gradients[rank - 1],
         backgroundClip: 'text',
