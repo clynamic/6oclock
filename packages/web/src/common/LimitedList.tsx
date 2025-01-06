@@ -1,14 +1,17 @@
 import { Box } from '@mui/material';
+import { BoxOwnProps } from '@mui/system';
 import { PropsWithChildren } from 'react';
 import { TruncatedList, TruncatedListProps } from 'react-truncate-list';
 
 export interface LimitedListProps extends PropsWithChildren {
   indicator?: TruncatedListProps['renderTruncator'];
+  sx?: BoxOwnProps['sx'];
 }
 
 export const LimitedList: React.FC<LimitedListProps> = ({
   children,
   indicator,
+  sx,
 }) => {
   return (
     <Box
@@ -20,6 +23,7 @@ export const LimitedList: React.FC<LimitedListProps> = ({
         listStyleType: 'none',
         paddingInline: 0,
         marginBlock: 0,
+        ...sx,
       }}
       renderTruncator={indicator ?? (() => <></>)}
       component={TruncatedList}
