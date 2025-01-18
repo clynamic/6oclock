@@ -6,9 +6,7 @@ import {
   Button,
   Divider,
   Menu,
-  MenuItem,
   Stack,
-  ThemeProvider,
   Toolbar,
   Typography,
 } from '@mui/material';
@@ -42,7 +40,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ actions }) => {
 
 const PageHeaderBar: React.FC = () => {
   const pageHeaderContext = usePageHeaderContext();
-  const { layout, navigation, navigate, currentLink, currentSubLinks } =
+  const { layout, navigation, currentLink, currentSubLinks } =
     pageHeaderContext;
 
   if (layout === 'small') {
@@ -129,18 +127,13 @@ const PageHeaderBar: React.FC = () => {
                   .map((entry) => {
                     if (entry instanceof Object && 'href' in entry) {
                       return (
-                        <MenuItem
-                          key={`nav-${entry.href}`}
-                          sx={{
-                            width: '100%',
-                          }}
-                          onClick={() => {
-                            navigate(entry.href);
-                            popupState.close();
-                          }}
-                        >
-                          {entry.label}
-                        </MenuItem>
+                        <NavLink
+                          key={entry.href}
+                          href={entry.href}
+                          label={entry.label}
+                          // This doesnt look good and isn't necessary.
+                          // selected={entry === currentLink}
+                        />
                       );
                     }
                     return entry;
@@ -180,144 +173,92 @@ const PageHeaderBar: React.FC = () => {
   }
   if (layout === 'wide') {
     return (
-      <ThemeProvider
-        theme={(theme) => ({
-          ...theme,
-          components: {
-            MuiButton: {
-              styleOverrides: {
-                root: {
-                  textTransform: 'none',
-                },
-              },
-            },
-          },
-        })}
-      >
-        <Box
-          sx={{
-            borderBottomLeftRadius: (theme) => theme.shape.borderRadius,
-            borderBottomRightRadius: (theme) => theme.shape.borderRadius,
-            marginBottom: 1,
-          }}
-        >
-          <Stack direction="row" spacing={1} alignItems="center">
-            <AppLogo />
+      <Box sx={{ marginBottom: 1 }}>
+        <Stack direction="row" spacing={1} alignItems="center">
+          <AppLogo />
+          <Stack
+            direction="column"
+            sx={{
+              paddingTop: 0.5,
+              paddingBottom: 0.5,
+              flexBasis: '100%',
+            }}
+          >
             <Stack
-              direction="column"
+              direction="row"
+              gap={2}
               sx={{
-                paddingTop: 0.5,
-                paddingBottom: 0.5,
-                flexBasis: '100%',
+                paddingLeft: 0.5,
+                paddingRight: 0.5,
+                width: '100%',
               }}
             >
-              <Stack
-                direction="row"
-                gap={2}
+              {navigation
+                .filter((entry) => {
+                  if (entry instanceof Object && 'href' in entry) {
+                    return !entry.hidden;
+                  }
+                  return true;
+                })
+                .map((entry, i) => {
+                  if (entry instanceof Object && 'href' in entry) {
+                    return (
+                      <NavLink
+                        key={i}
+                        component={RouterLink}
+                        href={entry.href}
+                        label={entry.label}
+                        selected={entry === currentLink}
+                      />
+                    );
+                  }
+                  return <Fragment key={`nav-action-${i}`}>{entry}</Fragment>;
+                })}
+            </Stack>
+            <Stack
+              direction="row"
+              gap={2}
+              sx={{
+                backgroundColor: 'background.paper',
+                borderRadius: 1,
+                paddingLeft: 2,
+                paddingRight: 2,
+              }}
+            >
+              <Box
+                key="empty-subnav"
                 sx={{
-                  paddingLeft: 0.5,
-                  paddingRight: 0.5,
-                  width: '100%',
+                  height: (theme) => theme.spacing(3.4),
                 }}
-              >
-                <ThemeProvider
-                  theme={(theme) => ({
-                    ...theme,
-                    components: {
-                      MuiButton: {
-                        defaultProps: {
-                          variant: 'text',
-                          size: 'small',
-                          color: 'secondary',
-                        },
-                        styleOverrides: {
-                          root: {
-                            textTransform: 'none',
-                            p: 0.2,
-                            borderBottomLeftRadius: 0,
-                            borderBottomRightRadius: 0,
-                          },
-                        },
-                      },
-                    },
+              />
+              {currentSubLinks &&
+                currentSubLinks.length > 0 &&
+                currentSubLinks
+                  .filter((entry) => {
+                    if (entry instanceof Object && 'href' in entry) {
+                      return !entry.hidden;
+                    }
+                    return true;
+                  })
+                  .map((entry, i) => {
+                    if (entry instanceof Object && 'href' in entry) {
+                      return (
+                        <NavLink
+                          key={`subnav-${entry.href}`}
+                          href={entry.href}
+                          label={entry.label}
+                          variant={'sub'}
+                        />
+                      );
+                    }
+                    return (
+                      <Fragment key={`subnav-action-${i}`}>{entry}</Fragment>
+                    );
                   })}
-                >
-                  {navigation
-                    .filter((entry) => {
-                      if (entry instanceof Object && 'href' in entry) {
-                        return !entry.hidden;
-                      }
-                      return true;
-                    })
-                    .map((entry, i) => {
-                      const selected = entry === currentLink;
-                      if (entry instanceof Object && 'href' in entry) {
-                        return (
-                          <Button
-                            key={i}
-                            component={RouterLink}
-                            to={entry.href}
-                            color={'secondary'}
-                            sx={{
-                              backgroundColor: selected
-                                ? 'background.paper'
-                                : undefined,
-                            }}
-                          >
-                            <Typography>{entry.label}</Typography>
-                          </Button>
-                        );
-                      }
-                      return (
-                        <Fragment key={`nav-action-${i}`}>{entry}</Fragment>
-                      );
-                    })}
-                </ThemeProvider>
-              </Stack>
-              <Stack
-                direction="row"
-                gap={2}
-                sx={{
-                  backgroundColor: 'background.paper',
-                  borderRadius: 1,
-                  paddingLeft: 2,
-                  paddingRight: 2,
-                }}
-              >
-                <Box
-                  key="empty-subnav"
-                  sx={{
-                    height: (theme) => theme.spacing(3.4),
-                  }}
-                />
-                {currentSubLinks &&
-                  currentSubLinks.length > 0 &&
-                  currentSubLinks
-                    .filter((entry) => {
-                      if (entry instanceof Object && 'href' in entry) {
-                        return !entry.hidden;
-                      }
-                      return true;
-                    })
-                    .map((entry, i) => {
-                      if (entry instanceof Object && 'href' in entry) {
-                        return (
-                          <NavLink
-                            key={`subnav-${entry.href}`}
-                            href={entry.href}
-                            label={entry.label}
-                          />
-                        );
-                      }
-                      return (
-                        <Fragment key={`subnav-action-${i}`}>{entry}</Fragment>
-                      );
-                    })}
-              </Stack>
             </Stack>
           </Stack>
-        </Box>
-      </ThemeProvider>
+        </Stack>
+      </Box>
     );
   }
 };

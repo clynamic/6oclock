@@ -8,8 +8,7 @@ import { HomePage } from '../home';
 import { JanitorOverviewPage } from '../janitors';
 import { PostUploaderPage } from '../janitors/uploads';
 import { ModOverviewPage, TicketReporterPage } from '../mods';
-import { NavNode } from '../page';
-import { NavSpacer, NavUser } from '../page';
+import { NavHealth, NavNode, NavSpacer, NavUser } from '../page';
 import { PerformanceDetailPage, PerformanceTable } from '../performance';
 import { ProfilePage } from '../profile';
 import { ChartParamsExtraProvider } from '../utils';
@@ -128,6 +127,7 @@ export const appNavNodes: NavNode[] = [
       },
     ],
   },
+  <NavHealth />,
   <NavSpacer />,
   <NavUser />,
 ];

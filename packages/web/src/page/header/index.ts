@@ -1,6 +1,7 @@
 export * from './href';
 export * from './NavButton';
 export * from './NavDivider';
+export * from './NavHealth';
 export * from './NavLink';
 export * from './NavSpacer';
 export * from './NavUser';

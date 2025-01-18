@@ -12,19 +12,24 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import { usePageHeaderContext } from './PageHeaderContext';
 
+export type NavLinkVariant = 'top' | 'sub';
+
 export type NavLinkProps = {
   href: string;
   label: React.ReactNode;
   endIcon?: React.ReactNode;
   hidden?: boolean;
-} & ButtonProps &
-  MenuItemProps;
+  selected?: boolean;
+  variant?: NavLinkVariant;
+} & Omit<ButtonProps & MenuItemProps, 'href' | 'variant'>;
 
 export const NavLink: React.FC<NavLinkProps> = ({
   href,
   label,
   endIcon,
   hidden,
+  selected,
+  variant,
   ...props
 }) => {
   const { layout, popupState, navigate } = usePageHeaderContext();
@@ -47,6 +52,7 @@ export const NavLink: React.FC<NavLinkProps> = ({
             popupState?.close();
           }
         }}
+        selected={selected}
       >
         {endIcon ? (
           <ListItemIcon
@@ -76,9 +82,10 @@ export const NavLink: React.FC<NavLinkProps> = ({
         sx={{
           ...(props.sx || {}),
           textTransform: 'none',
-          p: 0.2,
+          p: variant === 'sub' ? 0.2 : undefined,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
+          backgroundColor: selected ? 'background.paper' : undefined,
         }}
         {...props}
       >
