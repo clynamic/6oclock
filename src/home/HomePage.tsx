@@ -53,6 +53,18 @@ export const HomePage = () => {
                 },
               })}
             >
+              <Button component={Link} to="/janitors">
+                <Stack direction="row" alignItems="center" spacing={1}>
+                  <Beenhere sx={{ fontSize: 32 }} />
+                  <Typography variant="h5">Janitors</Typography>
+                </Stack>
+              </Button>
+              <Button component={Link} to="/mods">
+                <Stack direction="row" alignItems="center" spacing={1}>
+                  <Shield sx={{ fontSize: 32 }} />
+                  <Typography variant="h5">Mods</Typography>
+                </Stack>
+              </Button>
               {/*
                 <Button component={Link} to="/admins">
                   <Stack direction="row" alignItems="center" spacing={1}>
@@ -61,18 +73,6 @@ export const HomePage = () => {
                   </Stack>
                 </Button>
               */}
-              <Button component={Link} to="/mods">
-                <Stack direction="row" alignItems="center" spacing={1}>
-                  <Shield sx={{ fontSize: 32 }} />
-                  <Typography variant="h5">Mods</Typography>
-                </Stack>
-              </Button>
-              <Button component={Link} to="/janitors">
-                <Stack direction="row" alignItems="center" spacing={1}>
-                  <Beenhere sx={{ fontSize: 32 }} />
-                  <Typography variant="h5">Janitors</Typography>
-                </Stack>
-              </Button>
             </ThemeProvider>
           </Stack>
           <Divider orientation="horizontal" />
