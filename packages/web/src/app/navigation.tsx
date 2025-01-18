@@ -31,31 +31,6 @@ export const appNavNodes: NavNode[] = [
     component: <HomePage />,
   },
   {
-    label: 'Mods',
-    href: '/mods',
-    children: [
-      {
-        label: 'Dashboard',
-        href: '/mods',
-        component: <ModOverviewPage />,
-      },
-      {
-        label: 'Performance',
-        href: '/mods/performance',
-        component: (
-          <ChartParamsExtraProvider params={{ area: 'moderator' }}>
-            <PerformanceTable />
-          </ChartParamsExtraProvider>
-        ),
-      },
-      {
-        label: 'Reports',
-        href: '/mods/reports',
-        component: <TicketReporterPage />,
-      },
-    ],
-  },
-  {
     label: 'Janitors',
     href: '/janitors',
     children: [
@@ -77,6 +52,31 @@ export const appNavNodes: NavNode[] = [
         label: 'Uploaders',
         href: '/janitors/uploads',
         component: <PostUploaderPage />,
+      },
+    ],
+  },
+  {
+    label: 'Mods',
+    href: '/mods',
+    children: [
+      {
+        label: 'Dashboard',
+        href: '/mods',
+        component: <ModOverviewPage />,
+      },
+      {
+        label: 'Performance',
+        href: '/mods/performance',
+        component: (
+          <ChartParamsExtraProvider params={{ area: 'moderator' }}>
+            <PerformanceTable />
+          </ChartParamsExtraProvider>
+        ),
+      },
+      {
+        label: 'Reports',
+        href: '/mods/reports',
+        component: <TicketReporterPage />,
       },
     ],
   },
