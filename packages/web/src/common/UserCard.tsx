@@ -20,7 +20,7 @@ export const UserCard: React.FC = () => {
       <UserAvatar user={user} shape="rounded" size={64} />
       <Stack>
         <UsernameText user={user} />
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant="body2" color="text.secondary">
           {user?.level}
         </Typography>
       </Stack>
