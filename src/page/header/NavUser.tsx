@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { useUserHead } from '../../api';
 import { useAuth } from '../../auth';
-import { NavButton } from './NavButton';
+import { NavLink } from './NavLink';
 
 export const NavUser: React.FC = () => {
   const { payload } = useAuth();
@@ -16,11 +16,9 @@ export const NavUser: React.FC = () => {
   if (!payload || !user) return null;
 
   return (
-    <NavButton
+    <NavLink
       component={Link}
-      {...{
-        to: `/users/${user.id}`,
-      }}
+      href={`/users/${user.id}`}
       endIcon={
         <Avatar
           variant="circular"
@@ -36,8 +34,7 @@ export const NavUser: React.FC = () => {
           {user?.name.split('_').map((part) => part[0]) ?? '?'}
         </Avatar>
       }
-    >
-      {user?.name.replace(/_/g, ' ') ?? 'Profile'}
-    </NavButton>
+      label={user?.name.replace(/_/g, ' ') ?? 'Profile'}
+    />
   );
 };
