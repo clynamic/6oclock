@@ -79,6 +79,7 @@ export const NavLink: React.FC<NavLinkProps> = ({
         variant="text"
         size="small"
         color="secondary"
+        endIcon={endIcon}
         sx={{
           ...(props.sx || {}),
           textTransform: 'none',
