@@ -19,7 +19,12 @@ export const JobsDisplay = () => {
   );
 
   return (
-    <QueryHint data={data} isLoading={isLoading} error={error}>
+    <QueryHint
+      data={data}
+      isLoading={isLoading}
+      isEmpty={!data?.length}
+      error={error}
+    >
       <LimitedList
         indicator={() => (
           <Stack direction="row" justifyContent="flex-end">

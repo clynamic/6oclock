@@ -77,3 +77,11 @@ export const flattenPointSeries = <T extends string>(
 
   return result;
 };
+
+export const isPointSeriesEmpty = <T extends string>(
+  series: SeriesRecordPoint<T>[],
+): boolean => {
+  return series.every((point) =>
+    Object.values(point).every((v) => v instanceof Date || v === 0),
+  );
+};

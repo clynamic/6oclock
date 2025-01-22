@@ -11,6 +11,7 @@ import {
 import { QueryHint } from '../../common';
 import {
   addToMergedSeries,
+  isPointSeriesEmpty,
   refetchQueryOptions,
   SeriesChartProps,
   useChartRange,
@@ -89,6 +90,7 @@ export const PostReplacementStatusSeriesChart: React.FC = () => {
     <QueryHint
       data={[statusData, createdData]}
       isLoading={[statusLoading, createdLoading]}
+      isEmpty={isPointSeriesEmpty(dataset)}
       error={[statusError, createdError]}
       type="bars"
     >
