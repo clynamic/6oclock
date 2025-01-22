@@ -16,7 +16,13 @@ export const PostPendingSeriesChart: React.FC = () => {
   );
 
   return (
-    <QueryHint data={data} isLoading={isLoading} error={error} type="lines">
+    <QueryHint
+      data={data}
+      isLoading={isLoading}
+      isEmpty={data?.every((e) => e.value === 0)}
+      error={error}
+      type="lines"
+    >
       <LineChart
         dataset={data?.map((e) => ({ ...e })) ?? []}
         loading={isLoading}
