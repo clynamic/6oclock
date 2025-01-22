@@ -94,8 +94,7 @@ export const PerformanceDetailPage: React.FC = () => {
       />
       <PageHeader
         actions={[
-          // TODO: manually specifying "sub" is not ideal
-          <NavLink href={`/users/${userId}`} label="Profile" variant="sub" />,
+          <NavLink href={`/users/${userId}`} label="Profile" />,
           <NavSpacer />,
           <NavLink
             href={
@@ -104,7 +103,6 @@ export const PerformanceDetailPage: React.FC = () => {
                 : `/performance/${userId}?lastMonth=true`
             }
             label={lastMonth ? 'This Month' : 'Last Month'}
-            variant="sub"
           />,
         ]}
       />

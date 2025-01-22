@@ -21,7 +21,11 @@ import {
   useNavigationEntries,
 } from '../navigation';
 import { NavLink } from './NavLink';
-import { PageHeaderProvider, usePageHeaderContext } from './PageHeaderContext';
+import {
+  PageHeaderProvider,
+  PageHeaderReprovider,
+  usePageHeaderContext,
+} from './PageHeaderContext';
 
 export interface PageHeaderProps {
   actions?: NavAction[];
@@ -39,15 +43,14 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ actions }) => {
 };
 
 const PageHeaderBar: React.FC = () => {
-  const pageHeaderContext = usePageHeaderContext();
   const { layout, navigation, currentLink, currentSubLinks } =
-    pageHeaderContext;
+    usePageHeaderContext();
 
   if (layout === 'small') {
     return (
       <PopupState variant="popover" popupId="navigation-menu">
         {(popupState) => (
-          <PageHeaderProvider {...pageHeaderContext} popupState={popupState}>
+          <PageHeaderReprovider popupState={popupState}>
             <AppBar
               position="static"
               elevation={0}
@@ -166,7 +169,7 @@ const PageHeaderBar: React.FC = () => {
                   })}
               </Menu>
             </AppBar>
-          </PageHeaderProvider>
+          </PageHeaderReprovider>
         )}
       </PopupState>
     );
@@ -231,30 +234,31 @@ const PageHeaderBar: React.FC = () => {
                   height: (theme) => theme.spacing(3.4),
                 }}
               />
-              {currentSubLinks &&
-                currentSubLinks.length > 0 &&
-                currentSubLinks
-                  .filter((entry) => {
-                    if (entry instanceof Object && 'href' in entry) {
-                      return !entry.hidden;
-                    }
-                    return true;
-                  })
-                  .map((entry, i) => {
-                    if (entry instanceof Object && 'href' in entry) {
+              <PageHeaderReprovider section="sub">
+                {currentSubLinks &&
+                  currentSubLinks.length > 0 &&
+                  currentSubLinks
+                    .filter((entry) => {
+                      if (entry instanceof Object && 'href' in entry) {
+                        return !entry.hidden;
+                      }
+                      return true;
+                    })
+                    .map((entry, i) => {
+                      if (entry instanceof Object && 'href' in entry) {
+                        return (
+                          <NavLink
+                            key={`subnav-${entry.href}`}
+                            href={entry.href}
+                            label={entry.label}
+                          />
+                        );
+                      }
                       return (
-                        <NavLink
-                          key={`subnav-${entry.href}`}
-                          href={entry.href}
-                          label={entry.label}
-                          variant={'sub'}
-                        />
+                        <Fragment key={`subnav-action-${i}`}>{entry}</Fragment>
                       );
-                    }
-                    return (
-                      <Fragment key={`subnav-action-${i}`}>{entry}</Fragment>
-                    );
-                  })}
+                    })}
+              </PageHeaderReprovider>
             </Stack>
           </Stack>
         </Stack>
