@@ -2,7 +2,7 @@ import { createLayout, DashboardCatalog } from '../../dashboard';
 import { PerformanceLeaderboard } from '../../performance';
 import {
   PostReplacementStatusSeriesChart,
-  PostStatusCountSeriesChart,
+  PostStatusSeriesChart,
 } from '../charts';
 import { PostPendingSeriesChart } from '../charts/PostPendingSeriesChart';
 import { PostStatusSummaryChart } from '../charts/PostStatusSummaryChart';
@@ -56,7 +56,7 @@ export const janitorDashboardCatalog: DashboardCatalog = {
   },
   postTurnaround: {
     name: 'Posts Approved/Deleted',
-    component: PostStatusCountSeriesChart,
+    component: PostStatusSeriesChart,
     layout: createLayout(
       {
         minW: 4,

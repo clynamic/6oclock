@@ -11,13 +11,14 @@ import {
 } from '../../api';
 import { QueryHint } from '../../common';
 import {
+  isPointSeriesEmpty,
   mergePointSeries,
   refetchQueryOptions,
   SeriesChartProps,
   useChartRange,
 } from '../../utils';
 
-export const PostStatusCountSeriesChart: React.FC = () => {
+export const PostStatusSeriesChart: React.FC = () => {
   const theme = useTheme();
   const range = useChartRange();
 
@@ -108,6 +109,7 @@ export const PostStatusCountSeriesChart: React.FC = () => {
         deletedLoading,
         uploadsLoading,
       ]}
+      isEmpty={isPointSeriesEmpty(dataset)}
       error={[approvedError, permittedError, deletedError, uploadsError]}
       type="bars"
     >
