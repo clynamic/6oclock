@@ -1,10 +1,17 @@
 /* eslint-disable react-refresh/only-export-components */
 import { PopupState } from 'material-ui-popup-state/hooks';
-import React, { createContext, ReactNode, useContext, useMemo } from 'react';
+import React, {
+  createContext,
+  PropsWithChildren,
+  ReactNode,
+  useContext,
+  useMemo,
+} from 'react';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 
 import { useCurrentBreakpoint } from '../../utils';
 import { NavAction, NavNode, NavTopLink, SubNavNode } from '../navigation';
+import { NavLinkVariant } from './NavLink';
 
 export type PageHeaderLayout = 'small' | 'wide';
 
@@ -15,6 +22,7 @@ export interface PageHeaderContextValue {
   currentSubLinks?: SubNavNode[];
   layout: PageHeaderLayout;
   popupState?: PopupState;
+  section?: NavLinkVariant;
 }
 
 export const PageHeaderContext = createContext<PageHeaderContextValue | null>(
@@ -75,6 +83,18 @@ export const PageHeaderProvider: React.FC<PageHeaderProviderProps> = ({
         popupState,
       }}
     >
+      {children}
+    </PageHeaderContext.Provider>
+  );
+};
+
+export const PageHeaderReprovider: React.FC<
+  PropsWithChildren<Partial<PageHeaderContextValue>>
+> = ({ children, ...props }) => {
+  const context = usePageHeaderContext();
+
+  return (
+    <PageHeaderContext.Provider value={{ ...context, ...props }}>
       {children}
     </PageHeaderContext.Provider>
   );
