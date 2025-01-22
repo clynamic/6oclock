@@ -40,6 +40,7 @@ export const ManifestHealthDisplay: React.FC = () => {
   return (
     <QueryHint
       isLoading={isLoading}
+      isEmpty={!data?.length}
       error={error}
       skeleton={[...Array(3)].map((_, index) => (
         <Card key={index} sx={{ width: '100%' }}>

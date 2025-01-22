@@ -6,6 +6,7 @@ import { useMemo } from 'react';
 import { useTicketClosedSeries, useTicketCreatedSeries } from '../../api';
 import { QueryHint } from '../../common';
 import {
+  isPointSeriesEmpty,
   mergePointSeries,
   refetchQueryOptions,
   SeriesChartProps,
@@ -79,6 +80,7 @@ export const TicketStatusSeriesChart: React.FC<TicketTurnaroundChartProps> = ({
     <QueryHint
       data={[createdData, closedData]}
       isLoading={[createdLoading, closedLoading]}
+      isEmpty={isPointSeriesEmpty(dataset)}
       error={[createdError, closedError]}
       type={variant}
     >
