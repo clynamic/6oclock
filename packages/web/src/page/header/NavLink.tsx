@@ -32,7 +32,7 @@ export const NavLink: React.FC<NavLinkProps> = ({
   variant,
   ...props
 }) => {
-  const { layout, popupState, navigate } = usePageHeaderContext();
+  const { layout, popupState, navigate, section } = usePageHeaderContext();
 
   if (hidden) return null;
 
@@ -83,7 +83,7 @@ export const NavLink: React.FC<NavLinkProps> = ({
         sx={{
           ...(props.sx || {}),
           textTransform: 'none',
-          p: variant === 'sub' ? 0.2 : undefined,
+          p: (variant ?? section) === 'sub' ? 0.2 : undefined,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
           backgroundColor: selected ? 'background.paper' : undefined,
