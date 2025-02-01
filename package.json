@@ -24,6 +24,7 @@
     "axios": "^1.7.4",
     "crypto-js": "^4.2.0",
     "framer-motion": "^11.3.28",
+    "@wtto00/html2canvas": "^1.4.1",
     "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "luxon": "^3.5.0",
