@@ -1,15 +1,19 @@
 import {
   Box,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableCellProps,
   TableHead,
   TableRow,
+  Typography,
+  useTheme,
 } from '@mui/material';
+import html2canvas from '@wtto00/html2canvas';
 import { DateTime } from 'luxon';
 import { mix } from 'polished';
-import React, { PropsWithChildren, useMemo } from 'react';
+import React, { PropsWithChildren, useEffect, useMemo, useRef } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PerformanceGrade, TrendGrade, usePerformance } from '../api';
@@ -20,7 +24,9 @@ import {
   UserAvatar,
   UsernameText,
 } from '../common';
+import { AXIOS_INSTANCE } from '../http';
 import {
+  NavButton,
   NavLink,
   NavSpacer,
   Page,
@@ -38,6 +44,26 @@ import {
   useChartValue,
 } from '../utils';
 import { useGradeColors } from './color';
+
+const ProxyImageWrapper: React.FC<PropsWithChildren> = ({ children }) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!wrapperRef.current) return;
+    const images = wrapperRef.current.querySelectorAll<HTMLImageElement>('img');
+
+    images.forEach((image) => {
+      const newSrc = image.src.replace(
+        'https://static1.e621.net',
+        `${AXIOS_INSTANCE.defaults.baseURL!}/proxy`,
+      );
+
+      image.setAttribute('src', newSrc);
+    });
+  }, []);
+
+  return <Box ref={wrapperRef}>{children}</Box>;
+};
 
 const SpaceCell: React.FC = () => (
   <TableCell>
@@ -84,7 +110,8 @@ export const PerformanceTable: React.FC = () => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
 
-  const tableRef = React.useRef<HTMLTableElement>(null);
+  const theme = useTheme();
+  const screenshotRef = React.useRef<HTMLDivElement>(null);
 
   const lastMonth = searchParams.get('lastMonth') === 'true';
 
@@ -132,12 +159,56 @@ export const PerformanceTable: React.FC = () => {
     return Array.from(activities);
   }, [data]);
 
+  const handlePrint = () => {
+    if (screenshotRef.current) {
+      html2canvas(screenshotRef.current, {
+        useCORS: true,
+        backgroundColor: theme.palette.background.paper,
+        onclone: (clonedDocument) => {
+          clonedDocument.querySelectorAll<HTMLElement>('p').forEach((el) => {
+            const bg = window.getComputedStyle(el).backgroundImage;
+            if (bg.includes('linear-gradient')) {
+              el.style.color =
+                bg
+                  .match(
+                    /#[0-9a-fA-F]+|rgba?\([\d\s,]+\)|hsla?\([\d\s%,]+\)/,
+                  )?.[0]
+                  ?.trim() || 'currentColor';
+              el.style.backgroundImage = 'none';
+            }
+          });
+
+          Object.assign(
+            clonedDocument.getElementById('screenshot-root')!.style,
+            {
+              backgroundColor: theme.palette.background.paper,
+              backgroundImage: `url("/assets/hex-texture.png")`,
+              backgroundRepeat: 'repeat-x',
+              backgroundPosition: 'top left',
+            },
+          );
+        },
+      }).then((canvas) => {
+        const url = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${area}-performance-${DateTime.fromJSDate(
+          selectedRange.startDate,
+        ).toFormat('yyyy-MM-dd')}.png`;
+        a.click();
+      });
+    }
+  };
+
   return (
     <Page>
       <PageTitle subtitle="Performance" />
       <PageHeader
         actions={[
           <NavSpacer />,
+          <NavButton key="print" onClick={handlePrint}>
+            Print
+          </NavButton>,
           <NavLink
             href={
               lastMonth
@@ -160,114 +231,123 @@ export const PerformanceTable: React.FC = () => {
           }}
         >
           <QueryHint data={data} isLoading={isLoading} error={error}>
-            <Table size="small" sx={{ width: 'fit-content' }} ref={tableRef}>
-              <TableHead>
-                <TableRow>
-                  <SpaceCell />
-                  <SpaceCell />
-                  <TableCell>Name</TableCell>
-                  <SpaceCell />
-                  {activities.map((type) => (
-                    <TableCell key={type}>
-                      {getActivityNoun(getActivityFromKey(type))}
-                    </TableCell>
-                  ))}
-                  <SpaceCell />
-                  {[...months.slice(1)].reverse().map((month) => (
-                    <TableCell key={month}>{month}</TableCell>
-                  ))}
-                  <SpaceCell />
-                  <TableCell>{months[0]}</TableCell>
-                  <TableCell>Grade</TableCell>
-                  <TableCell>Trend</TableCell>
-                  <TableCell>Trend</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data?.map((summary) => (
-                  <TableRow
-                    key={summary.userId}
-                    hover
-                    sx={{
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => {
-                      navigate(
-                        `/performance/${summary.userId}${location.search}`,
-                      );
-                    }}
-                  >
-                    <TableCell
-                      sx={{
-                        userSelect: 'none',
-                      }}
-                    >
-                      <RankingText rank={summary.position} variant="body1">
-                        {`#${summary.position}`}
-                      </RankingText>
-                    </TableCell>
-                    <TableCell>
-                      <UserAvatar
-                        user={
-                          summary
-                            ? { id: summary.userId, ...summary.userHead }
-                            : undefined
-                        }
-                        size={40}
-                        shape="rounded"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <UsernameText
-                        variant="body1"
-                        user={
-                          summary
-                            ? {
-                                userId: summary.userId,
-                                head: summary.userHead,
-                              }
-                            : undefined
-                        }
-                      />
-                    </TableCell>
+            <Stack ref={screenshotRef} id="screenshot-root" p={2}>
+              <Typography variant="h6">
+                {DateTime.fromJSDate(selectedRange.startDate).toFormat(
+                  'LLLL yyyy',
+                )}
+              </Typography>
+              <Table size="small" sx={{ width: 'fit-content' }}>
+                <TableHead>
+                  <TableRow>
+                    <SpaceCell />
+                    <SpaceCell />
+                    <TableCell>Name</TableCell>
                     <SpaceCell />
                     {activities.map((type) => (
-                      <TableCell key={type} align="center">
-                        {formatNumber(
-                          summary.activity[
-                            type as keyof typeof summary.activity
-                          ] ?? 0,
-                        )}
+                      <TableCell key={type}>
+                        {getActivityNoun(getActivityFromKey(type))}
                       </TableCell>
                     ))}
                     <SpaceCell />
-                    {[...summary.history.slice(1)]
-                      .reverse()
-                      .map((record, i) => (
-                        <GradeCell
-                          grade={record.grade}
-                          key={`${summary.userId}-${i}`}
-                        >
-                          {record.score}
-                        </GradeCell>
-                      ))}
+                    {[...months.slice(1)].reverse().map((month) => (
+                      <TableCell key={month}>{month}</TableCell>
+                    ))}
                     <SpaceCell />
-                    <GradeCell grade={summary.scoreGrade}>
-                      {formatNumber(summary.score)}
-                    </GradeCell>
-                    <GradeCell grade={summary.scoreGrade}>
-                      {summary.scoreGrade}
-                    </GradeCell>
-                    <GradeCell grade={summary.trendGrade}>
-                      <TrendIcon grade={summary.trendGrade} />
-                    </GradeCell>
-                    <GradeCell grade={summary.trendGrade}>
-                      {summary.trend}
-                    </GradeCell>
+                    <TableCell>{months[0]}</TableCell>
+                    <TableCell>Grade</TableCell>
+                    <TableCell>Trend</TableCell>
+                    <TableCell>Trend</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHead>
+                <TableBody>
+                  {data?.map((summary) => (
+                    <TableRow
+                      key={summary.userId}
+                      hover
+                      sx={{
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => {
+                        navigate(
+                          `/performance/${summary.userId}${location.search}`,
+                        );
+                      }}
+                    >
+                      <TableCell
+                        sx={{
+                          userSelect: 'none',
+                        }}
+                      >
+                        <RankingText rank={summary.position} variant="body1">
+                          {`#${summary.position}`}
+                        </RankingText>
+                      </TableCell>
+                      <TableCell>
+                        <ProxyImageWrapper>
+                          <UserAvatar
+                            user={
+                              summary
+                                ? { id: summary.userId, ...summary.userHead }
+                                : undefined
+                            }
+                            size={40}
+                            shape="rounded"
+                          />
+                        </ProxyImageWrapper>
+                      </TableCell>
+                      <TableCell>
+                        <UsernameText
+                          variant="body1"
+                          user={
+                            summary
+                              ? {
+                                  userId: summary.userId,
+                                  head: summary.userHead,
+                                }
+                              : undefined
+                          }
+                        />
+                      </TableCell>
+                      <SpaceCell />
+                      {activities.map((type) => (
+                        <TableCell key={type} align="center">
+                          {formatNumber(
+                            summary.activity[
+                              type as keyof typeof summary.activity
+                            ] ?? 0,
+                          )}
+                        </TableCell>
+                      ))}
+                      <SpaceCell />
+                      {[...summary.history.slice(1)]
+                        .reverse()
+                        .map((record, i) => (
+                          <GradeCell
+                            grade={record.grade}
+                            key={`${summary.userId}-${i}`}
+                          >
+                            {record.score}
+                          </GradeCell>
+                        ))}
+                      <SpaceCell />
+                      <GradeCell grade={summary.scoreGrade}>
+                        {formatNumber(summary.score)}
+                      </GradeCell>
+                      <GradeCell grade={summary.scoreGrade}>
+                        {summary.scoreGrade}
+                      </GradeCell>
+                      <GradeCell grade={summary.trendGrade}>
+                        <TrendIcon grade={summary.trendGrade} />
+                      </GradeCell>
+                      <GradeCell grade={summary.trendGrade}>
+                        {summary.trend}
+                      </GradeCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Stack>
           </QueryHint>
         </Box>
       </PageBody>
