@@ -156,7 +156,7 @@ export const PerformanceTable: React.FC = () => {
         activities.add(type);
       });
     });
-    return Array.from(activities);
+    return Array.from(activities).sort();
   }, [data]);
 
   const handlePrint = () => {
