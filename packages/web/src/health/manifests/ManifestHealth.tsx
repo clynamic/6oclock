@@ -106,8 +106,8 @@ export const ManifestHealthDisplay: React.FC = () => {
                     </IconButton>
                     <Menu {...bindMenu(popupState)}>
                       <MenuItem
-                        onClick={() => {
-                          deleteManifest({ id: heart.id });
+                        onClick={async () => {
+                          await deleteManifest({ id: heart.id });
                           refetch();
                           popupState.close();
                         }}
