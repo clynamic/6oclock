@@ -1,11 +1,9 @@
-import { Box, CircularProgress, Typography } from '@mui/material';
 import { MD5 } from 'crypto-js';
 import { DateTime } from 'luxon';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { matchPath, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { checkAuthToken } from '../http';
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
 import { useAuth } from './context';
 
 export interface AuthGuardProps {
@@ -15,8 +13,6 @@ export interface AuthGuardProps {
 export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   const { token, clearToken, session, saveSession, clearSession, payload } =
     useAuth();
-  const hasSession = useMemo(() => !!session, [session]);
-
   const sentinel = useRef(0);
 
   const navigate = useNavigate();
@@ -94,31 +90,6 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       }
     }
   }, [location.pathname, navigate, payload?.userId]);
-
-  if (!hasSession) {
-    return (
-      <Page>
-        <PageTitle subtitle="Authenticating..." />
-        <PageHeader />
-        <PageBody>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              gap: 2,
-            }}
-          >
-            <CircularProgress />
-            <Typography variant="h6">Checking your credentials...</Typography>
-          </Box>
-        </PageBody>
-        <PageFooter />
-      </Page>
-    );
-  }
 
   return children ? <>{children}</> : <Outlet />;
 };
