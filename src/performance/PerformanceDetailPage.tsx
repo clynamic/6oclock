@@ -8,9 +8,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { SparkLineChart } from '@mui/x-charts';
-import { DateTime } from 'luxon';
-import { useMemo } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { usePerformance } from '../api';
 import {
@@ -23,7 +21,6 @@ import {
 } from '../common';
 import {
   NavLink,
-  NavSpacer,
   Page,
   PageBody,
   PageFooter,
@@ -31,7 +28,6 @@ import {
   PageTitle,
 } from '../page';
 import {
-  DateRange,
   formatNumber,
   getActivityFromKey,
   getActivityName,
@@ -43,26 +39,8 @@ import { useGradeColors } from './color';
 export const PerformanceDetailPage: React.FC = () => {
   const range = useChartRange();
   const { id: userId } = useParams<{ id: string }>();
-  const [searchParams] = useSearchParams();
   const theme = useTheme();
   const { getScoreGradeColor, getTrendGradeColor } = useGradeColors();
-
-  const lastMonth = searchParams.get('lastMonth') === 'true';
-
-  const selectedRange = useMemo<DateRange>(() => {
-    if (lastMonth) {
-      return {
-        ...range,
-        startDate: DateTime.fromJSDate(range.startDate)
-          .minus({ month: 1 })
-          .toJSDate(),
-        endDate: DateTime.fromJSDate(range.endDate)
-          .minus({ month: 1 })
-          .toJSDate(),
-      };
-    }
-    return range;
-  }, [lastMonth, range]);
 
   const {
     data: summary,
@@ -70,7 +48,7 @@ export const PerformanceDetailPage: React.FC = () => {
     error,
   } = usePerformance(
     {
-      ...selectedRange,
+      ...range,
       userId: Number(userId ?? 0),
       head: true,
     },
@@ -93,18 +71,7 @@ export const PerformanceDetailPage: React.FC = () => {
         }
       />
       <PageHeader
-        actions={[
-          <NavLink href={`/users/${userId}`} label="Profile" />,
-          <NavSpacer />,
-          <NavLink
-            href={
-              lastMonth
-                ? `/performance/${userId}`
-                : `/performance/${userId}?lastMonth=true`
-            }
-            label={lastMonth ? 'This Month' : 'Last Month'}
-          />,
-        ]}
+        actions={[<NavLink href={`/users/${userId}`} label="Profile" />]}
       />
       <PageBody>
         <Box sx={{ width: '100%', maxWidth: 800, margin: 'auto', p: 2 }}>
@@ -146,7 +113,7 @@ export const PerformanceDetailPage: React.FC = () => {
                                 variant="caption"
                                 color="text.secondary"
                               >
-                                {`${selectedRange.startDate.toLocaleDateString()} - ${selectedRange.endDate.toLocaleDateString()}`}
+                                {`${range.startDate.toLocaleDateString()} - ${range.endDate.toLocaleDateString()}`}
                               </Typography>
                             </Stack>
                           </Stack>
