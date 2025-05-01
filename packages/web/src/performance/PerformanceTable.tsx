@@ -14,7 +14,7 @@ import html2canvas from '@wtto00/html2canvas';
 import { DateTime } from 'luxon';
 import { mix } from 'polished';
 import React, { PropsWithChildren, useEffect, useMemo, useRef } from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { PerformanceGrade, TrendGrade, usePerformance } from '../api';
 import {
@@ -27,7 +27,6 @@ import {
 import { AXIOS_INSTANCE } from '../http';
 import {
   NavButton,
-  NavLink,
   NavSpacer,
   Page,
   PageBody,
@@ -36,7 +35,6 @@ import {
   PageTitle,
 } from '../page';
 import {
-  DateRange,
   formatNumber,
   getActivityFromKey,
   getActivityNoun,
@@ -107,32 +105,13 @@ const GradeCell: React.FC<
 export const PerformanceTable: React.FC = () => {
   const { range, area } = useChartValue();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const location = useLocation();
 
   const theme = useTheme();
   const screenshotRef = React.useRef<HTMLDivElement>(null);
 
-  const lastMonth = searchParams.get('lastMonth') === 'true';
-
-  const selectedRange = useMemo<DateRange>(() => {
-    if (lastMonth) {
-      return {
-        ...range,
-        startDate: DateTime.fromJSDate(range.startDate)
-          .minus({ month: 1 })
-          .toJSDate(),
-        endDate: DateTime.fromJSDate(range.endDate)
-          .minus({ month: 1 })
-          .toJSDate(),
-      };
-    }
-    return range;
-  }, [lastMonth, range]);
-
   const { data, isLoading, error } = usePerformance(
     {
-      ...selectedRange,
+      ...range,
       area,
       head: true,
     },
@@ -141,13 +120,13 @@ export const PerformanceTable: React.FC = () => {
 
   const months = useMemo(() => {
     const months = [];
-    let date = DateTime.fromJSDate(selectedRange.startDate);
+    let date = DateTime.fromJSDate(range.startDate);
     for (let i = 0; i < 4; i++) {
       months.push(date.toFormat('LLLL'));
       date = date.minus({ month: 1 });
     }
     return months;
-  }, [selectedRange.startDate]);
+  }, [range.startDate]);
 
   const activities = useMemo(() => {
     const activities = new Set<string>();
@@ -193,7 +172,7 @@ export const PerformanceTable: React.FC = () => {
         const a = document.createElement('a');
         a.href = url;
         a.download = `${area}-performance-${DateTime.fromJSDate(
-          selectedRange.startDate,
+          range.startDate,
         ).toFormat('yyyy-MM-dd')}.png`;
         a.click();
       });
@@ -209,14 +188,6 @@ export const PerformanceTable: React.FC = () => {
           <NavButton key="print" onClick={handlePrint}>
             Print
           </NavButton>,
-          <NavLink
-            href={
-              lastMonth
-                ? location.pathname
-                : `${location.pathname}?lastMonth=true`
-            }
-            label={lastMonth ? 'This Month' : 'Last Month'}
-          />,
         ]}
       />
       <PageBody>
@@ -233,9 +204,7 @@ export const PerformanceTable: React.FC = () => {
           <QueryHint data={data} isLoading={isLoading} error={error}>
             <Stack ref={screenshotRef} id="screenshot-root" p={2}>
               <Typography variant="h6">
-                {DateTime.fromJSDate(selectedRange.startDate).toFormat(
-                  'LLLL yyyy',
-                )}
+                {DateTime.fromJSDate(range.startDate).toFormat('LLLL yyyy')}
               </Typography>
               <Table size="small" sx={{ width: 'fit-content' }}>
                 <TableHead>
@@ -269,9 +238,7 @@ export const PerformanceTable: React.FC = () => {
                         cursor: 'pointer',
                       }}
                       onClick={() => {
-                        navigate(
-                          `/performance/${summary.userId}${location.search}`,
-                        );
+                        navigate(`/performance/${summary.userId}`);
                       }}
                     >
                       <TableCell

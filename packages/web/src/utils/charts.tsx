@@ -1,10 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
 import { BarChart, LineChart } from '@mui/x-charts';
-import {
+import React, {
   createContext,
   PropsWithChildren,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 
@@ -22,7 +24,8 @@ export interface ChartParams {
 
 interface ChartParamsContextValue {
   params: ChartParams;
-  setParams: (params: ChartParams) => void;
+  setParams: React.Dispatch<React.SetStateAction<ChartParams>>;
+  resetParams: () => void;
 }
 
 const ChartParamsContext = createContext<ChartParamsContextValue | undefined>(
@@ -37,23 +40,37 @@ export const ChartParamsProvider: React.FC<ChartParamsProviderProps> = ({
   params,
   children,
 }) => {
+  const defaultParams = useMemo(
+    () => ({
+      range: getCurrentMonthRange(),
+    }),
+    [],
+  );
   const [value, setValue] = useState<ChartParams>({
-    range: getCurrentMonthRange(),
+    ...defaultParams,
     ...params,
   });
 
-  useEffect(() => {
+  const resetParams = useCallback(() => {
     setValue({
-      range: getCurrentMonthRange(),
+      ...defaultParams,
       ...params,
     });
-  }, [params]);
+  }, [defaultParams, params]);
+
+  useEffect(() => {
+    setValue({
+      ...defaultParams,
+      ...params,
+    });
+  }, [defaultParams, params]);
 
   return (
     <ChartParamsContext.Provider
       value={{
         params: value,
         setParams: setValue,
+        resetParams,
       }}
     >
       {children}
@@ -68,12 +85,19 @@ export type ChartParamsExtraProviderProps = PropsWithChildren & {
 export const ChartParamsExtraProvider: React.FC<
   ChartParamsExtraProviderProps
 > = ({ params, children }) => {
-  const value = useChartValue();
+  const parentContext = useChartContext();
+  const scopedValue = useMemo<ChartParamsContextValue>(() => {
+    return {
+      params: { ...parentContext.params, ...params },
+      setParams: parentContext.setParams,
+      resetParams: parentContext.resetParams,
+    };
+  }, [parentContext, params]);
 
   return (
-    <ChartParamsProvider params={{ ...value, ...params }}>
+    <ChartParamsContext.Provider value={scopedValue}>
       {children}
-    </ChartParamsProvider>
+    </ChartParamsContext.Provider>
   );
 };
 
