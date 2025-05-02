@@ -20,4 +20,7 @@ export const ItemType = {
   post_versions: 'post_versions',
   post_replacements: 'post_replacements',
   mod_actions: 'mod_actions',
+  bulk_update_requests: 'bulk_update_requests',
+  tag_aliases: 'tag_aliases',
+  tag_implications: 'tag_implications',
 } as const;
