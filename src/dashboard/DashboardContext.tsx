@@ -30,6 +30,7 @@ interface DashboardContextType {
   isLoading?: boolean;
   isError?: boolean;
   error?: unknown;
+  available?: boolean;
   setConfig: (config: DashboardConfig) => void;
   saveConfig: (update: DashboardUpdate) => Promise<void>;
   resetConfig: () => void;
@@ -54,6 +55,7 @@ export interface DashboardProviderProps {
   isLoading?: boolean;
   isError?: boolean;
   error?: unknown;
+  available?: boolean;
   catalog: DashboardCatalog;
   version?: number;
   children: React.ReactNode;
@@ -66,6 +68,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
   isLoading,
   isError,
   error,
+  available,
   children,
   catalog,
   version,
@@ -146,6 +149,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
         isLoading,
         isError,
         error,
+        available,
         setConfig,
         saveConfig,
         resetConfig,

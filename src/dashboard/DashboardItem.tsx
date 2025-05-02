@@ -1,6 +1,6 @@
 import { Breakpoint } from '@mui/material';
 
-import { DashboardPosition } from '../api';
+import { DashboardPosition, ItemType } from '../api';
 import { DashboardCardProps } from './DashboardCard';
 import { DashboardLayout, DashboardLayouts } from './DashboardGrid';
 
@@ -24,6 +24,7 @@ export type DashboardItemLayouts = Record<string, DashboardItemLayout>;
 export type DashboardItemConfig = {
   name: string;
   layout: DashboardItemLayouts;
+  items?: ItemType[];
   card?: Omit<DashboardCardProps, 'children'>;
   component: React.FC;
 };

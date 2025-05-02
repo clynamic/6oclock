@@ -1,3 +1,4 @@
+import { ItemType } from '../../api';
 import { createLayout, DashboardCatalog } from '../../dashboard';
 import { PerformanceLeaderboard } from '../../performance';
 import {
@@ -51,6 +52,7 @@ export const modDashboardCatalog: DashboardCatalog = {
         xl: { x: 6, y: 0, w: 6, h: 5 },
       },
     ),
+    items: [ItemType.tickets],
     card: { title: 'Status' },
     component: TicketStatusSummaryChart,
   },
@@ -71,6 +73,7 @@ export const modDashboardCatalog: DashboardCatalog = {
         xl: { x: 6, y: 5, w: 6, h: 6 },
       },
     ),
+    items: [ItemType.tickets],
     card: { title: 'Type' },
     component: TicketTypeSummaryChart,
   },
@@ -90,6 +93,7 @@ export const modDashboardCatalog: DashboardCatalog = {
         xl: { x: 0, y: 11, w: 8, h: 5 },
       },
     ),
+    items: [ItemType.tickets],
     card: { title: 'Turnaround' },
     component: TicketStatusSeriesChart,
   },
@@ -110,6 +114,7 @@ export const modDashboardCatalog: DashboardCatalog = {
         xl: { x: 12, y: 0, w: 4, h: 11 },
       },
     ),
+    items: [ItemType.tickets],
     card: { title: 'Reporters', variant: 'outlined' },
     component: TicketReporterBoard,
   },
@@ -129,6 +134,7 @@ export const modDashboardCatalog: DashboardCatalog = {
         xl: { x: 8, y: 11, w: 8, h: 5 },
       },
     ),
+    items: [ItemType.tickets],
     card: { title: 'Frontline' },
     component: TicketOpenSeriesChart,
   },
