@@ -274,11 +274,11 @@ const DatePageButtons = ({
 
   return (
     <Stack direction="row" spacing={1} alignItems="center">
-      <IconButton onClick={() => shiftRange('back')}>
+      <IconButton size="small" onClick={() => shiftRange('back')}>
         <ChevronLeft />
       </IconButton>
       {children}
-      <IconButton onClick={() => shiftRange('forward')}>
+      <IconButton size="small" onClick={() => shiftRange('forward')}>
         <ChevronRight />
       </IconButton>
     </Stack>
