@@ -11,6 +11,7 @@ export * from './activitySeriesPoint';
 export * from './activitySummary';
 export * from './approvalCountSummary';
 export * from './approverSummary';
+export * from './checkManifestAvailabilityParams';
 export * from './dashboardConfig';
 export * from './dashboardConfigMeta';
 export * from './dashboardConfigType';

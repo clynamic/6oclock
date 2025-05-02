@@ -6,10 +6,12 @@ import {
   DashboardConfigType,
   DashboardUpdate,
   getDashboardQueryKey,
+  useCheckManifestAvailability,
   useDashboard as useRemoteDashboard,
   useDeleteDashboard,
   useUpdateDashboard,
 } from '../api';
+import { useChartRange } from '../utils';
 import { DashboardConfig, DashboardProvider } from './DashboardContext';
 import { buildCatalogLayouts, DashboardCatalog } from './DashboardItem';
 
@@ -41,6 +43,7 @@ export const RemoteDashboardProvider: React.FC<
   const { mutateAsync: updateDashboard } = useUpdateDashboard();
   const { mutateAsync: deleteDashboard } = useDeleteDashboard();
   const queryClient = useQueryClient();
+  const range = useChartRange();
 
   const saveConfig = useCallback(
     async (update: DashboardUpdate) => {
@@ -91,6 +94,23 @@ export const RemoteDashboardProvider: React.FC<
     return remoteError;
   }, [remoteError]);
 
+  const itemTypes = useMemo(() => {
+    return Object.values(catalog)
+      .flatMap((config) => config.items ?? [])
+      .filter((item, index, arr) => arr.findIndex((i) => i === item) === index);
+  }, [catalog]);
+  const { data: available } = useCheckManifestAvailability(
+    {
+      ...range,
+      type: itemTypes,
+    },
+    {
+      query: {
+        enabled: itemTypes.length > 0,
+      },
+    },
+  );
+
   return (
     <DashboardProvider
       data={data}
@@ -99,6 +119,7 @@ export const RemoteDashboardProvider: React.FC<
       isLoading={isLoading}
       isError={!!error}
       error={error}
+      available={available}
       catalog={catalog}
       version={version}
     >

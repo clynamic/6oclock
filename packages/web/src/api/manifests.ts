@@ -18,7 +18,11 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query';
-import type { ListManifestsParams, Manifest } from './model';
+import type {
+  CheckManifestAvailabilityParams,
+  ListManifestsParams,
+  Manifest,
+} from './model';
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
 
@@ -333,6 +337,158 @@ export function useListManifests<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getListManifestsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * Returns true if manifests cover the date range, false otherwise
+ * @summary Check manifest availability for a date range
+ */
+export const checkManifestAvailability = (
+  params?: CheckManifestAvailabilityParams,
+  signal?: AbortSignal,
+) => {
+  return makeRequest<boolean>({
+    url: `/manifests/available`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
+
+export const getCheckManifestAvailabilityQueryKey = (
+  params?: CheckManifestAvailabilityParams,
+) => {
+  return [`/manifests/available`, ...(params ? [params] : [])] as const;
+};
+
+export const getCheckManifestAvailabilityQueryOptions = <
+  TData = Awaited<ReturnType<typeof checkManifestAvailability>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: CheckManifestAvailabilityParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof checkManifestAvailability>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getCheckManifestAvailabilityQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof checkManifestAvailability>>
+  > = ({ signal }) => checkManifestAvailability(params, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof checkManifestAvailability>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type CheckManifestAvailabilityQueryResult = NonNullable<
+  Awaited<ReturnType<typeof checkManifestAvailability>>
+>;
+export type CheckManifestAvailabilityQueryError = ErrorType<unknown>;
+
+export function useCheckManifestAvailability<
+  TData = Awaited<ReturnType<typeof checkManifestAvailability>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | CheckManifestAvailabilityParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof checkManifestAvailability>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof checkManifestAvailability>>,
+          TError,
+          TData
+        >,
+        'initialData'
+      >;
+  },
+): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useCheckManifestAvailability<
+  TData = Awaited<ReturnType<typeof checkManifestAvailability>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: CheckManifestAvailabilityParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof checkManifestAvailability>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof checkManifestAvailability>>,
+          TError,
+          TData
+        >,
+        'initialData'
+      >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+export function useCheckManifestAvailability<
+  TData = Awaited<ReturnType<typeof checkManifestAvailability>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: CheckManifestAvailabilityParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof checkManifestAvailability>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+/**
+ * @summary Check manifest availability for a date range
+ */
+
+export function useCheckManifestAvailability<
+  TData = Awaited<ReturnType<typeof checkManifestAvailability>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: CheckManifestAvailabilityParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof checkManifestAvailability>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getCheckManifestAvailabilityQueryOptions(
+    params,
+    options,
+  );
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

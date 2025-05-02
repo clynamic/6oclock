@@ -1,6 +1,7 @@
 import {
   Close,
   HourglassEmpty,
+  Inventory,
   NewReleasesOutlined,
 } from '@mui/icons-material';
 import {
@@ -31,6 +32,7 @@ export const DashboardBody = () => {
     resetConfig,
     isLoading,
     error,
+    available,
   } = useDashboard();
 
   const resetDashboard = useCallback(() => {
@@ -72,7 +74,26 @@ export const DashboardBody = () => {
             </Typography>
           </Alert>
         )}
-        {currentLayout?.length === 0 ? (
+        {available === false ? (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              gap: 2,
+            }}
+          >
+            <Inventory sx={{ fontSize: 48 }} />
+            <Typography variant="h6">
+              The data for this dashboard is not available.
+            </Typography>
+            <Typography variant="caption">
+              Please contact your administrator
+            </Typography>
+          </Box>
+        ) : currentLayout?.length === 0 ? (
           <Box
             sx={{
               display: 'flex',
