@@ -1,3 +1,4 @@
+import { ItemType } from '../api';
 import { UserCard } from '../common';
 import { createLayout, DashboardCatalog } from '../dashboard';
 import { UploadsSeriesByUploaderChart } from '../janitors';
@@ -61,6 +62,7 @@ export const userProfileCatalog: DashboardCatalog = {
         xl: { x: 5, y: 0, w: 5, h: 5 },
       },
     ),
+    items: [ItemType.tickets],
     card: { title: 'Tickets Created' },
     component: TicketCreatedSeriesByReporterChart,
   },
@@ -81,6 +83,7 @@ export const userProfileCatalog: DashboardCatalog = {
         xl: { x: 5, y: 0, w: 5, h: 5 },
       },
     ),
+    items: [ItemType.post_versions],
     card: { title: 'Posts Uploaded' },
     component: UploadsSeriesByUploaderChart,
   },
