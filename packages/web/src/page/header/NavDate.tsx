@@ -34,7 +34,7 @@ import {
 } from '../../utils';
 import { NavButton } from './NavButton';
 import { usePageHeaderContext } from './PageHeaderContext';
-import { useAuth } from '../../auth';
+import { useCurrentUserHead } from '../../auth';
 
 type CalendarView = 'year' | 'month' | 'day';
 
@@ -51,7 +51,7 @@ const getCalendarViews = (d: TimeDuration): CalendarView[] => {
 
 export const NavDate: React.FC = () => {
   const theme = useTheme();
-  const { payload } = useAuth();
+  const { data: user } = useCurrentUserHead();
   const {
     params: {
       range: { startDate, endDate, timezone },
@@ -154,7 +154,7 @@ export const NavDate: React.FC = () => {
     setAnchorEl(null);
   }, [resetParams]);
 
-  if (!payload) return null;
+  if (!user) return null;
 
   return (
     <>
