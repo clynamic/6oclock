@@ -1,19 +1,13 @@
 import { Avatar } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { useUserHead } from '../../api';
-import { useAuth } from '../../auth';
+import { useCurrentUserHead } from '../../auth';
 import { NavLink } from './NavLink';
 
 export const NavUser: React.FC = () => {
-  const { payload } = useAuth();
-  const { data: user } = useUserHead(payload?.userId ?? 0, {
-    query: {
-      enabled: payload?.userId !== undefined,
-    },
-  });
+  const { data: user } = useCurrentUserHead();
 
-  if (!payload || !user) return null;
+  if (!user) return null;
 
   return (
     <NavLink
