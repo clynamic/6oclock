@@ -60,21 +60,23 @@ export const PerformanceCard: React.FC = () => {
           <Stack direction="column" spacing={1} flex={1} overflow="hidden">
             <LimitedList>
               {data
-                ? Object.entries(data.activity).map(([type, value]) => (
-                    <Stack
-                      key={type}
-                      direction="row"
-                      spacing={1}
-                      justifyContent="space-between"
-                    >
-                      <Typography variant="body1">
-                        {getActivityName(getActivityFromKey(type))}
-                      </Typography>
-                      <Typography variant="body1">
-                        {formatNumber(value)}
-                      </Typography>
-                    </Stack>
-                  ))
+                ? Object.entries(data.activity)
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([type, value]) => (
+                      <Stack
+                        key={type}
+                        direction="row"
+                        spacing={1}
+                        justifyContent="space-between"
+                      >
+                        <Typography variant="body1">
+                          {getActivityName(getActivityFromKey(type))}
+                        </Typography>
+                        <Typography variant="body1">
+                          {formatNumber(value)}
+                        </Typography>
+                      </Stack>
+                    ))
                 : Array.from({ length: 3 }).map((_, index) => (
                     <Stack
                       key={index}

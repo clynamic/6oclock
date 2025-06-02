@@ -213,7 +213,7 @@ export const PerformanceTable: React.FC = () => {
                     <SpaceCell />
                     <TableCell>Name</TableCell>
                     <SpaceCell />
-                    {activities.map((type) => (
+                    {activities.sort().map((type) => (
                       <TableCell key={type}>
                         {getActivityNoun(getActivityFromKey(type))}
                       </TableCell>
@@ -277,7 +277,7 @@ export const PerformanceTable: React.FC = () => {
                         />
                       </TableCell>
                       <SpaceCell />
-                      {activities.map((type) => (
+                      {activities.sort().map((type) => (
                         <TableCell key={type} align="center">
                           {formatNumber(
                             summary.activity[
