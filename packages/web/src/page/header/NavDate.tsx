@@ -34,6 +34,7 @@ import {
 } from '../../utils';
 import { NavButton } from './NavButton';
 import { usePageHeaderContext } from './PageHeaderContext';
+import { useAuth } from '../../auth';
 
 type CalendarView = 'year' | 'month' | 'day';
 
@@ -50,6 +51,7 @@ const getCalendarViews = (d: TimeDuration): CalendarView[] => {
 
 export const NavDate: React.FC = () => {
   const theme = useTheme();
+  const { payload } = useAuth();
   const {
     params: {
       range: { startDate, endDate, timezone },
@@ -114,18 +116,21 @@ export const NavDate: React.FC = () => {
     [rangeStart, rangeEnd],
   );
 
-  const shiftRange = (dir: 'back' | 'forward') => {
-    const factor = dir === 'back' ? -1 : 1;
-    const newStart = rangeStart.plus({ [durationUnit]: factor });
-    setParams((previous) => ({
-      ...previous,
-      range: {
-        startDate: newStart.toJSDate(),
-        endDate: newStart.plus({ [durationUnit]: 1 }).toJSDate(),
-        timezone,
-      },
-    }));
-  };
+  const shiftRange = useCallback(
+    (dir: 'back' | 'forward') => {
+      const factor = dir === 'back' ? -1 : 1;
+      const newStart = rangeStart.plus({ [durationUnit]: factor });
+      setParams((previous) => ({
+        ...previous,
+        range: {
+          startDate: newStart.toJSDate(),
+          endDate: newStart.plus({ [durationUnit]: 1 }).toJSDate(),
+          timezone,
+        },
+      }));
+    },
+    [setParams, rangeStart, durationUnit, timezone],
+  );
 
   const applySelection = useCallback(
     (date: DateTime, duration: TimeDuration) => {
@@ -148,6 +153,8 @@ export const NavDate: React.FC = () => {
     resetParams();
     setAnchorEl(null);
   }, [resetParams]);
+
+  if (!payload) return null;
 
   return (
     <>
