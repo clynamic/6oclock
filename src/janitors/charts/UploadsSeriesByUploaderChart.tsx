@@ -1,11 +1,11 @@
 import { useTheme } from '@mui/material';
 import { BarChart, LineChart } from '@mui/x-charts';
-import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
 import { useUploadCount } from '../../api';
 import { QueryHint } from '../../common';
 import {
+  formatSeriesDateLabel,
   refetchQueryOptions,
   SeriesChartProps,
   useChartValue,
@@ -37,8 +37,7 @@ export const UploadsSeriesByUploaderChart: React.FC<
       {
         scaleType: 'band',
         dataKey: 'date',
-        valueFormatter: (value) =>
-          DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
+        valueFormatter: (value) => formatSeriesDateLabel(value, data!),
       },
     ],
     series: [

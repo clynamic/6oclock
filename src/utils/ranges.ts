@@ -1,4 +1,5 @@
 import { DateTime, DateTimeUnit } from 'luxon';
+import { TimeScale } from '../api';
 
 export interface DateRange {
   startDate: Date;
@@ -68,5 +69,61 @@ export const unitFromDuration = (duration: TimeDuration): DateTimeUnit => {
       return 'month';
     case TimeDuration.Year:
       return 'year';
+  }
+};
+
+export const inferScaleFromRange = (
+  start: DateTime,
+  end: DateTime,
+): TimeScale => {
+  const diffInMs = Math.abs(end.toMillis() - start.toMillis());
+  const hours = diffInMs / (1000 * 60 * 60);
+  const days = hours / 24;
+  const months = days / 30;
+  const years = days / 365;
+
+  if (hours <= 2) return TimeScale.minute;
+  if (days <= 2) return TimeScale.hour;
+  if (months <= 1.1) return TimeScale.day;
+  if (months <= 2) return TimeScale.week;
+  if (years <= 2) return TimeScale.month;
+  if (years <= 10) return TimeScale.year;
+  return TimeScale.decade;
+};
+
+export const formatSeriesDateLabel = (
+  date: Date,
+  series: { date: Date }[],
+): string => {
+  const start = DateTime.fromJSDate(series[0].date);
+  const end = DateTime.fromJSDate(series[series.length - 1].date);
+  const scale = inferScaleFromRange(start, end);
+  const _date = DateTime.fromJSDate(date);
+  switch (scale) {
+    case TimeScale.minute:
+      if (end.diff(start, 'minutes').minutes <= 1) {
+        return _date.toFormat('ss');
+      }
+      if (end.diff(start, 'minutes').minutes < 60) {
+        return _date.toFormat('mm');
+      }
+      return _date.toFormat('HH:mm');
+    case TimeScale.hour:
+      return _date.toFormat('HH:mm');
+    case TimeScale.day:
+      if (end.diff(start, 'days').days < 8) {
+        return _date.toFormat('cccc');
+      }
+      return _date.toFormat('dd LLLL');
+    case TimeScale.week:
+      return _date.toFormat('dd LLLL');
+    case TimeScale.month:
+      return _date.toFormat('LLLL yyyy');
+    case TimeScale.year:
+      return _date.toFormat('yyyy');
+    case TimeScale.decade:
+      return `${_date.year} - ${_date.year + 9}`;
+    default:
+      throw new Error(`Unsupported time scale: ${scale}`);
   }
 };
