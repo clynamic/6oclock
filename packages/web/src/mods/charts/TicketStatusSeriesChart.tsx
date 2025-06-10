@@ -1,11 +1,11 @@
 import { useTheme } from '@mui/material';
 import { BarChart, LineChart } from '@mui/x-charts';
-import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
 import { useTicketClosedSeries, useTicketCreatedSeries } from '../../api';
 import { QueryHint } from '../../common';
 import {
+  formatSeriesDateLabel,
   isPointSeriesEmpty,
   mergePointSeries,
   refetchQueryOptions,
@@ -49,8 +49,7 @@ export const TicketStatusSeriesChart: React.FC<TicketTurnaroundChartProps> = ({
       {
         scaleType: 'band',
         dataKey: 'date',
-        valueFormatter: (value) =>
-          DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
+        valueFormatter: (value) => formatSeriesDateLabel(value, dataset),
       },
     ],
     series: [

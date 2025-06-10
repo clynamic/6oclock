@@ -1,10 +1,13 @@
 import { useTheme } from '@mui/material';
 import { LineChart } from '@mui/x-charts';
-import { DateTime } from 'luxon';
 
 import { usePostPendingSeries } from '../../api';
 import { QueryHint } from '../../common';
-import { refetchQueryOptions, useChartRange } from '../../utils';
+import {
+  formatSeriesDateLabel,
+  refetchQueryOptions,
+  useChartRange,
+} from '../../utils';
 
 export const PostPendingSeriesChart: React.FC = () => {
   const theme = useTheme();
@@ -30,8 +33,7 @@ export const PostPendingSeriesChart: React.FC = () => {
           {
             scaleType: 'band',
             dataKey: 'date',
-            valueFormatter: (value) =>
-              DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
+            valueFormatter: (value) => formatSeriesDateLabel(value, data!),
           },
         ]}
         series={[
