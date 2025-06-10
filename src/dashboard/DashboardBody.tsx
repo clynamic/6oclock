@@ -90,7 +90,8 @@ export const DashboardBody = () => {
               The data for this dashboard is not available.
             </Typography>
             <Typography variant="caption">
-              Please contact your administrator
+              If you believe this is an error, please contact your
+              administrator.
             </Typography>
           </Box>
         ) : currentLayout?.length === 0 ? (
