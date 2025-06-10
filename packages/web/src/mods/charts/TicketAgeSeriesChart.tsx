@@ -1,10 +1,13 @@
 import { BarChart } from '@mui/x-charts';
-import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
 import { useTicketAgeSeries } from '../../api';
 import { QueryHint } from '../../common';
-import { SeriesChartProps, useChartRange } from '../../utils';
+import {
+  formatSeriesDateLabel,
+  SeriesChartProps,
+  useChartRange,
+} from '../../utils';
 import { TicketAgeColors, TicketAgeLabels } from './TicketAgeSummaryChart';
 
 export const TicketAgeSeriesChart: React.FC = () => {
@@ -26,8 +29,7 @@ export const TicketAgeSeriesChart: React.FC = () => {
       {
         scaleType: 'band',
         dataKey: 'date',
-        valueFormatter: (value) =>
-          DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
+        valueFormatter: (value) => formatSeriesDateLabel(value, dataset),
       },
     ],
     series: (

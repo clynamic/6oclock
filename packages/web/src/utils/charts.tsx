@@ -11,7 +11,7 @@ import React, {
 } from 'react';
 
 import { UserArea } from '../api';
-import { DateRange, getCurrentMonthRange } from './months';
+import { DateRange, getCurrentMonthRange } from './ranges';
 
 export type SeriesChartProps = Parameters<typeof BarChart>[0] &
   Parameters<typeof LineChart>[0];

@@ -1,11 +1,11 @@
 import { useTheme } from '@mui/material';
 import { BarChart } from '@mui/x-charts';
-import { DateTime } from 'luxon';
 
 import { ActivitySeriesPoint, TimeScale, useActivity } from '../../api';
 import { QueryHint } from '../../common';
 import {
   flattenPointSeries,
+  formatSeriesDateLabel,
   refetchQueryOptions,
   SeriesChartProps,
   useChartValue,
@@ -28,8 +28,7 @@ export const UserActivitySeriesChart: React.FC = () => {
       {
         scaleType: 'band',
         dataKey: 'date',
-        valueFormatter: (value) =>
-          DateTime.fromJSDate(value).toLocaleString(DateTime.TIME_SIMPLE),
+        valueFormatter: (value) => formatSeriesDateLabel(value, data!),
       },
     ],
     series: Object.keys(data?.[0] ?? {})

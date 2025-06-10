@@ -1,6 +1,5 @@
 import { useTheme } from '@mui/material';
 import { BarChart } from '@mui/x-charts';
-import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
 import {
@@ -9,6 +8,7 @@ import {
 } from '../../api';
 import { QueryHint } from '../../common';
 import {
+  formatSeriesDateLabel,
   mergePointSeries,
   refetchQueryOptions,
   SeriesChartProps,
@@ -57,8 +57,7 @@ export const ApprovalCountSeriesByApproverChart: React.FC = () => {
       {
         scaleType: 'band',
         dataKey: 'date',
-        valueFormatter: (value) =>
-          DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_SHORT),
+        valueFormatter: (value) => formatSeriesDateLabel(value, dataset),
       },
     ],
     series: [
