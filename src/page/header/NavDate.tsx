@@ -70,19 +70,18 @@ export const NavDate: React.FC = () => {
   const { layout } = usePageHeaderContext();
   const isWideLayout = useMemo(() => layout === 'wide', [layout]);
 
-  const now = useMemo(() => new TZDate(new Date(), SHIP_TIMEZONE), []);
+  const now = new TZDate(new Date(), SHIP_TIMEZONE);
 
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [currentDate, setCurrentDate] = useState(() => startDate);
-  const [currentDuration, setCurrentDuration] = useState(() => chartDuration);
-  const [view, setView] = useState<CalendarView>('day');
-
-  const isOpen = Boolean(anchorEl);
-
+  const [currentDuration, setCurrentDuration] = useState(chartDuration);
   const durationUnit = useMemo(
     () => unitFromDuration(currentDuration),
     [currentDuration],
   );
+
+  const [currentDate, setCurrentDate] = useState(startDate);
+
+  const [view, setView] = useState<CalendarView>('day');
+
   const calendarViews = useMemo(
     () => getCalendarViews(currentDuration),
     [currentDuration],
@@ -96,6 +95,9 @@ export const NavDate: React.FC = () => {
     () => addPeriods(rangeStart, durationUnit, 1),
     [rangeStart, durationUnit],
   );
+
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const isOpen = Boolean(anchorEl);
 
   useEffect(() => {
     setView(calendarViews.at(-1)!);
