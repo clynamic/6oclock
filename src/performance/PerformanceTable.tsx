@@ -193,16 +193,20 @@ export const PerformanceTable: React.FC = () => {
       <PageBody>
         <Box
           sx={{
-            width: '100%',
-            height: '100%',
             p: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            overflowX: 'auto',
+            maxWidth: '100%',
           }}
         >
           <QueryHint data={data} isLoading={isLoading} error={error}>
-            <Stack ref={screenshotRef} id="screenshot-root" p={2}>
+            <Stack
+              ref={screenshotRef}
+              id="screenshot-root"
+              sx={{
+                p: 2,
+                width: 'fit-content',
+              }}
+            >
               <Typography variant="h6">
                 {DateTime.fromJSDate(range.startDate).toFormat('LLLL yyyy')}
               </Typography>
