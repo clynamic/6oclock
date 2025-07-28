@@ -40,6 +40,7 @@ import {
   formatRangeLabel,
   inferDurationFromRange,
   TimeDuration,
+  TimeUnit,
   unitFromDuration,
   useChartContext,
 } from '../../utils';
@@ -59,7 +60,7 @@ const getCalendarViews = (d: TimeDuration): CalendarView[] => {
   }
 };
 
-const startOfPeriod = (date: Date, unit: string): Date => {
+const startOfPeriod = (date: Date, unit: TimeUnit): Date => {
   switch (unit) {
     case 'day':
       return startOfDay(date);
@@ -74,7 +75,7 @@ const startOfPeriod = (date: Date, unit: string): Date => {
   }
 };
 
-const addPeriods = (date: Date, unit: string, amount: number): Date => {
+const addPeriods = (date: Date, unit: TimeUnit, amount: number): Date => {
   switch (unit) {
     case 'day':
       return addDays(date, amount);
@@ -169,7 +170,7 @@ export const NavDate: React.FC = () => {
   const applySelection = useCallback(
     (date: Date, duration: TimeDuration) => {
       const newStart = startOfPeriod(date, unitFromDuration(duration));
-      const newEnd = addPeriods(newStart, duration.toLowerCase(), 1);
+      const newEnd = addPeriods(newStart, duration, 1);
       setParams((previous) => ({
         ...previous,
         range: {
