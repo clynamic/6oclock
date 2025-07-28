@@ -1,4 +1,4 @@
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Fade } from '@mui/material';
 import { UseInfiniteQueryResult } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
@@ -24,7 +24,7 @@ export const LoadMoreHint: React.FC<LoadMoreHintProps> = ({
   return (
     <>
       <div ref={ref} style={{ height: 1 }} />
-      {isFetchingNextPage && (
+      <Fade in={isFetchingNextPage} timeout={300}>
         <Box
           sx={{
             display: 'flex',
@@ -32,9 +32,9 @@ export const LoadMoreHint: React.FC<LoadMoreHintProps> = ({
             py: 2,
           }}
         >
-          <CircularProgress />
+          <CircularProgress key="load-more-spinner" size={24} />
         </Box>
-      )}
+      </Fade>
     </>
   );
 };
