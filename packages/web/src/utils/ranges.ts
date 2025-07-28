@@ -74,7 +74,9 @@ export const inferDurationFromRange = (
   return TimeDuration.Year;
 };
 
-export const unitFromDuration = (duration: TimeDuration): string => {
+export type TimeUnit = 'day' | 'week' | 'month' | 'year';
+
+export const unitFromDuration = (duration: TimeDuration): TimeUnit => {
   switch (duration) {
     case TimeDuration.Day:
       return 'day';
