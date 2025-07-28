@@ -141,7 +141,27 @@
         "operationId": "getManifestHealth",
         "summary": "Retrieve manifest health",
         "description": "Retrieve manifest health",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number",
+            "schema": { "minimum": 1, "default": 1, "type": "number" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "minimum": 1,
+              "maximum": 320,
+              "default": 80,
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Manifest health",
@@ -235,6 +255,64 @@
         "security": [{ "bearer": [] }]
       }
     },
+    "/manifests/available": {
+      "get": {
+        "operationId": "checkManifestAvailability",
+        "summary": "Check manifest availability for a date range",
+        "description": "Returns true if manifests cover the date range, false otherwise",
+        "parameters": [
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/ItemType" }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Manifest availability",
+            "content": {
+              "application/json": { "schema": { "type": "boolean" } }
+            }
+          }
+        },
+        "tags": ["Manifests"],
+        "security": [{ "bearer": [] }]
+      }
+    },
     "/manifests/{id}": {
       "get": {
         "operationId": "getManifest",
@@ -287,38 +365,38 @@
         "description": "List manifests",
         "parameters": [
           {
-            "required": true,
             "name": "scale",
+            "required": true,
             "in": "query",
             "schema": { "$ref": "#/components/schemas/TimeScale" }
           },
           {
-            "required": true,
             "name": "cycle",
+            "required": true,
             "in": "query",
             "schema": { "$ref": "#/components/schemas/TimeScale" }
           },
           {
-            "required": true,
             "name": "startDate",
+            "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
           },
           {
-            "required": true,
             "name": "endDate",
+            "required": false,
             "in": "query",
             "schema": { "format": "date-time", "type": "string" }
           },
           {
-            "required": true,
             "name": "timezone",
+            "required": false,
             "in": "query",
             "schema": { "type": "string" }
           },
           {
-            "required": false,
             "name": "type",
+            "required": false,
             "in": "query",
             "schema": {
               "type": "array",
@@ -326,8 +404,8 @@
             }
           },
           {
-            "required": false,
             "name": "id",
+            "required": false,
             "in": "query",
             "schema": { "type": "number" }
           }
@@ -342,64 +420,6 @@
                   "items": { "$ref": "#/components/schemas/Manifest" }
                 }
               }
-            }
-          }
-        },
-        "tags": ["Manifests"],
-        "security": [{ "bearer": [] }]
-      }
-    },
-    "/manifests/available": {
-      "get": {
-        "operationId": "checkManifestAvailability",
-        "summary": "Check manifest availability for a date range",
-        "description": "Returns true if manifests cover the date range, false otherwise",
-        "parameters": [
-          {
-            "required": false,
-            "name": "scale",
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "required": false,
-            "name": "cycle",
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "required": false,
-            "name": "startDate",
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "required": false,
-            "name": "endDate",
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "required": false,
-            "name": "timezone",
-            "in": "query",
-            "schema": { "type": "string" }
-          },
-          {
-            "required": false,
-            "name": "type",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": { "$ref": "#/components/schemas/ItemType" }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Manifest availability",
-            "content": {
-              "application/json": { "schema": { "type": "boolean" } }
             }
           }
         },
@@ -2397,18 +2417,6 @@
           "meta": { "type": "object" }
         }
       },
-      "Manifest": {
-        "type": "object",
-        "properties": {
-          "type": { "$ref": "#/components/schemas/ItemType" },
-          "id": { "type": "number" },
-          "startDate": { "format": "date-time", "type": "string" },
-          "endDate": { "format": "date-time", "type": "string" },
-          "lowerId": { "type": "number" },
-          "upperId": { "type": "number" }
-        },
-        "required": ["type", "id", "startDate", "endDate", "lowerId", "upperId"]
-      },
       "TimeScale": {
         "type": "string",
         "enum": [
@@ -2421,6 +2429,18 @@
           "decade",
           "all"
         ]
+      },
+      "Manifest": {
+        "type": "object",
+        "properties": {
+          "type": { "$ref": "#/components/schemas/ItemType" },
+          "id": { "type": "number" },
+          "startDate": { "format": "date-time", "type": "string" },
+          "endDate": { "format": "date-time", "type": "string" },
+          "lowerId": { "type": "number" },
+          "upperId": { "type": "number" }
+        },
+        "required": ["type", "id", "startDate", "endDate", "lowerId", "upperId"]
       },
       "UserArea": {
         "type": "string",
