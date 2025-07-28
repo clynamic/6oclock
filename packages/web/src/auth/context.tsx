@@ -48,6 +48,7 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [token, setToken] = useState<string | null>(() => {
     const storedToken = localStorage.getItem(storageKey);
     if (storedToken) {
+      // This is necessary to ensure the first calls are already authenticated
       setAxiosAuth(storedToken);
     }
     return storedToken;
