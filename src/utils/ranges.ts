@@ -10,8 +10,10 @@ import {
   startOfMonth,
   subDays,
 } from 'date-fns';
+import { tz } from '@date-fns/tz';
 
 import { TimeScale } from '../api';
+import { SHIP_TIMEZONE } from './timezone';
 
 export interface DateRange {
   startDate: Date;
@@ -21,10 +23,10 @@ export interface DateRange {
 
 export const getCurrentMonthRange = (): DateRange => {
   const now = new Date();
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timezone = SHIP_TIMEZONE;
   return {
-    startDate: startOfMonth(now),
-    endDate: endOfMonth(now),
+    startDate: startOfMonth(now, { in: tz(timezone) }),
+    endDate: endOfMonth(now, { in: tz(timezone) }),
     timezone,
   };
 };
