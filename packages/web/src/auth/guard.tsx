@@ -1,5 +1,5 @@
 import { MD5 } from 'crypto-js';
-import { DateTime } from 'luxon';
+import { addHours, isBefore } from 'date-fns';
 import React, { useEffect, useRef } from 'react';
 import { matchPath, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -39,10 +39,7 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       }
 
       if (token && session) {
-        const expired =
-          DateTime.fromJSDate(session.date).plus({
-            hours: 1,
-          }) < DateTime.now();
+        const expired = isBefore(addHours(session.date, 1), new Date());
         const hash = MD5(token).toString();
         const valid = hash === session.hash;
         if (expired || !valid) {

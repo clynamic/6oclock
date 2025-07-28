@@ -1,4 +1,16 @@
-import { DateTime, DateTimeUnit } from 'luxon';
+import {
+  differenceInDays,
+  differenceInMilliseconds,
+  differenceInMinutes,
+  endOfMonth,
+  format,
+  getYear,
+  isSameMonth,
+  isSameYear,
+  startOfMonth,
+  subDays,
+} from 'date-fns';
+
 import { TimeScale } from '../api';
 
 export interface DateRange {
@@ -8,11 +20,12 @@ export interface DateRange {
 }
 
 export const getCurrentMonthRange = (): DateRange => {
-  const now = DateTime.now().toLocal();
+  const now = new Date();
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return {
-    startDate: now.startOf('month').toJSDate(),
-    endDate: now.endOf('month').toJSDate(),
-    timezone: now.zoneName,
+    startDate: startOfMonth(now),
+    endDate: endOfMonth(now),
+    timezone,
   };
 };
 
@@ -24,42 +37,42 @@ export enum TimeDuration {
 }
 
 export const formatRangeLabel = (
-  start: DateTime,
-  end: DateTime,
+  start: Date,
+  end: Date,
   duration: TimeDuration,
 ): string => {
-  if (duration === TimeDuration.Day) return start.toFormat('DDD');
+  if (duration === TimeDuration.Day) return format(start, 'PPP');
   if (duration === TimeDuration.Week)
-    return `${start.toFormat('DDD')} - ${end.minus({ days: 1 }).toFormat('DDD')}`;
+    return `${format(start, 'PPP')} - ${format(subDays(end, 1), 'PPP')}`;
 
-  const endAdjusted = end.minus({ days: 1 });
+  const endAdjusted = subDays(end, 1);
 
-  if (duration === TimeDuration.Month && start.hasSame(endAdjusted, 'month')) {
-    return start.toFormat('LLLL yyyy');
+  if (duration === TimeDuration.Month && isSameMonth(start, endAdjusted)) {
+    return format(start, 'MMMM yyyy');
   }
 
-  if (duration === TimeDuration.Year && start.hasSame(endAdjusted, 'year')) {
-    return start.toFormat('yyyy');
+  if (duration === TimeDuration.Year && isSameYear(start, endAdjusted)) {
+    return format(start, 'yyyy');
   }
 
-  const sameYear = start.year === endAdjusted.year;
+  const sameYear = getYear(start) === getYear(endAdjusted);
   if (sameYear)
-    return `${start.toFormat('LLL')} - ${endAdjusted.toFormat('LLL yyyy')}`;
-  return `${start.toFormat('LLL yyyy')} - ${endAdjusted.toFormat('LLL yyyy')}`;
+    return `${format(start, 'LLL')} - ${format(endAdjusted, 'LLL yyyy')}`;
+  return `${format(start, 'LLL yyyy')} - ${format(endAdjusted, 'LLL yyyy')}`;
 };
 
 export const inferDurationFromRange = (
-  start: DateTime,
-  end: DateTime,
+  start: Date,
+  end: Date,
 ): TimeDuration => {
-  const diff = end.diff(start, ['days']).days;
+  const diff = differenceInDays(end, start);
   if (diff <= 1) return TimeDuration.Day;
   if (diff <= 8) return TimeDuration.Week;
   if (diff <= 32) return TimeDuration.Month;
   return TimeDuration.Year;
 };
 
-export const unitFromDuration = (duration: TimeDuration): DateTimeUnit => {
+export const unitFromDuration = (duration: TimeDuration): string => {
   switch (duration) {
     case TimeDuration.Day:
       return 'day';
@@ -72,11 +85,8 @@ export const unitFromDuration = (duration: TimeDuration): DateTimeUnit => {
   }
 };
 
-export const inferScaleFromRange = (
-  start: DateTime,
-  end: DateTime,
-): TimeScale => {
-  const diffInMs = Math.abs(end.toMillis() - start.toMillis());
+export const inferScaleFromRange = (start: Date, end: Date): TimeScale => {
+  const diffInMs = Math.abs(differenceInMilliseconds(end, start));
   const hours = diffInMs / (1000 * 60 * 60);
   const days = hours / 24;
   const months = days / 30;
@@ -95,34 +105,35 @@ export const formatSeriesDateLabel = (
   date: Date,
   series: { date: Date }[],
 ): string => {
-  const start = DateTime.fromJSDate(series[0].date);
-  const end = DateTime.fromJSDate(series[series.length - 1].date);
+  const start = series[0].date;
+  const end = series[series.length - 1].date;
   const scale = inferScaleFromRange(start, end);
-  const _date = DateTime.fromJSDate(date);
+
   switch (scale) {
     case TimeScale.minute:
-      if (end.diff(start, 'minutes').minutes <= 1) {
-        return _date.toFormat('ss');
+      const diffMinutes = differenceInMinutes(end, start);
+      if (differenceInDays(end, start) === 0 && diffMinutes <= 1) {
+        return format(date, 'ss');
       }
-      if (end.diff(start, 'minutes').minutes < 60) {
-        return _date.toFormat('mm');
+      if (differenceInDays(end, start) === 0 && diffMinutes < 60) {
+        return format(date, 'mm');
       }
-      return _date.toFormat('HH:mm');
+      return format(date, 'HH:mm');
     case TimeScale.hour:
-      return _date.toFormat('HH:mm');
+      return format(date, 'HH:mm');
     case TimeScale.day:
-      if (end.diff(start, 'days').days < 8) {
-        return _date.toFormat('cccc');
+      if (differenceInDays(end, start) < 8) {
+        return format(date, 'cccc');
       }
-      return _date.toFormat('dd LLLL');
+      return format(date, 'dd MMMM');
     case TimeScale.week:
-      return _date.toFormat('dd LLLL');
+      return format(date, 'dd MMMM');
     case TimeScale.month:
-      return _date.toFormat('LLLL yyyy');
+      return format(date, 'MMMM yyyy');
     case TimeScale.year:
-      return _date.toFormat('yyyy');
+      return format(date, 'yyyy');
     case TimeScale.decade:
-      return `${_date.year} - ${_date.year + 9}`;
+      return `${getYear(date)} - ${getYear(date) + 9}`;
     default:
       throw new Error(`Unsupported time scale: ${scale}`);
   }

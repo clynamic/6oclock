@@ -1,5 +1,5 @@
-import { useAuth } from './context';
 import { useUserHead } from '../api';
+import { useAuth } from './context';
 
 export const useCurrentUserHead = () => {
   const { payload } = useAuth();
