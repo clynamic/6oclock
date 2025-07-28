@@ -9,6 +9,8 @@ import {
   endOfMonth,
   format,
   getYear,
+  isAfter,
+  isBefore,
   isSameMonth,
   isSameYear,
   startOfDay,
@@ -17,7 +19,7 @@ import {
   startOfYear,
   subDays,
 } from 'date-fns';
-import { tz } from '@date-fns/tz';
+import { TZDate } from '@date-fns/tz';
 
 import { TimeScale } from '../api';
 import { SHIP_TIMEZONE } from './timezone';
@@ -29,11 +31,11 @@ export interface DateRange {
 }
 
 export const getCurrentMonthRange = (): DateRange => {
-  const now = new Date();
+  const now = new TZDate(new Date(), SHIP_TIMEZONE);
   const timezone = SHIP_TIMEZONE;
   return {
-    startDate: startOfMonth(now, { in: tz(timezone) }),
-    endDate: endOfMonth(now, { in: tz(timezone) }),
+    startDate: startOfMonth(now),
+    endDate: endOfMonth(now),
     timezone,
   };
 };
@@ -128,6 +130,19 @@ export const addPeriods = (
     default:
       return date;
   }
+};
+
+export const isInPeriod = (
+  date: Date,
+  reference: Date,
+  unit: TimeUnit,
+): boolean => {
+  const start = startOfPeriod(reference, unit);
+  const end = addPeriods(start, unit, 1);
+  console.log(
+    `Checking if ${date} is in period from ${start} to ${end}: ${!isBefore(date, start) && isBefore(date, end)}`,
+  );
+  return !isBefore(date, start) && !isAfter(date, end);
 };
 
 export const subPeriods = (
