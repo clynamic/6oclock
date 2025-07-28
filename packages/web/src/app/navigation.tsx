@@ -2,11 +2,9 @@ import { ReactElement } from 'react';
 import { Route, useParams } from 'react-router-dom';
 
 import { useAuth } from '../auth';
-import { HealthPage } from '../health';
-import { JobsPage } from '../health/jobs';
+import { HealthPage, JobsPage, ManifestHealthPage } from '../health';
 import { HomePage } from '../home';
-import { JanitorOverviewPage } from '../janitors';
-import { PostUploaderPage } from '../janitors/uploads';
+import { JanitorOverviewPage, PostUploaderPage } from '../janitors';
 import { ModOverviewPage, TicketReporterPage } from '../mods';
 import { NavDate, NavHealth, NavNode, NavSpacer, NavUser } from '../page';
 import { PerformanceDetailPage, PerformanceTable } from '../performance';
@@ -124,6 +122,11 @@ export const appNavNodes: NavNode[] = [
         label: 'Jobs',
         href: '/health/jobs',
         component: <JobsPage />,
+      },
+      {
+        label: 'Manifests',
+        href: '/health/manifests',
+        component: <ManifestHealthPage />,
       },
     ],
   },
