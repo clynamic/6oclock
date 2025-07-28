@@ -23,9 +23,11 @@ export const HealthPage: React.FC = () => {
               variant="outlined"
               sx={{
                 background: 'transparent',
+                height: '100%',
+                maxHeight: 700,
               }}
             >
-              <Stack p={2} spacing={2}>
+              <Stack p={2} spacing={2} sx={{ height: '100%' }}>
                 <Typography variant="h5">Manifests</Typography>
                 <ManifestHealthDisplay />
               </Stack>
