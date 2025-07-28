@@ -36,9 +36,13 @@ import {
 } from '../page';
 import {
   formatNumber,
+  formatRangeLabel,
   getActivityFromKey,
   getActivityNoun,
+  inferDurationFromRange,
   refetchQueryOptions,
+  TimeDuration,
+  unitFromDuration,
   useChartValue,
 } from '../utils';
 import { useGradeColors } from './color';
@@ -104,6 +108,14 @@ const GradeCell: React.FC<
 
 export const PerformanceTable: React.FC = () => {
   const { range, area } = useChartValue();
+  const chartDuration = useMemo(
+    () =>
+      inferDurationFromRange(
+        DateTime.fromJSDate(range.startDate),
+        DateTime.fromJSDate(range.endDate),
+      ),
+    [range.startDate, range.endDate],
+  );
   const navigate = useNavigate();
 
   const theme = useTheme();
@@ -118,15 +130,32 @@ export const PerformanceTable: React.FC = () => {
     refetchQueryOptions(),
   );
 
-  const months = useMemo(() => {
-    const months = [];
+  const periods = useMemo(() => {
+    const labels = [];
+    const durationUnit = unitFromDuration(chartDuration);
     let date = DateTime.fromJSDate(range.startDate);
+
     for (let i = 0; i < 4; i++) {
-      months.push(date.toFormat('LLLL'));
-      date = date.minus({ month: 1 });
+      switch (chartDuration) {
+        case TimeDuration.Day:
+          labels.push(date.toFormat('MMM dd'));
+          break;
+        case TimeDuration.Week:
+          labels.push(date.toFormat("'W'W MMM"));
+          break;
+        case TimeDuration.Month:
+          labels.push(date.toFormat('LLLL'));
+          break;
+        case TimeDuration.Year:
+          labels.push(date.toFormat('yyyy'));
+          break;
+        default:
+          labels.push(date.toFormat('LLLL'));
+      }
+      date = date.minus({ [durationUnit]: 1 });
     }
-    return months;
-  }, [range.startDate]);
+    return labels;
+  }, [range.startDate, chartDuration]);
 
   const activities = useMemo(() => {
     const activities = new Set<string>();
@@ -208,7 +237,11 @@ export const PerformanceTable: React.FC = () => {
               }}
             >
               <Typography variant="h6">
-                {DateTime.fromJSDate(range.startDate).toFormat('LLLL yyyy')}
+                {formatRangeLabel(
+                  DateTime.fromJSDate(range.startDate),
+                  DateTime.fromJSDate(range.endDate),
+                  chartDuration,
+                )}
               </Typography>
               <Table size="small" sx={{ width: 'fit-content' }}>
                 <TableHead>
@@ -223,11 +256,11 @@ export const PerformanceTable: React.FC = () => {
                       </TableCell>
                     ))}
                     <SpaceCell />
-                    {[...months.slice(1)].reverse().map((month) => (
-                      <TableCell key={month}>{month}</TableCell>
+                    {[...periods.slice(1)].reverse().map((period) => (
+                      <TableCell key={period}>{period}</TableCell>
                     ))}
                     <SpaceCell />
-                    <TableCell>{months[0]}</TableCell>
+                    <TableCell>{periods[0]}</TableCell>
                     <TableCell>Grade</TableCell>
                     <TableCell>Trend</TableCell>
                     <TableCell>Trend</TableCell>
