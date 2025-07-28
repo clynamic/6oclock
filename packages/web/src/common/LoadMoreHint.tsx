@@ -1,4 +1,4 @@
-import { CircularProgress } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { UseInfiniteQueryResult } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
@@ -24,7 +24,17 @@ export const LoadMoreHint: React.FC<LoadMoreHintProps> = ({
   return (
     <>
       <div ref={ref} style={{ height: 1 }} />
-      {isFetchingNextPage && <CircularProgress />}
+      {isFetchingNextPage && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            py: 2,
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
     </>
   );
 };
