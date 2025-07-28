@@ -47,4 +47,4 @@ yarn dev
 - [Orval](https://orval.dev/) - API client generator
 - [React Router](https://reactrouter.com/) - routing
 - [React Grid Layout](https://github.com/react-grid-layout/react-grid-layout) - draggable, resizable grid layout
-- [Luxon](https://moment.github.io/luxon/) - date and time library
+- [date-fns](https://date-fns.org/) - date utility library

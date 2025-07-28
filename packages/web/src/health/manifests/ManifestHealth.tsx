@@ -22,7 +22,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { BarChart } from '@mui/x-charts';
-import { DateTime } from 'luxon';
+import { format } from 'date-fns';
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 
 import { useDeleteManifest, useManifestHealth } from '../../api';
@@ -122,7 +122,7 @@ export const ManifestHealthDisplay: React.FC = () => {
                   <Stack direction="row" gap={1} sx={{ flexWrap: 'wrap' }}>
                     <Chip
                       icon={<CalendarMonth />}
-                      label={`${DateTime.fromJSDate(heart.startDate).toLocaleString()} - ${DateTime.fromJSDate(heart.endDate).toLocaleString()}`}
+                      label={`${format(heart.startDate, 'PP')} - ${format(heart.endDate, 'PP')}`}
                     />
                     <Chip
                       icon={<Tag />}

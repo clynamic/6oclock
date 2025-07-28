@@ -11,7 +11,7 @@ import {
   useTheme,
 } from '@mui/material';
 import html2canvas from '@wtto00/html2canvas';
-import { DateTime } from 'luxon';
+import { addDays, addMonths, addWeeks, addYears, format } from 'date-fns';
 import { mix } from 'polished';
 import React, { PropsWithChildren, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -109,11 +109,7 @@ const GradeCell: React.FC<
 export const PerformanceTable: React.FC = () => {
   const { range, area } = useChartValue();
   const chartDuration = useMemo(
-    () =>
-      inferDurationFromRange(
-        DateTime.fromJSDate(range.startDate),
-        DateTime.fromJSDate(range.endDate),
-      ),
+    () => inferDurationFromRange(range.startDate, range.endDate),
     [range.startDate, range.endDate],
   );
   const navigate = useNavigate();
@@ -133,26 +129,40 @@ export const PerformanceTable: React.FC = () => {
   const periods = useMemo(() => {
     const labels = [];
     const durationUnit = unitFromDuration(chartDuration);
-    let date = DateTime.fromJSDate(range.startDate);
+    let date = new Date(range.startDate);
 
     for (let i = 0; i < 4; i++) {
       switch (chartDuration) {
         case TimeDuration.Day:
-          labels.push(date.toFormat('MMM dd'));
+          labels.push(format(date, 'MMM dd'));
           break;
         case TimeDuration.Week:
-          labels.push(date.toFormat("'W'W MMM"));
+          labels.push(format(date, "'W'w MMM"));
           break;
         case TimeDuration.Month:
-          labels.push(date.toFormat('LLLL'));
+          labels.push(format(date, 'MMMM'));
           break;
         case TimeDuration.Year:
-          labels.push(date.toFormat('yyyy'));
+          labels.push(format(date, 'yyyy'));
           break;
         default:
-          labels.push(date.toFormat('LLLL'));
+          labels.push(format(date, 'MMMM'));
       }
-      date = date.minus({ [durationUnit]: 1 });
+      // Subtract one period
+      switch (durationUnit) {
+        case 'day':
+          date = addDays(date, -1);
+          break;
+        case 'week':
+          date = addWeeks(date, -1);
+          break;
+        case 'month':
+          date = addMonths(date, -1);
+          break;
+        case 'year':
+          date = addYears(date, -1);
+          break;
+      }
     }
     return labels;
   }, [range.startDate, chartDuration]);
@@ -200,9 +210,10 @@ export const PerformanceTable: React.FC = () => {
         const url = canvas.toDataURL('image/png');
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${area}-performance-${DateTime.fromJSDate(
+        a.download = `${area}-performance-${format(
           range.startDate,
-        ).toFormat('yyyy-MM-dd')}.png`;
+          'yyyy-MM-dd',
+        )}.png`;
         a.click();
       });
     }
@@ -238,8 +249,8 @@ export const PerformanceTable: React.FC = () => {
             >
               <Typography variant="h6">
                 {formatRangeLabel(
-                  DateTime.fromJSDate(range.startDate),
-                  DateTime.fromJSDate(range.endDate),
+                  range.startDate,
+                  range.endDate,
                   chartDuration,
                 )}
               </Typography>

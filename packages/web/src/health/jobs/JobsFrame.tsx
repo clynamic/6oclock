@@ -8,7 +8,7 @@ import {
   Schedule,
 } from '@mui/icons-material';
 import { Card, Chip, Stack, Typography } from '@mui/material';
-import { DateTime } from 'luxon';
+import { formatDistanceToNow } from 'date-fns';
 
 import { JobInfo } from '../../api';
 
@@ -32,9 +32,9 @@ export const JobsFrame: React.FC<JobsFrameProps> = ({ job }) => {
             icon={<Event />}
             label={
               job.endedAt
-                ? DateTime.fromJSDate(job.endedAt).toRelative()
+                ? formatDistanceToNow(job.endedAt, { addSuffix: true })
                 : job.startedAt
-                  ? DateTime.fromJSDate(job.startedAt).toRelative()
+                  ? formatDistanceToNow(job.startedAt, { addSuffix: true })
                   : 'Upcoming'
             }
           />
