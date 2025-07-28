@@ -22,25 +22,16 @@ import {
   PickersDay,
 } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import {
-  addDays,
-  addMonths,
-  addWeeks,
-  addYears,
-  isBefore,
-  startOfDay,
-  startOfMonth,
-  startOfWeek,
-  startOfYear,
-} from 'date-fns';
+import { isBefore } from 'date-fns';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useCurrentUserHead } from '../../auth';
 import {
+  addPeriods,
   formatRangeLabel,
   inferDurationFromRange,
+  startOfPeriod,
   TimeDuration,
-  TimeUnit,
   unitFromDuration,
   useChartContext,
 } from '../../utils';
@@ -57,36 +48,6 @@ const getCalendarViews = (d: TimeDuration): CalendarView[] => {
       return ['year', 'month'];
     default:
       return ['year', 'month', 'day'];
-  }
-};
-
-const startOfPeriod = (date: Date, unit: TimeUnit): Date => {
-  switch (unit) {
-    case 'day':
-      return startOfDay(date);
-    case 'week':
-      return startOfWeek(date);
-    case 'month':
-      return startOfMonth(date);
-    case 'year':
-      return startOfYear(date);
-    default:
-      return date;
-  }
-};
-
-const addPeriods = (date: Date, unit: TimeUnit, amount: number): Date => {
-  switch (unit) {
-    case 'day':
-      return addDays(date, amount);
-    case 'week':
-      return addWeeks(date, amount);
-    case 'month':
-      return addMonths(date, amount);
-    case 'year':
-      return addYears(date, amount);
-    default:
-      return date;
   }
 };
 
