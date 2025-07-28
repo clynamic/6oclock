@@ -30,6 +30,7 @@ import {
   addPeriods,
   formatRangeLabel,
   inferDurationFromRange,
+  SHIP_TIMEZONE,
   startOfPeriod,
   TimeDuration,
   unitFromDuration,
@@ -37,6 +38,7 @@ import {
 } from '../../utils';
 import { NavButton } from './NavButton';
 import { usePageHeaderContext } from './PageHeaderContext';
+import { TZDate } from '@date-fns/tz';
 
 type CalendarView = 'year' | 'month' | 'day';
 
@@ -215,7 +217,8 @@ export const NavDate: React.FC = () => {
               view={view}
               views={calendarViews}
               onViewChange={setView}
-              disableFuture
+              // "disableFuture" does not work, because it uses the local timezone.
+              maxDate={new TZDate(new Date(), SHIP_TIMEZONE)}
               slots={{
                 day: (props) => (
                   <PickersDay
