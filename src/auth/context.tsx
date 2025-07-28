@@ -46,17 +46,23 @@ const storageKey = 'auth_token';
 
 export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [token, setToken] = useState<string | null>(() => {
-    return localStorage.getItem(storageKey);
+    const storedToken = localStorage.getItem(storageKey);
+    if (storedToken) {
+      setAxiosAuth(storedToken);
+    }
+    return storedToken;
   });
 
   const saveToken = (token: string) => {
     setToken(token);
     localStorage.setItem(storageKey, token);
+    setAxiosAuth(token);
   };
 
   const clearToken = () => {
     setToken(null);
     localStorage.removeItem(storageKey);
+    clearAxiosAuth();
   };
 
   useEffect(() => {
