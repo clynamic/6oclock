@@ -31,6 +31,7 @@ export * from './getDeletionCountSeriesParams';
 export * from './getDeletionSeriesByDeleterParams';
 export * from './getFeedbackTypeSeriesParams';
 export * from './getJobsParams';
+export * from './getManifestHealthParams';
 export * from './getPerformanceParams';
 export * from './getPermitCountParams';
 export * from './getPostPendingSeriesParams';
