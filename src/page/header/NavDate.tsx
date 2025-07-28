@@ -21,10 +21,21 @@ import {
   LocalizationProvider,
   PickersDay,
 } from '@mui/x-date-pickers';
-import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import { DateTime } from 'luxon';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import {
+  addDays,
+  addMonths,
+  addWeeks,
+  addYears,
+  isBefore,
+  startOfDay,
+  startOfMonth,
+  startOfWeek,
+  startOfYear,
+} from 'date-fns';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useCurrentUserHead } from '../../auth';
 import {
   formatRangeLabel,
   inferDurationFromRange,
@@ -34,7 +45,6 @@ import {
 } from '../../utils';
 import { NavButton } from './NavButton';
 import { usePageHeaderContext } from './PageHeaderContext';
-import { useCurrentUserHead } from '../../auth';
 
 type CalendarView = 'year' | 'month' | 'day';
 
@@ -49,6 +59,36 @@ const getCalendarViews = (d: TimeDuration): CalendarView[] => {
   }
 };
 
+const startOfPeriod = (date: Date, unit: string): Date => {
+  switch (unit) {
+    case 'day':
+      return startOfDay(date);
+    case 'week':
+      return startOfWeek(date);
+    case 'month':
+      return startOfMonth(date);
+    case 'year':
+      return startOfYear(date);
+    default:
+      return date;
+  }
+};
+
+const addPeriods = (date: Date, unit: string, amount: number): Date => {
+  switch (unit) {
+    case 'day':
+      return addDays(date, amount);
+    case 'week':
+      return addWeeks(date, amount);
+    case 'month':
+      return addMonths(date, amount);
+    case 'year':
+      return addYears(date, amount);
+    default:
+      return date;
+  }
+};
+
 export const NavDate: React.FC = () => {
   const theme = useTheme();
   const { data: user } = useCurrentUserHead();
@@ -60,20 +100,14 @@ export const NavDate: React.FC = () => {
     resetParams,
   } = useChartContext();
   const chartDuration = useMemo(
-    () =>
-      inferDurationFromRange(
-        DateTime.fromJSDate(startDate),
-        DateTime.fromJSDate(endDate),
-      ),
+    () => inferDurationFromRange(startDate, endDate),
     [startDate, endDate],
   );
   const { layout } = usePageHeaderContext();
   const isWideLayout = useMemo(() => layout === 'wide', [layout]);
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [currentDate, setCurrentDate] = useState(() =>
-    DateTime.fromJSDate(startDate),
-  );
+  const [currentDate, setCurrentDate] = useState(() => startDate);
   const [currentDuration, setCurrentDuration] = useState(() => chartDuration);
   const [view, setView] = useState<CalendarView>('day');
 
@@ -89,11 +123,11 @@ export const NavDate: React.FC = () => {
   );
 
   const rangeStart = useMemo(
-    () => currentDate.startOf(durationUnit),
+    () => startOfPeriod(currentDate, durationUnit),
     [currentDate, durationUnit],
   );
   const rangeEnd = useMemo(
-    () => rangeStart.plus({ [durationUnit]: 1 }),
+    () => addPeriods(rangeStart, durationUnit, 1),
     [rangeStart, durationUnit],
   );
 
@@ -102,29 +136,29 @@ export const NavDate: React.FC = () => {
   }, [calendarViews]);
 
   const resetCurrentState = useCallback(() => {
-    setCurrentDate(DateTime.fromJSDate(startDate));
+    setCurrentDate(startDate);
     setCurrentDuration(chartDuration);
   }, [startDate, chartDuration]);
 
   useEffect(() => {
-    setCurrentDate(DateTime.fromJSDate(startDate));
+    setCurrentDate(startDate);
     setCurrentDuration(chartDuration);
   }, [startDate, endDate, chartDuration]);
 
   const isInRange = useCallback(
-    (date: DateTime) => date >= rangeStart && date < rangeEnd,
+    (date: Date) => !isBefore(date, rangeStart) && isBefore(date, rangeEnd),
     [rangeStart, rangeEnd],
   );
 
   const shiftRange = useCallback(
     (dir: 'back' | 'forward') => {
       const factor = dir === 'back' ? -1 : 1;
-      const newStart = rangeStart.plus({ [durationUnit]: factor });
+      const newStart = addPeriods(rangeStart, durationUnit, factor);
       setParams((previous) => ({
         ...previous,
         range: {
-          startDate: newStart.toJSDate(),
-          endDate: newStart.plus({ [durationUnit]: 1 }).toJSDate(),
+          startDate: newStart,
+          endDate: addPeriods(newStart, durationUnit, 1),
           timezone,
         },
       }));
@@ -133,14 +167,14 @@ export const NavDate: React.FC = () => {
   );
 
   const applySelection = useCallback(
-    (date: DateTime, duration: TimeDuration) => {
-      const newStart = date.startOf(unitFromDuration(duration));
-      const newEnd = newStart.plus({ [duration.toLowerCase()]: 1 });
+    (date: Date, duration: TimeDuration) => {
+      const newStart = startOfPeriod(date, unitFromDuration(duration));
+      const newEnd = addPeriods(newStart, duration.toLowerCase(), 1);
       setParams((previous) => ({
         ...previous,
         range: {
-          startDate: newStart.toJSDate(),
-          endDate: newEnd.toJSDate(),
+          startDate: newStart,
+          endDate: newEnd,
           timezone,
         },
       }));
@@ -168,11 +202,7 @@ export const NavDate: React.FC = () => {
             height: '100%',
           }}
         >
-          {formatRangeLabel(
-            DateTime.fromJSDate(startDate),
-            DateTime.fromJSDate(endDate),
-            chartDuration,
-          )}
+          {formatRangeLabel(startDate, endDate, chartDuration)}
         </NavButton>
       </DatePageButtons>
 
@@ -216,10 +246,10 @@ export const NavDate: React.FC = () => {
             ))}
           </ToggleButtonGroup>
 
-          <LocalizationProvider dateAdapter={AdapterLuxon}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateCalendar
               value={currentDate}
-              onChange={(date) => setCurrentDate(date as DateTime)}
+              onChange={(date) => setCurrentDate(date as Date)}
               view={view}
               views={calendarViews}
               onViewChange={setView}
