@@ -22,7 +22,7 @@ import {
   PickersDay,
 } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { isBefore } from 'date-fns';
+import { isAfter, isBefore } from 'date-fns';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useCurrentUserHead } from '../../auth';
@@ -69,6 +69,8 @@ export const NavDate: React.FC = () => {
   );
   const { layout } = usePageHeaderContext();
   const isWideLayout = useMemo(() => layout === 'wide', [layout]);
+
+  const now = useMemo(() => new TZDate(new Date(), SHIP_TIMEZONE), []);
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [currentDate, setCurrentDate] = useState(() => startDate);
@@ -218,7 +220,9 @@ export const NavDate: React.FC = () => {
               views={calendarViews}
               onViewChange={setView}
               // "disableFuture" does not work, because it uses the local timezone.
-              maxDate={new TZDate(new Date(), SHIP_TIMEZONE)}
+              shouldDisableDate={(date) => isAfter(date, now)}
+              shouldDisableMonth={(month) => isAfter(month, now)}
+              shouldDisableYear={(year) => isAfter(year, now)}
               slots={{
                 day: (props) => (
                   <PickersDay
