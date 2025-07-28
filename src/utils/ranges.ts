@@ -1,4 +1,8 @@
 import {
+  addDays,
+  addMonths,
+  addWeeks,
+  addYears,
   differenceInDays,
   differenceInMilliseconds,
   differenceInMinutes,
@@ -7,7 +11,10 @@ import {
   getYear,
   isSameMonth,
   isSameYear,
+  startOfDay,
   startOfMonth,
+  startOfWeek,
+  startOfYear,
   subDays,
 } from 'date-fns';
 import { tz } from '@date-fns/tz';
@@ -86,6 +93,59 @@ export const unitFromDuration = (duration: TimeDuration): TimeUnit => {
       return 'month';
     case TimeDuration.Year:
       return 'year';
+  }
+};
+
+export const startOfPeriod = (date: Date, unit: TimeUnit): Date => {
+  switch (unit) {
+    case 'day':
+      return startOfDay(date);
+    case 'week':
+      return startOfWeek(date);
+    case 'month':
+      return startOfMonth(date);
+    case 'year':
+      return startOfYear(date);
+    default:
+      return date;
+  }
+};
+
+export const addPeriods = (
+  date: Date,
+  unit: TimeUnit,
+  amount: number,
+): Date => {
+  switch (unit) {
+    case 'day':
+      return addDays(date, amount);
+    case 'week':
+      return addWeeks(date, amount);
+    case 'month':
+      return addMonths(date, amount);
+    case 'year':
+      return addYears(date, amount);
+    default:
+      return date;
+  }
+};
+
+export const subPeriods = (
+  date: Date,
+  unit: TimeUnit,
+  amount: number,
+): Date => {
+  switch (unit) {
+    case 'day':
+      return subDays(date, amount);
+    case 'week':
+      return addWeeks(date, -amount);
+    case 'month':
+      return addMonths(date, -amount);
+    case 'year':
+      return addYears(date, -amount);
+    default:
+      return date;
   }
 };
 
