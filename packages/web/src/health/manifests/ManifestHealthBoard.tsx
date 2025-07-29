@@ -24,6 +24,13 @@ export const ManifestHealthDisplay = () => {
       isLoading={isLoading}
       isEmpty={!data?.length}
       error={error}
+      skeleton={
+        <LimitedList>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <ManifestHealthFrame key={index} extended={false} />
+          ))}
+        </LimitedList>
+      }
     >
       <LimitedList
         indicator={() => (
