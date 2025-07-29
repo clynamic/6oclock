@@ -1,0 +1,115 @@
+import { Box, useTheme } from '@mui/material';
+import html2canvas from '@wtto00/html2canvas';
+import { format } from 'date-fns';
+import React, { useEffect, useRef } from 'react';
+
+import { AXIOS_INSTANCE } from '../http';
+
+interface ScreenshotPrinterProps {
+  children: (printHandler: () => void) => React.ReactNode;
+  /**
+   * Optional filename for the downloaded screenshot.
+   */
+  filename?: string;
+  /**
+   * Optional ID of the target element to take a screenshot of.
+   */
+  targetId?: string;
+}
+
+export const ScreenshotPrinter: React.FC<ScreenshotPrinterProps> = ({
+  children,
+  filename = 'screenshot',
+  targetId,
+}) => {
+  const theme = useTheme();
+  const screenshotRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!screenshotRef.current) return;
+
+    // This cannot be done in the onclone function for inexplicable reasons.
+    const processImages = () => {
+      const images =
+        screenshotRef.current!.querySelectorAll<HTMLImageElement>('img');
+      images.forEach((image) => {
+        if (image.src.includes('https://static1.e621.net')) {
+          const newSrc = image.src.replace(
+            'https://static1.e621.net',
+            `${AXIOS_INSTANCE.defaults.baseURL!}/proxy`,
+          );
+          image.setAttribute('src', newSrc);
+        }
+      });
+    };
+
+    processImages();
+
+    const observer = new MutationObserver(() => {
+      processImages();
+    });
+
+    observer.observe(screenshotRef.current, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['src'],
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  const handlePrint = () => {
+    const targetElement = targetId
+      ? document.getElementById(targetId)
+      : screenshotRef.current;
+
+    if (targetElement) {
+      html2canvas(targetElement, {
+        useCORS: true,
+        backgroundColor: theme.palette.background.paper,
+        onclone: (clonedDocument) => {
+          clonedDocument.querySelectorAll<HTMLElement>('p').forEach((el) => {
+            const bg = window.getComputedStyle(el).backgroundImage;
+            if (bg.includes('linear-gradient')) {
+              el.style.color =
+                bg
+                  .match(
+                    /#[0-9a-fA-F]+|rgba?\([\d\s,]+\)|hsla?\([\d\s%,]+\)/,
+                  )?.[0]
+                  ?.trim() || 'currentColor';
+              el.style.backgroundImage = 'none';
+            }
+          });
+
+          const clonedTarget = targetId
+            ? clonedDocument.getElementById(targetId)
+            : clonedDocument.body;
+
+          if (clonedTarget) {
+            Object.assign(clonedTarget.style, {
+              backgroundColor: theme.palette.background.paper,
+              backgroundImage: `url("/assets/hex-texture.png")`,
+              backgroundRepeat: 'repeat-x',
+              backgroundPosition: 'top left',
+            });
+          }
+        },
+      }).then((canvas) => {
+        const url = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${filename}-${format(new Date(), 'yyyy-MM-dd')}.png`;
+        a.click();
+      });
+    }
+  };
+
+  return (
+    <Box ref={screenshotRef} sx={{ display: 'contents' }}>
+      {children(handlePrint)}
+    </Box>
+  );
+};
