@@ -1,5 +1,4 @@
 import { Avatar } from '@mui/material';
-import { Link } from 'react-router-dom';
 
 import { useCurrentUserHead } from '../../auth';
 import { NavLink } from './NavLink';
@@ -11,7 +10,6 @@ export const NavUser: React.FC = () => {
 
   return (
     <NavLink
-      component={Link}
       href={`/users/${user.id}`}
       endIcon={
         <Avatar
