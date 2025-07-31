@@ -3,13 +3,10 @@ import { BarChart, LineChart } from '@mui/x-charts';
 import { useMemo } from 'react';
 
 import { useTicketCreatedSeriesByReporter } from '../../api';
-import { QueryHint } from '../../common';
-import {
-  formatSeriesDateLabel,
-  refetchQueryOptions,
-  SeriesChartProps,
-  useChartValue,
-} from '../../utils';
+import { QueryHint } from '../../common/QueryHint';
+import { formatSeriesDateLabel } from '../../utils/ranges';
+import { SeriesChartProps, useChartValue } from '../../utils/charts';
+import { refetchQueryOptions } from '../../utils/query';
 
 export interface TicketReporterChartProps {
   variant?: 'bars' | 'lines';
@@ -71,3 +68,5 @@ export const TicketCreatedSeriesByReporterChart: React.FC<
     </QueryHint>
   );
 };
+
+

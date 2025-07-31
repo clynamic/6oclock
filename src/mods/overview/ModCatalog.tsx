@@ -1,13 +1,11 @@
 import { ItemType } from '../../api';
-import { createLayout, DashboardCatalog } from '../../dashboard';
-import { PerformanceLeaderboard } from '../../performance';
-import {
-  TicketOpenSeriesChart,
-  TicketStatusSeriesChart,
-  TicketStatusSummaryChart,
-  TicketTypeSummaryChart,
-} from '../charts';
-import { TicketReporterBoard } from '../reports';
+import { DashboardCatalog, createLayout } from '../../dashboard/DashboardItem';
+import { PerformanceLeaderboard } from '../../performance/PerformanceBoard';
+import { TicketOpenSeriesChart } from '../charts/TicketOpenSeriesChart';
+import { TicketStatusSeriesChart } from '../charts/TicketStatusSeriesChart';
+import { TicketStatusSummaryChart } from '../charts/TicketStatusSummaryChart';
+import { TicketTypeSummaryChart } from '../charts/TicketTypeSummaryChart';
+import { TicketReporterBoard } from '../reports/TicketReporterBoard';
 
 export const modDashoardCatalogVersion = 2;
 

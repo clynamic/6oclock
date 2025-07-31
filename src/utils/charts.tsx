@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
-import { BarChart, LineChart } from '@mui/x-charts';
+import type { BarChart } from '@mui/x-charts/BarChart';
+import type { LineChart } from '@mui/x-charts/LineChart';
 import React, {
   createContext,
   PropsWithChildren,

@@ -14,7 +14,7 @@ import {
   DashboardPositions,
   DashboardUpdate,
 } from '../api';
-import { useCurrentBreakpoint } from '../utils';
+import { useCurrentBreakpoint } from '../utils/breakpoints';
 import { useCurrentLayout } from './current-layout';
 import { DashboardLayout, DashboardLayouts } from './DashboardGrid';
 import { buildCatalogLayout, DashboardCatalog } from './DashboardItem';
@@ -171,3 +171,4 @@ export const useDashboard = () => {
 
   return context;
 };
+

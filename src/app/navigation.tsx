@@ -1,15 +1,63 @@
-import { ReactElement } from 'react';
+import { lazy, ReactElement, Suspense } from 'react';
 import { Route, useParams } from 'react-router-dom';
 
-import { useAuth } from '../auth';
-import { HealthPage, JobsPage, ManifestHealthPage } from '../health';
-import { HomePage } from '../home';
-import { JanitorOverviewPage, PostUploaderPage } from '../janitors';
-import { ModOverviewPage, TicketReporterPage } from '../mods';
-import { NavDate, NavHealth, NavNode, NavSpacer, NavUser } from '../page';
-import { PerformanceDetailPage, PerformanceTable } from '../performance';
-import { ProfilePage } from '../profile';
-import { ChartParamsExtraProvider } from '../utils';
+import { useAuth } from '../auth/context';
+import { LoadingHint } from '../common/LoadingHint';
+import type { NavNode } from '../page/navigation';
+import { NavDate } from '../page/header/NavDate';
+import { NavHealth } from '../page/header/NavHealth';
+import { NavSpacer } from '../page/header/NavSpacer';
+import { NavUser } from '../page/header/NavUser';
+
+import { ChartParamsExtraProvider } from '../utils/charts';
+
+const HomePage = lazy(() =>
+  import('../home/HomePage').then((m) => ({ default: m.HomePage })),
+);
+const HealthPage = lazy(() =>
+  import('../health/HealthPage').then((m) => ({ default: m.HealthPage })),
+);
+const JobsPage = lazy(() =>
+  import('../health/jobs/JobsPage').then((m) => ({ default: m.JobsPage })),
+);
+const ManifestHealthPage = lazy(() =>
+  import('../health/manifests/ManifestHealthPage').then((m) => ({
+    default: m.ManifestHealthPage,
+  })),
+);
+const JanitorOverviewPage = lazy(() =>
+  import('../janitors/overview/JanitorOverviewPage').then((m) => ({
+    default: m.JanitorOverviewPage,
+  })),
+);
+const PostUploaderPage = lazy(() =>
+  import('../janitors/uploads/PostUploaderPage').then((m) => ({
+    default: m.PostUploaderPage,
+  })),
+);
+const ModOverviewPage = lazy(() =>
+  import('../mods/overview/ModOverviewPage').then((m) => ({
+    default: m.ModOverviewPage,
+  })),
+);
+const TicketReporterPage = lazy(() =>
+  import('../mods/reports/TicketReporterPage').then((m) => ({
+    default: m.TicketReporterPage,
+  })),
+);
+const PerformanceDetailPage = lazy(() =>
+  import('../performance/PerformanceDetailPage').then((m) => ({
+    default: m.PerformanceDetailPage,
+  })),
+);
+const PerformanceTable = lazy(() =>
+  import('../performance/PerformanceTable').then((m) => ({
+    default: m.PerformanceTable,
+  })),
+);
+const ProfilePage = lazy(() =>
+  import('../profile/ProfilePage').then((m) => ({ default: m.ProfilePage })),
+);
 
 export const useResolveUserId = (): Record<string, string> => {
   const { id } = useParams<{ id: string }>();
@@ -146,7 +194,11 @@ export const createRoutesFromNodes = (entries: NavNode[]): ReactElement[] =>
                 <Route
                   key={entry.href}
                   path={entry.href}
-                  element={entry.component}
+                  element={
+                    <Suspense fallback={<LoadingHint />}>
+                      {entry.component}
+                    </Suspense>
+                  }
                 />,
               ]
             : []),

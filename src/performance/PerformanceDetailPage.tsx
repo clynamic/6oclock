@@ -11,31 +11,24 @@ import { SparkLineChart } from '@mui/x-charts';
 import { useParams } from 'react-router-dom';
 
 import { usePerformance } from '../api';
-import {
-  QueryHint,
-  RankingText,
-  Stamp,
-  TrendIcon,
-  UserAvatar,
-  UsernameText,
-} from '../common';
-import {
-  NavLink,
-  NavSpacer,
-  Page,
-  PageBody,
-  PageFooter,
-  PageHeader,
-  PageTitle,
-} from '../page';
-import {
-  formatNumber,
-  getActivityFromKey,
-  getActivityName,
-  refetchQueryOptions,
-  useChartRange,
-} from '../utils';
+import { UserAvatar } from '../common/UserAvatar';
+import { TrendIcon } from '../common/TrendIcon';
+import { UsernameText } from '../common/UsernameText';
+import { QueryHint } from '../common/QueryHint';
+import { RankingText } from '../common/RankingText';
+import { Stamp } from '../common/Stamp';
+import { PageBody } from '../page/PageBody';
+import { PageTitle } from '../page/PageTitle';
+import { PageFooter } from '../page/PageFooter';
+import { Page } from '../page/Page';
+import { PageHeader } from '../page/header/PageHeader';
+import { formatNumber } from '../utils/numbers';
+import { refetchQueryOptions } from '../utils/query';
+import { getActivityFromKey, getActivityName } from '../utils/activity';
+import { useChartRange } from '../utils/charts';
 import { useGradeColors } from './color';
+import { NavSpacer } from '../page/header/NavSpacer';
+import { NavLink } from '../page/header/NavLink';
 
 export const PerformanceDetailPage: React.FC = () => {
   const range = useChartRange();

@@ -7,15 +7,11 @@ import {
   usePostReplacementCreated,
   usePostReplacementStatus,
 } from '../../api';
-import { QueryHint } from '../../common';
-import {
-  addToMergedSeries,
-  formatSeriesDateLabel,
-  isPointSeriesEmpty,
-  refetchQueryOptions,
-  SeriesChartProps,
-  useChartRange,
-} from '../../utils';
+import { QueryHint } from '../../common/QueryHint';
+import { formatSeriesDateLabel } from '../../utils/ranges';
+import { addToMergedSeries, isPointSeriesEmpty } from '../../utils/series';
+import { SeriesChartProps, useChartRange } from '../../utils/charts';
+import { refetchQueryOptions } from '../../utils/query';
 
 export const PostReplacementStatusSeriesChart: React.FC = () => {
   const theme = useTheme();
@@ -97,3 +93,5 @@ export const PostReplacementStatusSeriesChart: React.FC = () => {
     </QueryHint>
   );
 };
+
+

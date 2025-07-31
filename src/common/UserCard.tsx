@@ -3,7 +3,7 @@ import { Box, IconButton, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import { useUserHead } from '../api';
-import { useChartValue } from '../utils';
+import { useChartValue } from '../utils/charts';
 import { UserAvatar } from './UserAvatar';
 import { UsernameText } from './UsernameText';
 
@@ -36,3 +36,4 @@ export const UserCard: React.FC = () => {
     </Stack>
   );
 };
+

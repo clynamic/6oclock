@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { useCallback } from 'react';
 
-import { QueryHint } from '../common';
+import { QueryHint } from '../common/QueryHint';
 import { LoadingHint } from '../common/LoadingHint';
 import { DashboardCard } from './DashboardCard';
 import { useDashboard } from './DashboardContext';
@@ -138,3 +138,4 @@ export const DashboardBody = () => {
     </QueryHint>
   );
 };
+

@@ -1,13 +1,10 @@
-import { BarChart } from '@mui/x-charts';
+import { BarChart } from '@mui/x-charts/BarChart';
 import { useMemo } from 'react';
 
 import { useTicketAgeSeries } from '../../api';
-import { QueryHint } from '../../common';
-import {
-  formatSeriesDateLabel,
-  SeriesChartProps,
-  useChartRange,
-} from '../../utils';
+import { QueryHint } from '../../common/QueryHint';
+import { formatSeriesDateLabel } from '../../utils/ranges';
+import { SeriesChartProps, useChartRange } from '../../utils/charts';
 import { TicketAgeColors, TicketAgeLabels } from './TicketAgeSummaryChart';
 
 export const TicketAgeSeriesChart: React.FC = () => {

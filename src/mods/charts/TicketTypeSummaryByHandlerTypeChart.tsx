@@ -2,8 +2,9 @@ import { PieChart, PieValueType } from '@mui/x-charts';
 import { useMemo } from 'react';
 
 import { TicketTypeSummary, useTicketTypeSummaryByHandler } from '../../api';
-import { QueryHint } from '../../common';
-import { refetchQueryOptions, useChartValue } from '../../utils';
+import { QueryHint } from '../../common/QueryHint';
+import { useChartValue } from '../../utils/charts';
+import { refetchQueryOptions } from '../../utils/query';
 import { TicketTypeColors } from './TicketTypeSummaryChart';
 
 export const TicketTypeSummaryByHandlerTypeChart: React.FC = () => {
@@ -64,3 +65,5 @@ export const TicketTypeSummaryByHandlerTypeChart: React.FC = () => {
     </QueryHint>
   );
 };
+
+

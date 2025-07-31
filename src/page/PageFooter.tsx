@@ -2,7 +2,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import React from 'react';
 
 import { version } from '../../package.json';
-import { AppLogo } from '../common';
+import { AppLogo } from '../common/AppLogo';
 
 export const PageFooter: React.FC = () => {
   return (
@@ -37,3 +37,4 @@ export const PageFooter: React.FC = () => {
     </Box>
   );
 };
+

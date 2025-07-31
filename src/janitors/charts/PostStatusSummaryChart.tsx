@@ -3,8 +3,9 @@ import { PieChart } from '@mui/x-charts';
 import { useMemo } from 'react';
 
 import { usePostStatusSummary } from '../../api';
-import { QueryHint } from '../../common';
-import { refetchQueryOptions, useChartRange } from '../../utils';
+import { QueryHint } from '../../common/QueryHint';
+import { useChartRange } from '../../utils/charts';
+import { refetchQueryOptions } from '../../utils/query';
 
 export const PostStatusSummaryChart: React.FC = () => {
   const theme = useTheme();
@@ -74,3 +75,5 @@ export const PostStatusSummaryChart: React.FC = () => {
     </QueryHint>
   );
 };
+
+

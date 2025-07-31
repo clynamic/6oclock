@@ -3,7 +3,8 @@ import { Button, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import { useManifestHealth } from '../../api';
-import { LimitedList, QueryHint } from '../../common';
+import { LimitedList } from '../../common/LimitedList';
+import { QueryHint } from '../../common/QueryHint';
 import { ManifestHealthFrame } from './ManifestHealthFrame';
 
 export const ManifestHealthDisplay = () => {
@@ -53,3 +54,4 @@ export const ManifestHealthDisplay = () => {
     </QueryHint>
   );
 };
+

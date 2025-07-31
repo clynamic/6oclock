@@ -8,8 +8,9 @@ import {
 import { Link } from 'react-router-dom';
 
 import { PostUploaderSummary } from '../../api';
-import { UserAvatar, UsernameText } from '../../common';
-import { formatNumber } from '../../utils';
+import { UsernameText } from '../../common/UsernameText';
+import { UserAvatar } from '../../common/UserAvatar';
+import { formatNumber } from '../../utils/numbers';
 
 export interface PostUploaderFrame {
   summary?: PostUploaderSummary;
@@ -49,3 +50,5 @@ export const PostUploaderFrame: React.FC<PostUploaderFrame> = ({ summary }) => {
     </Card>
   );
 };
+
+

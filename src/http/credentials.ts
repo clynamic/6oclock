@@ -1,5 +1,5 @@
 import { login, validateToken } from '../api';
-import { AXIOS_INSTANCE } from '../http';
+import { AXIOS_INSTANCE } from './axios';
 
 export interface Credentials {
   username: string;

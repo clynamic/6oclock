@@ -1,9 +1,7 @@
 import { Box, useTheme } from '@mui/material';
-import html2canvas from '@wtto00/html2canvas';
 import { format } from 'date-fns';
 import React, { useEffect, useRef } from 'react';
-
-import { AXIOS_INSTANCE } from '../http';
+import { AXIOS_INSTANCE } from '../http/axios';
 
 interface ScreenshotPrinterProps {
   children: (printHandler: () => void) => React.ReactNode;
@@ -61,16 +59,19 @@ export const ScreenshotPrinter: React.FC<ScreenshotPrinterProps> = ({
     };
   }, []);
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
     const targetElement = targetId
       ? document.getElementById(targetId)
       : screenshotRef.current;
 
     if (targetElement) {
+      // Dynamically import html2canvas to avoid including it in the main bundle
+      const { default: html2canvas } = await import('@wtto00/html2canvas');
+
       html2canvas(targetElement, {
         useCORS: true,
         backgroundColor: theme.palette.background.paper,
-        onclone: (clonedDocument) => {
+        onclone: (clonedDocument: Document) => {
           clonedDocument.querySelectorAll<HTMLElement>('p').forEach((el) => {
             const bg = window.getComputedStyle(el).backgroundImage;
             if (bg.includes('linear-gradient')) {
@@ -97,7 +98,7 @@ export const ScreenshotPrinter: React.FC<ScreenshotPrinterProps> = ({
             });
           }
         },
-      }).then((canvas) => {
+      }).then((canvas: HTMLCanvasElement) => {
         const url = canvas.toDataURL('image/png');
         const a = document.createElement('a');
         a.href = url;
