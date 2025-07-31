@@ -3,8 +3,12 @@ import { CircularProgress, Stack, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../auth';
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
+import { useAuth } from '../auth/context';
+import { PageBody } from '../page/PageBody';
+import { PageTitle } from '../page/PageTitle';
+import { PageFooter } from '../page/PageFooter';
+import { Page } from '../page/Page';
+import { PageHeader } from '../page/header/PageHeader';
 
 export const LogoutPage: React.FC = () => {
   const { clearToken } = useAuth();

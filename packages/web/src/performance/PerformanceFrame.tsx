@@ -10,13 +10,11 @@ import {
 import { Link } from 'react-router-dom';
 
 import { PerformanceSummary } from '../api';
-import { RankingText, UserAvatar, UsernameText } from '../common';
-import {
-  formatNumber,
-  getActivityFromKey,
-  getActivityIcon,
-  getActivityNoun,
-} from '../utils';
+import { RankingText } from '../common/RankingText';
+import { UsernameText } from '../common/UsernameText';
+import { UserAvatar } from '../common/UserAvatar';
+import { formatNumber } from '../utils/numbers';
+import { getActivityFromKey, getActivityIcon, getActivityNoun } from '../utils/activity';
 import { useGradeColors } from './color';
 
 export interface PerformanceLeaderboardFrameProps {
@@ -127,3 +125,5 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
     </Card>
   );
 };
+
+

@@ -3,8 +3,10 @@ import { Button, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import { usePostUploaderSummary } from '../../api';
-import { LimitedList, QueryHint } from '../../common';
-import { refetchQueryOptions, useChartRange } from '../../utils';
+import { LimitedList } from '../../common/LimitedList';
+import { QueryHint } from '../../common/QueryHint';
+import { useChartRange } from '../../utils/charts';
+import { refetchQueryOptions } from '../../utils/query';
 import { PostUploaderFrame } from './PostUploaderFrame';
 
 export const PostUploaderBoard: React.FC = () => {
@@ -48,3 +50,5 @@ export const PostUploaderBoard: React.FC = () => {
     </QueryHint>
   );
 };
+
+

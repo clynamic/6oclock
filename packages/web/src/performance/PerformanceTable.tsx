@@ -15,35 +15,30 @@ import React, { PropsWithChildren, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { PerformanceGrade, TrendGrade, usePerformance } from '../api';
+import { UserAvatar } from '../common/UserAvatar';
+import { TrendIcon } from '../common/TrendIcon';
+import { UsernameText } from '../common/UsernameText';
+import { QueryHint } from '../common/QueryHint';
+import { RankingText } from '../common/RankingText';
+import { ScreenshotPrinter } from '../common/ScreenshotPrinter';
+import { PageBody } from '../page/PageBody';
+import { NavButton } from '../page/header/NavButton';
+import { PageTitle } from '../page/PageTitle';
+import { PageFooter } from '../page/PageFooter';
+import { Page } from '../page/Page';
+import { PageHeader } from '../page/header/PageHeader';
 import {
-  QueryHint,
-  RankingText,
-  ScreenshotPrinter,
-  TrendIcon,
-  UserAvatar,
-  UsernameText,
-} from '../common';
-import {
-  NavButton,
-  NavSpacer,
-  Page,
-  PageBody,
-  PageFooter,
-  PageHeader,
-  PageTitle,
-} from '../page';
-import {
-  formatNumber,
   formatRangeLabel,
-  getActivityFromKey,
-  getActivityNoun,
   inferDurationFromRange,
-  refetchQueryOptions,
   TimeDuration,
   unitFromDuration,
-  useChartValue,
-} from '../utils';
+} from '../utils/ranges';
+import { formatNumber } from '../utils/numbers';
+import { refetchQueryOptions } from '../utils/query';
+import { getActivityFromKey, getActivityNoun } from '../utils/activity';
+import { useChartValue } from '../utils/charts';
 import { useGradeColors } from './color';
+import { NavSpacer } from '../page/header/NavSpacer';
 
 const SpaceCell: React.FC = () => (
   <TableCell>

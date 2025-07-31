@@ -3,8 +3,10 @@ import { Button, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import { usePerformance, UserArea } from '../api';
-import { LimitedList, QueryHint } from '../common';
-import { refetchQueryOptions, useChartValue } from '../utils';
+import { LimitedList } from '../common/LimitedList';
+import { QueryHint } from '../common/QueryHint';
+import { refetchQueryOptions } from '../utils/query';
+import { useChartValue } from '../utils/charts';
 import { PerformanceFrame } from './PerformanceFrame';
 
 export const PerformanceLeaderboard: React.FC = () => {
@@ -55,3 +57,4 @@ export const PerformanceLeaderboard: React.FC = () => {
     </QueryHint>
   );
 };
+

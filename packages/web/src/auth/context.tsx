@@ -7,8 +7,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-
-import { clearAxiosAuth, setAxiosAuth } from '../http';
+import { setAxiosAuth, clearAxiosAuth } from '../http/credentials';
 
 export interface AuthPayload {
   userId: number;

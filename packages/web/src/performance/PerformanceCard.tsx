@@ -3,14 +3,13 @@ import { Box, Button, Skeleton, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import { usePerformance } from '../api';
-import { LimitedList, QueryHint, RankingText } from '../common';
-import {
-  formatNumber,
-  getActivityFromKey,
-  getActivityName,
-  refetchQueryOptions,
-  useChartValue,
-} from '../utils';
+import { LimitedList } from '../common/LimitedList';
+import { RankingText } from '../common/RankingText';
+import { QueryHint } from '../common/QueryHint';
+import { formatNumber } from '../utils/numbers';
+import { refetchQueryOptions } from '../utils/query';
+import { getActivityFromKey, getActivityName } from '../utils/activity';
+import { useChartValue } from '../utils/charts';
 import { useGradeColors } from './color';
 
 export const PerformanceCard: React.FC = () => {
@@ -105,3 +104,5 @@ export const PerformanceCard: React.FC = () => {
     </QueryHint>
   );
 };
+
+

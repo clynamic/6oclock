@@ -6,14 +6,11 @@ import {
   useApprovalCountSeriesByApprover,
   useDeletionSeriesByDeleter,
 } from '../../api';
-import { QueryHint } from '../../common';
-import {
-  formatSeriesDateLabel,
-  mergePointSeries,
-  refetchQueryOptions,
-  SeriesChartProps,
-  useChartValue,
-} from '../../utils';
+import { QueryHint } from '../../common/QueryHint';
+import { formatSeriesDateLabel } from '../../utils/ranges';
+import { mergePointSeries } from '../../utils/series';
+import { SeriesChartProps, useChartValue } from '../../utils/charts';
+import { refetchQueryOptions } from '../../utils/query';
 
 export const ApprovalCountSeriesByApproverChart: React.FC = () => {
   const theme = useTheme();
@@ -92,3 +89,5 @@ export const ApprovalCountSeriesByApproverChart: React.FC = () => {
     </QueryHint>
   );
 };
+
+

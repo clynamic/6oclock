@@ -2,9 +2,12 @@ import { Logout } from '@mui/icons-material';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useAuth } from '../auth';
-import { DashboardEditHeader } from '../dashboard';
-import { NavButton, NavDivider, NavSpacer, PageHeader } from '../page';
+import { useAuth } from '../auth/context';
+import { PageHeader } from '../page/header/PageHeader';
+import { NavButton } from '../page/header/NavButton';
+import { NavDivider } from '../page/header/NavDivider';
+import { NavSpacer } from '../page/header/NavSpacer';
+import { DashboardEditHeader } from '../dashboard/DashboardEditHeader';
 
 export interface ProfilePageHeaderProps {
   userId?: number;

@@ -1,9 +1,9 @@
 import { ItemType } from '../api';
-import { UserCard } from '../common';
-import { createLayout, DashboardCatalog } from '../dashboard';
-import { UploadsSeriesByUploaderChart } from '../janitors';
-import { TicketCreatedSeriesByReporterChart } from '../mods';
-import { UserActivitySeriesChart } from './charts';
+import { UserCard } from '../common/UserCard';
+import { DashboardCatalog, createLayout } from '../dashboard/DashboardItem';
+import { UploadsSeriesByUploaderChart } from '../janitors/charts/UploadsSeriesByUploaderChart';
+import { TicketCreatedSeriesByReporterChart } from '../mods/charts/TicketCreatedSeriesByReporterChart';
+import { UserActivitySeriesChart } from './charts/UserActivitySeriesChart';
 
 export const userProfileCatalog: DashboardCatalog = {
   userHead: {

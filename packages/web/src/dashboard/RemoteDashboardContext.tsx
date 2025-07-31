@@ -11,7 +11,7 @@ import {
   useDeleteDashboard,
   useUpdateDashboard,
 } from '../api';
-import { useChartRange } from '../utils';
+import { useChartRange } from '../utils/charts';
 import { DashboardConfig, DashboardProvider } from './DashboardContext';
 import { buildCatalogLayouts, DashboardCatalog } from './DashboardItem';
 
@@ -127,3 +127,4 @@ export const RemoteDashboardProvider: React.FC<
     </DashboardProvider>
   );
 };
+

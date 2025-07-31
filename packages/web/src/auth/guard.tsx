@@ -1,10 +1,10 @@
-import { MD5 } from 'crypto-js';
+import MD5 from 'crypto-js/md5';
 import { addHours, isBefore } from 'date-fns';
 import React, { useEffect, useRef } from 'react';
 import { matchPath, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-import { checkAuthToken } from '../http';
 import { useAuth } from './context';
+import { checkAuthToken } from '../http/credentials';
 
 export interface AuthGuardProps {
   children?: React.ReactNode;

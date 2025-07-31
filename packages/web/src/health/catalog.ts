@@ -1,6 +1,6 @@
-import { DashboardCatalog, createLayout } from '../dashboard';
-import { JobsDisplay } from './jobs';
-import { ManifestHealthDisplay } from './manifests';
+import { DashboardCatalog, createLayout } from '../dashboard/DashboardItem';
+import { JobsDisplay } from './jobs/JobsBoard';
+import { ManifestHealthDisplay } from './manifests/ManifestHealthBoard';
 
 export const healthCatalog: DashboardCatalog = {
   'health-manifests': {

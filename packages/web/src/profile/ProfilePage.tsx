@@ -1,19 +1,21 @@
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-
-import { adminProfileCatalog } from '../admins';
-import { UserArea, useUserHead } from '../api';
+import { adminProfileCatalog } from '../admins/profile/AdminProfileCatalog';
+import { useUserHead, UserArea } from '../api';
+import { DashboardBody } from '../dashboard/DashboardBody';
+import { DashboardProvider } from '../dashboard/DashboardContext';
 import {
-  buildCatalogLayouts,
-  DashboardBody,
   DashboardCatalog,
-  DashboardProvider,
-} from '../dashboard';
-import { janitorProfileCatalog } from '../janitors';
-import { modProfileCatalog } from '../mods';
-import { Page, PageBody, PageFooter, PageTitle } from '../page';
-import { userProfileCatalog } from '../users';
-import { ChartParamsExtraProvider } from '../utils';
+  buildCatalogLayouts,
+} from '../dashboard/DashboardItem';
+import { janitorProfileCatalog } from '../janitors/profile/JanitorProfileCatalog';
+import { modProfileCatalog } from '../mods/profile/ModProfileCatalog';
+import { Page } from '../page/Page';
+import { PageBody } from '../page/PageBody';
+import { PageFooter } from '../page/PageFooter';
+import { PageTitle } from '../page/PageTitle';
+import { userProfileCatalog } from '../users/UserProfileCatalog';
+import { ChartParamsExtraProvider } from '../utils/charts';
 import { ProfilePageHeader } from './ProfilePageHeader';
 
 export const ProfilePage: React.FC = () => {

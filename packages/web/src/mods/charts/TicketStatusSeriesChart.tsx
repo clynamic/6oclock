@@ -3,15 +3,11 @@ import { BarChart, LineChart } from '@mui/x-charts';
 import { useMemo } from 'react';
 
 import { useTicketClosedSeries, useTicketCreatedSeries } from '../../api';
-import { QueryHint } from '../../common';
-import {
-  formatSeriesDateLabel,
-  isPointSeriesEmpty,
-  mergePointSeries,
-  refetchQueryOptions,
-  SeriesChartProps,
-  useChartRange,
-} from '../../utils';
+import { QueryHint } from '../../common/QueryHint';
+import { formatSeriesDateLabel } from '../../utils/ranges';
+import { isPointSeriesEmpty, mergePointSeries } from '../../utils/series';
+import { SeriesChartProps, useChartRange } from '../../utils/charts';
+import { refetchQueryOptions } from '../../utils/query';
 
 export interface TicketTurnaroundChartProps {
   variant?: 'bars' | 'lines';
@@ -87,3 +83,5 @@ export const TicketStatusSeriesChart: React.FC<TicketTurnaroundChartProps> = ({
     </QueryHint>
   );
 };
+
+

@@ -1,8 +1,8 @@
-import { UserCard } from '../../common';
-import { createLayout, DashboardCatalog } from '../../dashboard';
-import { PerformanceCard } from '../../performance';
-import { UserActivitySeriesChart } from '../../users';
-import { ApprovalCountSeriesByApproverChart } from '../charts';
+import { UserCard } from '../../common/UserCard';
+import { DashboardCatalog, createLayout } from '../../dashboard/DashboardItem';
+import { PerformanceCard } from '../../performance/PerformanceCard';
+import { UserActivitySeriesChart } from '../../users/charts/UserActivitySeriesChart';
+import { ApprovalCountSeriesByApproverChart } from '../charts/ApprovalCountSeriesByApproverChart';
 
 export const janitorProfileCatalog: DashboardCatalog = {
   userHead: {

@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 
-import { useCurrentBreakpoint } from '../../utils';
+import { useCurrentBreakpoint } from '../../utils/breakpoints';
 import { NavAction, NavNode, NavTopLink, SubNavNode } from '../navigation';
 import { NavLinkVariant } from './NavLink';
 
@@ -109,3 +109,4 @@ export const usePageHeaderContext = () => {
   }
   return context;
 };
+

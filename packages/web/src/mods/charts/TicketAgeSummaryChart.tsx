@@ -2,8 +2,9 @@ import { PieChart, PieValueType } from '@mui/x-charts';
 import { useMemo } from 'react';
 
 import { TicketAgeSummary, useTicketAgeSummary } from '../../api';
-import { QueryHint } from '../../common';
-import { refetchQueryOptions, useChartRange } from '../../utils';
+import { QueryHint } from '../../common/QueryHint';
+import { useChartRange } from '../../utils/charts';
+import { refetchQueryOptions } from '../../utils/query';
 
 export const TicketAgeColors = {
   oneDay: '#82b74b', // Moss green
@@ -77,3 +78,5 @@ export const TicketAgeSummaryChart: React.FC = () => {
     </QueryHint>
   );
 };
+
+
