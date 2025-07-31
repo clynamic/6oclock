@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useHealthCheck } from '../api';
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
+import { PageBody } from '../page/PageBody';
+import { PageTitle } from '../page/PageTitle';
+import { PageFooter } from '../page/PageFooter';
+import { Page } from '../page/Page';
+import { PageHeader } from '../page/header/PageHeader';
 
 export const UnreachablePage: React.FC = () => {
   const navigation = useNavigate();

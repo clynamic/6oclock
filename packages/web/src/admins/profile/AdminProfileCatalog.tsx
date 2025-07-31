@@ -1,12 +1,10 @@
-import { UserCard } from '../../common';
-import { createLayout, DashboardCatalog } from '../../dashboard';
-import { ApprovalCountSeriesByApproverChart } from '../../janitors';
-import {
-  TicketClosedSeriesByHandlerChart,
-  TicketTypeSummaryByHandlerTypeChart,
-} from '../../mods';
-import { PerformanceCard } from '../../performance';
-import { UserActivitySeriesChart } from '../../users';
+import { UserCard } from '../../common/UserCard';
+import { DashboardCatalog, createLayout } from '../../dashboard/DashboardItem';
+import { ApprovalCountSeriesByApproverChart } from '../../janitors/charts/ApprovalCountSeriesByApproverChart';
+import { TicketClosedSeriesByHandlerChart } from '../../mods/charts/TicketClosedSeriesByHandlerChart';
+import { TicketTypeSummaryByHandlerTypeChart } from '../../mods/charts/TicketTypeSummaryByHandlerTypeChart';
+import { PerformanceCard } from '../../performance/PerformanceCard';
+import { UserActivitySeriesChart } from '../../users/charts/UserActivitySeriesChart';
 
 export const adminProfileCatalog: DashboardCatalog = {
   userHead: {

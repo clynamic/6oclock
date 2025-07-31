@@ -9,9 +9,14 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../page';
+import { PageBody } from '../page/PageBody';
+import { PageTitle } from '../page/PageTitle';
+import { PageFooter } from '../page/PageFooter';
+import { Page } from '../page/Page';
+import { PageHeader } from '../page/header/PageHeader';
+import React from 'react';
 
-export const HomePage = () => {
+export const HomePage: React.FC = () => {
   return (
     <Page>
       <PageTitle subtitle="Home" />

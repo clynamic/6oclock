@@ -1,6 +1,6 @@
 import { Avatar } from '@mui/material';
 
-import { useCurrentUserHead } from '../../auth';
+import { useCurrentUserHead } from '../../auth/user';
 import { NavLink } from './NavLink';
 
 export const NavUser: React.FC = () => {
@@ -30,3 +30,4 @@ export const NavUser: React.FC = () => {
     />
   );
 };
+

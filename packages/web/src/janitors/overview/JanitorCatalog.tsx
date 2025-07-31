@@ -1,13 +1,11 @@
 import { ItemType } from '../../api';
-import { createLayout, DashboardCatalog } from '../../dashboard';
-import { PerformanceLeaderboard } from '../../performance';
-import {
-  PostReplacementStatusSeriesChart,
-  PostStatusSeriesChart,
-} from '../charts';
+import { DashboardCatalog, createLayout } from '../../dashboard/DashboardItem';
+import { PerformanceLeaderboard } from '../../performance/PerformanceBoard';
 import { PostPendingSeriesChart } from '../charts/PostPendingSeriesChart';
+import { PostStatusSeriesChart } from '../charts/PostStatusSeriesChart';
 import { PostStatusSummaryChart } from '../charts/PostStatusSummaryChart';
-import { PostUploaderBoard } from '../uploads';
+import { PostReplacementStatusSeriesChart } from '../charts/ReplacementStatusSeriesChart';
+import { PostUploaderBoard } from '../uploads/PostUploaderBoard';
 
 export const janitorDashboardCatalogVersion = 3;
 

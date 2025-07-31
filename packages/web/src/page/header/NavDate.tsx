@@ -25,17 +25,17 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { isAfter, isBefore } from 'date-fns';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { useCurrentUserHead } from '../../auth';
+import { useCurrentUserHead } from '../../auth/user';
 import {
   addPeriods,
   formatRangeLabel,
   inferDurationFromRange,
-  SHIP_TIMEZONE,
   startOfPeriod,
   TimeDuration,
   unitFromDuration,
-  useChartContext,
-} from '../../utils';
+} from '../../utils/ranges';
+import { SHIP_TIMEZONE } from '../../utils/timezone';
+import { useChartContext } from '../../utils/charts';
 import { NavButton } from './NavButton';
 import { usePageHeaderContext } from './PageHeaderContext';
 import { TZDate } from '@date-fns/tz';
@@ -300,3 +300,4 @@ const DatePageButtons = ({
     </Stack>
   );
 };
+

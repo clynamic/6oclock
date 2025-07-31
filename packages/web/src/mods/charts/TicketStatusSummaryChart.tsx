@@ -3,8 +3,9 @@ import { PieChart, PieValueType } from '@mui/x-charts';
 import { useMemo } from 'react';
 
 import { TimeScale, useTicketStatus } from '../../api';
-import { QueryHint } from '../../common';
-import { refetchQueryOptions, useChartRange } from '../../utils';
+import { QueryHint } from '../../common/QueryHint';
+import { useChartRange } from '../../utils/charts';
+import { refetchQueryOptions } from '../../utils/query';
 
 export const TicketStatusSummaryChart: React.FC = () => {
   const theme = useTheme();
@@ -74,3 +75,5 @@ export const TicketStatusSummaryChart: React.FC = () => {
     </QueryHint>
   );
 };
+
+

@@ -1,26 +1,28 @@
 import { Box, Stack } from '@mui/material';
 
 import { useManifestHealthInfinite } from '../../api';
-import { LoadMoreHint, QueryHint } from '../../common';
-import { Page, PageBody, PageFooter, PageHeader, PageTitle } from '../../page';
+import { QueryHint } from '../../common/QueryHint';
+import { PageHeader } from '../../page/header/PageHeader';
+import { Page } from '../../page/Page';
+import { PageTitle } from '../../page/PageTitle';
+import { PageBody } from '../../page/PageBody';
+import { PageFooter } from '../../page/PageFooter';
 import { ManifestHealthFrame } from './ManifestHealthFrame';
+import { LoadMoreHint } from '../../common/LoadMoreHint';
 
 export const ManifestHealthPage: React.FC = () => {
-  const { data, ...query } = useManifestHealthInfinite(
-    undefined,
-    {
-      query: {
-        refetchInterval: 10000,
-        initialPageParam: 1,
-        getNextPageParam: (lastPage, _, i) => {
-          if (lastPage.length === 0) {
-            return undefined;
-          }
-          return (i ?? 1) + 1;
-        },
+  const { data, ...query } = useManifestHealthInfinite(undefined, {
+    query: {
+      refetchInterval: 10000,
+      initialPageParam: 1,
+      getNextPageParam: (lastPage, _, i) => {
+        if (lastPage.length === 0) {
+          return undefined;
+        }
+        return (i ?? 1) + 1;
       },
     },
-  );
+  });
 
   return (
     <Page>

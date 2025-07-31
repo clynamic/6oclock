@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useCurrentBreakpoint } from '../utils';
+import { useCurrentBreakpoint } from '../utils/breakpoints';
 import { DashboardLayout, DashboardLayouts } from './DashboardGrid';
 
 export const useCurrentLayout = (
@@ -14,3 +14,4 @@ export const useCurrentLayout = (
 
   return currentLayout;
 };
+

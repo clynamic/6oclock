@@ -11,15 +11,19 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { useAuth } from '../auth';
-import { getAuthToken } from '../http';
-import { PageBody, PageFooter, PageHeader, PageTitle } from '../page';
+import { useAuth } from '../auth/context';
+
+import { PageBody } from '../page/PageBody';
+import { PageFooter } from '../page/PageFooter';
+import { PageHeader } from '../page/header/PageHeader';
+import { PageTitle } from '../page/PageTitle';
 import { Page } from '../page/Page';
 import { ApiKeyField } from './ApiKeyField';
 import { ApiKeyHint } from './ApiKeyHint';
 import { LoginButton } from './LoginButton';
 import { LoginFormData } from './type';
 import { UsernameField } from './UsernameField';
+import { getAuthToken } from '../http/credentials';
 
 export const LoginPage = () => {
   const navigation = useNavigate();

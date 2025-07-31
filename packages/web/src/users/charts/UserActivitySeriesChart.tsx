@@ -2,14 +2,11 @@ import { useTheme } from '@mui/material';
 import { BarChart } from '@mui/x-charts';
 
 import { ActivitySeriesPoint, TimeScale, useActivity } from '../../api';
-import { QueryHint } from '../../common';
-import {
-  flattenPointSeries,
-  formatSeriesDateLabel,
-  refetchQueryOptions,
-  SeriesChartProps,
-  useChartValue,
-} from '../../utils';
+import { QueryHint } from '../../common/QueryHint';
+import { formatSeriesDateLabel } from '../../utils/ranges';
+import { flattenPointSeries } from '../../utils/series';
+import { SeriesChartProps, useChartValue } from '../../utils/charts';
+import { refetchQueryOptions } from '../../utils/query';
 
 export const UserActivitySeriesChart: React.FC = () => {
   const theme = useTheme();
@@ -69,3 +66,5 @@ export const UserActivitySeriesChart: React.FC = () => {
     </QueryHint>
   );
 };
+
+

@@ -14,7 +14,7 @@ import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 import { Fragment } from 'react/jsx-runtime';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { AppLogo } from '../../common';
+import { AppLogo } from '../../common/AppLogo';
 import {
   NavAction,
   resolveNavLinks,
@@ -266,3 +266,4 @@ const PageHeaderBar: React.FC = () => {
     );
   }
 };
+
