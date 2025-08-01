@@ -1,5 +1,5 @@
 import { useIsAdmin } from '../../api';
-import { NavLink } from './NavLink';
+import { NavItem } from './NavItem';
 import { usePageHeaderContext } from './PageHeaderContext';
 
 // TODO: this is super janky. Nav entries should have dynamic visibility
@@ -8,7 +8,7 @@ export const NavHealth: React.FC = () => {
   const { currentLink } = usePageHeaderContext();
 
   return isAdmin ? (
-    <NavLink
+    <NavItem
       href="/health"
       label={'Health'}
       selected={currentLink?.href === '/health'}
