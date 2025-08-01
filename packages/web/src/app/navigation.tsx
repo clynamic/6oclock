@@ -2,7 +2,7 @@ import { lazy, ReactElement, Suspense } from 'react';
 import { Route, useParams } from 'react-router-dom';
 
 import { useAuth } from '../auth/context';
-import { LoadingHint } from '../common/LoadingHint';
+import { LoadingPage } from '../page/LoadingPage';
 import type { NavNode } from '../page/navigation';
 import { NavDate } from '../page/header/NavDate';
 import { NavHealth } from '../page/header/NavHealth';
@@ -195,7 +195,7 @@ export const createRoutesFromNodes = (entries: NavNode[]): ReactElement[] =>
                   key={entry.href}
                   path={entry.href}
                   element={
-                    <Suspense fallback={<LoadingHint />}>
+                    <Suspense fallback={<LoadingPage />}>
                       {entry.component}
                     </Suspense>
                   }

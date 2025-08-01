@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { AuthProvider } from '../auth/context';
 import { AuthGuard } from '../auth/guard';
-import { LoadingHint } from '../common/LoadingHint';
+import { LoadingPage } from '../page/LoadingPage';
 import { NavigationEntryProvider } from '../page/navigation';
 import { ChartParamsProvider } from '../utils/charts';
 import { LogoutPage } from './Logout';
@@ -33,7 +33,7 @@ export const App: React.FC = () => {
                   <Route
                     path="/login"
                     element={
-                      <Suspense fallback={<LoadingHint />}>
+                      <Suspense fallback={<LoadingPage />}>
                         <LoginPage />
                       </Suspense>
                     }
