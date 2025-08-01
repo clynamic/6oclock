@@ -20,12 +20,13 @@ import {
   resolveNavLinks,
   useNavigationEntries,
 } from '../navigation';
-import { NavLink } from './NavLink';
+import { NavItem } from './NavItem';
 import {
   PageHeaderProvider,
   PageHeaderReprovider,
   usePageHeaderContext,
 } from './PageHeaderContext';
+import { NavAvatar } from './NavAvatar';
 
 export interface PageHeaderProps {
   actions?: NavAction[];
@@ -94,6 +95,7 @@ const PageHeaderBar: React.FC = () => {
                     <MenuIcon />
                   </Stack>
                 </Button>
+                <NavAvatar size={48} />
               </Toolbar>
               <Backdrop
                 open={popupState.isOpen}
@@ -130,7 +132,7 @@ const PageHeaderBar: React.FC = () => {
                   .map((entry) => {
                     if (entry instanceof Object && 'href' in entry) {
                       return (
-                        <NavLink
+                        <NavItem
                           key={entry.href}
                           href={entry.href}
                           label={entry.label}
@@ -158,7 +160,7 @@ const PageHeaderBar: React.FC = () => {
                   .map((entry) => {
                     if (entry instanceof Object && 'href' in entry) {
                       return (
-                        <NavLink
+                        <NavItem
                           key={`subnav-${entry.href}`}
                           href={entry.href}
                           label={entry.label}
@@ -206,7 +208,7 @@ const PageHeaderBar: React.FC = () => {
                 .map((entry, i) => {
                   if (entry instanceof Object && 'href' in entry) {
                     return (
-                      <NavLink
+                      <NavItem
                         key={i}
                         component={RouterLink}
                         href={entry.href}
@@ -247,7 +249,7 @@ const PageHeaderBar: React.FC = () => {
                     .map((entry, i) => {
                       if (entry instanceof Object && 'href' in entry) {
                         return (
-                          <NavLink
+                          <NavItem
                             key={`subnav-${entry.href}`}
                             href={entry.href}
                             label={entry.label}
@@ -261,9 +263,9 @@ const PageHeaderBar: React.FC = () => {
               </PageHeaderReprovider>
             </Stack>
           </Stack>
+          <NavAvatar />
         </Stack>
       </Box>
     );
   }
 };
-

@@ -11,7 +11,7 @@ import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 
 import { useCurrentBreakpoint } from '../../utils/breakpoints';
 import { NavAction, NavNode, NavTopLink, SubNavNode } from '../navigation';
-import { NavLinkVariant } from './NavLink';
+import { NavLinkVariant } from './NavItem';
 
 export type PageHeaderLayout = 'small' | 'wide';
 
@@ -109,4 +109,3 @@ export const usePageHeaderContext = () => {
   }
   return context;
 };
-
