@@ -55,7 +55,7 @@ const getCalendarViews = (d: TimeDuration): CalendarView[] => {
 
 export const NavDate: React.FC = () => {
   const theme = useTheme();
-  const { data: user } = useCurrentUserHead();
+  const { data: enabled } = useCurrentUserHead();
   const {
     params: {
       range: { startDate, endDate, timezone },
@@ -156,11 +156,13 @@ export const NavDate: React.FC = () => {
     setAnchorEl(null);
   }, [resetParams]);
 
-  if (!user) return null;
-
   return (
     <>
-      <DatePageButtons isWideLayout={isWideLayout} shiftRange={shiftRange}>
+      <DatePageButtons
+        isWideLayout={isWideLayout}
+        shiftRange={shiftRange}
+        disabled={!enabled}
+      >
         <NavButton
           onClick={(e) => {
             e.preventDefault();
@@ -169,6 +171,7 @@ export const NavDate: React.FC = () => {
           style={{
             height: '100%',
           }}
+          disabled={!enabled}
         >
           {formatRangeLabel(startDate, endDate, chartDuration)}
         </NavButton>
@@ -271,12 +274,14 @@ type DatePageButtonsProps = {
   isWideLayout: boolean;
   shiftRange: (direction: 'back' | 'forward') => void;
   children: React.ReactNode;
+  disabled?: boolean;
 };
 
 const DatePageButtons = ({
   isWideLayout,
   shiftRange,
   children,
+  disabled = false,
 }: DatePageButtonsProps) => {
   if (!isWideLayout) return <>{children}</>;
 
@@ -286,6 +291,7 @@ const DatePageButtons = ({
         size="small"
         style={{ padding: 4 }}
         onClick={() => shiftRange('back')}
+        disabled={disabled}
       >
         <ChevronLeft />
       </IconButton>
@@ -294,10 +300,10 @@ const DatePageButtons = ({
         size="small"
         style={{ padding: 4 }}
         onClick={() => shiftRange('forward')}
+        disabled={disabled}
       >
         <ChevronRight />
       </IconButton>
     </Stack>
   );
 };
-

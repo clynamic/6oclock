@@ -23,7 +23,7 @@ export type NavLinkProps = {
   variant?: NavLinkVariant;
 } & Omit<ButtonProps & MenuItemProps, 'href' | 'variant'>;
 
-export const NavLink: React.FC<NavLinkProps> = ({
+export const NavItem: React.FC<NavLinkProps> = ({
   href,
   label,
   endIcon,

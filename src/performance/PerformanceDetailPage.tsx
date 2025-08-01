@@ -28,7 +28,7 @@ import { getActivityFromKey, getActivityName } from '../utils/activity';
 import { useChartRange } from '../utils/charts';
 import { useGradeColors } from './color';
 import { NavSpacer } from '../page/header/NavSpacer';
-import { NavLink } from '../page/header/NavLink';
+import { NavItem } from '../page/header/NavItem';
 
 export const PerformanceDetailPage: React.FC = () => {
   const range = useChartRange();
@@ -66,7 +66,7 @@ export const PerformanceDetailPage: React.FC = () => {
       />
       <PageHeader
         actions={[
-          <NavLink key="profile" href={`/users/${userId}`} label="Profile" />,
+          <NavItem key="profile" href={`/users/${userId}`} label="Profile" />,
           <NavSpacer key="spacer" />,
         ]}
       />
