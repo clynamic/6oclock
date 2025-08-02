@@ -58,6 +58,9 @@ const PerformanceTable = lazy(() =>
 const ProfilePage = lazy(() =>
   import('../profile/ProfilePage').then((m) => ({ default: m.ProfilePage })),
 );
+const SettingsPage = lazy(() =>
+  import('../settings/SettingsPage').then((m) => ({ default: m.SettingsPage })),
+);
 
 export const useResolveUserId = (): Record<string, string> => {
   const { id } = useParams<{ id: string }>();
@@ -177,6 +180,12 @@ export const appNavNodes: NavNode[] = [
         component: <ManifestHealthPage />,
       },
     ],
+  },
+  {
+    label: 'Settings',
+    href: '/settings',
+    component: <SettingsPage />,
+    hidden: true,
   },
   <NavHealth />,
   <NavSpacer />,
