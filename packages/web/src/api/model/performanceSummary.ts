@@ -3,7 +3,7 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.6
+ * OpenAPI spec version: 0.0.7
  */
 import type { ActivitySummary } from './activitySummary';
 import type { PerformanceRecord } from './performanceRecord';

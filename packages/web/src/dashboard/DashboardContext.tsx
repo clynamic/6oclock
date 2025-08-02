@@ -13,6 +13,7 @@ import {
   DashboardConfigMeta,
   DashboardPositions,
   DashboardUpdate,
+  ManifestAvailability,
 } from '../api';
 import { useCurrentBreakpoint } from '../utils/breakpoints';
 import { useCurrentLayout } from './current-layout';
@@ -30,7 +31,7 @@ interface DashboardContextType {
   isLoading?: boolean;
   isError?: boolean;
   error?: unknown;
-  available?: boolean;
+  available?: ManifestAvailability;
   setConfig: (config: DashboardConfig) => void;
   saveConfig: (update: DashboardUpdate) => Promise<void>;
   resetConfig: () => void;
@@ -55,7 +56,7 @@ export interface DashboardProviderProps {
   isLoading?: boolean;
   isError?: boolean;
   error?: unknown;
-  available?: boolean;
+  available?: ManifestAvailability;
   catalog: DashboardCatalog;
   version?: number;
   children: React.ReactNode;
@@ -171,4 +172,3 @@ export const useDashboard = () => {
 
   return context;
 };
-
