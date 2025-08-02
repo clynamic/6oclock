@@ -104,7 +104,7 @@
             "schema": {
               "minimum": 1,
               "maximum": 320,
-              "default": 80,
+              "default": 20,
               "type": "number"
             }
           }
@@ -157,7 +157,7 @@
             "schema": {
               "minimum": 1,
               "maximum": 320,
-              "default": 80,
+              "default": 20,
               "type": "number"
             }
           }
@@ -305,7 +305,11 @@
           "200": {
             "description": "Manifest availability",
             "content": {
-              "application/json": { "schema": { "type": "boolean" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManifestAvailability"
+                }
+              }
             }
           }
         },
@@ -830,7 +834,7 @@
             "schema": {
               "minimum": 1,
               "maximum": 320,
-              "default": 80,
+              "default": 20,
               "type": "number"
             }
           }
@@ -1456,7 +1460,7 @@
             "schema": {
               "minimum": 1,
               "maximum": 320,
-              "default": 80,
+              "default": 20,
               "type": "number"
             }
           }
@@ -1531,7 +1535,7 @@
             "schema": {
               "minimum": 1,
               "maximum": 320,
-              "default": 80,
+              "default": 20,
               "type": "number"
             }
           }
@@ -2177,7 +2181,7 @@
             "schema": {
               "minimum": 1,
               "maximum": 320,
-              "default": 80,
+              "default": 20,
               "type": "number"
             }
           }
@@ -2259,7 +2263,7 @@
   "info": {
     "title": "5-thirty",
     "description": "backend data aggregate for 6 o'clock",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "contact": {}
   },
   "tags": [],
@@ -2429,6 +2433,24 @@
           "decade",
           "all"
         ]
+      },
+      "ManifestAvailability": {
+        "type": "object",
+        "properties": {
+          "approvals": { "type": "number" },
+          "tickets": { "type": "number" },
+          "posts": { "type": "number" },
+          "users": { "type": "number" },
+          "userProfiles": { "type": "number" },
+          "flags": { "type": "number" },
+          "feedbacks": { "type": "number" },
+          "postVersions": { "type": "number" },
+          "postReplacements": { "type": "number" },
+          "modActions": { "type": "number" },
+          "bulkUpdateRequests": { "type": "number" },
+          "tagAliases": { "type": "number" },
+          "tagImplications": { "type": "number" }
+        }
       },
       "Manifest": {
         "type": "object",
