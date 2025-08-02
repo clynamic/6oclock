@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { AuthProvider } from '../auth/context';
 import { AuthGuard } from '../auth/guard';
-import { SafeModeProvider } from '../common/SafeModeContext';
+import { SafeModeProvider } from '../settings/SafeModeContext';
 import { LoadingPage } from '../page/LoadingPage';
 import { NavigationEntryProvider } from '../page/navigation';
 import { ChartParamsProvider } from '../utils/charts';
