@@ -14,7 +14,11 @@ import { RankingText } from '../common/RankingText';
 import { UsernameText } from '../common/UsernameText';
 import { UserAvatar } from '../common/UserAvatar';
 import { formatNumber } from '../utils/numbers';
-import { getActivityFromKey, getActivityIcon, getActivityNoun } from '../utils/activity';
+import {
+  getActivityFromKey,
+  getActivityIcon,
+  getActivityNoun,
+} from '../utils/activity';
 import { useGradeColors } from './color';
 
 export interface PerformanceLeaderboardFrameProps {
@@ -44,9 +48,7 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
           <Stack direction="row" spacing={2}>
             <UserAvatar
               user={
-                summary
-                  ? { id: summary.userId, ...summary.userHead }
-                  : undefined
+                summary ? { id: summary.userId, ...summary.head } : undefined
               }
               size={64}
               shape="rounded"
@@ -59,16 +61,7 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
                   justifyContent="space-between"
                   alignItems="center"
                 >
-                  <UsernameText
-                    user={
-                      summary
-                        ? {
-                            userId: summary.userId,
-                            head: summary.userHead,
-                          }
-                        : undefined
-                    }
-                  />
+                  <UsernameText user={summary} />
                 </Stack>
                 <Stack direction="row" gap={1} sx={{ flexWrap: 'wrap' }}>
                   {summary ? (
@@ -125,5 +118,3 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
     </Card>
   );
 };
-
-
