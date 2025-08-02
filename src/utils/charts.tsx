@@ -37,6 +37,50 @@ export type ChartParamsProviderProps = PropsWithChildren & {
   params?: ChartParams;
 };
 
+const CHART_PARAMS_STORAGE_KEY = 'chart_params';
+const CHART_PARAMS_EXPIRY_HOURS = 24;
+
+interface StoredChartParams {
+  params: ChartParams;
+  timestamp: number;
+}
+
+const saveChartParamsToStorage = (params: ChartParams) => {
+  const stored: StoredChartParams = {
+    params,
+    timestamp: Date.now(),
+  };
+  localStorage.setItem(CHART_PARAMS_STORAGE_KEY, JSON.stringify(stored));
+};
+
+const loadChartParamsFromStorage = (): ChartParams | null => {
+  try {
+    const stored = localStorage.getItem(CHART_PARAMS_STORAGE_KEY);
+    if (!stored) return null;
+
+    const parsed: StoredChartParams = JSON.parse(stored);
+    const now = Date.now();
+    const hoursElapsed = (now - parsed.timestamp) / (1000 * 60 * 60);
+
+    if (hoursElapsed > CHART_PARAMS_EXPIRY_HOURS) {
+      localStorage.removeItem(CHART_PARAMS_STORAGE_KEY);
+      return null;
+    }
+
+    return {
+      ...parsed.params,
+      range: {
+        ...parsed.params.range,
+        startDate: new Date(parsed.params.range.startDate),
+        endDate: new Date(parsed.params.range.endDate),
+      },
+    };
+  } catch {
+    localStorage.removeItem(CHART_PARAMS_STORAGE_KEY);
+    return null;
+  }
+};
+
 export const ChartParamsProvider: React.FC<ChartParamsProviderProps> = ({
   params,
   children,
@@ -47,30 +91,50 @@ export const ChartParamsProvider: React.FC<ChartParamsProviderProps> = ({
     }),
     [],
   );
-  const [value, setValue] = useState<ChartParams>({
-    ...defaultParams,
-    ...params,
+
+  const [value, setValue] = useState<ChartParams>(() => {
+    const storedParams = loadChartParamsFromStorage();
+    return {
+      ...defaultParams,
+      ...storedParams,
+      ...params,
+    };
   });
 
   const resetParams = useCallback(() => {
-    setValue({
+    const newParams = {
       ...defaultParams,
       ...params,
-    });
+    };
+    setValue(newParams);
+    localStorage.removeItem(CHART_PARAMS_STORAGE_KEY);
   }, [defaultParams, params]);
 
+  const setParams = useCallback(
+    (newParams: React.SetStateAction<ChartParams>) => {
+      setValue((prev) => {
+        const updated =
+          typeof newParams === 'function' ? newParams(prev) : newParams;
+        saveChartParamsToStorage(updated);
+        return updated;
+      });
+    },
+    [],
+  );
+
   useEffect(() => {
-    setValue({
+    setValue((prev) => ({
       ...defaultParams,
       ...params,
-    });
+      ...prev,
+    }));
   }, [defaultParams, params]);
 
   return (
     <ChartParamsContext.Provider
       value={{
         params: value,
-        setParams: setValue,
+        setParams,
         resetParams,
       }}
     >
