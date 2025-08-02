@@ -59,8 +59,8 @@ export const PerformanceDetailPage: React.FC = () => {
     <Page>
       <PageTitle
         subtitle={
-          summary?.userHead?.name
-            ? `Performance - ${summary?.userHead?.name}`
+          summary?.head?.name
+            ? `Performance - ${summary?.head?.name}`
             : 'Performance'
         }
       />
@@ -87,7 +87,7 @@ export const PerformanceDetailPage: React.FC = () => {
                       <UserAvatar
                         user={
                           summary
-                            ? { id: summary.userId, ...summary.userHead }
+                            ? { id: summary.userId, ...summary.head }
                             : undefined
                         }
                         size={90}
@@ -100,13 +100,10 @@ export const PerformanceDetailPage: React.FC = () => {
                           sx={{ flexGrow: 1 }}
                         >
                           <Stack direction="column">
-                            <UsernameText
-                              user={summary?.userHead}
-                              variant="h4"
-                            />
-                            <Typography variant="h5">
+                            <UsernameText user={summary} variant="h4" />
+                            <Typography variant="h5" color="text.secondary">
                               {summary ? (
-                                summary?.userHead?.level
+                                summary?.head?.level
                               ) : (
                                 <Skeleton variant="text" width={100} />
                               )}

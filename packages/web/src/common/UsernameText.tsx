@@ -70,11 +70,15 @@ export const UsernameText = ({ user, variant }: UsernameTextProps) => {
   const { name, level } = head;
   const color =
     UsernameColors[level.replace(/\s/g, '-').toLowerCase()] ?? 'inherit';
+  const isBlocked = level.toLowerCase() === 'blocked';
 
   return (
     <Typography
       variant={variant ?? 'h6'}
-      sx={{ color }}
+      sx={{
+        color,
+        textDecoration: isBlocked ? 'line-through' : 'none',
+      }}
       noWrap
       textOverflow={'ellipsis'}
       whiteSpace={'nowrap'}
