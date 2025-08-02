@@ -3,7 +3,7 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.6
+ * OpenAPI spec version: 0.0.7
  */
 import { useMutation, useQuery } from '@tanstack/react-query';
 import type {
@@ -22,6 +22,7 @@ import type {
   CheckManifestAvailabilityParams,
   ListManifestsParams,
   Manifest,
+  ManifestAvailability,
 } from './model';
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
@@ -34,7 +35,7 @@ export const checkManifestAvailability = (
   params?: CheckManifestAvailabilityParams,
   signal?: AbortSignal,
 ) => {
-  return makeRequest<boolean>({
+  return makeRequest<ManifestAvailability>({
     url: `/manifests/available`,
     method: 'GET',
     params,

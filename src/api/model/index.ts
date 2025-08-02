@@ -3,7 +3,7 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.6
+ * OpenAPI spec version: 0.0.7
  */
 
 export * from './activity';
@@ -56,6 +56,7 @@ export * from './itemType';
 export * from './jobInfo';
 export * from './listManifestsParams';
 export * from './manifest';
+export * from './manifestAvailability';
 export * from './manifestHealth';
 export * from './manifestSlice';
 export * from './performanceGrade';

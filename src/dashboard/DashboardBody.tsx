@@ -12,7 +12,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { QueryHint } from '../common/QueryHint';
 import { LoadingHint } from '../common/LoadingHint';
@@ -46,6 +46,14 @@ export const DashboardBody = () => {
     });
   }, [config, saveConfig, version]);
 
+  const isUnavailable = useMemo(() => {
+    if (!available) return false;
+    const values = Object.values(available).filter(
+      (v): v is number => typeof v === 'number',
+    );
+    return values.length > 0 && values.every((value) => value < 0.5);
+  }, [available]);
+
   return (
     <QueryHint
       isLoading={isLoading}
@@ -74,7 +82,7 @@ export const DashboardBody = () => {
             </Typography>
           </Alert>
         )}
-        {available === false ? (
+        {isUnavailable ? (
           <Box
             sx={{
               display: 'flex',
@@ -83,6 +91,7 @@ export const DashboardBody = () => {
               justifyContent: 'center',
               height: '100%',
               gap: 2,
+              p: 2,
             }}
           >
             <Inventory sx={{ fontSize: 48 }} />
@@ -103,6 +112,7 @@ export const DashboardBody = () => {
               justifyContent: 'center',
               height: '100%',
               gap: 2,
+              p: 2,
             }}
           >
             <HourglassEmpty sx={{ fontSize: 48 }} />
@@ -125,9 +135,9 @@ export const DashboardBody = () => {
           >
             {currentLayout?.map((layout) => {
               if (catalog[layout.i] === undefined) return null;
-              const { component: Component, card } = catalog[layout.i];
+              const { component: Component, card, items } = catalog[layout.i];
               return (
-                <DashboardCard key={layout.i} {...card}>
+                <DashboardCard key={layout.i} {...card} items={items}>
                   <Component />
                 </DashboardCard>
               );
@@ -138,4 +148,3 @@ export const DashboardBody = () => {
     </QueryHint>
   );
 };
-
