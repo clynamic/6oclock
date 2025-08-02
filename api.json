@@ -493,6 +493,13 @@
             "required": false,
             "in": "query",
             "schema": { "type": "boolean" }
+          },
+          {
+            "name": "x-safe-mode",
+            "in": "header",
+            "description": "Enable safe mode to filter explicit content",
+            "required": false,
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -600,6 +607,13 @@
             "required": true,
             "in": "path",
             "schema": { "type": "number" }
+          },
+          {
+            "name": "x-safe-mode",
+            "in": "header",
+            "description": "Enable safe mode to filter explicit content",
+            "required": false,
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -837,6 +851,13 @@
               "default": 20,
               "type": "number"
             }
+          },
+          {
+            "name": "x-safe-mode",
+            "in": "header",
+            "description": "Enable safe mode to filter explicit content",
+            "required": false,
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -1463,6 +1484,13 @@
               "default": 20,
               "type": "number"
             }
+          },
+          {
+            "name": "x-safe-mode",
+            "in": "header",
+            "description": "Enable safe mode to filter explicit content",
+            "required": false,
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -1538,6 +1566,13 @@
               "default": 20,
               "type": "number"
             }
+          },
+          {
+            "name": "x-safe-mode",
+            "in": "header",
+            "description": "Enable safe mode to filter explicit content",
+            "required": false,
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2184,6 +2219,13 @@
               "default": 20,
               "type": "number"
             }
+          },
+          {
+            "name": "x-safe-mode",
+            "in": "header",
+            "description": "Enable safe mode to filter explicit content",
+            "required": false,
+            "schema": { "type": "string" }
           }
         ],
         "responses": {

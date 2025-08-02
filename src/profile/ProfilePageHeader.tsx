@@ -1,8 +1,9 @@
-import { Logout } from '@mui/icons-material';
+import { Logout, Shield, ShieldOutlined } from '@mui/icons-material';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useAuth } from '../auth/context';
+import { useSafeMode } from '../common/SafeModeContext';
 import { PageHeader } from '../page/header/PageHeader';
 import { NavButton } from '../page/header/NavButton';
 import { NavDivider } from '../page/header/NavDivider';
@@ -17,6 +18,7 @@ export const ProfilePageHeader: React.FC<ProfilePageHeaderProps> = ({
   userId,
 }) => {
   const { payload } = useAuth();
+  const { safeMode, setSafeMode } = useSafeMode();
   const isOwnProfile = useMemo(() => {
     return payload?.userId === userId;
   }, [payload, userId]);
@@ -31,6 +33,14 @@ export const ProfilePageHeader: React.FC<ProfilePageHeaderProps> = ({
         ]) || [<NavSpacer />],
         ...(isOwnProfile
           ? [
+              <NavButton
+                key="safe-mode"
+                onClick={() => setSafeMode(!safeMode)}
+                endIcon={safeMode ? <Shield /> : <ShieldOutlined />}
+                color={safeMode ? 'success' : 'inherit'}
+              >
+                Safe Mode
+              </NavButton>,
               <NavButton
                 key="logout"
                 component={Link}
