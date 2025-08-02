@@ -38,7 +38,8 @@ export type ChartParamsProviderProps = PropsWithChildren & {
 };
 
 const CHART_PARAMS_STORAGE_KEY = 'chart_params';
-const CHART_PARAMS_EXPIRY_HOURS = 24;
+const CHART_PARAMS_EXPIRY_MINUTES = 30;
+const CHART_PARAMS_REFRESH_THRESHOLD_MINUTES = 10;
 
 interface StoredChartParams {
   params: ChartParams;
@@ -60,11 +61,19 @@ const loadChartParamsFromStorage = (): ChartParams | null => {
 
     const parsed: StoredChartParams = JSON.parse(stored);
     const now = Date.now();
-    const hoursElapsed = (now - parsed.timestamp) / (1000 * 60 * 60);
+    const minutesElapsed = (now - parsed.timestamp) / (1000 * 60);
 
-    if (hoursElapsed > CHART_PARAMS_EXPIRY_HOURS) {
+    if (minutesElapsed > CHART_PARAMS_EXPIRY_MINUTES) {
       localStorage.removeItem(CHART_PARAMS_STORAGE_KEY);
       return null;
+    }
+
+    if (minutesElapsed > CHART_PARAMS_REFRESH_THRESHOLD_MINUTES) {
+      const refreshed: StoredChartParams = {
+        ...parsed,
+        timestamp: now,
+      };
+      localStorage.setItem(CHART_PARAMS_STORAGE_KEY, JSON.stringify(refreshed));
     }
 
     return {
