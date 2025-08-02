@@ -240,7 +240,7 @@ export const PerformanceTable: React.FC = () => {
                                   summary
                                     ? {
                                         id: summary.userId,
-                                        ...summary.userHead,
+                                        ...summary.head,
                                       }
                                     : undefined
                                 }
@@ -249,17 +249,7 @@ export const PerformanceTable: React.FC = () => {
                               />
                             </TableCell>
                             <TableCell>
-                              <UsernameText
-                                variant="body1"
-                                user={
-                                  summary
-                                    ? {
-                                        userId: summary.userId,
-                                        head: summary.userHead,
-                                      }
-                                    : undefined
-                                }
-                              />
+                              <UsernameText variant="body1" user={summary} />
                             </TableCell>
                             <SpaceCell />
                             {activities.sort().map((type) => (

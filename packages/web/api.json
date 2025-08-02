@@ -2599,7 +2599,7 @@
           "scoreGrade": { "$ref": "#/components/schemas/PerformanceGrade" },
           "trendGrade": { "$ref": "#/components/schemas/TrendGrade" },
           "userId": { "type": "number" },
-          "userHead": { "$ref": "#/components/schemas/UserHead" },
+          "head": { "$ref": "#/components/schemas/UserHead" },
           "position": { "type": "number" },
           "score": { "type": "number" },
           "trend": { "type": "number" },
