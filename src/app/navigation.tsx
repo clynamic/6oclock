@@ -4,6 +4,7 @@ import { Route, useParams } from 'react-router-dom';
 import { useAuth } from '../auth/context';
 import { LoadingPage } from '../page/LoadingPage';
 import type { NavNode } from '../page/navigation';
+import { NavClock } from '../page/header/NavClock';
 import { NavDate } from '../page/header/NavDate';
 import { NavHealth } from '../page/header/NavHealth';
 import { NavSpacer } from '../page/header/NavSpacer';
@@ -189,6 +190,7 @@ export const appNavNodes: NavNode[] = [
   },
   <NavHealth />,
   <NavSpacer />,
+  <NavClock />,
   <NavDate />,
   <NavUser />,
 ];
