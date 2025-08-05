@@ -37,7 +37,16 @@ export const ErrorHint: React.FC<ErrorHintProps> = ({ error }) => {
       sx={{ height: '100%' }}
     >
       <WarningAmberOutlined sx={{ fontSize: 48 }} />
-      <Typography variant="h6">{message}</Typography>
+      <Typography
+        variant="h6"
+        sx={{
+          maxWidth: '100%',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+        }}
+      >
+        {message}
+      </Typography>
     </Stack>
   );
 };
