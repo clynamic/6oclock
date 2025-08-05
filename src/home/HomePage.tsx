@@ -1,5 +1,6 @@
 import { Beenhere, Shield } from '@mui/icons-material';
 import {
+  Box,
   Button,
   Divider,
   Stack,
@@ -14,6 +15,7 @@ import { PageTitle } from '../page/PageTitle';
 import { PageFooter } from '../page/PageFooter';
 import { Page } from '../page/Page';
 import { PageHeader } from '../page/header/PageHeader';
+import { HomeCounter } from './HomeCounter';
 import React from 'react';
 
 export const HomePage: React.FC = () => {
@@ -22,7 +24,8 @@ export const HomePage: React.FC = () => {
       <PageTitle subtitle="Home" />
       <PageHeader />
       <PageBody>
-        <Stack direction="column" spacing={2}>
+        <Stack direction="column" spacing={2} p={2}>
+          <Box height="150px" /* This balances the counter space */ />
           <Stack
             direction={{
               sm: 'row',
@@ -85,6 +88,7 @@ export const HomePage: React.FC = () => {
           <Typography variant="body1">
             Your valiant efforts are appreciated.
           </Typography>
+          <HomeCounter />
         </Stack>
       </PageBody>
       <PageFooter />
