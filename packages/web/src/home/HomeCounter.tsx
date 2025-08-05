@@ -14,6 +14,7 @@ import { SHIP_TIMEZONE } from '../utils/timezone';
 import { refetchQueryOptions } from '../utils/query';
 import { CounterDisplay } from '../common/CounterDisplay';
 import { startOfPeriod, addPeriods } from '../utils/ranges';
+import { hexagonColors } from '../app/theme';
 
 interface CounterOption {
   name: string;
@@ -173,7 +174,7 @@ export const HomeCounter: React.FC = () => {
         p: 3,
         borderRadius: 1,
         textAlign: 'center',
-        backgroundColor: 'action.hover',
+        backgroundColor: hexagonColors.section,
       }}
     >
       <Stack direction="row" justifyContent="center" sx={{ mb: 2 }}>
