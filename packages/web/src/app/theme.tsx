@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
-const hexagonColors = {
+export const hexagonColors = {
   background: '#020f23', // $hexagon-color-background
   foreground: '#152f56', // $hexagon-color-foreground
   section: '#1f3c67', // $hexagon-color-section
