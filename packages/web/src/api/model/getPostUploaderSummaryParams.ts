@@ -8,17 +8,17 @@
 import type { TimeScale } from './timeScale';
 
 export type GetPostUploaderSummaryParams = {
-  scale?: TimeScale;
-  cycle?: TimeScale;
-  startDate?: Date;
-  endDate?: Date;
-  timezone?: string;
-  /**
-   * Page number
-   */
-  page?: number;
-  /**
-   * Page size
-   */
-  limit?: number;
+scale?: TimeScale;
+cycle?: TimeScale;
+startDate?: Date;
+endDate?: Date;
+timezone?: string;
+/**
+ * Page number
+ */
+page?: number;
+/**
+ * Page size
+ */
+limit?: number;
 };

@@ -8,11 +8,11 @@
 import type { TimeScale } from './timeScale';
 
 export type GetFeedbackTypeSeriesParams = {
-  scale?: TimeScale;
-  cycle?: TimeScale;
-  startDate?: Date;
-  endDate?: Date;
-  timezone?: string;
-  creatorId?: number;
-  userId?: number;
+scale?: TimeScale;
+cycle?: TimeScale;
+startDate?: Date;
+endDate?: Date;
+timezone?: string;
+creatorId?: number;
+userId?: number;
 };

@@ -10,12 +10,12 @@ import type { UserArea } from './userArea';
 import type { Activity } from './activity';
 
 export type GetActivityParams = {
-  scale?: TimeScale;
-  cycle?: TimeScale;
-  startDate?: Date;
-  endDate?: Date;
-  timezone?: string;
-  area?: UserArea;
-  activities?: Activity[];
-  userId?: number;
+scale?: TimeScale;
+cycle?: TimeScale;
+startDate?: Date;
+endDate?: Date;
+timezone?: string;
+area?: UserArea;
+activities?: Activity[];
+userId?: number;
 };

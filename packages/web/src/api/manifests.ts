@@ -5,7 +5,10 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.7
  */
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query'
 import type {
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
@@ -16,486 +19,339 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query';
+  UseQueryResult
+} from '@tanstack/react-query'
 import type {
   CheckManifestAvailabilityParams,
   ListManifestsParams,
   Manifest,
-  ManifestAvailability,
-} from './model';
+  ManifestAvailability
+} from './model'
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
+
+
+
 
 /**
  * Returns true if manifests cover the date range, false otherwise
  * @summary Check manifest availability for a date range
  */
 export const checkManifestAvailability = (
-  params?: CheckManifestAvailabilityParams,
-  signal?: AbortSignal,
+    params?: CheckManifestAvailabilityParams,
+ signal?: AbortSignal
 ) => {
-  return makeRequest<ManifestAvailability>({
-    url: `/manifests/available`,
-    method: 'GET',
-    params,
-    signal,
-  });
-};
+      
+      
+      return makeRequest<ManifestAvailability>(
+      {url: `/manifests/available`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
 
-export const getCheckManifestAvailabilityQueryKey = (
-  params?: CheckManifestAvailabilityParams,
+export const getCheckManifestAvailabilityQueryKey = (params?: CheckManifestAvailabilityParams,) => {
+    return [`/manifests/available`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getCheckManifestAvailabilityQueryOptions = <TData = Awaited<ReturnType<typeof checkManifestAvailability>>, TError = ErrorType<unknown>>(params?: CheckManifestAvailabilityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof checkManifestAvailability>>, TError, TData>>, }
 ) => {
-  return [`/manifests/available`, ...(params ? [params] : [])] as const;
-};
 
-export const getCheckManifestAvailabilityQueryOptions = <
-  TData = Awaited<ReturnType<typeof checkManifestAvailability>>,
-  TError = ErrorType<unknown>,
->(
-  params?: CheckManifestAvailabilityParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof checkManifestAvailability>>,
-        TError,
-        TData
-      >
-    >;
-  },
-) => {
-  const { query: queryOptions } = options ?? {};
+const {query: queryOptions} = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ?? getCheckManifestAvailabilityQueryKey(params);
+  const queryKey =  queryOptions?.queryKey ?? getCheckManifestAvailabilityQueryKey(params);
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof checkManifestAvailability>>
-  > = ({ signal }) => checkManifestAvailability(params, signal);
+  
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof checkManifestAvailability>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof checkManifestAvailability>>> = ({ signal }) => checkManifestAvailability(params, signal);
 
-export type CheckManifestAvailabilityQueryResult = NonNullable<
-  Awaited<ReturnType<typeof checkManifestAvailability>>
->;
-export type CheckManifestAvailabilityQueryError = ErrorType<unknown>;
+      
 
-export function useCheckManifestAvailability<
-  TData = Awaited<ReturnType<typeof checkManifestAvailability>>,
-  TError = ErrorType<unknown>,
->(
-  params: undefined | CheckManifestAvailabilityParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof checkManifestAvailability>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof checkManifestAvailability>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type CheckManifestAvailabilityQueryResult = NonNullable<Awaited<ReturnType<typeof checkManifestAvailability>>>
+export type CheckManifestAvailabilityQueryError = ErrorType<unknown>
+
+
+export function useCheckManifestAvailability<TData = Awaited<ReturnType<typeof checkManifestAvailability>>, TError = ErrorType<unknown>>(
+ params: undefined |  CheckManifestAvailabilityParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof checkManifestAvailability>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof checkManifestAvailability>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useCheckManifestAvailability<
-  TData = Awaited<ReturnType<typeof checkManifestAvailability>>,
-  TError = ErrorType<unknown>,
->(
-  params?: CheckManifestAvailabilityParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof checkManifestAvailability>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useCheckManifestAvailability<TData = Awaited<ReturnType<typeof checkManifestAvailability>>, TError = ErrorType<unknown>>(
+ params?: CheckManifestAvailabilityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof checkManifestAvailability>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof checkManifestAvailability>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useCheckManifestAvailability<
-  TData = Awaited<ReturnType<typeof checkManifestAvailability>>,
-  TError = ErrorType<unknown>,
->(
-  params?: CheckManifestAvailabilityParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof checkManifestAvailability>>,
-        TError,
-        TData
-      >
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+        > , 'initialData'
+      >, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useCheckManifestAvailability<TData = Awaited<ReturnType<typeof checkManifestAvailability>>, TError = ErrorType<unknown>>(
+ params?: CheckManifestAvailabilityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof checkManifestAvailability>>, TError, TData>>, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary Check manifest availability for a date range
  */
 
-export function useCheckManifestAvailability<
-  TData = Awaited<ReturnType<typeof checkManifestAvailability>>,
-  TError = ErrorType<unknown>,
->(
-  params?: CheckManifestAvailabilityParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof checkManifestAvailability>>,
-        TError,
-        TData
-      >
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getCheckManifestAvailabilityQueryOptions(
-    params,
-    options,
-  );
+export function useCheckManifestAvailability<TData = Awaited<ReturnType<typeof checkManifestAvailability>>, TError = ErrorType<unknown>>(
+ params?: CheckManifestAvailabilityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof checkManifestAvailability>>, TError, TData>>, }
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  query.queryKey = queryOptions.queryKey;
+  const queryOptions = getCheckManifestAvailabilityQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
 
 /**
  * Get a manifest by ID
  * @summary Get a manifest by ID
  */
-export const manifest = (id: number, signal?: AbortSignal) => {
-  return makeRequest<Manifest>({
-    url: `/manifests/${encodeURIComponent(String(id))}`,
-    method: 'GET',
-    signal,
-  });
-};
-
-export const getManifestQueryKey = (id: number) => {
-  return [`/manifests/${id}`] as const;
-};
-
-export const getManifestQueryOptions = <
-  TData = Awaited<ReturnType<typeof manifest>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof manifest>>, TError, TData>
-    >;
-  },
+export const manifest = (
+    id: number,
+ signal?: AbortSignal
 ) => {
-  const { query: queryOptions } = options ?? {};
+      
+      
+      return makeRequest<Manifest>(
+      {url: `/manifests/${encodeURIComponent(String(id))}`, method: 'GET', signal
+    },
+      );
+    }
+  
 
-  const queryKey = queryOptions?.queryKey ?? getManifestQueryKey(id);
+export const getManifestQueryKey = (id: number,) => {
+    return [`/manifests/${id}`] as const;
+    }
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof manifest>>> = ({
-    signal,
-  }) => manifest(id, signal);
+    
+export const getManifestQueryOptions = <TData = Awaited<ReturnType<typeof manifest>>, TError = ErrorType<unknown>>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof manifest>>, TError, TData>>, }
+) => {
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<Awaited<ReturnType<typeof manifest>>, TError, TData> & {
-    queryKey: QueryKey;
-  };
-};
+const {query: queryOptions} = options ?? {};
 
-export type ManifestQueryResult = NonNullable<
-  Awaited<ReturnType<typeof manifest>>
->;
-export type ManifestQueryError = ErrorType<unknown>;
+  const queryKey =  queryOptions?.queryKey ?? getManifestQueryKey(id);
 
-export function useManifest<
-  TData = Awaited<ReturnType<typeof manifest>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof manifest>>, TError, TData>
-    > &
-      Pick<
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof manifest>>> = ({ signal }) => manifest(id, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof manifest>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ManifestQueryResult = NonNullable<Awaited<ReturnType<typeof manifest>>>
+export type ManifestQueryError = ErrorType<unknown>
+
+
+export function useManifest<TData = Awaited<ReturnType<typeof manifest>>, TError = ErrorType<unknown>>(
+ id: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof manifest>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof manifest>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useManifest<
-  TData = Awaited<ReturnType<typeof manifest>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof manifest>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useManifest<TData = Awaited<ReturnType<typeof manifest>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof manifest>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof manifest>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useManifest<
-  TData = Awaited<ReturnType<typeof manifest>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof manifest>>, TError, TData>
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+        > , 'initialData'
+      >, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useManifest<TData = Awaited<ReturnType<typeof manifest>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof manifest>>, TError, TData>>, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary Get a manifest by ID
  */
 
-export function useManifest<
-  TData = Awaited<ReturnType<typeof manifest>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof manifest>>, TError, TData>
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getManifestQueryOptions(id, options);
+export function useManifest<TData = Awaited<ReturnType<typeof manifest>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof manifest>>, TError, TData>>, }
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  query.queryKey = queryOptions.queryKey;
+  const queryOptions = getManifestQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
 
 /**
  * Delete a manifest by ID
  * @summary Delete a manifest by ID
  */
-export const deleteManifest = (id: number) => {
-  return makeRequest<void>({
-    url: `/manifests/${encodeURIComponent(String(id))}`,
-    method: 'DELETE',
-  });
-};
+export const deleteManifest = (
+    id: number,
+ ) => {
+      
+      
+      return makeRequest<void>(
+      {url: `/manifests/${encodeURIComponent(String(id))}`, method: 'DELETE'
+    },
+      );
+    }
+  
 
-export const getDeleteManifestMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteManifest>>,
-    TError,
-    { id: number },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof deleteManifest>>,
-  TError,
-  { id: number },
-  TContext
-> => {
-  const { mutation: mutationOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof deleteManifest>>,
-    { id: number }
-  > = (props) => {
-    const { id } = props ?? {};
+export const getDeleteManifestMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteManifest>>, TError,{id: number}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof deleteManifest>>, TError,{id: number}, TContext> => {
+const {mutation: mutationOptions} = options ?? {};
 
-    return deleteManifest(id);
-  };
+      
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type DeleteManifestMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteManifest>>
->;
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteManifest>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
 
-export type DeleteManifestMutationError = ErrorType<unknown>;
+          return  deleteManifest(id,)
+        }
 
-/**
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteManifestMutationResult = NonNullable<Awaited<ReturnType<typeof deleteManifest>>>
+    
+    export type DeleteManifestMutationError = ErrorType<unknown>
+
+    /**
  * @summary Delete a manifest by ID
  */
-export const useDeleteManifest = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteManifest>>,
-    TError,
-    { id: number },
-    TContext
-  >;
-}): UseMutationResult<
-  Awaited<ReturnType<typeof deleteManifest>>,
-  TError,
-  { id: number },
-  TContext
-> => {
-  const mutationOptions = getDeleteManifestMutationOptions(options);
+export const useDeleteManifest = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteManifest>>, TError,{id: number}, TContext>, }
+): UseMutationResult<
+        Awaited<ReturnType<typeof deleteManifest>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions);
-};
-/**
+      const mutationOptions = getDeleteManifestMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
  * List manifests
  * @summary List manifests
  */
 export const listManifests = (
-  params: ListManifestsParams,
-  signal?: AbortSignal,
+    params: ListManifestsParams,
+ signal?: AbortSignal
 ) => {
-  return makeRequest<Manifest[]>({
-    url: `/manifests`,
-    method: 'GET',
-    params,
-    signal,
-  });
-};
+      
+      
+      return makeRequest<Manifest[]>(
+      {url: `/manifests`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
 
-export const getListManifestsQueryKey = (params: ListManifestsParams) => {
-  return [`/manifests`, ...(params ? [params] : [])] as const;
-};
+export const getListManifestsQueryKey = (params: ListManifestsParams,) => {
+    return [`/manifests`, ...(params ? [params]: [])] as const;
+    }
 
-export const getListManifestsQueryOptions = <
-  TData = Awaited<ReturnType<typeof listManifests>>,
-  TError = ErrorType<unknown>,
->(
-  params: ListManifestsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof listManifests>>, TError, TData>
-    >;
-  },
+    
+export const getListManifestsQueryOptions = <TData = Awaited<ReturnType<typeof listManifests>>, TError = ErrorType<unknown>>(params: ListManifestsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listManifests>>, TError, TData>>, }
 ) => {
-  const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getListManifestsQueryKey(params);
+const {query: queryOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof listManifests>>> = ({
-    signal,
-  }) => listManifests(params, signal);
+  const queryKey =  queryOptions?.queryKey ?? getListManifestsQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof listManifests>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
+  
 
-export type ListManifestsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof listManifests>>
->;
-export type ListManifestsQueryError = ErrorType<unknown>;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listManifests>>> = ({ signal }) => listManifests(params, signal);
 
-export function useListManifests<
-  TData = Awaited<ReturnType<typeof listManifests>>,
-  TError = ErrorType<unknown>,
->(
-  params: ListManifestsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof listManifests>>, TError, TData>
-    > &
-      Pick<
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listManifests>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListManifestsQueryResult = NonNullable<Awaited<ReturnType<typeof listManifests>>>
+export type ListManifestsQueryError = ErrorType<unknown>
+
+
+export function useListManifests<TData = Awaited<ReturnType<typeof listManifests>>, TError = ErrorType<unknown>>(
+ params: ListManifestsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listManifests>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof listManifests>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useListManifests<
-  TData = Awaited<ReturnType<typeof listManifests>>,
-  TError = ErrorType<unknown>,
->(
-  params: ListManifestsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof listManifests>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useListManifests<TData = Awaited<ReturnType<typeof listManifests>>, TError = ErrorType<unknown>>(
+ params: ListManifestsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listManifests>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof listManifests>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useListManifests<
-  TData = Awaited<ReturnType<typeof listManifests>>,
-  TError = ErrorType<unknown>,
->(
-  params: ListManifestsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof listManifests>>, TError, TData>
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+        > , 'initialData'
+      >, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useListManifests<TData = Awaited<ReturnType<typeof listManifests>>, TError = ErrorType<unknown>>(
+ params: ListManifestsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listManifests>>, TError, TData>>, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary List manifests
  */
 
-export function useListManifests<
-  TData = Awaited<ReturnType<typeof listManifests>>,
-  TError = ErrorType<unknown>,
->(
-  params: ListManifestsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof listManifests>>, TError, TData>
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getListManifestsQueryOptions(params, options);
+export function useListManifests<TData = Awaited<ReturnType<typeof listManifests>>, TError = ErrorType<unknown>>(
+ params: ListManifestsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listManifests>>, TError, TData>>, }
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  query.queryKey = queryOptions.queryKey;
+  const queryOptions = getListManifestsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+

@@ -8,10 +8,10 @@
 import type { TimeScale } from './timeScale';
 
 export type GetUploadCountParams = {
-  scale?: TimeScale;
-  cycle?: TimeScale;
-  startDate?: Date;
-  endDate?: Date;
-  timezone?: string;
-  uploaderId?: number;
+scale?: TimeScale;
+cycle?: TimeScale;
+startDate?: Date;
+endDate?: Date;
+timezone?: string;
+uploaderId?: number;
 };

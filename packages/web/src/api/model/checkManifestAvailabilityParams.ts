@@ -9,10 +9,10 @@ import type { TimeScale } from './timeScale';
 import type { ItemType } from './itemType';
 
 export type CheckManifestAvailabilityParams = {
-  scale?: TimeScale;
-  cycle?: TimeScale;
-  startDate?: Date;
-  endDate?: Date;
-  timezone?: string;
-  type?: ItemType[];
+scale?: TimeScale;
+cycle?: TimeScale;
+startDate?: Date;
+endDate?: Date;
+timezone?: string;
+type?: ItemType[];
 };
