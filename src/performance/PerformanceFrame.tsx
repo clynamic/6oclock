@@ -67,13 +67,13 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
                   {summary ? (
                     <>
                       {Object.entries(summary.activity)
-                        .slice(0, 2)
                         .map(([key, count]) => ({
                           key,
                           activity: getActivityFromKey(key),
                           count: count as number,
                         }))
                         .sort((a, b) => b.count - a.count)
+                        .slice(0, 2)
                         .map(({ key, activity, count }) => (
                           <Chip
                             key={key}
