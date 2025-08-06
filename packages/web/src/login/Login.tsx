@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import {
   Box,
   Card,
@@ -7,23 +9,21 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useAuth } from '../auth/context';
-
+import { getAuthToken } from '../http/credentials';
+import { Page } from '../page/Page';
 import { PageBody } from '../page/PageBody';
 import { PageFooter } from '../page/PageFooter';
-import { PageHeader } from '../page/header/PageHeader';
 import { PageTitle } from '../page/PageTitle';
-import { Page } from '../page/Page';
+import { PageHeader } from '../page/header/PageHeader';
 import { ApiKeyField } from './ApiKeyField';
 import { ApiKeyHint } from './ApiKeyHint';
 import { LoginButton } from './LoginButton';
-import { LoginFormData } from './type';
 import { UsernameField } from './UsernameField';
-import { getAuthToken } from '../http/credentials';
+import { LoginFormData } from './type';
 
 export const LoginPage = () => {
   const navigation = useNavigate();

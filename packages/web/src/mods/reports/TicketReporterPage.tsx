@@ -1,15 +1,15 @@
 import { Box, Stack } from '@mui/material';
 
 import { useTicketReporterSummaryInfinite } from '../../api';
+import { LoadMoreHint } from '../../common/LoadMoreHint';
 import { QueryHint } from '../../common/QueryHint';
-import { PageHeader } from '../../page/header/PageHeader';
 import { Page } from '../../page/Page';
-import { PageTitle } from '../../page/PageTitle';
 import { PageBody } from '../../page/PageBody';
 import { PageFooter } from '../../page/PageFooter';
+import { PageTitle } from '../../page/PageTitle';
+import { PageHeader } from '../../page/header/PageHeader';
 import { useChartRange } from '../../utils/charts';
 import { TicketReporterFrame } from './TicketReporterFrame';
-import { LoadMoreHint } from '../../common/LoadMoreHint';
 
 export const TicketReporterPage: React.FC = () => {
   const range = useChartRange();

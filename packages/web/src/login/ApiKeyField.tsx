@@ -1,6 +1,7 @@
+import React from 'react';
+
 import { Key } from '@mui/icons-material';
 import { InputAdornment, TextField } from '@mui/material';
-import React from 'react';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 
 import { LoginFormData } from './type';

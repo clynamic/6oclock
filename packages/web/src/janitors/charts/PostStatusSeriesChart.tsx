@@ -1,6 +1,7 @@
+import { useMemo } from 'react';
+
 import { useTheme } from '@mui/material';
 import { BarChart } from '@mui/x-charts';
-import { useMemo } from 'react';
 
 import {
   useApprovalCountSeries,
@@ -9,10 +10,10 @@ import {
   useUploadCount,
 } from '../../api';
 import { QueryHint } from '../../common/QueryHint';
-import { formatSeriesDateLabel } from '../../utils/ranges';
-import { isPointSeriesEmpty, mergePointSeries } from '../../utils/series';
 import { SeriesChartProps, useChartRange } from '../../utils/charts';
 import { refetchQueryOptions } from '../../utils/query';
+import { formatSeriesDateLabel } from '../../utils/ranges';
+import { isPointSeriesEmpty, mergePointSeries } from '../../utils/series';
 
 export const PostStatusSeriesChart: React.FC = () => {
   const theme = useTheme();
@@ -112,5 +113,3 @@ export const PostStatusSeriesChart: React.FC = () => {
     </QueryHint>
   );
 };
-
-

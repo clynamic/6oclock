@@ -14,4 +14,3 @@ export const useCurrentLayout = (
 
   return currentLayout;
 };
-

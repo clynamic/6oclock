@@ -36,4 +36,3 @@ export const UserCard: React.FC = () => {
     </Stack>
   );
 };
-

@@ -1,12 +1,13 @@
-import { Box, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
+
+import { Box, Stack } from '@mui/material';
 
 const COUNTER_IMAGES = Array.from(
   { length: 10 },
   (_, i) => `/counter/${i}.png`,
 );
 
-export const useCounterImagePreloader = () => {
+const useCounterImagePreloader = () => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
   useEffect(() => {
@@ -86,7 +87,7 @@ export const CounterDisplay: React.FC<CounterDisplayProps> = ({
     };
 
     requestAnimationFrame(updateCounter);
-  }, [number, animate]);
+  }, [number, animate, displayNumber]);
 
   const digits = getDigitsFromNumber(displayNumber);
 

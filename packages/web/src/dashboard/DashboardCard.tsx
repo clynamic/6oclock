@@ -1,9 +1,10 @@
-import { ZoomOutMap } from '@mui/icons-material';
-import { Box, Card, CardProps, Chip, Stack, Typography } from '@mui/material';
 import { ReactNode, useMemo } from 'react';
 
-import ErrorBoundary from '../common/ErrorBoundary';
+import { ZoomOutMap } from '@mui/icons-material';
+import { Box, Card, CardProps, Chip, Stack, Typography } from '@mui/material';
+
 import { ItemType } from '../api';
+import ErrorBoundary from '../common/ErrorBoundary';
 import { createDashboardChild } from './DashboardChild';
 import { useDashboard } from './DashboardContext';
 

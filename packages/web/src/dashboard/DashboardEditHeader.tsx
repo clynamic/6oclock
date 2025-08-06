@@ -1,7 +1,8 @@
+import { useMemo, useState } from 'react';
+
 import { Cancel, Category, Edit, Save } from '@mui/icons-material';
 import { Checkbox, Menu, MenuItem } from '@mui/material';
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
-import { useMemo, useState } from 'react';
 
 import { DashboardPosition, DashboardPositions } from '../api';
 import { NavButton } from '../page/header/NavButton';

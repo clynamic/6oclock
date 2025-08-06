@@ -1,12 +1,13 @@
+import { useMemo } from 'react';
+
 import { useTheme } from '@mui/material';
 import { BarChart, LineChart } from '@mui/x-charts';
-import { useMemo } from 'react';
 
 import { useUploadCount } from '../../api';
 import { QueryHint } from '../../common/QueryHint';
-import { formatSeriesDateLabel } from '../../utils/ranges';
 import { SeriesChartProps, useChartValue } from '../../utils/charts';
 import { refetchQueryOptions } from '../../utils/query';
+import { formatSeriesDateLabel } from '../../utils/ranges';
 
 export interface UploadsUploaderChartProps {
   variant?: 'bars' | 'lines';
@@ -70,5 +71,3 @@ export const UploadsSeriesByUploaderChart: React.FC<
     </QueryHint>
   );
 };
-
-

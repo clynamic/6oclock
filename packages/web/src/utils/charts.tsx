@@ -1,15 +1,16 @@
 /* eslint-disable react-refresh/only-export-components */
-import type { BarChart } from '@mui/x-charts/BarChart';
-import type { LineChart } from '@mui/x-charts/LineChart';
 import React, {
-  createContext,
   PropsWithChildren,
+  createContext,
   useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react';
+
+import type { BarChart } from '@mui/x-charts/BarChart';
+import type { LineChart } from '@mui/x-charts/LineChart';
 
 import { UserArea } from '../api';
 import { DateRange, getCurrentMonthRange } from './ranges';
