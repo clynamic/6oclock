@@ -11,24 +11,24 @@ import { SparkLineChart } from '@mui/x-charts';
 import { useParams } from 'react-router-dom';
 
 import { usePerformance } from '../api';
-import { UserAvatar } from '../common/UserAvatar';
-import { TrendIcon } from '../common/TrendIcon';
-import { UsernameText } from '../common/UsernameText';
 import { QueryHint } from '../common/QueryHint';
 import { RankingText } from '../common/RankingText';
 import { Stamp } from '../common/Stamp';
-import { PageBody } from '../page/PageBody';
-import { PageTitle } from '../page/PageTitle';
-import { PageFooter } from '../page/PageFooter';
+import { TrendIcon } from '../common/TrendIcon';
+import { UserAvatar } from '../common/UserAvatar';
+import { UsernameText } from '../common/UsernameText';
 import { Page } from '../page/Page';
+import { PageBody } from '../page/PageBody';
+import { PageFooter } from '../page/PageFooter';
+import { PageTitle } from '../page/PageTitle';
+import { NavItem } from '../page/header/NavItem';
+import { NavSpacer } from '../page/header/NavSpacer';
 import { PageHeader } from '../page/header/PageHeader';
-import { formatNumber } from '../utils/numbers';
-import { refetchQueryOptions } from '../utils/query';
 import { getActivityFromKey, getActivityName } from '../utils/activity';
 import { useChartRange } from '../utils/charts';
+import { formatNumber } from '../utils/numbers';
+import { refetchQueryOptions } from '../utils/query';
 import { useGradeColors } from './color';
-import { NavSpacer } from '../page/header/NavSpacer';
-import { NavItem } from '../page/header/NavItem';
 
 export const PerformanceDetailPage: React.FC = () => {
   const range = useChartRange();

@@ -1,20 +1,21 @@
-import { Box, Stack, Typography } from '@mui/material';
 import { useMemo } from 'react';
-import { startOfDay } from 'date-fns';
+
 import { TZDate } from '@date-fns/tz';
+import { Box, Stack, Typography } from '@mui/material';
+import { startOfDay } from 'date-fns';
 
 import {
   TimeScale,
-  useTicketStatus,
   useApprovalCountSeries,
-  usePostReplacementStatus,
   useDeletionCountSeries,
+  usePostReplacementStatus,
+  useTicketStatus,
 } from '../api';
-import { SHIP_TIMEZONE } from '../utils/timezone';
-import { refetchQueryOptions } from '../utils/query';
-import { CounterDisplay } from '../common/CounterDisplay';
-import { startOfPeriod, addPeriods } from '../utils/ranges';
 import { hexagonColors } from '../app/theme';
+import { CounterDisplay } from '../common/CounterDisplay';
+import { refetchQueryOptions } from '../utils/query';
+import { addPeriods, startOfPeriod } from '../utils/ranges';
+import { SHIP_TIMEZONE } from '../utils/timezone';
 
 interface CounterOption {
   name: string;

@@ -1,5 +1,6 @@
-import { Skeleton, Typography, TypographyOwnProps } from '@mui/material';
 import { useMemo } from 'react';
+
+import { Skeleton, Typography, TypographyOwnProps } from '@mui/material';
 
 import { UserHead } from '../api';
 

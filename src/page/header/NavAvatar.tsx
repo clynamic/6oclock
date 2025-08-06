@@ -1,5 +1,6 @@
 import { Avatar, Button } from '@mui/material';
 import { NavLink } from 'react-router-dom';
+
 import { useCurrentUserHead } from '../../auth/user';
 
 export interface NavAvatarProps {

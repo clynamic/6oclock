@@ -1,12 +1,13 @@
 /* eslint-disable react-refresh/only-export-components */
-import { PopupState } from 'material-ui-popup-state/hooks';
 import React, {
-  createContext,
   PropsWithChildren,
   ReactNode,
+  createContext,
   useContext,
   useMemo,
 } from 'react';
+
+import { PopupState } from 'material-ui-popup-state/hooks';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 
 import { useCurrentBreakpoint } from '../../utils/breakpoints';

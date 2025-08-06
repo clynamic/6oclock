@@ -1,5 +1,6 @@
-import { PieChart, PieValueType } from '@mui/x-charts';
 import { useMemo } from 'react';
+
+import { PieChart, PieValueType } from '@mui/x-charts';
 
 import { TicketTypeSummary, useTicketTypeSummary } from '../../api';
 import { QueryHint } from '../../common/QueryHint';
@@ -73,5 +74,3 @@ export const TicketTypeSummaryChart: React.FC = () => {
     </QueryHint>
   );
 };
-
-

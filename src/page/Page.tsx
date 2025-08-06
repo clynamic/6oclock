@@ -1,5 +1,6 @@
-import { Box } from '@mui/material';
 import { PropsWithChildren } from 'react';
+
+import { Box } from '@mui/material';
 
 export const Page: React.FC<PropsWithChildren> = ({ children }) => {
   return (

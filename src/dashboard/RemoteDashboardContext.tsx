@@ -1,20 +1,21 @@
+import { useCallback, useMemo } from 'react';
+
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { useCallback, useMemo } from 'react';
 
 import {
   DashboardConfigType,
   DashboardUpdate,
   getDashboardQueryKey,
   useCheckManifestAvailability,
-  useDashboard as useRemoteDashboard,
   useDeleteDashboard,
+  useDashboard as useRemoteDashboard,
   useUpdateDashboard,
 } from '../api';
 import { useChartRange } from '../utils/charts';
-import { DashboardConfig, DashboardProvider } from './DashboardContext';
-import { buildCatalogLayouts, DashboardCatalog } from './DashboardItem';
 import { refetchQueryOptions } from '../utils/query';
+import { DashboardConfig, DashboardProvider } from './DashboardContext';
+import { DashboardCatalog, buildCatalogLayouts } from './DashboardItem';
 
 export interface RemoteDashboardProviderProps {
   type: DashboardConfigType;

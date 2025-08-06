@@ -1,5 +1,6 @@
-import { Box, Skeleton, Stack } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
+
+import { Box, Skeleton, Stack } from '@mui/material';
 
 export const BarChartSkeleton: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);

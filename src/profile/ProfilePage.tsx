@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
+
 import { useParams } from 'react-router-dom';
+
 import { adminProfileCatalog } from '../admins/profile/AdminProfileCatalog';
-import { useUserHead, UserArea } from '../api';
+import { UserArea, useUserHead } from '../api';
 import { DashboardBody } from '../dashboard/DashboardBody';
 import { DashboardProvider } from '../dashboard/DashboardContext';
 import {

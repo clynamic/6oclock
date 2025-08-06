@@ -1,5 +1,6 @@
-import { Typography, TypographyOwnProps } from '@mui/material';
 import { ReactNode } from 'react';
+
+import { Typography, TypographyOwnProps } from '@mui/material';
 
 export interface RankingTextProps {
   children: ReactNode;

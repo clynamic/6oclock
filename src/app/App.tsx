@@ -1,19 +1,20 @@
+import { Suspense, lazy, useMemo } from 'react';
+
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { lazy, Suspense, useMemo } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { AuthProvider } from '../auth/context';
 import { AuthGuard } from '../auth/guard';
-import { SafeModeProvider } from '../settings/SafeModeContext';
 import { LoadingPage } from '../page/LoadingPage';
 import { NavigationEntryProvider } from '../page/navigation';
+import { SafeModeProvider } from '../settings/SafeModeContext';
 import { ChartParamsProvider } from '../utils/charts';
 import { LogoutPage } from './Logout';
-import { appNavNodes, createRoutesFromNodes } from './navigation';
 import { NotFoundPage } from './NotFound';
-import { theme } from './theme';
 import { UnreachablePage } from './Unreachable';
+import { appNavNodes, createRoutesFromNodes } from './navigation';
+import { theme } from './theme';
 
 const LoginPage = lazy(() =>
   import('../login/Login').then((m) => ({ default: m.LoginPage })),

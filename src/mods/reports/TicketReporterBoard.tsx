@@ -50,5 +50,3 @@ export const TicketReporterBoard: React.FC = () => {
     </QueryHint>
   );
 };
-
-

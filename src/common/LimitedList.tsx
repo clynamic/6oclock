@@ -1,6 +1,7 @@
+import { PropsWithChildren } from 'react';
+
 import { Box } from '@mui/material';
 import { BoxOwnProps } from '@mui/system';
-import { PropsWithChildren } from 'react';
 import { TruncatedList, TruncatedListProps } from 'react-truncate-list';
 
 export interface LimitedListProps extends PropsWithChildren {

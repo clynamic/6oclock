@@ -1,15 +1,16 @@
-import { lazy, ReactElement, Suspense } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import { ReactElement, Suspense, lazy } from 'react';
+
 import { Route, useParams } from 'react-router-dom';
 
 import { useAuth } from '../auth/context';
 import { LoadingPage } from '../page/LoadingPage';
-import type { NavNode } from '../page/navigation';
 import { NavClock } from '../page/header/NavClock';
 import { NavDate } from '../page/header/NavDate';
 import { NavHealth } from '../page/header/NavHealth';
 import { NavSpacer } from '../page/header/NavSpacer';
 import { NavUser } from '../page/header/NavUser';
-
+import type { NavNode } from '../page/navigation';
 import { ChartParamsExtraProvider } from '../utils/charts';
 
 const HomePage = lazy(() =>

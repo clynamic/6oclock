@@ -1,3 +1,5 @@
+import { useCallback, useMemo } from 'react';
+
 import {
   Close,
   HourglassEmpty,
@@ -12,10 +14,9 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useCallback, useMemo } from 'react';
 
-import { QueryHint } from '../common/QueryHint';
 import { LoadingHint } from '../common/LoadingHint';
+import { QueryHint } from '../common/QueryHint';
 import { DashboardCard } from './DashboardCard';
 import { useDashboard } from './DashboardContext';
 import { DashboardGrid } from './DashboardGrid';

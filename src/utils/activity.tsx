@@ -1,5 +1,6 @@
-import { Beenhere, Flag, RestartAlt, Sell, Upload } from '@mui/icons-material';
 import { ReactElement } from 'react';
+
+import { Beenhere, Flag, RestartAlt, Sell, Upload } from '@mui/icons-material';
 
 import { Activity } from '../api';
 

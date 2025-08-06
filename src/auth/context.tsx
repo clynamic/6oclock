@@ -1,13 +1,15 @@
-import { jwtDecode } from 'jwt-decode';
 import {
-  createContext,
   PropsWithChildren,
+  createContext,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react';
-import { setAxiosAuth, clearAxiosAuth } from '../http/credentials';
+
+import { jwtDecode } from 'jwt-decode';
+
+import { clearAxiosAuth, setAxiosAuth } from '../http/credentials';
 
 export interface AuthPayload {
   userId: number;

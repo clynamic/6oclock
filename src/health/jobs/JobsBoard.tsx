@@ -45,4 +45,3 @@ export const JobsDisplay = () => {
     </QueryHint>
   );
 };
-

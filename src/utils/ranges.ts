@@ -1,3 +1,4 @@
+import { TZDate } from '@date-fns/tz';
 import {
   addDays,
   addMonths,
@@ -19,7 +20,6 @@ import {
   startOfYear,
   subDays,
 } from 'date-fns';
-import { TZDate } from '@date-fns/tz';
 
 import { TimeScale } from '../api';
 import { SHIP_TIMEZONE } from './timezone';
@@ -189,7 +189,7 @@ export const formatSeriesDateLabel = (
   const scale = inferScaleFromRange(start, end);
 
   switch (scale) {
-    case TimeScale.minute:
+    case TimeScale.minute: {
       const diffMinutes = differenceInMinutes(end, start);
       if (differenceInDays(end, start) === 0 && diffMinutes <= 1) {
         return format(date, 'ss');
@@ -198,6 +198,7 @@ export const formatSeriesDateLabel = (
         return format(date, 'mm');
       }
       return format(date, 'HH:mm');
+    }
     case TimeScale.hour:
       return format(date, 'HH:mm');
     case TimeScale.day:

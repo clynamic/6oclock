@@ -1,13 +1,14 @@
-import { Settings } from '@mui/icons-material';
 import { useMemo } from 'react';
+
+import { Settings } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import { useAuth } from '../auth/context';
-import { PageHeader } from '../page/header/PageHeader';
+import { DashboardEditHeader } from '../dashboard/DashboardEditHeader';
 import { NavButton } from '../page/header/NavButton';
 import { NavDivider } from '../page/header/NavDivider';
 import { NavSpacer } from '../page/header/NavSpacer';
-import { DashboardEditHeader } from '../dashboard/DashboardEditHeader';
+import { PageHeader } from '../page/header/PageHeader';
 
 export interface ProfilePageHeaderProps {
   userId?: number;

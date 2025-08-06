@@ -8,8 +8,8 @@ import {
 import { Link } from 'react-router-dom';
 
 import { TicketReporterSummary } from '../../api';
-import { UsernameText } from '../../common/UsernameText';
 import { UserAvatar } from '../../common/UserAvatar';
+import { UsernameText } from '../../common/UsernameText';
 import { formatNumber } from '../../utils/numbers';
 
 export interface TicketReporterFrameProps {
@@ -52,5 +52,3 @@ export const TicketReporterFrame: React.FC<TicketReporterFrameProps> = ({
     </Card>
   );
 };
-
-

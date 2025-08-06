@@ -1,13 +1,13 @@
-import { PageBody } from '../page/PageBody';
-import { PageTitle } from '../page/PageTitle';
-import { PageFooter } from '../page/PageFooter';
-import { Page } from '../page/Page';
-import { PageHeader } from '../page/header/PageHeader';
-import { healthCatalog } from './catalog';
 import { DashboardBody } from '../dashboard/DashboardBody';
 import { DashboardProvider } from '../dashboard/DashboardContext';
 import { DashboardEditHeader } from '../dashboard/DashboardEditHeader';
 import { buildCatalogLayouts } from '../dashboard/DashboardItem';
+import { Page } from '../page/Page';
+import { PageBody } from '../page/PageBody';
+import { PageFooter } from '../page/PageFooter';
+import { PageTitle } from '../page/PageTitle';
+import { PageHeader } from '../page/header/PageHeader';
+import { healthCatalog } from './catalog';
 
 export const HealthPage: React.FC = () => {
   return (

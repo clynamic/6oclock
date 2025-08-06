@@ -1,8 +1,9 @@
-import { Popover, Stack, Typography, useTheme } from '@mui/material';
-import { Sailing } from '@mui/icons-material';
-import { format } from 'date-fns';
-import { TZDate } from '@date-fns/tz';
 import { useEffect, useState } from 'react';
+
+import { TZDate } from '@date-fns/tz';
+import { Sailing } from '@mui/icons-material';
+import { Popover, Stack, Typography, useTheme } from '@mui/material';
+import { format } from 'date-fns';
 
 import { SHIP_TIMEZONE } from '../../utils/timezone';
 import { NavButton } from './NavButton';

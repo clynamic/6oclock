@@ -1,5 +1,4 @@
 /* eslint-disable react-refresh/only-export-components */
-import { Breakpoint, useTheme } from '@mui/material';
 import React, {
   createContext,
   useCallback,
@@ -9,6 +8,8 @@ import React, {
   useState,
 } from 'react';
 
+import { Breakpoint, useTheme } from '@mui/material';
+
 import {
   DashboardConfigMeta,
   DashboardPositions,
@@ -16,9 +17,9 @@ import {
   ManifestAvailability,
 } from '../api';
 import { useCurrentBreakpoint } from '../utils/breakpoints';
-import { useCurrentLayout } from './current-layout';
 import { DashboardLayout, DashboardLayouts } from './DashboardGrid';
-import { buildCatalogLayout, DashboardCatalog } from './DashboardItem';
+import { DashboardCatalog, buildCatalogLayout } from './DashboardItem';
+import { useCurrentLayout } from './current-layout';
 import { extractDashboardLayoutPositions } from './debug';
 
 interface DashboardContextType {

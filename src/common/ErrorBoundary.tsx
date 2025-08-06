@@ -1,5 +1,6 @@
-import { Box, Stack, Typography } from '@mui/material';
 import React, { PropsWithChildren } from 'react';
+
+import { Box, Stack, Typography } from '@mui/material';
 
 interface ErrorBoundaryState {
   hasError: boolean;

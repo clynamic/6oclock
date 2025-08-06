@@ -1,13 +1,14 @@
+import { useEffect } from 'react';
+
 import { Logout } from '@mui/icons-material';
 import { CircularProgress, Stack, Typography } from '@mui/material';
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../auth/context';
-import { PageBody } from '../page/PageBody';
-import { PageTitle } from '../page/PageTitle';
-import { PageFooter } from '../page/PageFooter';
 import { Page } from '../page/Page';
+import { PageBody } from '../page/PageBody';
+import { PageFooter } from '../page/PageFooter';
+import { PageTitle } from '../page/PageTitle';
 import { PageHeader } from '../page/header/PageHeader';
 
 export const LogoutPage: React.FC = () => {

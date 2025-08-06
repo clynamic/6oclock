@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, PropsWithChildren, useContext } from 'react';
+import { PropsWithChildren, createContext, useContext } from 'react';
 
 export type NavNode = NavTopLink | NavAction;
 

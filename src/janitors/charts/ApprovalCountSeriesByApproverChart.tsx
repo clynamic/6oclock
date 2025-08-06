@@ -1,16 +1,17 @@
+import { useMemo } from 'react';
+
 import { useTheme } from '@mui/material';
 import { BarChart } from '@mui/x-charts';
-import { useMemo } from 'react';
 
 import {
   useApprovalCountSeriesByApprover,
   useDeletionSeriesByDeleter,
 } from '../../api';
 import { QueryHint } from '../../common/QueryHint';
-import { formatSeriesDateLabel } from '../../utils/ranges';
-import { mergePointSeries } from '../../utils/series';
 import { SeriesChartProps, useChartValue } from '../../utils/charts';
 import { refetchQueryOptions } from '../../utils/query';
+import { formatSeriesDateLabel } from '../../utils/ranges';
+import { mergePointSeries } from '../../utils/series';
 
 export const ApprovalCountSeriesByApproverChart: React.FC = () => {
   const theme = useTheme();
@@ -89,5 +90,3 @@ export const ApprovalCountSeriesByApproverChart: React.FC = () => {
     </QueryHint>
   );
 };
-
-

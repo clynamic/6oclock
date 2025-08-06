@@ -11,8 +11,8 @@ import {
   Typography,
 } from '@mui/material';
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
-import { Fragment } from 'react/jsx-runtime';
 import { Link as RouterLink } from 'react-router-dom';
+import { Fragment } from 'react/jsx-runtime';
 
 import { AppLogo } from '../../common/AppLogo';
 import {
@@ -20,13 +20,13 @@ import {
   resolveNavLinks,
   useNavigationEntries,
 } from '../navigation';
+import { NavAvatar } from './NavAvatar';
 import { NavItem } from './NavItem';
 import {
   PageHeaderProvider,
   PageHeaderReprovider,
   usePageHeaderContext,
 } from './PageHeaderContext';
-import { NavAvatar } from './NavAvatar';
 
 export interface PageHeaderProps {
   actions?: NavAction[];
