@@ -52,7 +52,7 @@ export const janitorDashboardCatalog: DashboardCatalog = {
       },
     ),
     items: [ItemType.post_versions, ItemType.post_events, ItemType.flags],
-    card: { title: 'Post Status' },
+    card: { title: 'Status' },
   },
   postTurnaround: {
     name: 'Posts Approved/Deleted',
