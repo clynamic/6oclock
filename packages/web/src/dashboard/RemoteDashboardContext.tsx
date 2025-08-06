@@ -14,6 +14,7 @@ import {
 import { useChartRange } from '../utils/charts';
 import { DashboardConfig, DashboardProvider } from './DashboardContext';
 import { buildCatalogLayouts, DashboardCatalog } from './DashboardItem';
+import { refetchQueryOptions } from '../utils/query';
 
 export interface RemoteDashboardProviderProps {
   type: DashboardConfigType;
@@ -104,11 +105,9 @@ export const RemoteDashboardProvider: React.FC<
       ...range,
       type: itemTypes,
     },
-    {
-      query: {
-        enabled: itemTypes.length > 0,
-      },
-    },
+    refetchQueryOptions({
+      enabled: itemTypes.length > 0,
+    }),
   );
 
   return (
@@ -127,4 +126,3 @@ export const RemoteDashboardProvider: React.FC<
     </DashboardProvider>
   );
 };
-
