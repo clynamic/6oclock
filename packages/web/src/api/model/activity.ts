@@ -15,6 +15,7 @@ export const Activity = {
   post_approve: 'post_approve',
   post_replacement_create: 'post_replacement_create',
   post_replacement_approve: 'post_replacement_approve',
+  post_replacement_promote: 'post_replacement_promote',
   post_replacement_reject: 'post_replacement_reject',
   ticket_create: 'ticket_create',
   ticket_handle: 'ticket_handle',

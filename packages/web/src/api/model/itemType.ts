@@ -10,7 +10,6 @@ export type ItemType = (typeof ItemType)[keyof typeof ItemType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ItemType = {
-  approvals: 'approvals',
   tickets: 'tickets',
   posts: 'posts',
   users: 'users',
@@ -19,6 +18,7 @@ export const ItemType = {
   feedbacks: 'feedbacks',
   post_versions: 'post_versions',
   post_replacements: 'post_replacements',
+  post_events: 'post_events',
   mod_actions: 'mod_actions',
   bulk_update_requests: 'bulk_update_requests',
   tag_aliases: 'tag_aliases',

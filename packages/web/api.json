@@ -2353,7 +2353,6 @@
       "ItemType": {
         "type": "string",
         "enum": [
-          "approvals",
           "tickets",
           "posts",
           "users",
@@ -2362,6 +2361,7 @@
           "feedbacks",
           "post_versions",
           "post_replacements",
+          "post_events",
           "mod_actions",
           "bulk_update_requests",
           "tag_aliases",
@@ -2518,6 +2518,7 @@
           "post_approve",
           "post_replacement_create",
           "post_replacement_approve",
+          "post_replacement_promote",
           "post_replacement_reject",
           "ticket_create",
           "ticket_handle"
@@ -2579,6 +2580,7 @@
           "postReplacementCreate": { "type": "number" },
           "postReplacementApprove": { "type": "number" },
           "postReplacementReject": { "type": "number" },
+          "postReplacementPromote": { "type": "number" },
           "ticketCreate": { "type": "number" },
           "ticketHandle": { "type": "number" }
         },
@@ -2589,6 +2591,7 @@
           "postReplacementCreate",
           "postReplacementApprove",
           "postReplacementReject",
+          "postReplacementPromote",
           "ticketCreate",
           "ticketHandle"
         ]
@@ -2631,6 +2634,7 @@
           "postReplacementCreate": { "type": "number" },
           "postReplacementApprove": { "type": "number" },
           "postReplacementReject": { "type": "number" },
+          "postReplacementPromote": { "type": "number" },
           "ticketCreate": { "type": "number" },
           "ticketHandle": { "type": "number" },
           "date": { "format": "date-time", "type": "string" }
@@ -2642,6 +2646,7 @@
           "postReplacementCreate",
           "postReplacementApprove",
           "postReplacementReject",
+          "postReplacementPromote",
           "ticketCreate",
           "ticketHandle",
           "date"

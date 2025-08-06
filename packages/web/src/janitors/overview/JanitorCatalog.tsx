@@ -51,7 +51,7 @@ export const janitorDashboardCatalog: DashboardCatalog = {
         xl: { x: 0, y: 0, w: 4, h: 5 },
       },
     ),
-    items: [ItemType.post_versions, ItemType.approvals, ItemType.flags],
+    items: [ItemType.post_versions, ItemType.post_events, ItemType.flags],
     card: { title: 'Post Status' },
   },
   postTurnaround: {
@@ -71,7 +71,7 @@ export const janitorDashboardCatalog: DashboardCatalog = {
         xl: { x: 4, y: 0, w: 7, h: 6 },
       },
     ),
-    items: [ItemType.post_versions, ItemType.approvals, ItemType.flags],
+    items: [ItemType.post_versions, ItemType.post_events, ItemType.flags],
     card: { title: 'Turnaround' },
   },
   postUploaders: {
@@ -112,7 +112,7 @@ export const janitorDashboardCatalog: DashboardCatalog = {
       },
     ),
     card: { title: 'Frontline' },
-    items: [ItemType.post_versions, ItemType.approvals, ItemType.flags],
+    items: [ItemType.post_versions, ItemType.post_events, ItemType.flags],
     component: PostPendingSeriesChart,
   },
   postReplacements: {
