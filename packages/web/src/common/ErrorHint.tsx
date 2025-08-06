@@ -1,7 +1,8 @@
+import { useMemo } from 'react';
+
 import { WarningAmberOutlined } from '@mui/icons-material';
 import { Stack, Typography } from '@mui/material';
 import { AxiosError } from 'axios';
-import { useMemo } from 'react';
 
 export interface ErrorHintProps {
   error?: unknown;

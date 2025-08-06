@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Beenhere, Shield } from '@mui/icons-material';
 import {
   Box,
@@ -10,13 +12,12 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { PageBody } from '../page/PageBody';
-import { PageTitle } from '../page/PageTitle';
-import { PageFooter } from '../page/PageFooter';
 import { Page } from '../page/Page';
+import { PageBody } from '../page/PageBody';
+import { PageFooter } from '../page/PageFooter';
+import { PageTitle } from '../page/PageTitle';
 import { PageHeader } from '../page/header/PageHeader';
 import { HomeCounter } from './HomeCounter';
-import React from 'react';
 
 export const HomePage: React.FC = () => {
   return (

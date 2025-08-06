@@ -2,12 +2,12 @@ import { Logout, Shield, ShieldOutlined } from '@mui/icons-material';
 import { Button, Card, CardContent, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { useSafeMode } from './SafeModeContext';
 import { Page } from '../page/Page';
 import { PageBody } from '../page/PageBody';
 import { PageFooter } from '../page/PageFooter';
-import { PageHeader } from '../page/header/PageHeader';
 import { PageTitle } from '../page/PageTitle';
+import { PageHeader } from '../page/header/PageHeader';
+import { useSafeMode } from './SafeModeContext';
 
 export const SettingsPage: React.FC = () => {
   const { safeMode, setSafeMode } = useSafeMode();

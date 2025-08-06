@@ -11,14 +11,14 @@ import { Link } from 'react-router-dom';
 
 import { PerformanceSummary } from '../api';
 import { RankingText } from '../common/RankingText';
-import { UsernameText } from '../common/UsernameText';
 import { UserAvatar } from '../common/UserAvatar';
-import { formatNumber } from '../utils/numbers';
+import { UsernameText } from '../common/UsernameText';
 import {
   getActivityFromKey,
   getActivityIcon,
   getActivityNoun,
 } from '../utils/activity';
+import { formatNumber } from '../utils/numbers';
 import { useGradeColors } from './color';
 
 export interface PerformanceLeaderboardFrameProps {

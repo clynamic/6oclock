@@ -3,8 +3,8 @@ import { CircularProgress, Stack, Typography } from '@mui/material';
 import { Page } from './Page';
 import { PageBody } from './PageBody';
 import { PageFooter } from './PageFooter';
-import { PageHeader } from './header/PageHeader';
 import { PageTitle } from './PageTitle';
+import { PageHeader } from './header/PageHeader';
 
 export interface LoadingPageProps {
   message?: React.ReactNode;

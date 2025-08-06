@@ -1,5 +1,6 @@
-import { Box } from '@mui/material';
 import { forwardRef } from 'react';
+
+import { Box } from '@mui/material';
 
 export interface DashboardChildForwardProps {
   className?: string;

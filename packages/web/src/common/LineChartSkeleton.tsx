@@ -1,5 +1,6 @@
-import { Box, Skeleton, Stack } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
+
+import { Box, Skeleton, Stack } from '@mui/material';
 
 interface Point {
   x: number;

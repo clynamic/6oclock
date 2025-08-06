@@ -1,6 +1,6 @@
 import React, {
-  createContext,
   PropsWithChildren,
+  createContext,
   useCallback,
   useContext,
   useEffect,
@@ -18,6 +18,7 @@ const SafeModeContext = createContext<SafeModeContextType | undefined>(
   undefined,
 );
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useSafeMode = () => {
   const context = useContext(SafeModeContext);
   if (!context) {

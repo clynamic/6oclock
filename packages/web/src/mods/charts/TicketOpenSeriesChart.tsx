@@ -3,9 +3,9 @@ import { LineChart } from '@mui/x-charts';
 
 import { useTicketOpenSeries } from '../../api';
 import { QueryHint } from '../../common/QueryHint';
-import { formatSeriesDateLabel } from '../../utils/ranges';
 import { useChartRange } from '../../utils/charts';
 import { refetchQueryOptions } from '../../utils/query';
+import { formatSeriesDateLabel } from '../../utils/ranges';
 
 export const TicketOpenSeriesChart: React.FC = () => {
   const theme = useTheme();
@@ -52,5 +52,3 @@ export const TicketOpenSeriesChart: React.FC = () => {
     </QueryHint>
   );
 };
-
-

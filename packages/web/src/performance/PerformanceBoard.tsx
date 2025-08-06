@@ -2,11 +2,11 @@ import { ArrowForward } from '@mui/icons-material';
 import { Button, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { usePerformance, UserArea } from '../api';
+import { UserArea, usePerformance } from '../api';
 import { LimitedList } from '../common/LimitedList';
 import { QueryHint } from '../common/QueryHint';
-import { refetchQueryOptions } from '../utils/query';
 import { useChartValue } from '../utils/charts';
+import { refetchQueryOptions } from '../utils/query';
 import { PerformanceFrame } from './PerformanceFrame';
 
 export const PerformanceLeaderboard: React.FC = () => {
@@ -57,4 +57,3 @@ export const PerformanceLeaderboard: React.FC = () => {
     </QueryHint>
   );
 };
-

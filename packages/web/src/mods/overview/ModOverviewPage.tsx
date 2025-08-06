@@ -1,15 +1,14 @@
 import { DashboardConfigType, UserArea } from '../../api';
-
+import { DashboardBody } from '../../dashboard/DashboardBody';
 import { DashboardEditHeader } from '../../dashboard/DashboardEditHeader';
-import { PageHeader } from '../../page/header/PageHeader';
+import { RemoteDashboardProvider } from '../../dashboard/RemoteDashboardContext';
 import { Page } from '../../page/Page';
-import { PageTitle } from '../../page/PageTitle';
 import { PageBody } from '../../page/PageBody';
 import { PageFooter } from '../../page/PageFooter';
+import { PageTitle } from '../../page/PageTitle';
+import { PageHeader } from '../../page/header/PageHeader';
 import { ChartParamsExtraProvider } from '../../utils/charts';
 import { modDashboardCatalog, modDashoardCatalogVersion } from './ModCatalog';
-import { DashboardBody } from '../../dashboard/DashboardBody';
-import { RemoteDashboardProvider } from '../../dashboard/RemoteDashboardContext';
 
 export const ModOverviewPage: React.FC = () => {
   return (

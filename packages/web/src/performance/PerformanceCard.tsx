@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 
 import { usePerformance } from '../api';
 import { LimitedList } from '../common/LimitedList';
-import { RankingText } from '../common/RankingText';
 import { QueryHint } from '../common/QueryHint';
-import { formatNumber } from '../utils/numbers';
-import { refetchQueryOptions } from '../utils/query';
+import { RankingText } from '../common/RankingText';
 import { getActivityFromKey, getActivityName } from '../utils/activity';
 import { useChartValue } from '../utils/charts';
+import { formatNumber } from '../utils/numbers';
+import { refetchQueryOptions } from '../utils/query';
 import { useGradeColors } from './color';
 
 export const PerformanceCard: React.FC = () => {
@@ -104,5 +104,3 @@ export const PerformanceCard: React.FC = () => {
     </QueryHint>
   );
 };
-
-

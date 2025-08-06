@@ -1,6 +1,8 @@
+import React, { useEffect, useRef } from 'react';
+
 import { Box, useTheme } from '@mui/material';
 import { format } from 'date-fns';
-import React, { useEffect, useRef } from 'react';
+
 import { AXIOS_INSTANCE } from '../http/axios';
 
 interface ScreenshotPrinterProps {

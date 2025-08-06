@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
+
 import { Box, CircularProgress, Fade } from '@mui/material';
 import { UseInfiniteQueryResult } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 export interface LoadMoreHintProps {

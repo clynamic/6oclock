@@ -1,6 +1,7 @@
+import { useMemo } from 'react';
+
 import { useTheme } from '@mui/material';
 import { PieChart, PieValueType } from '@mui/x-charts';
-import { useMemo } from 'react';
 
 import { TimeScale, useTicketStatus } from '../../api';
 import { QueryHint } from '../../common/QueryHint';
@@ -75,5 +76,3 @@ export const TicketStatusSummaryChart: React.FC = () => {
     </QueryHint>
   );
 };
-
-

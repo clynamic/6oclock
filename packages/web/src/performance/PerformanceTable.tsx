@@ -1,3 +1,5 @@
+import React, { PropsWithChildren, useMemo } from 'react';
+
 import {
   Box,
   Stack,
@@ -11,34 +13,33 @@ import {
 } from '@mui/material';
 import { addDays, addMonths, addWeeks, addYears, format } from 'date-fns';
 import { mix } from 'polished';
-import React, { PropsWithChildren, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { PerformanceGrade, TrendGrade, usePerformance } from '../api';
-import { UserAvatar } from '../common/UserAvatar';
-import { TrendIcon } from '../common/TrendIcon';
-import { UsernameText } from '../common/UsernameText';
 import { QueryHint } from '../common/QueryHint';
 import { RankingText } from '../common/RankingText';
 import { ScreenshotPrinter } from '../common/ScreenshotPrinter';
-import { PageBody } from '../page/PageBody';
-import { NavButton } from '../page/header/NavButton';
-import { PageTitle } from '../page/PageTitle';
-import { PageFooter } from '../page/PageFooter';
+import { TrendIcon } from '../common/TrendIcon';
+import { UserAvatar } from '../common/UserAvatar';
+import { UsernameText } from '../common/UsernameText';
 import { Page } from '../page/Page';
+import { PageBody } from '../page/PageBody';
+import { PageFooter } from '../page/PageFooter';
+import { PageTitle } from '../page/PageTitle';
+import { NavButton } from '../page/header/NavButton';
+import { NavSpacer } from '../page/header/NavSpacer';
 import { PageHeader } from '../page/header/PageHeader';
-import {
-  formatRangeLabel,
-  inferDurationFromRange,
-  TimeDuration,
-  unitFromDuration,
-} from '../utils/ranges';
-import { formatNumber } from '../utils/numbers';
-import { refetchQueryOptions } from '../utils/query';
 import { getActivityFromKey, getActivityNoun } from '../utils/activity';
 import { useChartValue } from '../utils/charts';
+import { formatNumber } from '../utils/numbers';
+import { refetchQueryOptions } from '../utils/query';
+import {
+  TimeDuration,
+  formatRangeLabel,
+  inferDurationFromRange,
+  unitFromDuration,
+} from '../utils/ranges';
 import { useGradeColors } from './color';
-import { NavSpacer } from '../page/header/NavSpacer';
 
 const SpaceCell: React.FC = () => (
   <TableCell>

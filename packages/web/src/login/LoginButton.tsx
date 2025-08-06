@@ -1,6 +1,7 @@
+import React from 'react';
+
 import { ArrowForward } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
-import React from 'react';
 
 export interface LoginButtonProps {
   loading: boolean;

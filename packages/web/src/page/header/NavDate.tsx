@@ -1,3 +1,6 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
+import { TZDate } from '@date-fns/tz';
 import {
   Check,
   ChevronLeft,
@@ -6,7 +9,6 @@ import {
   Restore,
 } from '@mui/icons-material';
 import {
-  alpha,
   Button,
   IconButton,
   Popover,
@@ -14,6 +16,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Typography,
+  alpha,
   useTheme,
 } from '@mui/material';
 import {
@@ -23,22 +26,20 @@ import {
 } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { isAfter, isBefore } from 'date-fns';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useCurrentUserHead } from '../../auth/user';
+import { useChartContext } from '../../utils/charts';
 import {
+  TimeDuration,
   addPeriods,
   formatRangeLabel,
   inferDurationFromRange,
   startOfPeriod,
-  TimeDuration,
   unitFromDuration,
 } from '../../utils/ranges';
 import { SHIP_TIMEZONE } from '../../utils/timezone';
-import { useChartContext } from '../../utils/charts';
 import { NavButton } from './NavButton';
 import { usePageHeaderContext } from './PageHeaderContext';
-import { TZDate } from '@date-fns/tz';
 
 type CalendarView = 'year' | 'month' | 'day';
 

@@ -50,5 +50,3 @@ export const PostUploaderBoard: React.FC = () => {
     </QueryHint>
   );
 };
-
-

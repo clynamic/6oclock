@@ -1,14 +1,14 @@
 import { Box, Stack } from '@mui/material';
 
-import { usePerformance, UserArea } from '../api';
+import { UserArea, usePerformance } from '../api';
 import { QueryHint } from '../common/QueryHint';
-import { PageBody } from '../page/PageBody';
-import { PageTitle } from '../page/PageTitle';
-import { PageFooter } from '../page/PageFooter';
 import { Page } from '../page/Page';
+import { PageBody } from '../page/PageBody';
+import { PageFooter } from '../page/PageFooter';
+import { PageTitle } from '../page/PageTitle';
 import { PageHeader } from '../page/header/PageHeader';
-import { refetchQueryOptions } from '../utils/query';
 import { useChartRange } from '../utils/charts';
+import { refetchQueryOptions } from '../utils/query';
 import { PerformanceFrame } from './PerformanceFrame';
 
 export interface PerformancePageProps {

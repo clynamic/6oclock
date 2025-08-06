@@ -1,9 +1,9 @@
 import { Stack, Typography } from '@mui/material';
 
-import { PageBody } from '../page/PageBody';
-import { PageTitle } from '../page/PageTitle';
-import { PageFooter } from '../page/PageFooter';
 import { Page } from '../page/Page';
+import { PageBody } from '../page/PageBody';
+import { PageFooter } from '../page/PageFooter';
+import { PageTitle } from '../page/PageTitle';
 import { PageHeader } from '../page/header/PageHeader';
 
 export const NotFoundPage: React.FC = () => {
