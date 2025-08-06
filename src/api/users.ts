@@ -5,7 +5,9 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.7
  */
-import { useQuery } from '@tanstack/react-query';
+import {
+  useQuery
+} from '@tanstack/react-query'
 import type {
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
@@ -13,133 +15,102 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query';
-import type { UserHead } from './model';
+  UseQueryResult
+} from '@tanstack/react-query'
+import type {
+  UserHead
+} from './model'
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
+
+
+
 
 /**
  * Get user head by user id
  * @summary Get user head
  */
-export const userHead = (id: number, signal?: AbortSignal) => {
-  return makeRequest<UserHead>({
-    url: `/users/head/${encodeURIComponent(String(id))}`,
-    method: 'GET',
-    signal,
-  });
-};
-
-export const getUserHeadQueryKey = (id: number) => {
-  return [`/users/head/${id}`] as const;
-};
-
-export const getUserHeadQueryOptions = <
-  TData = Awaited<ReturnType<typeof userHead>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof userHead>>, TError, TData>
-    >;
-  },
+export const userHead = (
+    id: number,
+ signal?: AbortSignal
 ) => {
-  const { query: queryOptions } = options ?? {};
+      
+      
+      return makeRequest<UserHead>(
+      {url: `/users/head/${encodeURIComponent(String(id))}`, method: 'GET', signal
+    },
+      );
+    }
+  
 
-  const queryKey = queryOptions?.queryKey ?? getUserHeadQueryKey(id);
+export const getUserHeadQueryKey = (id: number,) => {
+    return [`/users/head/${id}`] as const;
+    }
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof userHead>>> = ({
-    signal,
-  }) => userHead(id, signal);
+    
+export const getUserHeadQueryOptions = <TData = Awaited<ReturnType<typeof userHead>>, TError = ErrorType<unknown>>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof userHead>>, TError, TData>>, }
+) => {
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<Awaited<ReturnType<typeof userHead>>, TError, TData> & {
-    queryKey: QueryKey;
-  };
-};
+const {query: queryOptions} = options ?? {};
 
-export type UserHeadQueryResult = NonNullable<
-  Awaited<ReturnType<typeof userHead>>
->;
-export type UserHeadQueryError = ErrorType<unknown>;
+  const queryKey =  queryOptions?.queryKey ?? getUserHeadQueryKey(id);
 
-export function useUserHead<
-  TData = Awaited<ReturnType<typeof userHead>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof userHead>>, TError, TData>
-    > &
-      Pick<
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof userHead>>> = ({ signal }) => userHead(id, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof userHead>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type UserHeadQueryResult = NonNullable<Awaited<ReturnType<typeof userHead>>>
+export type UserHeadQueryError = ErrorType<unknown>
+
+
+export function useUserHead<TData = Awaited<ReturnType<typeof userHead>>, TError = ErrorType<unknown>>(
+ id: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof userHead>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof userHead>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useUserHead<
-  TData = Awaited<ReturnType<typeof userHead>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof userHead>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useUserHead<TData = Awaited<ReturnType<typeof userHead>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof userHead>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof userHead>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useUserHead<
-  TData = Awaited<ReturnType<typeof userHead>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof userHead>>, TError, TData>
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+        > , 'initialData'
+      >, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useUserHead<TData = Awaited<ReturnType<typeof userHead>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof userHead>>, TError, TData>>, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary Get user head
  */
 
-export function useUserHead<
-  TData = Awaited<ReturnType<typeof userHead>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof userHead>>, TError, TData>
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getUserHeadQueryOptions(id, options);
+export function useUserHead<TData = Awaited<ReturnType<typeof userHead>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof userHead>>, TError, TData>>, }
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  query.queryKey = queryOptions.queryKey;
+  const queryOptions = getUserHeadQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+

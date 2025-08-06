@@ -5,7 +5,9 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.7
  */
-import { useQuery } from '@tanstack/react-query';
+import {
+  useQuery
+} from '@tanstack/react-query'
 import type {
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
@@ -13,268 +15,195 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query';
+  UseQueryResult
+} from '@tanstack/react-query'
 import type {
   ActivitySeriesPoint,
   GetActivityParams,
   GetPerformanceParams,
-  PerformanceSummary,
-} from './model';
+  PerformanceSummary
+} from './model'
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
+
+
+
 
 /**
  * Get performance data for an area.
  * @summary Performance
  */
 export const performance = (
-  params?: GetPerformanceParams,
-  signal?: AbortSignal,
+    params?: GetPerformanceParams,
+ signal?: AbortSignal
 ) => {
-  return makeRequest<PerformanceSummary[]>({
-    url: `/metrics/performance/performance`,
-    method: 'GET',
-    params,
-    signal,
-  });
-};
+      
+      
+      return makeRequest<PerformanceSummary[]>(
+      {url: `/metrics/performance/performance`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
 
-export const getPerformanceQueryKey = (params?: GetPerformanceParams) => {
-  return [
-    `/metrics/performance/performance`,
-    ...(params ? [params] : []),
-  ] as const;
-};
+export const getPerformanceQueryKey = (params?: GetPerformanceParams,) => {
+    return [`/metrics/performance/performance`, ...(params ? [params]: [])] as const;
+    }
 
-export const getPerformanceQueryOptions = <
-  TData = Awaited<ReturnType<typeof performance>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetPerformanceParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
-    >;
-  },
+    
+export const getPerformanceQueryOptions = <TData = Awaited<ReturnType<typeof performance>>, TError = ErrorType<unknown>>(params?: GetPerformanceParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>>, }
 ) => {
-  const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getPerformanceQueryKey(params);
+const {query: queryOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof performance>>> = ({
-    signal,
-  }) => performance(params, signal);
+  const queryKey =  queryOptions?.queryKey ?? getPerformanceQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof performance>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
+  
 
-export type PerformanceQueryResult = NonNullable<
-  Awaited<ReturnType<typeof performance>>
->;
-export type PerformanceQueryError = ErrorType<unknown>;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof performance>>> = ({ signal }) => performance(params, signal);
 
-export function usePerformance<
-  TData = Awaited<ReturnType<typeof performance>>,
-  TError = ErrorType<unknown>,
->(
-  params: undefined | GetPerformanceParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
-    > &
-      Pick<
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type PerformanceQueryResult = NonNullable<Awaited<ReturnType<typeof performance>>>
+export type PerformanceQueryError = ErrorType<unknown>
+
+
+export function usePerformance<TData = Awaited<ReturnType<typeof performance>>, TError = ErrorType<unknown>>(
+ params: undefined |  GetPerformanceParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof performance>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function usePerformance<
-  TData = Awaited<ReturnType<typeof performance>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetPerformanceParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function usePerformance<TData = Awaited<ReturnType<typeof performance>>, TError = ErrorType<unknown>>(
+ params?: GetPerformanceParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof performance>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function usePerformance<
-  TData = Awaited<ReturnType<typeof performance>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetPerformanceParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+        > , 'initialData'
+      >, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function usePerformance<TData = Awaited<ReturnType<typeof performance>>, TError = ErrorType<unknown>>(
+ params?: GetPerformanceParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>>, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary Performance
  */
 
-export function usePerformance<
-  TData = Awaited<ReturnType<typeof performance>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetPerformanceParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getPerformanceQueryOptions(params, options);
+export function usePerformance<TData = Awaited<ReturnType<typeof performance>>, TError = ErrorType<unknown>>(
+ params?: GetPerformanceParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>>, }
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  query.queryKey = queryOptions.queryKey;
+  const queryOptions = getPerformanceQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
 
 /**
  * Get activity data for the specified range, scale, and cycle.
  * @summary Activity
  */
-export const activity = (params?: GetActivityParams, signal?: AbortSignal) => {
-  return makeRequest<ActivitySeriesPoint[]>({
-    url: `/metrics/performance/activity`,
-    method: 'GET',
-    params,
-    signal,
-  });
-};
-
-export const getActivityQueryKey = (params?: GetActivityParams) => {
-  return [
-    `/metrics/performance/activity`,
-    ...(params ? [params] : []),
-  ] as const;
-};
-
-export const getActivityQueryOptions = <
-  TData = Awaited<ReturnType<typeof activity>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetActivityParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
-    >;
-  },
+export const activity = (
+    params?: GetActivityParams,
+ signal?: AbortSignal
 ) => {
-  const { query: queryOptions } = options ?? {};
+      
+      
+      return makeRequest<ActivitySeriesPoint[]>(
+      {url: `/metrics/performance/activity`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
 
-  const queryKey = queryOptions?.queryKey ?? getActivityQueryKey(params);
+export const getActivityQueryKey = (params?: GetActivityParams,) => {
+    return [`/metrics/performance/activity`, ...(params ? [params]: [])] as const;
+    }
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof activity>>> = ({
-    signal,
-  }) => activity(params, signal);
+    
+export const getActivityQueryOptions = <TData = Awaited<ReturnType<typeof activity>>, TError = ErrorType<unknown>>(params?: GetActivityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>>, }
+) => {
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof activity>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
+const {query: queryOptions} = options ?? {};
 
-export type ActivityQueryResult = NonNullable<
-  Awaited<ReturnType<typeof activity>>
->;
-export type ActivityQueryError = ErrorType<unknown>;
+  const queryKey =  queryOptions?.queryKey ?? getActivityQueryKey(params);
 
-export function useActivity<
-  TData = Awaited<ReturnType<typeof activity>>,
-  TError = ErrorType<unknown>,
->(
-  params: undefined | GetActivityParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
-    > &
-      Pick<
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof activity>>> = ({ signal }) => activity(params, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ActivityQueryResult = NonNullable<Awaited<ReturnType<typeof activity>>>
+export type ActivityQueryError = ErrorType<unknown>
+
+
+export function useActivity<TData = Awaited<ReturnType<typeof activity>>, TError = ErrorType<unknown>>(
+ params: undefined |  GetActivityParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof activity>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useActivity<
-  TData = Awaited<ReturnType<typeof activity>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetActivityParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useActivity<TData = Awaited<ReturnType<typeof activity>>, TError = ErrorType<unknown>>(
+ params?: GetActivityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof activity>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useActivity<
-  TData = Awaited<ReturnType<typeof activity>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetActivityParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+        > , 'initialData'
+      >, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useActivity<TData = Awaited<ReturnType<typeof activity>>, TError = ErrorType<unknown>>(
+ params?: GetActivityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>>, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary Activity
  */
 
-export function useActivity<
-  TData = Awaited<ReturnType<typeof activity>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetActivityParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getActivityQueryOptions(params, options);
+export function useActivity<TData = Awaited<ReturnType<typeof activity>>, TError = ErrorType<unknown>>(
+ params?: GetActivityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>>, }
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  query.queryKey = queryOptions.queryKey;
+  const queryOptions = getActivityQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+

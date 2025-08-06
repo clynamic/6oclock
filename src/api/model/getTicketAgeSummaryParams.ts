@@ -8,9 +8,9 @@
 import type { TimeScale } from './timeScale';
 
 export type GetTicketAgeSummaryParams = {
-  scale?: TimeScale;
-  cycle?: TimeScale;
-  startDate?: Date;
-  endDate?: Date;
-  timezone?: string;
+scale?: TimeScale;
+cycle?: TimeScale;
+startDate?: Date;
+endDate?: Date;
+timezone?: string;
 };

@@ -9,11 +9,11 @@ import type { TimeScale } from './timeScale';
 import type { ItemType } from './itemType';
 
 export type ListManifestsParams = {
-  scale: TimeScale;
-  cycle: TimeScale;
-  startDate?: Date;
-  endDate?: Date;
-  timezone?: string;
-  type?: ItemType[];
-  id?: number;
+scale: TimeScale;
+cycle: TimeScale;
+startDate?: Date;
+endDate?: Date;
+timezone?: string;
+type?: ItemType[];
+id?: number;
 };

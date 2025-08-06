@@ -7,12 +7,12 @@
  */
 
 export type GetJobsParams = {
-  /**
-   * Page number
-   */
-  page?: number;
-  /**
-   * Page size
-   */
-  limit?: number;
+/**
+ * Page number
+ */
+page?: number;
+/**
+ * Page size
+ */
+limit?: number;
 };

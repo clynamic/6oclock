@@ -5,7 +5,10 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.7
  */
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useQuery
+} from '@tanstack/react-query'
 import type {
   DefinedInitialDataOptions,
   DefinedUseInfiniteQueryResult,
@@ -17,279 +20,170 @@ import type {
   UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query';
-import type { GetJobsParams, JobInfo } from './model';
+  UseQueryResult
+} from '@tanstack/react-query'
+import type {
+  GetJobsParams,
+  JobInfo
+} from './model'
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
+
+
+
 
 /**
  * Returns a list of all jobs that have been queued or processed.
  * @summary Get all jobs
  */
-export const jobs = (params?: GetJobsParams, signal?: AbortSignal) => {
-  return makeRequest<JobInfo[]>({
-    url: `/jobs`,
-    method: 'GET',
-    params,
-    signal,
-  });
-};
-
-export const getJobsQueryKey = (params?: GetJobsParams) => {
-  return [`/jobs`, ...(params ? [params] : [])] as const;
-};
-
-export const getJobsInfiniteQueryOptions = <
-  TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetJobsParams,
-  options?: {
-    query?: Partial<
-      UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof jobs>>,
-        TError,
-        TData,
-        Awaited<ReturnType<typeof jobs>>,
-        QueryKey,
-        GetJobsParams['page']
-      >
-    >;
-  },
+export const jobs = (
+    params?: GetJobsParams,
+ signal?: AbortSignal
 ) => {
-  const { query: queryOptions } = options ?? {};
+      
+      
+      return makeRequest<JobInfo[]>(
+      {url: `/jobs`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
 
-  const queryKey = queryOptions?.queryKey ?? getJobsQueryKey(params);
+export const getJobsQueryKey = (params?: GetJobsParams,) => {
+    return [`/jobs`, ...(params ? [params]: [])] as const;
+    }
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof jobs>>,
-    QueryKey,
-    GetJobsParams['page']
-  > = ({ signal, pageParam }) =>
-    jobs({ ...params, page: pageParam || params?.['page'] }, signal);
+    
+export const getJobsInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>, TError = ErrorType<unknown>>(params?: GetJobsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData, Awaited<ReturnType<typeof jobs>>, QueryKey, GetJobsParams['page']>>, }
+) => {
 
-  return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
-    Awaited<ReturnType<typeof jobs>>,
-    TError,
-    TData,
-    Awaited<ReturnType<typeof jobs>>,
-    QueryKey,
-    GetJobsParams['page']
-  > & { queryKey: QueryKey };
-};
+const {query: queryOptions} = options ?? {};
 
-export type JobsInfiniteQueryResult = NonNullable<
-  Awaited<ReturnType<typeof jobs>>
->;
-export type JobsInfiniteQueryError = ErrorType<unknown>;
+  const queryKey =  queryOptions?.queryKey ?? getJobsQueryKey(params);
 
-export function useJobsInfinite<
-  TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>,
-  TError = ErrorType<unknown>,
->(
-  params: undefined | GetJobsParams,
-  options: {
-    query: Partial<
-      UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof jobs>>,
-        TError,
-        TData,
-        Awaited<ReturnType<typeof jobs>>,
-        QueryKey,
-        GetJobsParams['page']
-      >
-    > &
-      Pick<
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof jobs>>, QueryKey, GetJobsParams['page']> = ({ signal, pageParam }) => jobs({...params, page: pageParam || params?.['page']}, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData, Awaited<ReturnType<typeof jobs>>, QueryKey, GetJobsParams['page']> & { queryKey: QueryKey }
+}
+
+export type JobsInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof jobs>>>
+export type JobsInfiniteQueryError = ErrorType<unknown>
+
+
+export function useJobsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>, TError = ErrorType<unknown>>(
+ params: undefined |  GetJobsParams, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData, Awaited<ReturnType<typeof jobs>>, QueryKey, GetJobsParams['page']>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof jobs>>,
           TError,
-          TData,
-          QueryKey
-        >,
-        'initialData'
-      >;
-  },
-): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useJobsInfinite<
-  TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetJobsParams,
-  options?: {
-    query?: Partial<
-      UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof jobs>>,
-        TError,
-        TData,
-        Awaited<ReturnType<typeof jobs>>,
-        QueryKey,
-        GetJobsParams['page']
-      >
-    > &
-      Pick<
+          TData, QueryKey
+        > , 'initialData'
+      >, }
+
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useJobsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>, TError = ErrorType<unknown>>(
+ params?: GetJobsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData, Awaited<ReturnType<typeof jobs>>, QueryKey, GetJobsParams['page']>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof jobs>>,
           TError,
-          TData,
-          QueryKey
-        >,
-        'initialData'
-      >;
-  },
-): UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useJobsInfinite<
-  TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetJobsParams,
-  options?: {
-    query?: Partial<
-      UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof jobs>>,
-        TError,
-        TData,
-        Awaited<ReturnType<typeof jobs>>,
-        QueryKey,
-        GetJobsParams['page']
-      >
-    >;
-  },
-): UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
+          TData, QueryKey
+        > , 'initialData'
+      >, }
+
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useJobsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>, TError = ErrorType<unknown>>(
+ params?: GetJobsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData, Awaited<ReturnType<typeof jobs>>, QueryKey, GetJobsParams['page']>>, }
+
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary Get all jobs
  */
 
-export function useJobsInfinite<
-  TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetJobsParams,
-  options?: {
-    query?: Partial<
-      UseInfiniteQueryOptions<
-        Awaited<ReturnType<typeof jobs>>,
-        TError,
-        TData,
-        Awaited<ReturnType<typeof jobs>>,
-        QueryKey,
-        GetJobsParams['page']
-      >
-    >;
-  },
-): UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getJobsInfiniteQueryOptions(params, options);
+export function useJobsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>, TError = ErrorType<unknown>>(
+ params?: GetJobsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData, Awaited<ReturnType<typeof jobs>>, QueryKey, GetJobsParams['page']>>, }
 
-  const query = useInfiniteQuery(queryOptions) as UseInfiniteQueryResult<
-    TData,
-    TError
-  > & { queryKey: QueryKey };
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  query.queryKey = queryOptions.queryKey;
+  const queryOptions = getJobsInfiniteQueryOptions(params,options)
+
+  const query = useInfiniteQuery(queryOptions) as  UseInfiniteQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
 
-export const getJobsQueryOptions = <
-  TData = Awaited<ReturnType<typeof jobs>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetJobsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>
-    >;
-  },
+
+
+export const getJobsQueryOptions = <TData = Awaited<ReturnType<typeof jobs>>, TError = ErrorType<unknown>>(params?: GetJobsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>>, }
 ) => {
-  const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getJobsQueryKey(params);
+const {query: queryOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof jobs>>> = ({
-    signal,
-  }) => jobs(params, signal);
+  const queryKey =  queryOptions?.queryKey ?? getJobsQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof jobs>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
+  
 
-export type JobsQueryResult = NonNullable<Awaited<ReturnType<typeof jobs>>>;
-export type JobsQueryError = ErrorType<unknown>;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof jobs>>> = ({ signal }) => jobs(params, signal);
 
-export function useJobs<
-  TData = Awaited<ReturnType<typeof jobs>>,
-  TError = ErrorType<unknown>,
->(
-  params: undefined | GetJobsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>
-    > &
-      Pick<
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type JobsQueryResult = NonNullable<Awaited<ReturnType<typeof jobs>>>
+export type JobsQueryError = ErrorType<unknown>
+
+
+export function useJobs<TData = Awaited<ReturnType<typeof jobs>>, TError = ErrorType<unknown>>(
+ params: undefined |  GetJobsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof jobs>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useJobs<
-  TData = Awaited<ReturnType<typeof jobs>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetJobsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useJobs<TData = Awaited<ReturnType<typeof jobs>>, TError = ErrorType<unknown>>(
+ params?: GetJobsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof jobs>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useJobs<
-  TData = Awaited<ReturnType<typeof jobs>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetJobsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+        > , 'initialData'
+      >, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useJobs<TData = Awaited<ReturnType<typeof jobs>>, TError = ErrorType<unknown>>(
+ params?: GetJobsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>>, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary Get all jobs
  */
 
-export function useJobs<
-  TData = Awaited<ReturnType<typeof jobs>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetJobsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getJobsQueryOptions(params, options);
+export function useJobs<TData = Awaited<ReturnType<typeof jobs>>, TError = ErrorType<unknown>>(
+ params?: GetJobsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>>, }
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  query.queryKey = queryOptions.queryKey;
+  const queryOptions = getJobsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+

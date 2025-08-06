@@ -7,12 +7,12 @@
  */
 
 export type GetManifestHealthParams = {
-  /**
-   * Page number
-   */
-  page?: number;
-  /**
-   * Page size
-   */
-  limit?: number;
+/**
+ * Page number
+ */
+page?: number;
+/**
+ * Page size
+ */
+limit?: number;
 };

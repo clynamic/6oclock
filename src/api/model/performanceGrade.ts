@@ -6,8 +6,8 @@
  * OpenAPI spec version: 0.0.7
  */
 
-export type PerformanceGrade =
-  (typeof PerformanceGrade)[keyof typeof PerformanceGrade];
+export type PerformanceGrade = typeof PerformanceGrade[keyof typeof PerformanceGrade];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PerformanceGrade = {
