@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Box, Stack } from '@mui/material';
 
@@ -61,33 +61,55 @@ export const CounterDisplay: React.FC<CounterDisplayProps> = ({
 }) => {
   useCounterImagePreloader();
   const [displayNumber, setDisplayNumber] = useState(animate ? 0 : number);
+  const animationRef = useRef<number>();
 
   useEffect(() => {
-    if (!animate || number === 0) {
+    if (!animate) {
       setDisplayNumber(number);
       return;
     }
 
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
+
     const duration = 200;
     const startTime = Date.now();
-    const startValue = displayNumber;
-    const difference = number - startValue;
+
+    let startValue: number;
+    let difference: number;
 
     const updateCounter = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easedProgress = easeInOutQuad(progress);
+      setDisplayNumber((current) => {
+        if (startValue === undefined) {
+          startValue = current;
+          difference = number - startValue;
 
-      const currentValue = Math.round(startValue + difference * easedProgress);
-      setDisplayNumber(currentValue);
+          if (difference === 0) return current;
+        }
 
-      if (progress < 1) {
-        requestAnimationFrame(updateCounter);
-      }
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easedProgress = easeInOutQuad(progress);
+
+        if (progress >= 1) return number;
+
+        const currentValue = Math.round(
+          startValue + difference * easedProgress,
+        );
+        animationRef.current = requestAnimationFrame(updateCounter);
+        return currentValue;
+      });
     };
 
-    requestAnimationFrame(updateCounter);
-  }, [number, animate, displayNumber]);
+    animationRef.current = requestAnimationFrame(updateCounter);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [number, animate]);
 
   const digits = getDigitsFromNumber(displayNumber);
 
