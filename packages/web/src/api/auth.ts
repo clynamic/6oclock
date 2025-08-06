@@ -5,7 +5,10 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.7
  */
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query'
 import type {
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
@@ -16,255 +19,219 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query';
-import type { TokenValidation, UserCredentials } from './model';
+  UseQueryResult
+} from '@tanstack/react-query'
+import type {
+  TokenValidation,
+  UserCredentials
+} from './model'
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
+
+
+
 
 /**
  * Login with username and api key
  * @summary Login
  */
-export const login = (userCredentials: UserCredentials) => {
-  return makeRequest<string>({
-    url: `/auth/login`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: userCredentials,
-  });
-};
+export const login = (
+    userCredentials: UserCredentials,
+ ) => {
+      
+      
+      return makeRequest<string>(
+      {url: `/auth/login`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: userCredentials
+    },
+      );
+    }
+  
 
-export const getLoginMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof login>>,
-    TError,
-    { data: UserCredentials },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof login>>,
-  TError,
-  { data: UserCredentials },
-  TContext
-> => {
-  const { mutation: mutationOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof login>>,
-    { data: UserCredentials }
-  > = (props) => {
-    const { data } = props ?? {};
+export const getLoginMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof login>>, TError,{data: UserCredentials}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof login>>, TError,{data: UserCredentials}, TContext> => {
+const {mutation: mutationOptions} = options ?? {};
 
-    return login(data);
-  };
+      
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type LoginMutationResult = NonNullable<
-  Awaited<ReturnType<typeof login>>
->;
-export type LoginMutationBody = UserCredentials;
-export type LoginMutationError = ErrorType<unknown>;
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof login>>, {data: UserCredentials}> = (props) => {
+          const {data} = props ?? {};
 
-/**
+          return  login(data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type LoginMutationResult = NonNullable<Awaited<ReturnType<typeof login>>>
+    export type LoginMutationBody = UserCredentials
+    export type LoginMutationError = ErrorType<unknown>
+
+    /**
  * @summary Login
  */
-export const useLogin = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof login>>,
-    TError,
-    { data: UserCredentials },
-    TContext
-  >;
-}): UseMutationResult<
-  Awaited<ReturnType<typeof login>>,
-  TError,
-  { data: UserCredentials },
-  TContext
-> => {
-  const mutationOptions = getLoginMutationOptions(options);
+export const useLogin = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof login>>, TError,{data: UserCredentials}, TContext>, }
+): UseMutationResult<
+        Awaited<ReturnType<typeof login>>,
+        TError,
+        {data: UserCredentials},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions);
-};
-/**
+      const mutationOptions = getLoginMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
  * Validate JWT token
  * @summary Validate token
  */
-export const validateToken = (tokenValidation: TokenValidation) => {
-  return makeRequest<boolean>({
-    url: `/auth/validate`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: tokenValidation,
-  });
-};
+export const validateToken = (
+    tokenValidation: TokenValidation,
+ ) => {
+      
+      
+      return makeRequest<boolean>(
+      {url: `/auth/validate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: tokenValidation
+    },
+      );
+    }
+  
 
-export const getValidateTokenMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof validateToken>>,
-    TError,
-    { data: TokenValidation },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof validateToken>>,
-  TError,
-  { data: TokenValidation },
-  TContext
-> => {
-  const { mutation: mutationOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof validateToken>>,
-    { data: TokenValidation }
-  > = (props) => {
-    const { data } = props ?? {};
+export const getValidateTokenMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof validateToken>>, TError,{data: TokenValidation}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof validateToken>>, TError,{data: TokenValidation}, TContext> => {
+const {mutation: mutationOptions} = options ?? {};
 
-    return validateToken(data);
-  };
+      
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type ValidateTokenMutationResult = NonNullable<
-  Awaited<ReturnType<typeof validateToken>>
->;
-export type ValidateTokenMutationBody = TokenValidation;
-export type ValidateTokenMutationError = ErrorType<unknown>;
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof validateToken>>, {data: TokenValidation}> = (props) => {
+          const {data} = props ?? {};
 
-/**
+          return  validateToken(data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ValidateTokenMutationResult = NonNullable<Awaited<ReturnType<typeof validateToken>>>
+    export type ValidateTokenMutationBody = TokenValidation
+    export type ValidateTokenMutationError = ErrorType<unknown>
+
+    /**
  * @summary Validate token
  */
-export const useValidateToken = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof validateToken>>,
-    TError,
-    { data: TokenValidation },
-    TContext
-  >;
-}): UseMutationResult<
-  Awaited<ReturnType<typeof validateToken>>,
-  TError,
-  { data: TokenValidation },
-  TContext
-> => {
-  const mutationOptions = getValidateTokenMutationOptions(options);
+export const useValidateToken = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof validateToken>>, TError,{data: TokenValidation}, TContext>, }
+): UseMutationResult<
+        Awaited<ReturnType<typeof validateToken>>,
+        TError,
+        {data: TokenValidation},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions);
-};
-/**
+      const mutationOptions = getValidateTokenMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
  * Check if the current user is admin
  * @summary Check if the current user is admin
  */
-export const isAdmin = (signal?: AbortSignal) => {
-  return makeRequest<boolean>({ url: `/auth/is-admin`, method: 'GET', signal });
-};
+export const isAdmin = (
+    
+ signal?: AbortSignal
+) => {
+      
+      
+      return makeRequest<boolean>(
+      {url: `/auth/is-admin`, method: 'GET', signal
+    },
+      );
+    }
+  
 
 export const getIsAdminQueryKey = () => {
-  return [`/auth/is-admin`] as const;
-};
+    return [`/auth/is-admin`] as const;
+    }
 
-export const getIsAdminQueryOptions = <
-  TData = Awaited<ReturnType<typeof isAdmin>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
-  >;
-}) => {
-  const { query: queryOptions } = options ?? {};
+    
+export const getIsAdminQueryOptions = <TData = Awaited<ReturnType<typeof isAdmin>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>>, }
+) => {
 
-  const queryKey = queryOptions?.queryKey ?? getIsAdminQueryKey();
+const {query: queryOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof isAdmin>>> = ({
-    signal,
-  }) => isAdmin(signal);
+  const queryKey =  queryOptions?.queryKey ?? getIsAdminQueryKey();
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof isAdmin>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
+  
 
-export type IsAdminQueryResult = NonNullable<
-  Awaited<ReturnType<typeof isAdmin>>
->;
-export type IsAdminQueryError = ErrorType<unknown>;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof isAdmin>>> = ({ signal }) => isAdmin(signal);
 
-export function useIsAdmin<
-  TData = Awaited<ReturnType<typeof isAdmin>>,
-  TError = ErrorType<unknown>,
->(options: {
-  query: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
-  > &
-    Pick<
-      DefinedInitialDataOptions<
-        Awaited<ReturnType<typeof isAdmin>>,
-        TError,
-        TData
-      >,
-      'initialData'
-    >;
-}): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useIsAdmin<
-  TData = Awaited<ReturnType<typeof isAdmin>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
-  > &
-    Pick<
-      UndefinedInitialDataOptions<
-        Awaited<ReturnType<typeof isAdmin>>,
-        TError,
-        TData
-      >,
-      'initialData'
-    >;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useIsAdmin<
-  TData = Awaited<ReturnType<typeof isAdmin>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
-  >;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type IsAdminQueryResult = NonNullable<Awaited<ReturnType<typeof isAdmin>>>
+export type IsAdminQueryError = ErrorType<unknown>
+
+
+export function useIsAdmin<TData = Awaited<ReturnType<typeof isAdmin>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof isAdmin>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, }
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useIsAdmin<TData = Awaited<ReturnType<typeof isAdmin>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof isAdmin>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useIsAdmin<TData = Awaited<ReturnType<typeof isAdmin>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>>, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary Check if the current user is admin
  */
 
-export function useIsAdmin<
-  TData = Awaited<ReturnType<typeof isAdmin>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
-  >;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getIsAdminQueryOptions(options);
+export function useIsAdmin<TData = Awaited<ReturnType<typeof isAdmin>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>>, }
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  query.queryKey = queryOptions.queryKey;
+  const queryOptions = getIsAdminQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+

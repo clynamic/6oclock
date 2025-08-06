@@ -5,7 +5,9 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 0.0.7
  */
-import { useQuery } from '@tanstack/react-query';
+import {
+  useQuery
+} from '@tanstack/react-query'
 import type {
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
@@ -13,160 +15,104 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query';
+  UseQueryResult
+} from '@tanstack/react-query'
 import type {
   FeedbackTypeSeriesPoint,
-  GetFeedbackTypeSeriesParams,
-} from './model';
+  GetFeedbackTypeSeriesParams
+} from './model'
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
+
+
+
 
 /**
  * Get a time series of feedback types counts for a given range
  * @summary Feedback Type Series
  */
 export const feedbackTypeSeries = (
-  params?: GetFeedbackTypeSeriesParams,
-  signal?: AbortSignal,
+    params?: GetFeedbackTypeSeriesParams,
+ signal?: AbortSignal
 ) => {
-  return makeRequest<FeedbackTypeSeriesPoint[]>({
-    url: `/metrics/feedbacks/type`,
-    method: 'GET',
-    params,
-    signal,
-  });
-};
+      
+      
+      return makeRequest<FeedbackTypeSeriesPoint[]>(
+      {url: `/metrics/feedbacks/type`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
 
-export const getFeedbackTypeSeriesQueryKey = (
-  params?: GetFeedbackTypeSeriesParams,
+export const getFeedbackTypeSeriesQueryKey = (params?: GetFeedbackTypeSeriesParams,) => {
+    return [`/metrics/feedbacks/type`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getFeedbackTypeSeriesQueryOptions = <TData = Awaited<ReturnType<typeof feedbackTypeSeries>>, TError = ErrorType<unknown>>(params?: GetFeedbackTypeSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof feedbackTypeSeries>>, TError, TData>>, }
 ) => {
-  return [`/metrics/feedbacks/type`, ...(params ? [params] : [])] as const;
-};
 
-export const getFeedbackTypeSeriesQueryOptions = <
-  TData = Awaited<ReturnType<typeof feedbackTypeSeries>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetFeedbackTypeSeriesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof feedbackTypeSeries>>,
-        TError,
-        TData
-      >
-    >;
-  },
-) => {
-  const { query: queryOptions } = options ?? {};
+const {query: queryOptions} = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ?? getFeedbackTypeSeriesQueryKey(params);
+  const queryKey =  queryOptions?.queryKey ?? getFeedbackTypeSeriesQueryKey(params);
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof feedbackTypeSeries>>
-  > = ({ signal }) => feedbackTypeSeries(params, signal);
+  
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof feedbackTypeSeries>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof feedbackTypeSeries>>> = ({ signal }) => feedbackTypeSeries(params, signal);
 
-export type FeedbackTypeSeriesQueryResult = NonNullable<
-  Awaited<ReturnType<typeof feedbackTypeSeries>>
->;
-export type FeedbackTypeSeriesQueryError = ErrorType<unknown>;
+      
 
-export function useFeedbackTypeSeries<
-  TData = Awaited<ReturnType<typeof feedbackTypeSeries>>,
-  TError = ErrorType<unknown>,
->(
-  params: undefined | GetFeedbackTypeSeriesParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof feedbackTypeSeries>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof feedbackTypeSeries>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type FeedbackTypeSeriesQueryResult = NonNullable<Awaited<ReturnType<typeof feedbackTypeSeries>>>
+export type FeedbackTypeSeriesQueryError = ErrorType<unknown>
+
+
+export function useFeedbackTypeSeries<TData = Awaited<ReturnType<typeof feedbackTypeSeries>>, TError = ErrorType<unknown>>(
+ params: undefined |  GetFeedbackTypeSeriesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof feedbackTypeSeries>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof feedbackTypeSeries>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useFeedbackTypeSeries<
-  TData = Awaited<ReturnType<typeof feedbackTypeSeries>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetFeedbackTypeSeriesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof feedbackTypeSeries>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useFeedbackTypeSeries<TData = Awaited<ReturnType<typeof feedbackTypeSeries>>, TError = ErrorType<unknown>>(
+ params?: GetFeedbackTypeSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof feedbackTypeSeries>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof feedbackTypeSeries>>,
           TError,
           TData
-        >,
-        'initialData'
-      >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
-export function useFeedbackTypeSeries<
-  TData = Awaited<ReturnType<typeof feedbackTypeSeries>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetFeedbackTypeSeriesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof feedbackTypeSeries>>,
-        TError,
-        TData
-      >
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey };
+        > , 'initialData'
+      >, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useFeedbackTypeSeries<TData = Awaited<ReturnType<typeof feedbackTypeSeries>>, TError = ErrorType<unknown>>(
+ params?: GetFeedbackTypeSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof feedbackTypeSeries>>, TError, TData>>, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary Feedback Type Series
  */
 
-export function useFeedbackTypeSeries<
-  TData = Awaited<ReturnType<typeof feedbackTypeSeries>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetFeedbackTypeSeriesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof feedbackTypeSeries>>,
-        TError,
-        TData
-      >
-    >;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getFeedbackTypeSeriesQueryOptions(params, options);
+export function useFeedbackTypeSeries<TData = Awaited<ReturnType<typeof feedbackTypeSeries>>, TError = ErrorType<unknown>>(
+ params?: GetFeedbackTypeSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof feedbackTypeSeries>>, TError, TData>>, }
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  query.queryKey = queryOptions.queryKey;
+  const queryOptions = getFeedbackTypeSeriesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+
