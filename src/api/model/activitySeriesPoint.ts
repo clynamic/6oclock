@@ -13,6 +13,7 @@ export interface ActivitySeriesPoint {
   postDelete: number;
   postReplacementApprove: number;
   postReplacementCreate: number;
+  postReplacementPromote: number;
   postReplacementReject: number;
   ticketCreate: number;
   ticketHandle: number;

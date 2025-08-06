@@ -27,6 +27,8 @@ export const getActivityName = (activity: Activity): string => {
       return 'Post Replacements created';
     case Activity.post_replacement_approve:
       return 'Post Replacements approved';
+    case Activity.post_replacement_promote:
+      return 'Post Replacements promoted';
     case Activity.post_replacement_reject:
       return 'Post Replacements rejected';
     case Activity.ticket_create:
@@ -48,6 +50,8 @@ export const getActivityNoun = (activity: Activity): string => {
       return 'Replacements';
     case Activity.post_replacement_approve:
       return 'Replacements';
+    case Activity.post_replacement_promote:
+      return 'Promotions';
     case Activity.post_replacement_reject:
       return 'Rejections';
     case Activity.ticket_create:
