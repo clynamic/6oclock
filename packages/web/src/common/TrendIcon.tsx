@@ -2,6 +2,7 @@ import { TrendingDown, TrendingFlat, TrendingUp } from '@mui/icons-material';
 import { Box } from '@mui/material';
 
 import { TrendGrade } from '../api';
+import { getTrendSymbol } from '../utils/trends';
 
 type TrendIconProps = {
   grade: TrendGrade;
@@ -34,7 +35,7 @@ export const TrendIcon: React.FC<TrendIconProps> = ({ grade, size = 20 }) => {
           ? TrendingUp
           : TrendingDown;
 
-    const text = grade === 'neutral' ? '→' : grade === 'rise' ? '↗' : '↘';
+    const text = getTrendSymbol(grade);
     const overlap = -size * 0.2;
 
     return (
@@ -63,9 +64,7 @@ export const TrendIcon: React.FC<TrendIconProps> = ({ grade, size = 20 }) => {
             whiteSpace: 'nowrap',
           }}
         >
-          {Array.from({ length: count })
-            .map(() => text)
-            .join('')}
+          {text}
         </Box>
       </Box>
     );
