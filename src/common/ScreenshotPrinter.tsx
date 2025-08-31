@@ -74,18 +74,30 @@ export const ScreenshotPrinter: React.FC<ScreenshotPrinterProps> = ({
         useCORS: true,
         backgroundColor: theme.palette.background.paper,
         onclone: (clonedDocument: Document) => {
-          clonedDocument.querySelectorAll<HTMLElement>('p').forEach((el) => {
-            const bg = window.getComputedStyle(el).backgroundImage;
-            if (bg.includes('linear-gradient')) {
-              el.style.color =
-                bg
-                  .match(
-                    /#[0-9a-fA-F]+|rgba?\([\d\s,]+\)|hsla?\([\d\s%,]+\)/,
-                  )?.[0]
-                  ?.trim() || 'currentColor';
-              el.style.backgroundImage = 'none';
-            }
-          });
+          clonedDocument
+            .querySelectorAll<HTMLElement>('.MuiTypography-root')
+            .forEach((el) => {
+              const bg = window.getComputedStyle(el).backgroundImage;
+              if (bg.includes('linear-gradient')) {
+                el.style.color =
+                  bg
+                    .match(
+                      /#[0-9a-fA-F]+|rgba?\([\d\s,]+\)|hsla?\([\d\s%,]+\)/,
+                    )?.[0]
+                    ?.trim() || 'currentColor';
+                el.style.backgroundImage = 'none';
+              }
+            });
+
+          clonedDocument
+            .querySelectorAll<HTMLElement>('.MuiCard-root')
+            .forEach((card) => {
+              Object.assign(card.style, {
+                backgroundColor: '#213a5f',
+                backgroundImage: 'unset',
+                boxShadow: 'none',
+              });
+            });
 
           const clonedTarget = targetId
             ? clonedDocument.getElementById(targetId)
