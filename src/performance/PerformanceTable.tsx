@@ -40,6 +40,7 @@ import {
   unitFromDuration,
 } from '../utils/ranges';
 import { useGradeColors } from './color';
+import { exportPerformanceToCSV } from './export';
 
 const SpaceCell: React.FC = () => (
   <TableCell>
@@ -96,6 +97,11 @@ export const PerformanceTable: React.FC = () => {
     },
     refetchQueryOptions(),
   );
+
+  const handleExport = async () => {
+    if (!data) return;
+    exportPerformanceToCSV(data, range, area);
+  };
 
   const periods = useMemo(() => {
     const labels = [];
@@ -160,8 +166,19 @@ export const PerformanceTable: React.FC = () => {
             <PageHeader
               actions={[
                 <NavSpacer />,
-                <NavButton key="print" onClick={handlePrint}>
+                <NavButton
+                  key="print"
+                  onClick={handlePrint}
+                  disabled={isLoading}
+                >
                   Print
+                </NavButton>,
+                <NavButton
+                  key="export-performance"
+                  onClick={handleExport}
+                  disabled={isLoading}
+                >
+                  Export
                 </NavButton>,
               ]}
             />
