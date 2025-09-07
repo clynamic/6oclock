@@ -86,7 +86,9 @@ const PageHeaderBar: React.FC = () => {
                       width: '100%',
                     }}
                   >
-                    <Typography variant="h6">{currentLink?.label}</Typography>
+                    <Typography variant="h6">
+                      {currentLink?.label ?? '\u200B'}
+                    </Typography>
                     <MenuIcon />
                   </Stack>
                 </Button>
