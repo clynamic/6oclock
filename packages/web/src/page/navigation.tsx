@@ -7,7 +7,7 @@ export interface NavTopLink {
   label: React.ReactNode;
   href: string;
   children?: SubNavNode[];
-  hidden?: boolean;
+  hidden?: boolean | (() => boolean);
   component?: React.ReactNode;
   resolve?: (href: string) => Record<string, string>;
 }
@@ -17,7 +17,7 @@ export type SubNavNode = NavSubLink | NavAction;
 export interface NavSubLink {
   label: React.ReactNode;
   href: string;
-  hidden?: boolean;
+  hidden?: boolean | (() => boolean);
   component?: React.ReactNode;
   resolve?: (href: string) => Record<string, string>;
 }
@@ -61,26 +61,33 @@ export const resolveHref = (
   });
 };
 
-export const resolveNavLinks = (entries: NavNode[]): NavNode[] => {
-  return entries.map((entry) => {
-    if (entry instanceof Object && 'resolve' in entry && entry.resolve) {
-      const variables = entry.resolve(entry.href);
-      return {
-        ...entry,
-        href: resolveHref(entry.href, variables),
-      };
-    }
-    if (
-      entry instanceof Object &&
-      'href' in entry &&
-      'children' in entry &&
-      entry.children
-    ) {
-      return {
-        ...entry,
-        children: resolveNavLinks(entry.children),
-      };
-    }
-    return entry;
-  });
+export const useResolveNavLinks = (entries: NavNode[]): NavNode[] => {
+  const processEntries = (entryList: NavNode[]): NavNode[] => {
+    return entryList
+      .map((entry) => {
+        if (entry instanceof Object && 'href' in entry) {
+          const resolvedEntry = { ...entry };
+          if ('resolve' in entry && entry.resolve) {
+            const variables = entry.resolve(entry.href);
+            resolvedEntry.href = resolveHref(entry.href, variables);
+          }
+          if ('children' in entry && entry.children) {
+            resolvedEntry.children = processEntries(entry.children);
+          }
+          return resolvedEntry;
+        }
+        return entry;
+      })
+      .filter((entry) => {
+        if (entry instanceof Object && 'href' in entry) {
+          if (typeof entry.hidden === 'function') {
+            return !entry.hidden();
+          }
+          return !entry.hidden;
+        }
+        return true;
+      });
+  };
+
+  return processEntries(entries);
 };

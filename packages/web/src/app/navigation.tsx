@@ -3,11 +3,11 @@ import { ReactElement, Suspense, lazy } from 'react';
 
 import { Route, useParams } from 'react-router-dom';
 
+import { useIsAdmin } from '../api';
 import { useAuth } from '../auth/context';
 import { LoadingPage } from '../page/LoadingPage';
 import { NavClock } from '../page/header/NavClock';
 import { NavDate } from '../page/header/NavDate';
-import { NavHealth } from '../page/header/NavHealth';
 import { NavSpacer } from '../page/header/NavSpacer';
 import { NavUser } from '../page/header/NavUser';
 import type { NavNode } from '../page/navigation';
@@ -71,6 +71,14 @@ export const useResolveUserId = (): Record<string, string> => {
   return {
     id: id || payload?.userId?.toString() || '',
   };
+};
+
+export const useIsHealthHidden = (): boolean => {
+  const { session } = useAuth();
+  const { data: isAdmin } = useIsAdmin({
+    query: { enabled: session != null },
+  });
+  return !isAdmin;
 };
 
 export const appNavNodes: NavNode[] = [
@@ -164,7 +172,7 @@ export const appNavNodes: NavNode[] = [
   {
     label: 'Health',
     href: '/health',
-    hidden: true,
+    hidden: useIsHealthHidden,
     children: [
       {
         label: 'Dashboard',
@@ -189,7 +197,6 @@ export const appNavNodes: NavNode[] = [
     component: <SettingsPage />,
     hidden: true,
   },
-  <NavHealth />,
   <NavSpacer />,
   <NavClock />,
   <NavDate />,
