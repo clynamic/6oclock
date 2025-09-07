@@ -26,6 +26,7 @@
     "@tanstack/react-query": "^5.51.24",
     "@wtto00/html2canvas": "^1.4.1",
     "axios": "^1.7.4",
+    "cron-parser": "^5.3.1",
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
     "framer-motion": "^11.3.28",
