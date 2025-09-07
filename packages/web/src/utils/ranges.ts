@@ -139,9 +139,6 @@ export const isInPeriod = (
 ): boolean => {
   const start = startOfPeriod(reference, unit);
   const end = addPeriods(start, unit, 1);
-  console.log(
-    `Checking if ${date} is in period from ${start} to ${end}: ${!isBefore(date, start) && isBefore(date, end)}`,
-  );
   return !isBefore(date, start) && !isAfter(date, end);
 };
 
