@@ -17,8 +17,8 @@ import { Fragment } from 'react/jsx-runtime';
 import { AppLogo } from '../../common/AppLogo';
 import {
   NavAction,
-  resolveNavLinks,
   useNavigationEntries,
+  useResolveNavLinks,
 } from '../navigation';
 import { NavAvatar } from './NavAvatar';
 import { NavItem } from './NavItem';
@@ -34,7 +34,7 @@ export interface PageHeaderProps {
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ actions }) => {
   const allEntries = useNavigationEntries();
-  const entries = resolveNavLinks(allEntries);
+  const entries = useResolveNavLinks(allEntries);
 
   return (
     <PageHeaderProvider navigation={entries} actions={actions}>
@@ -122,27 +122,20 @@ const PageHeaderBar: React.FC = () => {
                   horizontal: 'center',
                 }}
               >
-                {navigation
-                  .filter((entry) => {
-                    if (entry instanceof Object && 'href' in entry) {
-                      return !entry.hidden;
-                    }
-                    return true;
-                  })
-                  .map((entry) => {
-                    if (entry instanceof Object && 'href' in entry) {
-                      return (
-                        <NavItem
-                          key={entry.href}
-                          href={entry.href}
-                          label={entry.label}
-                          // This doesnt look good and isn't necessary.
-                          // selected={entry === currentLink}
-                        />
-                      );
-                    }
-                    return entry;
-                  })}
+                {navigation.map((entry) => {
+                  if (entry instanceof Object && 'href' in entry) {
+                    return (
+                      <NavItem
+                        key={entry.href}
+                        href={entry.href}
+                        label={entry.label}
+                        // This doesnt look good and isn't necessary.
+                        // selected={entry === currentLink}
+                      />
+                    );
+                  }
+                  return entry;
+                })}
                 {currentSubLinks && currentSubLinks.length > 0 && (
                   <Divider
                     key="subnav-divider"
@@ -150,25 +143,18 @@ const PageHeaderBar: React.FC = () => {
                     variant="middle"
                   />
                 )}
-                {currentSubLinks
-                  ?.filter((entry) => {
-                    if (entry instanceof Object && 'href' in entry) {
-                      return !entry.hidden;
-                    }
-                    return true;
-                  })
-                  .map((entry) => {
-                    if (entry instanceof Object && 'href' in entry) {
-                      return (
-                        <NavItem
-                          key={`subnav-${entry.href}`}
-                          href={entry.href}
-                          label={entry.label}
-                        />
-                      );
-                    }
-                    return entry;
-                  })}
+                {currentSubLinks?.map((entry) => {
+                  if (entry instanceof Object && 'href' in entry) {
+                    return (
+                      <NavItem
+                        key={`subnav-${entry.href}`}
+                        href={entry.href}
+                        label={entry.label}
+                      />
+                    );
+                  }
+                  return entry;
+                })}
               </Menu>
             </AppBar>
           </PageHeaderReprovider>
@@ -198,27 +184,20 @@ const PageHeaderBar: React.FC = () => {
                 width: '100%',
               }}
             >
-              {navigation
-                .filter((entry) => {
-                  if (entry instanceof Object && 'href' in entry) {
-                    return !entry.hidden;
-                  }
-                  return true;
-                })
-                .map((entry, i) => {
-                  if (entry instanceof Object && 'href' in entry) {
-                    return (
-                      <NavItem
-                        key={i}
-                        component={RouterLink}
-                        href={entry.href}
-                        label={entry.label}
-                        selected={entry === currentLink}
-                      />
-                    );
-                  }
-                  return <Fragment key={`nav-action-${i}`}>{entry}</Fragment>;
-                })}
+              {navigation.map((entry, i) => {
+                if (entry instanceof Object && 'href' in entry) {
+                  return (
+                    <NavItem
+                      key={i}
+                      component={RouterLink}
+                      href={entry.href}
+                      label={entry.label}
+                      selected={entry === currentLink}
+                    />
+                  );
+                }
+                return <Fragment key={`nav-action-${i}`}>{entry}</Fragment>;
+              })}
             </Stack>
             <Stack
               direction="row"
@@ -239,27 +218,20 @@ const PageHeaderBar: React.FC = () => {
               <PageHeaderReprovider section="sub">
                 {currentSubLinks &&
                   currentSubLinks.length > 0 &&
-                  currentSubLinks
-                    .filter((entry) => {
-                      if (entry instanceof Object && 'href' in entry) {
-                        return !entry.hidden;
-                      }
-                      return true;
-                    })
-                    .map((entry, i) => {
-                      if (entry instanceof Object && 'href' in entry) {
-                        return (
-                          <NavItem
-                            key={`subnav-${entry.href}`}
-                            href={entry.href}
-                            label={entry.label}
-                          />
-                        );
-                      }
+                  currentSubLinks.map((entry, i) => {
+                    if (entry instanceof Object && 'href' in entry) {
                       return (
-                        <Fragment key={`subnav-action-${i}`}>{entry}</Fragment>
+                        <NavItem
+                          key={`subnav-${entry.href}`}
+                          href={entry.href}
+                          label={entry.label}
+                        />
                       );
-                    })}
+                    }
+                    return (
+                      <Fragment key={`subnav-action-${i}`}>{entry}</Fragment>
+                    );
+                  })}
               </PageHeaderReprovider>
             </Stack>
           </Stack>

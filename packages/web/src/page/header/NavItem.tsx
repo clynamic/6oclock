@@ -19,7 +19,6 @@ export type NavLinkProps = {
   href: string;
   label: React.ReactNode;
   endIcon?: React.ReactNode;
-  hidden?: boolean;
   selected?: boolean;
   variant?: NavLinkVariant;
 } & Omit<ButtonProps & MenuItemProps, 'href' | 'variant'>;
@@ -28,14 +27,11 @@ export const NavItem: React.FC<NavLinkProps> = ({
   href,
   label,
   endIcon,
-  hidden,
   selected,
   variant,
   ...props
 }) => {
   const { layout, popupState, navigate, section } = usePageHeaderContext();
-
-  if (hidden) return null;
 
   if (layout === 'small') {
     return (
