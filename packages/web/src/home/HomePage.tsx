@@ -18,6 +18,7 @@ import { PageFooter } from '../page/PageFooter';
 import { PageTitle } from '../page/PageTitle';
 import { PageHeader } from '../page/header/PageHeader';
 import { HomeCounter } from './HomeCounter';
+import { HomeMotd } from './HomeMotd';
 
 export const HomePage: React.FC = () => {
   return (
@@ -87,7 +88,7 @@ export const HomePage: React.FC = () => {
           <Divider orientation="horizontal" />
           <Typography variant="h4">{`6 o'clock`}</Typography>
           <Typography variant="body1">
-            Your valiant efforts are appreciated.
+            <HomeMotd />
           </Typography>
           <HomeCounter />
         </Stack>
