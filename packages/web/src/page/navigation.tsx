@@ -62,22 +62,29 @@ export const resolveHref = (
 };
 
 export const useResolveNavLinks = (entries: NavNode[]): NavNode[] => {
-  const processEntries = (entryList: NavNode[]): NavNode[] => {
-    return entryList
-      .map((entry) => {
-        if (entry instanceof Object && 'href' in entry) {
-          const resolvedEntry = { ...entry };
-          if ('resolve' in entry && entry.resolve) {
-            const variables = entry.resolve(entry.href);
-            resolvedEntry.href = resolveHref(entry.href, variables);
-          }
-          if ('children' in entry && entry.children) {
-            resolvedEntry.children = processEntries(entry.children);
-          }
-          return resolvedEntry;
+  const resolveEntries = (entryList: NavNode[]): NavNode[] => {
+    return entryList.map((entry) => {
+      if (entry instanceof Object && 'href' in entry) {
+        const resolvedEntry = { ...entry };
+        if ('resolve' in entry && entry.resolve) {
+          const variables = entry.resolve(entry.href);
+          resolvedEntry.href = resolveHref(entry.href, variables);
         }
-        return entry;
-      })
+        if ('children' in entry && entry.children) {
+          resolvedEntry.children = resolveEntries(entry.children);
+        }
+        return resolvedEntry;
+      }
+      return entry;
+    });
+  };
+
+  return resolveEntries(entries);
+};
+
+export const useFilterVisibleNavLinks = (entries: NavNode[]): NavNode[] => {
+  const filterEntries = (entryList: NavNode[]): NavNode[] => {
+    return entryList
       .filter((entry) => {
         if (entry instanceof Object && 'href' in entry) {
           if (typeof entry.hidden === 'function') {
@@ -86,8 +93,22 @@ export const useResolveNavLinks = (entries: NavNode[]): NavNode[] => {
           return !entry.hidden;
         }
         return true;
+      })
+      .map((entry) => {
+        if (
+          entry instanceof Object &&
+          'href' in entry &&
+          'children' in entry &&
+          entry.children
+        ) {
+          return {
+            ...entry,
+            children: filterEntries(entry.children),
+          };
+        }
+        return entry;
       });
   };
 
-  return processEntries(entries);
+  return filterEntries(entries);
 };
