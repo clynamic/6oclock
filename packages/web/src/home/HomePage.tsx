@@ -86,11 +86,13 @@ export const HomePage: React.FC = () => {
             </ThemeProvider>
           </Stack>
           <Divider orientation="horizontal" />
-          <Typography variant="h4">{`6 o'clock`}</Typography>
-          <Typography variant="body1">
-            <HomeMotd />
-          </Typography>
-          <HomeCounter />
+          <Stack direction="column" spacing={2} sx={{ maxWidth: '448px' }}>
+            <Typography variant="h4">{`6 o'clock`}</Typography>
+            <Typography variant="body1">
+              <HomeMotd />
+            </Typography>
+            <HomeCounter />
+          </Stack>
         </Stack>
       </PageBody>
       <PageFooter />
