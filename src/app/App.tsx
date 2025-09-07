@@ -1,4 +1,4 @@
-import { Suspense, lazy, useMemo } from 'react';
+import { lazy, useMemo } from 'react';
 
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -6,18 +6,24 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { AuthProvider } from '../auth/context';
 import { AuthGuard } from '../auth/guard';
-import { LoadingPage } from '../page/LoadingPage';
+import { SuspensePage } from '../page/SuspensePage';
 import { NavigationEntryProvider } from '../page/navigation';
 import { SafeModeProvider } from '../settings/SafeModeContext';
 import { ChartParamsProvider } from '../utils/charts';
-import { LogoutPage } from './Logout';
-import { NotFoundPage } from './NotFound';
-import { UnreachablePage } from './Unreachable';
 import { appNavNodes, createRoutesFromNodes } from './navigation';
 import { theme } from './theme';
 
 const LoginPage = lazy(() =>
   import('../login/Login').then((m) => ({ default: m.LoginPage })),
+);
+const LogoutPage = lazy(() =>
+  import('../login/Logout').then((m) => ({ default: m.LogoutPage })),
+);
+const NotFoundPage = lazy(() =>
+  import('./NotFound').then((m) => ({ default: m.NotFoundPage })),
+);
+const UnreachablePage = lazy(() =>
+  import('./Unreachable').then((m) => ({ default: m.UnreachablePage })),
 );
 
 export const App: React.FC = () => {
@@ -35,20 +41,25 @@ export const App: React.FC = () => {
                   <Routes>
                     <Route
                       path="/login"
-                      element={
-                        <Suspense fallback={<LoadingPage />}>
-                          <LoginPage />
-                        </Suspense>
-                      }
+                      element={<SuspensePage children={<LoginPage />} />}
                     />
-                    <Route path="/logout" element={<LogoutPage />} />
+                    <Route
+                      path="/logout"
+                      element={<SuspensePage children={<LogoutPage />} />}
+                    />
 
                     <Route path="/" element={<AuthGuard />}>
                       {...createRoutesFromNodes(appNavNodes)}
                     </Route>
 
-                    <Route path="*" element={<NotFoundPage />} />
-                    <Route path="/unreachable" element={<UnreachablePage />} />
+                    <Route
+                      path="*"
+                      element={<SuspensePage children={<NotFoundPage />} />}
+                    />
+                    <Route
+                      path="/unreachable"
+                      element={<SuspensePage children={<UnreachablePage />} />}
+                    />
                   </Routes>
                 </BrowserRouter>
               </ChartParamsProvider>
