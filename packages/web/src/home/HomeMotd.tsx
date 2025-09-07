@@ -134,5 +134,5 @@ export const HomeMotd: React.FC = () => {
     loadMotd();
   }, []);
 
-  return motdMessage;
+  return <span dangerouslySetInnerHTML={{ __html: motdMessage }} />;
 };
