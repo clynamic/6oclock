@@ -15,6 +15,7 @@ import { hexagonColors } from '../app/theme';
 import { CounterDisplay } from '../common/CounterDisplay';
 import { refetchQueryOptions } from '../utils/query';
 import { addPeriods, startOfPeriod } from '../utils/ranges';
+import { createSeededRandom, getTodaySeed } from '../utils/seed';
 import { SHIP_TIMEZONE } from '../utils/timezone';
 
 interface CounterOption {
@@ -22,14 +23,6 @@ interface CounterOption {
   weight: number;
   value: number;
 }
-
-const createSeededRandom = (seed: number) => {
-  let x = Math.sin(seed) * 10000;
-  return () => {
-    x = Math.sin(x) * 10000;
-    return x - Math.floor(x);
-  };
-};
 
 const getCounterRange = () => {
   const now = new TZDate(new Date(), SHIP_TIMEZONE);
@@ -44,12 +37,6 @@ const getCounterRange = () => {
     timezone: SHIP_TIMEZONE,
     scale: TimeScale.all,
   };
-};
-
-const getTodaySeed = () => {
-  const now = new TZDate(new Date(), SHIP_TIMEZONE);
-  const today = startOfDay(now);
-  return Math.floor(today.getTime() / (1000 * 60 * 60 * 24));
 };
 
 export const HomeCounter: React.FC = () => {
