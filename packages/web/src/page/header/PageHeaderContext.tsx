@@ -11,13 +11,21 @@ import { PopupState } from 'material-ui-popup-state/hooks';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 
 import { useCurrentBreakpoint } from '../../utils/breakpoints';
-import { NavAction, NavNode, NavTopLink, SubNavNode } from '../navigation';
+import {
+  NavAction,
+  NavNode,
+  NavTopLink,
+  SubNavNode,
+  useFilterVisibleNavLinks,
+  useResolveNavLinks,
+} from '../navigation';
 import { NavLinkVariant } from './NavItem';
 
 export type PageHeaderLayout = 'small' | 'wide';
 
 export interface PageHeaderContextValue {
-  navigation: NavNode[];
+  allEntries: NavNode[];
+  visibleEntries: NavNode[];
   navigate: NavigateFunction;
   currentLink?: NavTopLink;
   currentSubLinks?: SubNavNode[];
@@ -32,14 +40,14 @@ export const PageHeaderContext = createContext<PageHeaderContextValue | null>(
 
 export interface PageHeaderProviderProps {
   children: ReactNode;
-  navigation: NavNode[];
+  entries: NavNode[];
   actions?: NavAction[];
   popupState?: PopupState;
 }
 
 export const PageHeaderProvider: React.FC<PageHeaderProviderProps> = ({
   children,
-  navigation,
+  entries,
   actions,
   popupState,
 }) => {
@@ -49,8 +57,11 @@ export const PageHeaderProvider: React.FC<PageHeaderProviderProps> = ({
   const location = useLocation();
   const navigate = useNavigate();
 
+  const allEntries = useResolveNavLinks(entries);
+  const visibleEntries = useFilterVisibleNavLinks(allEntries);
+
   const currentLink = useMemo(() => {
-    const entry = navigation.find((entry): entry is NavTopLink => {
+    const entry = allEntries.find((entry): entry is NavTopLink => {
       if (entry instanceof Object && 'href' in entry) {
         const segments = location.pathname.split('/');
         return entry.href
@@ -60,24 +71,20 @@ export const PageHeaderProvider: React.FC<PageHeaderProviderProps> = ({
       return false;
     });
     return entry;
-  }, [location.pathname, navigation]);
+  }, [location.pathname, allEntries]);
+
+  const visibleSubLinks = useFilterVisibleNavLinks(currentLink?.children ?? []);
 
   const currentSubLinks = useMemo(() => {
-    let result: SubNavNode[] | undefined;
-    if (currentLink) {
-      result = currentLink.children;
-    }
-    if (actions) {
-      result = result ? [...result, ...actions] : actions;
-    }
-    return result;
-  }, [actions, currentLink]);
+    return [...(visibleSubLinks || []), ...(actions || [])];
+  }, [actions, visibleSubLinks]);
 
   return (
     <PageHeaderContext.Provider
       value={{
         layout,
-        navigation,
+        allEntries,
+        visibleEntries,
         navigate,
         currentLink,
         currentSubLinks,

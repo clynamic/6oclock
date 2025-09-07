@@ -15,11 +15,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';
 
 import { AppLogo } from '../../common/AppLogo';
-import {
-  NavAction,
-  useNavigationEntries,
-  useResolveNavLinks,
-} from '../navigation';
+import { NavAction, useNavigationEntries } from '../navigation';
 import { NavAvatar } from './NavAvatar';
 import { NavItem } from './NavItem';
 import {
@@ -33,18 +29,17 @@ export interface PageHeaderProps {
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ actions }) => {
-  const allEntries = useNavigationEntries();
-  const entries = useResolveNavLinks(allEntries);
+  const entries = useNavigationEntries();
 
   return (
-    <PageHeaderProvider navigation={entries} actions={actions}>
+    <PageHeaderProvider entries={entries} actions={actions}>
       <PageHeaderBar />
     </PageHeaderProvider>
   );
 };
 
 const PageHeaderBar: React.FC = () => {
-  const { layout, navigation, currentLink, currentSubLinks } =
+  const { layout, visibleEntries, currentLink, currentSubLinks } =
     usePageHeaderContext();
 
   if (layout === 'small') {
@@ -122,7 +117,7 @@ const PageHeaderBar: React.FC = () => {
                   horizontal: 'center',
                 }}
               >
-                {navigation.map((entry) => {
+                {visibleEntries.map((entry) => {
                   if (entry instanceof Object && 'href' in entry) {
                     return (
                       <NavItem
@@ -184,7 +179,7 @@ const PageHeaderBar: React.FC = () => {
                 width: '100%',
               }}
             >
-              {navigation.map((entry, i) => {
+              {visibleEntries.map((entry, i) => {
                 if (entry instanceof Object && 'href' in entry) {
                   return (
                     <NavItem
