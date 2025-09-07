@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
 import MD5 from 'crypto-js/md5';
 import { addHours, isBefore } from 'date-fns';
 import { Outlet, matchPath, useLocation, useNavigate } from 'react-router-dom';
@@ -14,6 +15,7 @@ export interface AuthGuardProps {
 export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   const { token, clearToken, session, saveSession, clearSession, payload } =
     useAuth();
+  const queryClient = useQueryClient();
   const sentinel = useRef(0);
 
   const navigate = useNavigate();
@@ -60,6 +62,7 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
 
       if (checkResult === 'invalid') {
         clearToken();
+        queryClient.clear();
         navigate(loginUrl, { replace: true });
         return;
       }
@@ -73,7 +76,15 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     };
 
     runCheck();
-  }, [clearSession, clearToken, navigate, saveSession, session, token]);
+  }, [
+    clearSession,
+    clearToken,
+    navigate,
+    queryClient,
+    saveSession,
+    session,
+    token,
+  ]);
 
   useEffect(() => {
     if (payload?.userId) {
