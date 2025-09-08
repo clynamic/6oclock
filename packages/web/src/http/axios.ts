@@ -1,11 +1,12 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
-import { dateDeserializeInterceptor } from './date';
+import { dateDeserializeInterceptor, dateSanitizerInterceptor } from './date';
 
 const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 export const AXIOS_INSTANCE = Axios.create({ baseURL });
 
+AXIOS_INSTANCE.interceptors.request.use(dateSanitizerInterceptor);
 AXIOS_INSTANCE.interceptors.response.use(dateDeserializeInterceptor);
 
 export const makeRequest = <T>(config: AxiosRequestConfig): Promise<T> =>
