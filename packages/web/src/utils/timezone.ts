@@ -1,1 +1,1 @@
-export const SHIP_TIMEZONE = 'America/Phoenix';
+export const SHIP_TIMEZONE = 'MST';

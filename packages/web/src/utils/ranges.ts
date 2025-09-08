@@ -7,10 +7,8 @@ import {
   differenceInDays,
   differenceInMilliseconds,
   differenceInMinutes,
-  endOfMonth,
   format,
   getYear,
-  isAfter,
   isBefore,
   isSameMonth,
   isSameYear,
@@ -31,11 +29,13 @@ export interface DateRange {
 }
 
 export const getCurrentMonthRange = (): DateRange => {
-  const now = new TZDate(new Date(), SHIP_TIMEZONE);
+  const now = TZDate.tz(SHIP_TIMEZONE);
   const timezone = SHIP_TIMEZONE;
+  const startDate = startOfMonth(now);
+  const endDate = addMonths(startDate, 1);
   return {
-    startDate: startOfMonth(now),
-    endDate: endOfMonth(now),
+    startDate,
+    endDate,
     timezone,
   };
 };
@@ -139,7 +139,7 @@ export const isInPeriod = (
 ): boolean => {
   const start = startOfPeriod(reference, unit);
   const end = addPeriods(start, unit, 1);
-  return !isBefore(date, start) && !isAfter(date, end);
+  return !isBefore(date, start) && isBefore(date, end);
 };
 
 export const subPeriods = (

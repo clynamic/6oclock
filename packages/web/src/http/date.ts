@@ -1,4 +1,6 @@
+import { InternalAxiosRequestConfig } from 'axios';
 import { AxiosResponse } from 'axios';
+import { format, isValid, startOfDay } from 'date-fns';
 
 // year-month-day or full ISO 8601
 const dateStringFormat = new RegExp(
@@ -36,4 +38,40 @@ export const dateDeserializeInterceptor = (
 ): AxiosResponse => ({
   ...response,
   data: deserializeDates(response.data),
+});
+
+const formatDateParam = (value: unknown): unknown => {
+  if (!(value instanceof Date)) return value;
+  if (!isValid(value)) return value;
+
+  if (value.getTime() === startOfDay(value).getTime()) {
+    return format(value, 'yyyy-MM-dd');
+  }
+
+  return value;
+};
+
+const sanitizeDateParams = <T>(params: T): T => {
+  if (params === null || typeof params !== 'object') return params;
+
+  const result = { ...params } as Record<string, unknown>;
+
+  for (const key of Object.keys(result)) {
+    if (key === 'startDate' || key === 'endDate') {
+      result[key] = formatDateParam(result[key]);
+    }
+  }
+
+  return result as T;
+};
+
+/**
+ * Removes empty time from date params (startDate, endDate)
+ * when they match the timezone's start of day.
+ */
+export const dateSanitizerInterceptor = (
+  config: InternalAxiosRequestConfig,
+): InternalAxiosRequestConfig => ({
+  ...config,
+  params: sanitizeDateParams(config.params),
 });
