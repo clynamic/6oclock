@@ -7,7 +7,7 @@ import { TicketClosedSeriesByHandlerChart } from '../mods/charts/TicketClosedSer
 import { TicketCreatedSeriesByReporterChart } from '../mods/charts/TicketCreatedSeriesByReporterChart';
 import { TicketTypeSummaryByHandlerTypeChart } from '../mods/charts/TicketTypeSummaryByHandlerTypeChart';
 import { PerformanceCard } from '../performance/PerformanceCard';
-import { UserActivitySeriesChart } from '../users/charts/UserActivitySeriesChart';
+import { UserActivitySeriesChart } from './charts/UserActivitySeriesChart';
 
 export const profileCatalog: DashboardCatalog = {
   userHead: {
