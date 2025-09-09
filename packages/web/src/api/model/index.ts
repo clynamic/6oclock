@@ -3,7 +3,7 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.7
+ * OpenAPI spec version: 0.0.8
  */
 
 export * from './activity';
@@ -36,6 +36,7 @@ export * from './getPerformanceParams';
 export * from './getPermitCountParams';
 export * from './getPostPendingSeriesParams';
 export * from './getPostReplacementCreatedParams';
+export * from './getPostReplacementHandledParams';
 export * from './getPostReplacementStatusParams';
 export * from './getPostStatusSummaryParams';
 export * from './getPostUploaderSummaryParams';
@@ -62,6 +63,7 @@ export * from './manifestSlice';
 export * from './performanceGrade';
 export * from './performanceRecord';
 export * from './performanceSummary';
+export * from './postReplacementHandledPoint';
 export * from './postReplacementStatusPoint';
 export * from './postStatusSummary';
 export * from './postUploaderSummary';
