@@ -6,13 +6,9 @@
  * OpenAPI spec version: 0.0.8
  */
 
-export type GetManifestHealthParams = {
-/**
- * Page number
- */
-page?: number;
-/**
- * Page size
- */
-limit?: number;
-};
+export interface PostReplacementHandledPoint {
+  approved: number;
+  date: Date;
+  promoted: number;
+  rejected: number;
+}

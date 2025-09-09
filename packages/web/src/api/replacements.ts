@@ -3,7 +3,7 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.7
+ * OpenAPI spec version: 0.0.8
  */
 import {
   useQuery
@@ -19,7 +19,9 @@ import type {
 } from '@tanstack/react-query'
 import type {
   GetPostReplacementCreatedParams,
+  GetPostReplacementHandledParams,
   GetPostReplacementStatusParams,
+  PostReplacementHandledPoint,
   PostReplacementStatusPoint,
   SeriesCountPoint
 } from './model'
@@ -119,7 +121,7 @@ export function usePostReplacementCreated<TData = Awaited<ReturnType<typeof post
 
 
 /**
- * Get post replacement status (pending, approved, partial) counts for a given date range
+ * Get post replacement status counts for a given date range
  * @summary Post replacement status
  */
 export const postReplacementStatus = (
@@ -197,6 +199,95 @@ export function usePostReplacementStatus<TData = Awaited<ReturnType<typeof postR
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getPostReplacementStatusQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+/**
+ * Get post replacements handled counts for a given date range
+ * @summary Post replacements handled
+ */
+export const postReplacementHandled = (
+    params: GetPostReplacementHandledParams,
+ signal?: AbortSignal
+) => {
+      
+      
+      return makeRequest<PostReplacementHandledPoint[]>(
+      {url: `/metrics/post-replacements/handled`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
+
+export const getPostReplacementHandledQueryKey = (params: GetPostReplacementHandledParams,) => {
+    return [`/metrics/post-replacements/handled`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getPostReplacementHandledQueryOptions = <TData = Awaited<ReturnType<typeof postReplacementHandled>>, TError = ErrorType<unknown>>(params: GetPostReplacementHandledParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postReplacementHandled>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getPostReplacementHandledQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof postReplacementHandled>>> = ({ signal }) => postReplacementHandled(params, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof postReplacementHandled>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type PostReplacementHandledQueryResult = NonNullable<Awaited<ReturnType<typeof postReplacementHandled>>>
+export type PostReplacementHandledQueryError = ErrorType<unknown>
+
+
+export function usePostReplacementHandled<TData = Awaited<ReturnType<typeof postReplacementHandled>>, TError = ErrorType<unknown>>(
+ params: GetPostReplacementHandledParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof postReplacementHandled>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof postReplacementHandled>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, }
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function usePostReplacementHandled<TData = Awaited<ReturnType<typeof postReplacementHandled>>, TError = ErrorType<unknown>>(
+ params: GetPostReplacementHandledParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postReplacementHandled>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof postReplacementHandled>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function usePostReplacementHandled<TData = Awaited<ReturnType<typeof postReplacementHandled>>, TError = ErrorType<unknown>>(
+ params: GetPostReplacementHandledParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postReplacementHandled>>, TError, TData>>, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey }
+/**
+ * @summary Post replacements handled
+ */
+
+export function usePostReplacementHandled<TData = Awaited<ReturnType<typeof postReplacementHandled>>, TError = ErrorType<unknown>>(
+ params: GetPostReplacementHandledParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postReplacementHandled>>, TError, TData>>, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getPostReplacementHandledQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

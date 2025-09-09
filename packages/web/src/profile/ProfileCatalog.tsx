@@ -7,6 +7,7 @@ import { TicketClosedSeriesByHandlerChart } from '../mods/charts/TicketClosedSer
 import { TicketCreatedSeriesByReporterChart } from '../mods/charts/TicketCreatedSeriesByReporterChart';
 import { TicketTypeSummaryByHandlerTypeChart } from '../mods/charts/TicketTypeSummaryByHandlerTypeChart';
 import { PerformanceCard } from '../performance/PerformanceCard';
+import { ReplacementHandledSeriesChart } from './charts/ReplacementHandledSeriesChart';
 import { UserActivitySeriesChart } from './charts/UserActivitySeriesChart';
 
 export const profileCatalog: DashboardCatalog = {
@@ -170,5 +171,25 @@ export const profileCatalog: DashboardCatalog = {
     ),
     card: { title: 'Posts Handled' },
     component: ApprovalCountSeriesByApproverChart,
+  },
+  replacementsHandled: {
+    name: 'Replacements Handled',
+    layout: createLayout(
+      {
+        minW: 2,
+        maxW: 9,
+        minH: 2,
+        maxH: 5,
+      },
+      {
+        xs: { x: 0, y: 22, w: 4, h: 5 },
+        sm: { x: 0, y: 22, w: 6, h: 5 },
+        md: { x: 0, y: 17, w: 9, h: 5 },
+        lg: { x: 0, y: 10, w: 6, h: 5 },
+        xl: { x: 10, y: 5, w: 5, h: 5 },
+      },
+    ),
+    card: { title: 'Replacements Handled' },
+    component: ReplacementHandledSeriesChart,
   },
 };
