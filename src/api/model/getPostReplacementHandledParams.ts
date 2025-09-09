@@ -7,10 +7,11 @@
  */
 import type { TimeScale } from './timeScale';
 
-export type GetApprovalCountSeriesParams = {
+export type GetPostReplacementHandledParams = {
 scale?: TimeScale;
 cycle?: TimeScale;
 startDate?: Date;
 endDate?: Date;
 timezone?: string;
+userId: number;
 };

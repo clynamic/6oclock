@@ -13,10 +13,10 @@ const ACTIVITY_TO_CHART_MAP: Record<
   postCreate: ['postsUploaded'],
   postApprove: ['postsHandled'],
   postDelete: ['postsHandled'],
-  postReplacementApprove: ['postsHandled'],
-  postReplacementCreate: [], // TODO: add personal replacements chart
-  postReplacementPromote: ['postsHandled'],
-  postReplacementReject: ['postsHandled'],
+  postReplacementApprove: ['replacementsHandled'],
+  postReplacementCreate: ['replacementsHandled'],
+  postReplacementPromote: ['replacementsHandled'],
+  postReplacementReject: ['replacementsHandled'],
   ticketCreate: ['ticketsCreated'],
   ticketHandle: ['ticketsHandled', 'ticketTypes'],
 };
