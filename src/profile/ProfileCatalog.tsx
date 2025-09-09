@@ -74,14 +74,14 @@ export const profileCatalog: DashboardCatalog = {
     layout: createLayout(
       {
         minW: 2,
-        maxW: 6,
+        maxW: 9,
         minH: 2,
         maxH: 5,
       },
       {
         xs: { x: 0, y: 12, w: 4, h: 5 },
         sm: { x: 0, y: 12, w: 6, h: 5 },
-        md: { x: 2, y: 12, w: 5, h: 5 },
+        md: { x: 0, y: 7, w: 9, h: 5 },
         lg: { x: 6, y: 10, w: 6, h: 5 },
         xl: { x: 5, y: 5, w: 5, h: 5 },
       },
@@ -95,14 +95,14 @@ export const profileCatalog: DashboardCatalog = {
     layout: createLayout(
       {
         minW: 2,
-        maxW: 6,
+        maxW: 9,
         minH: 2,
         maxH: 5,
       },
       {
         xs: { x: 0, y: 17, w: 4, h: 5 },
         sm: { x: 0, y: 17, w: 6, h: 5 },
-        md: { x: 2, y: 17, w: 5, h: 5 },
+        md: { x: 0, y: 17, w: 5, h: 5 },
         lg: { x: 6, y: 15, w: 6, h: 5 },
         xl: { x: 10, y: 5, w: 5, h: 5 },
       },
@@ -115,14 +115,14 @@ export const profileCatalog: DashboardCatalog = {
     layout: createLayout(
       {
         minW: 2,
-        maxW: 6,
+        maxW: 9,
         minH: 2,
         maxH: 5,
       },
       {
         xs: { x: 0, y: 22, w: 4, h: 5 },
         sm: { x: 0, y: 22, w: 6, h: 5 },
-        md: { x: 2, y: 22, w: 5, h: 5 },
+        md: { x: 5, y: 17, w: 4, h: 5 },
         lg: { x: 6, y: 20, w: 6, h: 5 },
         xl: { x: 5, y: 10, w: 5, h: 5 },
       },
