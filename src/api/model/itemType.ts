@@ -24,4 +24,5 @@ export const ItemType = {
   bulk_update_requests: 'bulk_update_requests',
   tag_aliases: 'tag_aliases',
   tag_implications: 'tag_implications',
+  permits: 'permits',
 } as const;

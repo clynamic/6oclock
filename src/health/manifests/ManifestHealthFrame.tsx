@@ -1,8 +1,8 @@
 import {
+  AirlineStops,
   CalendarMonth,
   DataUsage,
   Delete,
-  ErrorOutline,
   FolderOpen,
   MoreVert,
   Tag,
@@ -44,7 +44,7 @@ export const ManifestHealthFrame: React.FC<ManifestHealthFrameProps> = ({
   const theme = useTheme();
   const queryClient = useQueryClient();
   const { mutateAsync: deleteManifest } = useDeleteManifest();
-  const missing =
+  const unavailable =
     manifest?.slices.reduce((acc, s) => acc + s.unavailable, 0) ?? 0;
 
   const handleDelete = async () => {
@@ -120,10 +120,11 @@ export const ManifestHealthFrame: React.FC<ManifestHealthFrameProps> = ({
                       icon={<FolderOpen />}
                       label={`${manifest.count} total`}
                     />
-                    {missing > 0 && (
+                    {unavailable > 0 && (
                       <Chip
-                        icon={<ErrorOutline />}
-                        label={`${missing} missing`}
+                        icon={<AirlineStops />}
+                        label={`${unavailable} ${manifest.porous ? 'absent' : 'missing'}`}
+                        /* color={manifest.porous ? 'default' : 'error'} */ // This is too loud.
                       />
                     )}
                   </>
@@ -189,16 +190,24 @@ export const ManifestHealthFrame: React.FC<ManifestHealthFrameProps> = ({
                                     } else if (d.unavailable === 0) {
                                       return theme.palette.success.main;
                                     } else if (d.available === 0) {
-                                      return theme.palette.error.main;
+                                      return manifest.porous
+                                        ? theme.palette.grey[600]
+                                        : theme.palette.error.main;
                                     } else {
                                       const total =
                                         d.available +
                                         d.unavailable +
                                         (d.none || 0);
                                       const ratio = d.unavailable / total;
-                                      return ratio > 0.1
-                                        ? theme.palette.error.main
-                                        : theme.palette.warning.main;
+                                      if (manifest.porous) {
+                                        return ratio > 0.1
+                                          ? theme.palette.grey[600]
+                                          : theme.palette.success.light;
+                                      } else {
+                                        return ratio > 0.1
+                                          ? theme.palette.error.main
+                                          : theme.palette.warning.main;
+                                      }
                                     }
                                   }),
                                 },
@@ -225,8 +234,10 @@ export const ManifestHealthFrame: React.FC<ManifestHealthFrameProps> = ({
                               {
                                 dataKey: 'unavailable',
                                 stack: 'span',
-                                color: theme.palette.error.main,
-                                label: 'Missing',
+                                color: manifest.porous
+                                  ? theme.palette.grey[600]
+                                  : theme.palette.error.main,
+                                label: manifest.porous ? 'Absent' : 'Missing',
                               },
                               {
                                 dataKey: 'none',

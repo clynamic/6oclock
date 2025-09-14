@@ -13,6 +13,7 @@ export interface ManifestHealth {
   endDate: Date;
   endId: number;
   id: number;
+  porous: boolean;
   slices: ManifestSlice[];
   startDate: Date;
   startId: number;
