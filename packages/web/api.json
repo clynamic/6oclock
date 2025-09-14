@@ -2427,7 +2427,8 @@
           "mod_actions",
           "bulk_update_requests",
           "tag_aliases",
-          "tag_implications"
+          "tag_implications",
+          "permits"
         ]
       },
       "ManifestSlice": {
@@ -2446,6 +2447,7 @@
         "properties": {
           "type": { "$ref": "#/components/schemas/ItemType" },
           "id": { "type": "number" },
+          "porous": { "type": "boolean" },
           "startDate": { "format": "date-time", "type": "string" },
           "endDate": { "format": "date-time", "type": "string" },
           "startId": { "type": "number" },
@@ -2459,6 +2461,7 @@
         "required": [
           "type",
           "id",
+          "porous",
           "startDate",
           "endDate",
           "startId",
