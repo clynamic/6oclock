@@ -21,8 +21,7 @@ export const createSeededRandom = (seed: number) => {
  * This ensures the same seed is used for an entire day
  * @returns A seed number based on the current date
  */
-export const getTodaySeed = () => {
-  const now = TZDate.tz(SHIP_TIMEZONE);
-  const today = startOfDay(now);
+export const getDailySeed = (date: Date = TZDate.tz(SHIP_TIMEZONE)): number => {
+  const today = startOfDay(date);
   return Math.floor(today.getTime() / (1000 * 60 * 60 * 24));
 };
