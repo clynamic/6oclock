@@ -4,8 +4,16 @@ import { TZDate, tz } from '@date-fns/tz';
 import { CronExpressionParser } from 'cron-parser';
 import { isSameDay, parseISO } from 'date-fns';
 
-import { createSeededRandom, getTodaySeed } from '../utils/seed';
+import { createSeededRandom, getDailySeed } from '../utils/seed';
 import { SHIP_TIMEZONE } from '../utils/timezone';
+
+/**
+ * The exclusivity level of a message.
+ * - "absolute": Always selected, if present.
+ * - "featured": Selected if no absolute messages are present.
+ * - "default": Selected if no absolute or featured messages are present.
+ */
+type MotdTier = 'absolute' | 'featured' | 'default';
 
 interface MotdItem {
   /**
@@ -13,10 +21,10 @@ interface MotdItem {
    */
   message: string;
   /**
-   * The likelihood (0.0 to 1.0) of this message being selected.
+   * The relative weight of this message when selected within its tier.
    * If not specified, it defaults to 1.0.
    */
-  chance?: number;
+  weight?: number;
   /**
    * An ISO 8601 date string (e.g., "2023-12-25") for which this message should be displayed.
    * If the current date matches this date, this message will be selected.
@@ -29,11 +37,17 @@ interface MotdItem {
    * Not compatible with the `date` field.
    */
   schedule?: string;
+  /**
+   * The exclusivity level of this message. If omitted, it is treated as "default".
+   */
+  tier?: MotdTier;
 }
+
+const getMotdDate = () => TZDate.tz(SHIP_TIMEZONE);
 
 const isDateMatch = (dateStr: string): boolean => {
   try {
-    const now = TZDate.tz(SHIP_TIMEZONE);
+    const now = getMotdDate();
     const targetDate = parseISO(dateStr, { in: tz(SHIP_TIMEZONE) });
     return isSameDay(now, targetDate);
   } catch {
@@ -43,7 +57,7 @@ const isDateMatch = (dateStr: string): boolean => {
 
 const isScheduleMatch = (schedule: string): boolean => {
   try {
-    const now = TZDate.tz(SHIP_TIMEZONE);
+    const now = getMotdDate();
 
     const interval = CronExpressionParser.parse(schedule, {
       currentDate: now,
@@ -66,51 +80,63 @@ const getMotdData = async (): Promise<MotdItem[]> => {
   return Array.isArray(data) ? data : [];
 };
 
+const isEligibleToday = (item: MotdItem): boolean => {
+  if (item.date) return isDateMatch(item.date);
+  if (item.schedule) return isScheduleMatch(item.schedule);
+  return !item.date && !item.schedule;
+};
+
+const normalizeTier = (tier?: MotdTier): MotdTier => tier ?? 'default';
+
+const pickWeighted = (
+  random: () => number,
+  items: Array<{ message: string; weight: number }>,
+): string | undefined => {
+  if (items.length === 0) return;
+  const total = items.reduce((s, it) => s + it.weight, 0);
+  if (total <= 0) return;
+  const r = random() * total;
+  let acc = 0;
+  for (const it of items) {
+    acc += it.weight;
+    if (r <= acc) return it.message;
+  }
+};
+
 const selectMotd = (items: MotdItem[]): string | undefined => {
   if (items.length === 0) return;
 
-  const seed = getTodaySeed();
+  const seed = getDailySeed(getMotdDate());
   const random = createSeededRandom(seed);
 
-  const arena: MotdItem[] = [];
+  const eligible = items.filter(isEligibleToday);
+  if (eligible.length === 0) return;
 
-  if (arena.length === 0) {
-    const dateMatches = items.filter(
-      (item) => item.date && isDateMatch(item.date),
-    );
-    arena.push(...dateMatches);
-  }
-  if (arena.length === 0) {
-    const scheduleMatches = items.filter(
-      (item) => item.schedule && isScheduleMatch(item.schedule),
-    );
-    arena.push(...scheduleMatches);
-  }
-  if (arena.length === 0) {
-    arena.push(...items.filter((item) => !item.date && !item.schedule));
+  const byTier = new Map<MotdTier, MotdItem[]>();
+  for (const it of eligible) {
+    const t = normalizeTier(it.tier);
+    const arr = byTier.get(t) ?? [];
+    arr.push(it);
+    byTier.set(t, arr);
   }
 
-  if (arena.length === 0) return;
-
-  const weightedItems: Array<{ message: string; weight: number }> = arena.map(
-    (item) => ({
-      message: item.message,
-      weight: item.chance ?? 1.0,
-    }),
-  );
-
-  const totalWeight = weightedItems.reduce((sum, item) => sum + item.weight, 0);
-  const randomValue = random() * totalWeight;
-
-  let currentWeight = 0;
-  for (const item of weightedItems) {
-    currentWeight += item.weight;
-    if (randomValue <= currentWeight) {
-      return item.message;
+  const tierOrder: MotdTier[] = ['absolute', 'featured', 'default'];
+  let arena: MotdItem[] | undefined;
+  for (const t of tierOrder) {
+    const arr = byTier.get(t);
+    if (arr && arr.length > 0) {
+      arena = arr;
+      break;
     }
   }
+  if (!arena || arena.length === 0) return;
 
-  return weightedItems[0].message;
+  const weighted = arena.map((it) => ({
+    message: it.message,
+    weight: it.weight ?? 1.0,
+  }));
+
+  return pickWeighted(random, weighted);
 };
 
 const defaultMotd = 'Your valiant efforts are appreciated.';
