@@ -15,7 +15,7 @@ import { hexagonColors } from '../app/theme';
 import { CounterDisplay } from '../common/CounterDisplay';
 import { refetchQueryOptions } from '../utils/query';
 import { addPeriods, startOfPeriod } from '../utils/ranges';
-import { createSeededRandom, getTodaySeed } from '../utils/seed';
+import { createSeededRandom, getDailySeed } from '../utils/seed';
 import { SHIP_TIMEZONE } from '../utils/timezone';
 
 interface CounterOption {
@@ -51,7 +51,7 @@ export const HomeCounter: React.FC = () => {
     ];
 
     const totalWeight = options.reduce((sum, option) => sum + option.weight, 0);
-    const seed = getTodaySeed();
+    const seed = getDailySeed();
     const random = createSeededRandom(seed);
     const randomValue = random() * totalWeight;
 
