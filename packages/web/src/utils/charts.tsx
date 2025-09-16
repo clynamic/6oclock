@@ -9,6 +9,7 @@ import React, {
   useState,
 } from 'react';
 
+import { TZDate } from '@date-fns/tz';
 import type { BarChart } from '@mui/x-charts/BarChart';
 import type { LineChart } from '@mui/x-charts/LineChart';
 
@@ -81,8 +82,14 @@ const loadChartParamsFromStorage = (): ChartParams | null => {
       ...parsed.params,
       range: {
         ...parsed.params.range,
-        startDate: new Date(parsed.params.range.startDate),
-        endDate: new Date(parsed.params.range.endDate),
+        startDate: new TZDate(
+          parsed.params.range.startDate,
+          parsed.params.range.timezone,
+        ),
+        endDate: new TZDate(
+          parsed.params.range.endDate,
+          parsed.params.range.timezone,
+        ),
       },
     };
   } catch {

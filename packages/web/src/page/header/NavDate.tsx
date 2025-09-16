@@ -229,6 +229,7 @@ export const NavDate: React.FC = () => {
               shouldDisableDate={(date) => isAfter(date, now)}
               shouldDisableMonth={(month) => isAfter(month, now)}
               shouldDisableYear={(year) => isAfter(year, now)}
+              timezone={SHIP_TIMEZONE}
               slots={{
                 day: (props) => (
                   <PickersDay
