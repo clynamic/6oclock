@@ -17,7 +17,7 @@ import { PageBody } from '../page/PageBody';
 import { PageFooter } from '../page/PageFooter';
 import { PageTitle } from '../page/PageTitle';
 import { PageHeader } from '../page/header/PageHeader';
-import { HomeCounter } from './HomeCounter';
+import { HomeActivity } from './HomeActivity';
 import { HomeMotd } from './HomeMotd';
 
 export const HomePage: React.FC = () => {
@@ -91,7 +91,7 @@ export const HomePage: React.FC = () => {
             <Typography variant="body1">
               <HomeMotd />
             </Typography>
-            <HomeCounter />
+            <HomeActivity />
           </Stack>
         </Stack>
       </PageBody>

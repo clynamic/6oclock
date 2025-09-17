@@ -431,203 +431,42 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/metrics/performance/performance": {
+    "/gadgets/motd": {
       "get": {
-        "operationId": "getPerformance",
-        "summary": "Performance",
-        "description": "Get performance data for an area.",
-        "parameters": [
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "cycle",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "startDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "endDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "timezone",
-            "required": false,
-            "in": "query",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "area",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/UserArea" }
-          },
-          {
-            "name": "activities",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": { "$ref": "#/components/schemas/Activity" }
-            }
-          },
-          {
-            "name": "userId",
-            "required": false,
-            "in": "query",
-            "schema": { "type": "number" }
-          },
-          {
-            "name": "head",
-            "required": false,
-            "in": "query",
-            "schema": { "type": "boolean" }
-          },
-          {
-            "name": "x-safe-mode",
-            "in": "header",
-            "description": "Enable safe mode to filter explicit content",
-            "required": false,
-            "schema": { "type": "string" }
-          }
-        ],
+        "operationId": "getMotd",
+        "summary": "Get today's message of the day",
+        "description": "Returns the message of the day selected for today based on date, schedule, and tier. Unauthenticated users receive the default message.",
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Today's message of the day",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/PerformanceSummary" }
-                }
+                "schema": { "$ref": "#/components/schemas/Motd" }
               }
             }
           }
         },
-        "tags": ["Performance"],
-        "security": [{ "bearer": [] }]
+        "tags": ["Gadgets"]
       }
     },
-    "/metrics/performance/activity": {
+    "/gadgets/activity": {
       "get": {
-        "operationId": "getActivity",
-        "summary": "Activity",
-        "description": "Get activity data for the specified range, scale, and cycle.",
-        "parameters": [
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "cycle",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "startDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "endDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "timezone",
-            "required": false,
-            "in": "query",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "area",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/UserArea" }
-          },
-          {
-            "name": "activities",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": { "$ref": "#/components/schemas/Activity" }
-            }
-          },
-          {
-            "name": "userId",
-            "required": false,
-            "in": "query",
-            "schema": { "type": "number" }
-          }
-        ],
+        "operationId": "getDailyActivity",
+        "summary": "Get today's activity counter",
+        "description": "Returns today's activity counter",
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Today's activity counter",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ActivitySeriesPoint"
-                  }
-                }
+                "schema": { "$ref": "#/components/schemas/DailyActivity" }
               }
             }
           }
         },
-        "tags": ["Performance"],
-        "security": [{ "bearer": [] }]
-      }
-    },
-    "/users/head/{id}": {
-      "get": {
-        "operationId": "getUserHead",
-        "summary": "Get user head",
-        "description": "Get user head by user id",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": { "type": "number" }
-          },
-          {
-            "name": "x-safe-mode",
-            "in": "header",
-            "description": "Enable safe mode to filter explicit content",
-            "required": false,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/UserHead" }
-              }
-            }
-          }
-        },
-        "tags": ["Users"],
-        "security": [{ "bearer": [] }]
+        "tags": ["Gadgets"]
       }
     },
     "/metrics/approvals/count/summary": {
@@ -874,6 +713,440 @@
           }
         },
         "tags": ["Approvals"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/users/head/{id}": {
+      "get": {
+        "operationId": "getUserHead",
+        "summary": "Get user head",
+        "description": "Get user head by user id",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "x-safe-mode",
+            "in": "header",
+            "description": "Enable safe mode to filter explicit content",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserHead" }
+              }
+            }
+          }
+        },
+        "tags": ["Users"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/metrics/deletions/count/series": {
+      "get": {
+        "operationId": "getDeletionCountSeries",
+        "summary": "Post deletion series",
+        "description": "Get a time series of post deletion counts for a given date range",
+        "parameters": [
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Deletions"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/metrics/deletions/count/series/by/deleter/{userId}": {
+      "get": {
+        "operationId": "getDeletionSeriesByDeleter",
+        "summary": "Post deletion series by deleter",
+        "description": "Get a time series of post deletion counts for a given date range by deleter",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Deletions"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/metrics/deletions/activity/summary": {
+      "get": {
+        "operationId": "getDeletionActivitySummary",
+        "summary": "Post deletion activity summary",
+        "description": "Get a hourly summary of post deletion counts for a given date range",
+        "parameters": [
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Deletions"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/metrics/deletions/activity/summary/by/deleter/{userId}": {
+      "get": {
+        "operationId": "getDeletionActivitySummaryByDeleter",
+        "summary": "Post deletion activity summary by deleter",
+        "description": "Get a hourly summary of post deletion counts for a given date range by deleter",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Deletions"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/metrics/post-replacements/created": {
+      "get": {
+        "operationId": "getPostReplacementCreated",
+        "summary": "Post replacements created",
+        "description": "Get post replacements created counts for a given date range",
+        "parameters": [
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Replacements"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/metrics/post-replacements/status": {
+      "get": {
+        "operationId": "getPostReplacementStatus",
+        "summary": "Post replacement status",
+        "description": "Get post replacement status counts for a given date range",
+        "parameters": [
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostReplacementStatusPoint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Replacements"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/metrics/post-replacements/handled": {
+      "get": {
+        "operationId": "getPostReplacementHandled",
+        "summary": "Post replacements handled",
+        "description": "Get post replacements handled counts for a given date range",
+        "parameters": [
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "schema": { "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostReplacementHandledPoint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Replacements"],
         "security": [{ "bearer": [] }]
       }
     },
@@ -1594,6 +1867,171 @@
         "security": [{ "bearer": [] }]
       }
     },
+    "/metrics/performance/performance": {
+      "get": {
+        "operationId": "getPerformance",
+        "summary": "Performance",
+        "description": "Get performance data for an area.",
+        "parameters": [
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "area",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/UserArea" }
+          },
+          {
+            "name": "activities",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/Activity" }
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "head",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "boolean" }
+          },
+          {
+            "name": "x-safe-mode",
+            "in": "header",
+            "description": "Enable safe mode to filter explicit content",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PerformanceSummary" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Performance"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/metrics/performance/activity": {
+      "get": {
+        "operationId": "getActivity",
+        "summary": "Activity",
+        "description": "Get activity data for the specified range, scale, and cycle.",
+        "parameters": [
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "area",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/UserArea" }
+          },
+          {
+            "name": "activities",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/Activity" }
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActivitySeriesPoint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Performance"],
+        "security": [{ "bearer": [] }]
+      }
+    },
     "/metrics/posts/status/summary": {
       "get": {
         "operationId": "getPostStatusSummary",
@@ -1699,234 +2137,6 @@
         "security": [{ "bearer": [] }]
       }
     },
-    "/metrics/deletions/count/series": {
-      "get": {
-        "operationId": "getDeletionCountSeries",
-        "summary": "Post deletion series",
-        "description": "Get a time series of post deletion counts for a given date range",
-        "parameters": [
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "cycle",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "startDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "endDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "timezone",
-            "required": false,
-            "in": "query",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Deletions"],
-        "security": [{ "bearer": [] }]
-      }
-    },
-    "/metrics/deletions/count/series/by/deleter/{userId}": {
-      "get": {
-        "operationId": "getDeletionSeriesByDeleter",
-        "summary": "Post deletion series by deleter",
-        "description": "Get a time series of post deletion counts for a given date range by deleter",
-        "parameters": [
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": { "type": "number" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "cycle",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "startDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "endDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "timezone",
-            "required": false,
-            "in": "query",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Deletions"],
-        "security": [{ "bearer": [] }]
-      }
-    },
-    "/metrics/deletions/activity/summary": {
-      "get": {
-        "operationId": "getDeletionActivitySummary",
-        "summary": "Post deletion activity summary",
-        "description": "Get a hourly summary of post deletion counts for a given date range",
-        "parameters": [
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "cycle",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "startDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "endDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "timezone",
-            "required": false,
-            "in": "query",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Deletions"],
-        "security": [{ "bearer": [] }]
-      }
-    },
-    "/metrics/deletions/activity/summary/by/deleter/{userId}": {
-      "get": {
-        "operationId": "getDeletionActivitySummaryByDeleter",
-        "summary": "Post deletion activity summary by deleter",
-        "description": "Get a hourly summary of post deletion counts for a given date range by deleter",
-        "parameters": [
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": { "type": "number" }
-          },
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "cycle",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "startDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "endDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "timezone",
-            "required": false,
-            "in": "query",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Deletions"],
-        "security": [{ "bearer": [] }]
-      }
-    },
     "/metrics/feedbacks/type": {
       "get": {
         "operationId": "getFeedbackTypeSeries",
@@ -1992,178 +2202,6 @@
           }
         },
         "tags": ["Feedbacks"],
-        "security": [{ "bearer": [] }]
-      }
-    },
-    "/metrics/post-replacements/created": {
-      "get": {
-        "operationId": "getPostReplacementCreated",
-        "summary": "Post replacements created",
-        "description": "Get post replacements created counts for a given date range",
-        "parameters": [
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "cycle",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "startDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "endDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "timezone",
-            "required": false,
-            "in": "query",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/SeriesCountPoint" }
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Replacements"],
-        "security": [{ "bearer": [] }]
-      }
-    },
-    "/metrics/post-replacements/status": {
-      "get": {
-        "operationId": "getPostReplacementStatus",
-        "summary": "Post replacement status",
-        "description": "Get post replacement status counts for a given date range",
-        "parameters": [
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "cycle",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "startDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "endDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "timezone",
-            "required": false,
-            "in": "query",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PostReplacementStatusPoint"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Replacements"],
-        "security": [{ "bearer": [] }]
-      }
-    },
-    "/metrics/post-replacements/handled": {
-      "get": {
-        "operationId": "getPostReplacementHandled",
-        "summary": "Post replacements handled",
-        "description": "Get post replacements handled counts for a given date range",
-        "parameters": [
-          {
-            "name": "scale",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "cycle",
-            "required": false,
-            "in": "query",
-            "schema": { "$ref": "#/components/schemas/TimeScale" }
-          },
-          {
-            "name": "startDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "endDate",
-            "required": false,
-            "in": "query",
-            "schema": { "format": "date-time", "type": "string" }
-          },
-          {
-            "name": "timezone",
-            "required": false,
-            "in": "query",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "query",
-            "schema": { "type": "number" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PostReplacementHandledPoint"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Replacements"],
         "security": [{ "bearer": [] }]
       }
     },
@@ -2530,6 +2568,7 @@
       },
       "TimeScale": {
         "type": "string",
+        "description": "The time scale of the counter",
         "enum": [
           "minute",
           "hour",
@@ -2571,12 +2610,20 @@
         },
         "required": ["type", "id", "startDate", "endDate", "lowerId", "upperId"]
       },
-      "UserArea": {
-        "type": "string",
-        "enum": ["admin", "moderator", "janitor", "member"]
+      "Motd": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "The message of the day",
+            "example": "Your valiant efforts are appreciated."
+          }
+        },
+        "required": ["message"]
       },
       "Activity": {
         "type": "string",
+        "description": "The activity key for this counter",
         "enum": [
           "post_create",
           "post_delete",
@@ -2589,133 +2636,18 @@
           "ticket_handle"
         ]
       },
-      "PerformanceGrade": {
-        "type": "string",
-        "enum": [
-          "F",
-          "E",
-          "D",
-          "C",
-          "B",
-          "A",
-          "S",
-          "S2",
-          "S3",
-          "S4",
-          "S5",
-          "S6"
-        ]
-      },
-      "TrendGrade": {
-        "type": "string",
-        "enum": [
-          "plummet",
-          "drop",
-          "decline",
-          "neutral",
-          "rise",
-          "climb",
-          "surge"
-        ]
-      },
-      "UserHead": {
+      "DailyActivity": {
         "type": "object",
         "properties": {
-          "id": { "type": "number" },
-          "name": { "type": "string" },
-          "avatar": { "type": "string" },
-          "level": { "type": "string" }
-        },
-        "required": ["id", "name", "level"]
-      },
-      "PerformanceRecord": {
-        "type": "object",
-        "properties": {
-          "grade": { "$ref": "#/components/schemas/PerformanceGrade" },
-          "score": { "type": "number" }
-        },
-        "required": ["grade", "score"]
-      },
-      "ActivitySummary": {
-        "type": "object",
-        "properties": {
-          "postCreate": { "type": "number" },
-          "postDelete": { "type": "number" },
-          "postApprove": { "type": "number" },
-          "postReplacementCreate": { "type": "number" },
-          "postReplacementApprove": { "type": "number" },
-          "postReplacementReject": { "type": "number" },
-          "postReplacementPromote": { "type": "number" },
-          "ticketCreate": { "type": "number" },
-          "ticketHandle": { "type": "number" }
-        },
-        "required": [
-          "postCreate",
-          "postDelete",
-          "postApprove",
-          "postReplacementCreate",
-          "postReplacementApprove",
-          "postReplacementReject",
-          "postReplacementPromote",
-          "ticketCreate",
-          "ticketHandle"
-        ]
-      },
-      "PerformanceSummary": {
-        "type": "object",
-        "properties": {
-          "scoreGrade": { "$ref": "#/components/schemas/PerformanceGrade" },
-          "trendGrade": { "$ref": "#/components/schemas/TrendGrade" },
-          "userId": { "type": "number" },
-          "head": { "$ref": "#/components/schemas/UserHead" },
-          "position": { "type": "number" },
-          "score": { "type": "number" },
-          "trend": { "type": "number" },
-          "history": {
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/PerformanceRecord" }
+          "value": {
+            "type": "number",
+            "description": "The counter value",
+            "example": 42
           },
-          "activity": { "$ref": "#/components/schemas/ActivitySummary" },
-          "days": { "type": "number" }
+          "timescale": { "$ref": "#/components/schemas/TimeScale" },
+          "activity": { "$ref": "#/components/schemas/Activity" }
         },
-        "required": [
-          "scoreGrade",
-          "trendGrade",
-          "userId",
-          "position",
-          "score",
-          "trend",
-          "history",
-          "activity",
-          "days"
-        ]
-      },
-      "ActivitySeriesPoint": {
-        "type": "object",
-        "properties": {
-          "postCreate": { "type": "number" },
-          "postDelete": { "type": "number" },
-          "postApprove": { "type": "number" },
-          "postReplacementCreate": { "type": "number" },
-          "postReplacementApprove": { "type": "number" },
-          "postReplacementReject": { "type": "number" },
-          "postReplacementPromote": { "type": "number" },
-          "ticketCreate": { "type": "number" },
-          "ticketHandle": { "type": "number" },
-          "date": { "format": "date-time", "type": "string" }
-        },
-        "required": [
-          "postCreate",
-          "postDelete",
-          "postApprove",
-          "postReplacementCreate",
-          "postReplacementApprove",
-          "postReplacementReject",
-          "postReplacementPromote",
-          "ticketCreate",
-          "ticketHandle",
-          "date"
-        ]
+        "required": ["value", "timescale", "activity"]
       },
       "ApprovalCountSummary": {
         "type": "object",
@@ -2730,6 +2662,16 @@
         },
         "required": ["date", "value"]
       },
+      "UserHead": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "name": { "type": "string" },
+          "avatar": { "type": "string" },
+          "level": { "type": "string" }
+        },
+        "required": ["id", "name", "level"]
+      },
       "ApproverSummary": {
         "type": "object",
         "properties": {
@@ -2740,6 +2682,27 @@
           "days": { "type": "number" }
         },
         "required": ["userId", "total", "position", "days"]
+      },
+      "PostReplacementStatusPoint": {
+        "type": "object",
+        "properties": {
+          "pending": { "type": "number" },
+          "date": { "format": "date-time", "type": "string" },
+          "rejected": { "type": "number" },
+          "approved": { "type": "number" },
+          "promoted": { "type": "number" }
+        },
+        "required": ["pending", "date", "rejected", "approved", "promoted"]
+      },
+      "PostReplacementHandledPoint": {
+        "type": "object",
+        "properties": {
+          "date": { "format": "date-time", "type": "string" },
+          "rejected": { "type": "number" },
+          "approved": { "type": "number" },
+          "promoted": { "type": "number" }
+        },
+        "required": ["date", "rejected", "approved", "promoted"]
       },
       "TicketStatusSeriesPoint": {
         "type": "object",
@@ -2837,6 +2800,128 @@
         },
         "required": ["userId", "total", "days"]
       },
+      "UserArea": {
+        "type": "string",
+        "enum": ["admin", "moderator", "janitor", "member"]
+      },
+      "PerformanceGrade": {
+        "type": "string",
+        "enum": [
+          "F",
+          "E",
+          "D",
+          "C",
+          "B",
+          "A",
+          "S",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6"
+        ]
+      },
+      "TrendGrade": {
+        "type": "string",
+        "enum": [
+          "plummet",
+          "drop",
+          "decline",
+          "neutral",
+          "rise",
+          "climb",
+          "surge"
+        ]
+      },
+      "PerformanceRecord": {
+        "type": "object",
+        "properties": {
+          "grade": { "$ref": "#/components/schemas/PerformanceGrade" },
+          "score": { "type": "number" }
+        },
+        "required": ["grade", "score"]
+      },
+      "ActivitySummary": {
+        "type": "object",
+        "properties": {
+          "postCreate": { "type": "number" },
+          "postDelete": { "type": "number" },
+          "postApprove": { "type": "number" },
+          "postReplacementCreate": { "type": "number" },
+          "postReplacementApprove": { "type": "number" },
+          "postReplacementReject": { "type": "number" },
+          "postReplacementPromote": { "type": "number" },
+          "ticketCreate": { "type": "number" },
+          "ticketHandle": { "type": "number" }
+        },
+        "required": [
+          "postCreate",
+          "postDelete",
+          "postApprove",
+          "postReplacementCreate",
+          "postReplacementApprove",
+          "postReplacementReject",
+          "postReplacementPromote",
+          "ticketCreate",
+          "ticketHandle"
+        ]
+      },
+      "PerformanceSummary": {
+        "type": "object",
+        "properties": {
+          "scoreGrade": { "$ref": "#/components/schemas/PerformanceGrade" },
+          "trendGrade": { "$ref": "#/components/schemas/TrendGrade" },
+          "userId": { "type": "number" },
+          "head": { "$ref": "#/components/schemas/UserHead" },
+          "position": { "type": "number" },
+          "score": { "type": "number" },
+          "trend": { "type": "number" },
+          "history": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PerformanceRecord" }
+          },
+          "activity": { "$ref": "#/components/schemas/ActivitySummary" },
+          "days": { "type": "number" }
+        },
+        "required": [
+          "scoreGrade",
+          "trendGrade",
+          "userId",
+          "position",
+          "score",
+          "trend",
+          "history",
+          "activity",
+          "days"
+        ]
+      },
+      "ActivitySeriesPoint": {
+        "type": "object",
+        "properties": {
+          "postCreate": { "type": "number" },
+          "postDelete": { "type": "number" },
+          "postApprove": { "type": "number" },
+          "postReplacementCreate": { "type": "number" },
+          "postReplacementApprove": { "type": "number" },
+          "postReplacementReject": { "type": "number" },
+          "postReplacementPromote": { "type": "number" },
+          "ticketCreate": { "type": "number" },
+          "ticketHandle": { "type": "number" },
+          "date": { "format": "date-time", "type": "string" }
+        },
+        "required": [
+          "postCreate",
+          "postDelete",
+          "postApprove",
+          "postReplacementCreate",
+          "postReplacementApprove",
+          "postReplacementReject",
+          "postReplacementPromote",
+          "ticketCreate",
+          "ticketHandle",
+          "date"
+        ]
+      },
       "PostStatusSummary": {
         "type": "object",
         "properties": {
@@ -2856,27 +2941,6 @@
           "positive": { "type": "number" }
         },
         "required": ["date", "negative", "neutral", "positive"]
-      },
-      "PostReplacementStatusPoint": {
-        "type": "object",
-        "properties": {
-          "pending": { "type": "number" },
-          "date": { "format": "date-time", "type": "string" },
-          "rejected": { "type": "number" },
-          "approved": { "type": "number" },
-          "promoted": { "type": "number" }
-        },
-        "required": ["pending", "date", "rejected", "approved", "promoted"]
-      },
-      "PostReplacementHandledPoint": {
-        "type": "object",
-        "properties": {
-          "date": { "format": "date-time", "type": "string" },
-          "rejected": { "type": "number" },
-          "approved": { "type": "number" },
-          "promoted": { "type": "number" }
-        },
-        "required": ["date", "rejected", "approved", "promoted"]
       },
       "PostUploaderSummary": {
         "type": "object",
