@@ -6,6 +6,9 @@
  * OpenAPI spec version: 0.0.8
  */
 
+/**
+ * The time scale of the counter
+ */
 export type TimeScale = typeof TimeScale[keyof typeof TimeScale];
 
 
