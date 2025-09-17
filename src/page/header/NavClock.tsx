@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 
 import { SHIP_TIMEZONE } from '../../utils/timezone';
 import { NavButton } from './NavButton';
+import { usePageHeaderContext } from './PageHeaderContext';
 
 const MiniClockIcon: React.FC<{ time: Date }> = ({ time }) => {
   const hours = time.getHours() % 12;
@@ -147,6 +148,7 @@ export const NavClock: React.FC = () => {
   );
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const isOpen = Boolean(anchorEl);
+  const { layout } = usePageHeaderContext();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -172,7 +174,7 @@ export const NavClock: React.FC = () => {
         startIcon={<MiniClockIcon time={currentTime} />}
         sx={{
           fontFamily: 'monospace',
-          px: 1.5,
+          px: layout === 'small' ? undefined : 1.5,
           py: 0.5,
         }}
       >
