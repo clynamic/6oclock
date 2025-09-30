@@ -176,6 +176,7 @@ export const ManifestHealthFrame: React.FC<ManifestHealthFrameProps> = ({
                                 scaleType: 'band',
                                 dataKey: 'startId',
                                 valueFormatter: (v: number) => `#${v}`,
+                                position: 'none',
                                 colorMap: {
                                   type: 'piecewise',
                                   thresholds: dataset
@@ -216,6 +217,7 @@ export const ManifestHealthFrame: React.FC<ManifestHealthFrameProps> = ({
                             yAxis={[
                               {
                                 domainLimit: 'strict',
+                                position: 'none',
                               },
                             ]}
                             margin={{
@@ -246,12 +248,10 @@ export const ManifestHealthFrame: React.FC<ManifestHealthFrameProps> = ({
                                 label: 'None',
                               },
                             ]}
+                            hideLegend={true}
                             slotProps={{
-                              legend: { hidden: true },
                               noDataOverlay: { message: 'No data available' },
                             }}
-                            leftAxis={null}
-                            bottomAxis={null}
                           />
                         </Box>
                       );

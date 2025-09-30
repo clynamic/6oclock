@@ -69,9 +69,6 @@ export const PostStatusSummaryChart: React.FC = () => {
             message: 'No data',
           },
         }}
-        margin={{
-          right: 150,
-        }}
       />
     </QueryHint>
   );
