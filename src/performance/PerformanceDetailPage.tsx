@@ -250,7 +250,7 @@ export const PerformanceDetailPage: React.FC = () => {
                                   height={116}
                                   showTooltip
                                   showHighlight
-                                  colors={[theme.palette.primary.main]}
+                                  color={theme.palette.primary.main}
                                   sx={{
                                     '.MuiAreaElement-root': {
                                       fill: theme.palette.primary.main,

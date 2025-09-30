@@ -40,10 +40,8 @@ export const TicketOpenSeriesChart: React.FC = () => {
             color: theme.palette.primary.main,
           },
         ]}
+        hideLegend={true}
         slotProps={{
-          legend: {
-            hidden: true,
-          },
           noDataOverlay: {
             message: 'No data',
           },
