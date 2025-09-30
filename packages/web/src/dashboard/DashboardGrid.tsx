@@ -41,7 +41,7 @@ export const DashboardGrid: React.FC<DashboardGridProps> = ({ ...rest }) => {
         resizeHandles={isEditing ? ['se', 'sw', 'ne', 'nw'] : []}
         resizeHandle={
           ((handle: HandleDirection, ref: Ref<HTMLDivElement>) => (
-            <ResizableHandle resizeHandle={handle} ref={ref} />
+            (<ResizableHandle resizeHandle={handle} ref={ref} />)
             // for some reason, the @types/react-grid-layout package does not recognize the ref prop
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           )) as any
