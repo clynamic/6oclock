@@ -189,7 +189,7 @@ const PageHeaderBar: React.FC = () => {
                       component={RouterLink}
                       href={entry.href}
                       label={entry.label}
-                      selected={entry === currentLink}
+                      selected={currentLink?.href === entry.href}
                     />
                   );
                 }
