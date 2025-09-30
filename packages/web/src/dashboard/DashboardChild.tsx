@@ -1,5 +1,3 @@
-import { forwardRef } from 'react';
-
 import { Box } from '@mui/material';
 
 export interface DashboardChildForwardProps {
@@ -8,6 +6,7 @@ export interface DashboardChildForwardProps {
   onMouseDown?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onMouseUp?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onTouchEnd?: (event: React.TouchEvent<HTMLDivElement>) => void;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 export interface DashboardChildCreateProps {
@@ -18,23 +17,26 @@ export const createDashboardChild = <P extends object>(
   Component: React.ComponentType<P>,
   props?: DashboardChildCreateProps,
 ) => {
-  return forwardRef<HTMLDivElement, P & DashboardChildForwardProps>(
-    (
-      { className, style, onMouseDown, onMouseUp, onTouchEnd, ...rest },
-      ref,
-    ) => {
-      return (
-        <Box
-          ref={ref}
-          className={(className ?? '') + (props?.className ?? '')}
-          style={style}
-          onMouseDown={onMouseDown}
-          onMouseUp={onMouseUp}
-          onTouchEnd={onTouchEnd}
-        >
-          <Component {...(rest as P)} />
-        </Box>
-      );
-    },
-  );
+  return function DashboardChildWrapper({
+    className,
+    style,
+    onMouseDown,
+    onMouseUp,
+    onTouchEnd,
+    ref,
+    ...rest
+  }: P & DashboardChildForwardProps) {
+    return (
+      <Box
+        ref={ref}
+        className={(className ?? '') + (props?.className ?? '')}
+        style={style}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+        onTouchEnd={onTouchEnd}
+      >
+        <Component {...(rest as P)} />
+      </Box>
+    );
+  };
 };
