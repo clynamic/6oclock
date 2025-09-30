@@ -58,10 +58,8 @@ export const ReplacementHandledSeriesChart: React.FC<
         stack: 'handled',
       },
     ],
+    hideLegend: true,
     slotProps: {
-      legend: {
-        hidden: true,
-      },
       noDataOverlay: {
         message: 'No data',
       },

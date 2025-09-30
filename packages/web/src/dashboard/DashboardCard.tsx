@@ -96,7 +96,9 @@ export const DashboardCard = createDashboardChild<DashboardCardProps>(
                 </Stack>
               )}
             </Stack>
-            <ErrorBoundary>{children}</ErrorBoundary>
+            <Box sx={{ flex: 1, minHeight: 0 }}>
+              <ErrorBoundary>{children}</ErrorBoundary>
+            </Box>
           </Stack>
 
           {isEditing && (

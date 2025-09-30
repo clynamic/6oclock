@@ -41,10 +41,8 @@ export const PostPendingSeriesChart: React.FC = () => {
             color: theme.palette.primary.main,
           },
         ]}
+        hideLegend={true}
         slotProps={{
-          legend: {
-            hidden: true,
-          },
           noDataOverlay: {
             message: 'No data',
           },

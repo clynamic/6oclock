@@ -38,10 +38,8 @@ export const UserActivitySeriesChart: React.FC = () => {
         color: theme.palette.primary.main,
         stack: 'action',
       })),
+    hideLegend: true,
     slotProps: {
-      legend: {
-        hidden: true,
-      },
       noDataOverlay: {
         message: 'No data',
       },

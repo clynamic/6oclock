@@ -43,10 +43,8 @@ export const TicketCreatedSeriesByReporterChart: React.FC<
         color: theme.palette.primary.main,
       },
     ],
+    hideLegend: true,
     slotProps: {
-      legend: {
-        hidden: true,
-      },
       noDataOverlay: {
         message: 'No data',
       },

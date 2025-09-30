@@ -72,9 +72,6 @@ export const TicketAgeSummaryChart: React.FC = () => {
             message: 'No data',
           },
         }}
-        margin={{
-          right: 150,
-        }}
       />
     </QueryHint>
   );
