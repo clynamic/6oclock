@@ -61,7 +61,7 @@ export const CounterDisplay: React.FC<CounterDisplayProps> = ({
 }) => {
   useCounterImagePreloader();
   const [displayNumber, setDisplayNumber] = useState(animate ? 0 : number);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     if (!animate) {
