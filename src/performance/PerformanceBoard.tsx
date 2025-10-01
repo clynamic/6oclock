@@ -26,9 +26,13 @@ export const PerformanceLeaderboard: React.FC = () => {
       data={data}
       isLoading={isLoading}
       error={error}
-      skeleton={Array.from({ length: 5 }).map((_, index) => (
-        <PerformanceFrame key={index} />
-      ))}
+      skeleton={
+        <Stack gap={1}>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <PerformanceFrame key={index} />
+          ))}
+        </Stack>
+      }
     >
       <LimitedList
         indicator={() => (
@@ -50,9 +54,9 @@ export const PerformanceLeaderboard: React.FC = () => {
           </Stack>
         )}
       >
-        {data?.map((ticketer) => {
-          return <PerformanceFrame key={ticketer.userId} summary={ticketer} />;
-        })}
+        {data?.map((user) => (
+          <PerformanceFrame key={user.userId} summary={user} />
+        ))}
       </LimitedList>
     </QueryHint>
   );
