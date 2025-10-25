@@ -25,9 +25,13 @@ export const PostUploaderBoard: React.FC = () => {
       data={data}
       isLoading={isLoading}
       error={error}
-      skeleton={Array.from({ length: 5 }).map((_, index) => (
-        <PostUploaderFrame key={index} />
-      ))}
+      skeleton={
+        <Stack gap={1}>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <PostUploaderFrame key={index} />
+          ))}
+        </Stack>
+      }
     >
       <LimitedList
         indicator={() => (
