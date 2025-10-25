@@ -25,9 +25,13 @@ export const TicketReporterBoard: React.FC = () => {
       data={data}
       isLoading={isLoading}
       error={error}
-      skeleton={Array.from({ length: 5 }).map((_, index) => (
-        <TicketReporterFrame key={index} />
-      ))}
+      skeleton={
+        <Stack gap={1}>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <TicketReporterFrame key={index} />
+          ))}
+        </Stack>
+      }
     >
       <LimitedList
         indicator={() => (
