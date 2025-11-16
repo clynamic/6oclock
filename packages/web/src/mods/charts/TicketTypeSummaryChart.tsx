@@ -17,6 +17,7 @@ export const TicketTypeColors = {
   set: '#f092b0', // Rose pink
   post: '#f0c23b', // Golden yellow
   dmail: '#88cc88', // Fresh green
+  replacement: '#9ca3db', // Periwinkle blue
 } as const;
 
 export const TicketTypeSummaryChart: React.FC = () => {
