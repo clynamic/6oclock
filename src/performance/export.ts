@@ -2,12 +2,14 @@ import { format, subMonths } from 'date-fns';
 
 import { PerformanceSummary } from '../api';
 import { getActivityFromKey, getActivityNoun } from '../utils/activity';
+import { formatRangeLabel, inferDurationFromRange } from '../utils/ranges';
+import { capitalizeWords } from '../utils/strings';
 import { getTrendSymbol } from '../utils/trends';
 
 export const exportPerformanceToCSV = (
   data: PerformanceSummary[],
-  range?: { startDate: Date; endDate: Date },
-  area?: string,
+  area: string | undefined,
+  range: { startDate: Date; endDate: Date },
 ): void => {
   const activeActivityTypes = new Set<string>();
   data.forEach((summary) => {
@@ -28,7 +30,7 @@ export const exportPerformanceToCSV = (
       }
     });
 
-  const currentDate = range?.startDate || new Date();
+  const currentDate = range.startDate;
   const monthHeaders = [
     subMonths(currentDate, 3),
     subMonths(currentDate, 2),
@@ -88,9 +90,12 @@ export const exportPerformanceToCSV = (
   const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
 
+  const duration = inferDurationFromRange(range.startDate, range.endDate);
+  const rangeLabel = formatRangeLabel(range.startDate, range.endDate, duration);
+
   const link = document.createElement('a');
   link.href = url;
-  link.download = `${area || 'sheet'}-performance-${format(range?.startDate || new Date(), 'yyyy-MM-dd')}.csv`;
+  link.download = `Performance ${capitalizeWords(area || 'sheet')} ${rangeLabel}.csv`;
   link.click();
 
   URL.revokeObjectURL(url);

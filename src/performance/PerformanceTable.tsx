@@ -39,6 +39,7 @@ import {
   inferDurationFromRange,
   unitFromDuration,
 } from '../utils/ranges';
+import { capitalizeWords } from '../utils/strings';
 import { useGradeColors } from './color';
 import { exportPerformanceToCSV } from './export';
 
@@ -87,6 +88,10 @@ export const PerformanceTable: React.FC = () => {
     () => inferDurationFromRange(range.startDate, range.endDate),
     [range.startDate, range.endDate],
   );
+  const rangeLabel = useMemo(
+    () => formatRangeLabel(range.startDate, range.endDate, chartDuration),
+    [range.startDate, range.endDate, chartDuration],
+  );
   const navigate = useNavigate();
 
   const { data, isLoading, error } = usePerformance(
@@ -100,7 +105,7 @@ export const PerformanceTable: React.FC = () => {
 
   const handleExport = async () => {
     if (!data) return;
-    exportPerformanceToCSV(data, range, area);
+    exportPerformanceToCSV(data, area, range);
   };
 
   const periods = useMemo(() => {
@@ -158,7 +163,7 @@ export const PerformanceTable: React.FC = () => {
     <Page>
       <PageTitle subtitle="Performance" />
       <ScreenshotPrinter
-        filename={`${area}-performance-${format(range.startDate, 'yyyy-MM-dd')}`}
+        filename={`Performance ${capitalizeWords(area || 'sheet')} ${rangeLabel}`}
         targetId="performance-table-root"
       >
         {(handlePrint) => (
