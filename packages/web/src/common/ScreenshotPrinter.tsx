@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
 import { Box, useTheme } from '@mui/material';
-import { format } from 'date-fns';
 
 import { AXIOS_INSTANCE } from '../http/axios';
 
@@ -116,7 +115,7 @@ export const ScreenshotPrinter: React.FC<ScreenshotPrinterProps> = ({
         const url = canvas.toDataURL('image/png');
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${filename}-${format(new Date(), 'yyyy-MM-dd')}.png`;
+        a.download = `${filename}.png`;
         a.click();
       });
     }

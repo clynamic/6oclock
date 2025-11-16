@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import {
   Box,
   Card,
@@ -8,7 +10,6 @@ import {
   useTheme,
 } from '@mui/material';
 import { SparkLineChart } from '@mui/x-charts';
-import { format } from 'date-fns';
 import { useParams } from 'react-router-dom';
 
 import { usePerformance } from '../api';
@@ -31,6 +32,7 @@ import { getActivityFromKey, getActivityName } from '../utils/activity';
 import { useChartRange } from '../utils/charts';
 import { formatNumber } from '../utils/numbers';
 import { refetchQueryOptions } from '../utils/query';
+import { formatRangeLabel, inferDurationFromRange } from '../utils/ranges';
 import { useGradeColors } from './color';
 
 export const PerformanceDetailPage: React.FC = () => {
@@ -38,6 +40,14 @@ export const PerformanceDetailPage: React.FC = () => {
   const { id: userId } = useParams<{ id: string }>();
   const theme = useTheme();
   const { getScoreGradeColor, getTrendGradeColor } = useGradeColors();
+  const chartDuration = useMemo(
+    () => inferDurationFromRange(range.startDate, range.endDate),
+    [range.startDate, range.endDate],
+  );
+  const rangeLabel = useMemo(
+    () => formatRangeLabel(range.startDate, range.endDate, chartDuration),
+    [range.startDate, range.endDate, chartDuration],
+  );
 
   const {
     data: summary,
@@ -68,7 +78,7 @@ export const PerformanceDetailPage: React.FC = () => {
         }
       />
       <ScreenshotPrinter
-        filename={`performance-${summary?.head?.name || userId}-${format(range.startDate, 'yyyy-MM-dd')}`}
+        filename={`Performance ${summary?.head?.name || userId} ${rangeLabel}`}
         targetId="performance-detail-root"
       >
         {(handlePrint) => (
