@@ -151,6 +151,10 @@ export const ManifestHealthFrame: React.FC<ManifestHealthFrameProps> = ({
                         extended ? (groupIndex + 1) * 30 : 30,
                       );
 
+                      if (!extended && dataset.length === 0) {
+                        return null;
+                      }
+
                       const chartCount = manifest.slices.length / 30;
                       const height = extended
                         ? chartCount >= 8
