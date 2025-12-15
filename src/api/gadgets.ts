@@ -33,7 +33,6 @@ import type { ErrorType } from '../http/axios';
 
 
 /**
- * Returns the message of the day selected for today based on date, schedule, and tier. Unauthenticated users receive the default message.
  * @summary Get today's message of the day
  */
 export const motd = (

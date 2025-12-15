@@ -6,9 +6,6 @@
  * OpenAPI spec version: 0.0.8
  */
 
-/**
- * The activity key for this counter
- */
 export type Activity = typeof Activity[keyof typeof Activity];
 
 

@@ -16,4 +16,5 @@ export interface TicketTypeSummary {
   set: number;
   post: number;
   dmail: number;
+  replacement: number;
 }
