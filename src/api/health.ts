@@ -31,6 +31,7 @@ import type {
 
 import type {
   DeleteTilesByType200,
+  DeleteTilesByTypeParams,
   GetManifestHealthParams,
   GetTileHealthParams,
   ManifestHealth,
@@ -443,16 +444,18 @@ export function useTileHealth<TData = Awaited<ReturnType<typeof tileHealth>>, TE
 
 
 /**
- * Delete all tiles of the specified type (admin only)
+ * Delete all tiles of the specified type
  * @summary Delete all tiles of a type
  */
 export const deleteTilesByType = (
-    type: 'upload_hourly',
+    type: 'upload_hourly' | 'post_pending_hourly',
+    params?: DeleteTilesByTypeParams,
  ) => {
       
       
       return makeRequest<DeleteTilesByType200>(
-      {url: `/health/tiles/${encodeURIComponent(String(type))}`, method: 'DELETE'
+      {url: `/health/tiles/${encodeURIComponent(String(type))}`, method: 'DELETE',
+        params
     },
       );
     }
@@ -460,8 +463,8 @@ export const deleteTilesByType = (
 
 
 export const getDeleteTilesByTypeMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteTilesByType>>, TError,{type: 'upload_hourly'}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof deleteTilesByType>>, TError,{type: 'upload_hourly'}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteTilesByType>>, TError,{type: 'upload_hourly' | 'post_pending_hourly';params?: DeleteTilesByTypeParams}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof deleteTilesByType>>, TError,{type: 'upload_hourly' | 'post_pending_hourly';params?: DeleteTilesByTypeParams}, TContext> => {
 
 const mutationKey = ['deleteTilesByType'];
 const {mutation: mutationOptions} = options ?
@@ -473,10 +476,10 @@ const {mutation: mutationOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteTilesByType>>, {type: 'upload_hourly'}> = (props) => {
-          const {type} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteTilesByType>>, {type: 'upload_hourly' | 'post_pending_hourly';params?: DeleteTilesByTypeParams}> = (props) => {
+          const {type,params} = props ?? {};
 
-          return  deleteTilesByType(type,)
+          return  deleteTilesByType(type,params,)
         }
 
         
@@ -492,11 +495,11 @@ const {mutation: mutationOptions} = options ?
  * @summary Delete all tiles of a type
  */
 export const useDeleteTilesByType = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteTilesByType>>, TError,{type: 'upload_hourly'}, TContext>, }
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteTilesByType>>, TError,{type: 'upload_hourly' | 'post_pending_hourly';params?: DeleteTilesByTypeParams}, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof deleteTilesByType>>,
         TError,
-        {type: 'upload_hourly'},
+        {type: 'upload_hourly' | 'post_pending_hourly';params?: DeleteTilesByTypeParams},
         TContext
       > => {
 

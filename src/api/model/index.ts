@@ -21,6 +21,7 @@ export * from './dashboardPositions';
 export * from './dashboardUpdate';
 export * from './dashboardUpdateMeta';
 export * from './deleteTilesByType200';
+export * from './deleteTilesByTypeParams';
 export * from './feedbackTypeSeriesPoint';
 export * from './getActivityParams';
 export * from './getApprovalCountSeriesByApproverParams';

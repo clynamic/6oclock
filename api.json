@@ -226,14 +226,47 @@
       "delete": {
         "operationId": "deleteTilesByType",
         "summary": "Delete all tiles of a type",
-        "description": "Delete all tiles of the specified type (admin only)",
+        "description": "Delete all tiles of the specified type",
         "parameters": [
           {
             "name": "type",
             "required": true,
             "in": "path",
             "description": "The type of tiles to delete",
-            "schema": { "enum": ["upload_hourly"], "type": "string" }
+            "schema": {
+              "enum": ["upload_hourly", "post_pending_hourly"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2586,7 +2619,10 @@
           "slices"
         ]
       },
-      "TileType": { "type": "string", "enum": ["upload_hourly"] },
+      "TileType": {
+        "type": "string",
+        "enum": ["upload_hourly", "post_pending_hourly"]
+      },
       "TileSlice": {
         "type": "object",
         "properties": {
@@ -2618,6 +2654,19 @@
           "expected",
           "actual",
           "slices"
+        ]
+      },
+      "TimeScale": {
+        "type": "string",
+        "enum": [
+          "minute",
+          "hour",
+          "day",
+          "week",
+          "month",
+          "year",
+          "decade",
+          "all"
         ]
       },
       "DashboardPosition": {
@@ -2677,19 +2726,6 @@
           "positions": { "$ref": "#/components/schemas/DashboardPositions" },
           "meta": { "type": "object" }
         }
-      },
-      "TimeScale": {
-        "type": "string",
-        "enum": [
-          "minute",
-          "hour",
-          "day",
-          "week",
-          "month",
-          "year",
-          "decade",
-          "all"
-        ]
       },
       "ManifestAvailability": {
         "type": "object",

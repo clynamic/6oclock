@@ -45,7 +45,13 @@ export const TileHealthFrame: React.FC<TileHealthFrameProps> = ({
 
   const handleDelete = async () => {
     if (!tile) return;
-    await deleteTiles({ type: tile.type });
+    await deleteTiles({
+      type: tile.type,
+      params: {
+        startDate: tile.startDate,
+        endDate: tile.endDate,
+      },
+    });
     queryClient.invalidateQueries({
       queryKey: getTileHealthQueryKey(),
     });
