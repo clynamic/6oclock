@@ -1,3 +1,5 @@
+import { Box } from '@mui/system';
+
 import { useTileHealthInfinite } from '../../api';
 import { LimitedList } from '../../common/LimitedList';
 import { LoadMoreHint } from '../../common/LoadMoreHint';
@@ -28,18 +30,21 @@ export const TileHealthPage: React.FC = () => {
       <PageTitle subtitle="Tile Health" />
       <PageHeader />
       <PageBody>
-        <QueryHint
-          data={tiles}
-          isLoading={query.isLoading}
-          isEmpty={!tiles?.length}
-          error={query.error}
-        >
-          <LimitedList indicator={() => <LoadMoreHint query={query} />}>
-            {tiles?.map((tile) => (
-              <TileHealthFrame key={tile.type} tile={tile} extended={true} />
-            ))}
-          </LimitedList>
-        </QueryHint>
+        <Box sx={{ width: '100%', maxWidth: 600, margin: 'auto', p: 2 }}>
+          <QueryHint
+            data={tiles}
+            isLoading={query.isLoading}
+            isEmpty={!tiles?.length}
+            error={query.error}
+          >
+            <LimitedList indicator={() => <LoadMoreHint query={query} />}>
+              {tiles?.map((tile) => (
+                <TileHealthFrame key={tile.type} tile={tile} extended={true} />
+              ))}
+            </LimitedList>
+          </QueryHint>
+          <LoadMoreHint query={query} />
+        </Box>
       </PageBody>
       <PageFooter />
     </Page>
