@@ -3,7 +3,7 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.8
+ * OpenAPI spec version: 1.0.0
  */
 
 export * from './activity';
@@ -20,7 +20,6 @@ export * from './dashboardPosition';
 export * from './dashboardPositions';
 export * from './dashboardUpdate';
 export * from './dashboardUpdateMeta';
-export * from './deleteTilesByType200';
 export * from './deleteTilesByTypeParams';
 export * from './feedbackTypeSeriesPoint';
 export * from './getActivityParams';

@@ -77,9 +77,14 @@
     },
     "/proxy/*": {
       "get": {
-        "operationId": "ProxyController_proxyRequest",
+        "operationId": "proxyRequest",
+        "summary": "Proxy request to static host",
+        "description": "Proxies a request to the static host and returns the file as a stream",
         "parameters": [],
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": { "description": "File streamed successfully" },
+          "400": { "description": "Invalid path" }
+        },
         "tags": ["Proxy"]
       }
     },
@@ -270,22 +275,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Tiles deleted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "deleted": {
-                      "type": "number",
-                      "description": "Number of tiles deleted"
-                    }
-                  }
-                }
-              }
-            }
-          }
+          "200": { "description": "" },
+          "204": { "description": "Tiles deleted successfully" }
         },
         "tags": ["Health"],
         "security": [{ "bearer": [] }]
@@ -2516,7 +2507,7 @@
   "info": {
     "title": "5-thirty",
     "description": "backend data aggregate for 6 o'clock",
-    "version": "0.0.8",
+    "version": "1.0.0",
     "contact": {}
   },
   "tags": [],

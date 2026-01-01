@@ -3,7 +3,7 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.8
+ * OpenAPI spec version: 1.0.0
  */
 import {
   useInfiniteQuery,
@@ -30,7 +30,6 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  DeleteTilesByType200,
   DeleteTilesByTypeParams,
   GetManifestHealthParams,
   GetTileHealthParams,
@@ -453,7 +452,7 @@ export const deleteTilesByType = (
  ) => {
       
       
-      return makeRequest<DeleteTilesByType200>(
+      return makeRequest<void | void>(
       {url: `/health/tiles/${encodeURIComponent(String(type))}`, method: 'DELETE',
         params
     },

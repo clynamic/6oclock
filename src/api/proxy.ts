@@ -3,7 +3,7 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.8
+ * OpenAPI spec version: 1.0.0
  */
 import {
   useQuery
@@ -27,7 +27,11 @@ import type { ErrorType } from '../http/axios';
 
 
 
-export const proxyControllerProxyRequest = (
+/**
+ * Proxies a request to the static host and returns the file as a stream
+ * @summary Proxy request to static host
+ */
+export const proxyRequest = (
     
  signal?: AbortSignal
 ) => {
@@ -40,64 +44,67 @@ export const proxyControllerProxyRequest = (
     }
   
 
-export const getProxyControllerProxyRequestQueryKey = () => {
+export const getProxyRequestQueryKey = () => {
     return [`/proxy/*`] as const;
     }
 
     
-export const getProxyControllerProxyRequestQueryOptions = <TData = Awaited<ReturnType<typeof proxyControllerProxyRequest>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyControllerProxyRequest>>, TError, TData>>, }
+export const getProxyRequestQueryOptions = <TData = Awaited<ReturnType<typeof proxyRequest>>, TError = ErrorType<void>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getProxyControllerProxyRequestQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getProxyRequestQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof proxyControllerProxyRequest>>> = ({ signal }) => proxyControllerProxyRequest(signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof proxyRequest>>> = ({ signal }) => proxyRequest(signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof proxyControllerProxyRequest>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type ProxyControllerProxyRequestQueryResult = NonNullable<Awaited<ReturnType<typeof proxyControllerProxyRequest>>>
-export type ProxyControllerProxyRequestQueryError = ErrorType<unknown>
+export type ProxyRequestQueryResult = NonNullable<Awaited<ReturnType<typeof proxyRequest>>>
+export type ProxyRequestQueryError = ErrorType<void>
 
 
-export function useProxyControllerProxyRequest<TData = Awaited<ReturnType<typeof proxyControllerProxyRequest>>, TError = ErrorType<unknown>>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyControllerProxyRequest>>, TError, TData>> & Pick<
+export function useProxyRequest<TData = Awaited<ReturnType<typeof proxyRequest>>, TError = ErrorType<void>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof proxyControllerProxyRequest>>,
+          Awaited<ReturnType<typeof proxyRequest>>,
           TError,
-          Awaited<ReturnType<typeof proxyControllerProxyRequest>>
+          Awaited<ReturnType<typeof proxyRequest>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useProxyControllerProxyRequest<TData = Awaited<ReturnType<typeof proxyControllerProxyRequest>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyControllerProxyRequest>>, TError, TData>> & Pick<
+export function useProxyRequest<TData = Awaited<ReturnType<typeof proxyRequest>>, TError = ErrorType<void>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof proxyControllerProxyRequest>>,
+          Awaited<ReturnType<typeof proxyRequest>>,
           TError,
-          Awaited<ReturnType<typeof proxyControllerProxyRequest>>
+          Awaited<ReturnType<typeof proxyRequest>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useProxyControllerProxyRequest<TData = Awaited<ReturnType<typeof proxyControllerProxyRequest>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyControllerProxyRequest>>, TError, TData>>, }
+export function useProxyRequest<TData = Awaited<ReturnType<typeof proxyRequest>>, TError = ErrorType<void>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Proxy request to static host
+ */
 
-export function useProxyControllerProxyRequest<TData = Awaited<ReturnType<typeof proxyControllerProxyRequest>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyControllerProxyRequest>>, TError, TData>>, }
+export function useProxyRequest<TData = Awaited<ReturnType<typeof proxyRequest>>, TError = ErrorType<void>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>>, }
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getProxyControllerProxyRequestQueryOptions(options)
+  const queryOptions = getProxyRequestQueryOptions(options)
 
   const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
