@@ -6,12 +6,11 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type DashboardConfigType = typeof DashboardConfigType[keyof typeof DashboardConfigType];
+export type TileType = typeof TileType[keyof typeof TileType];
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const DashboardConfigType = {
-  moderator: 'moderator',
-  janitor: 'janitor',
-  admin: 'admin',
+export const TileType = {
+  upload_hourly: 'upload_hourly',
+  post_pending_hourly: 'post_pending_hourly',
 } as const;

@@ -6,9 +6,10 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export interface FeedbackTypeSeriesPoint {
-  date: Date;
-  negative: number;
-  neutral: number;
-  positive: number;
+export interface TileSlice {
+  startDate: Date;
+  endDate: Date;
+  available: number;
+  unavailable: number;
+  none: number;
 }
