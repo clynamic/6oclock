@@ -1,4 +1,3 @@
- 
 import { ReactElement, Suspense, lazy } from 'react';
 
 import { Route, useParams } from 'react-router-dom';
@@ -25,6 +24,11 @@ const JobsPage = lazy(() =>
 const ManifestHealthPage = lazy(() =>
   import('../health/manifests/ManifestHealthPage').then((m) => ({
     default: m.ManifestHealthPage,
+  })),
+);
+const TileHealthPage = lazy(() =>
+  import('../health/tiles/TileHealthPage').then((m) => ({
+    default: m.TileHealthPage,
   })),
 );
 const JanitorOverviewPage = lazy(() =>
@@ -188,6 +192,11 @@ export const appNavNodes: NavNode[] = [
         label: 'Manifests',
         href: '/health/manifests',
         component: <ManifestHealthPage />,
+      },
+      {
+        label: 'Tiles',
+        href: '/health/tiles',
+        component: <TileHealthPage />,
       },
     ],
   },

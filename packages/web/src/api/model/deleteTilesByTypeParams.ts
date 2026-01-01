@@ -7,7 +7,7 @@
  */
 import type { TimeScale } from './timeScale';
 
-export type GetDeletionSeriesByDeleterParams = {
+export type DeleteTilesByTypeParams = {
 scale?: TimeScale;
 cycle?: TimeScale;
 startDate?: Date;

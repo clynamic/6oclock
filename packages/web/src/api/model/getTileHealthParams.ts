@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetJobsParams = {
+export type GetTileHealthParams = {
 /**
  * Page number
  * @minimum 1

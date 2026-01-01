@@ -3,7 +3,7 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.8
+ * OpenAPI spec version: 1.0.0
  */
 
 export * from './activity';
@@ -20,6 +20,7 @@ export * from './dashboardPosition';
 export * from './dashboardPositions';
 export * from './dashboardUpdate';
 export * from './dashboardUpdateMeta';
+export * from './deleteTilesByTypeParams';
 export * from './feedbackTypeSeriesPoint';
 export * from './getActivityParams';
 export * from './getApprovalCountSeriesByApproverParams';
@@ -53,6 +54,7 @@ export * from './getTicketReporterSummaryParams';
 export * from './getTicketStatusParams';
 export * from './getTicketTypeSummaryByHandlerParams';
 export * from './getTicketTypeSummaryParams';
+export * from './getTileHealthParams';
 export * from './getUploadCountParams';
 export * from './itemType';
 export * from './jobInfo';
@@ -76,6 +78,9 @@ export * from './ticketHandlerSummary';
 export * from './ticketReporterSummary';
 export * from './ticketStatusSeriesPoint';
 export * from './ticketTypeSummary';
+export * from './tileHealth';
+export * from './tileSlice';
+export * from './tileType';
 export * from './timeScale';
 export * from './tokenValidation';
 export * from './trendGrade';

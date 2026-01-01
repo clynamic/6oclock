@@ -3,10 +3,11 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.8
+ * OpenAPI spec version: 1.0.0
  */
 import {
   useInfiniteQuery,
+  useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
@@ -15,19 +16,25 @@ import type {
   DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
   InfiniteData,
+  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
   UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
 
 import type {
+  DeleteTilesByTypeParams,
   GetManifestHealthParams,
-  ManifestHealth
+  GetTileHealthParams,
+  ManifestHealth,
+  TileHealth
 } from './model';
 
 import { makeRequest } from '../http/axios';
@@ -280,3 +287,223 @@ export function useManifestHealth<TData = Awaited<ReturnType<typeof manifestHeal
 
 
 
+/**
+ * Retrieve tile health and coverage information
+ * @summary Retrieve tile health
+ */
+export const tileHealth = (
+    params?: GetTileHealthParams,
+ signal?: AbortSignal
+) => {
+      
+      
+      return makeRequest<TileHealth[]>(
+      {url: `/health/tiles`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
+
+export const getTileHealthQueryKey = (params?: GetTileHealthParams,) => {
+    return [`/health/tiles`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getTileHealthInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof tileHealth>>, GetTileHealthParams['page']>, TError = ErrorType<unknown>>(params?: GetTileHealthParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof tileHealth>>, TError, TData, QueryKey, GetTileHealthParams['page']>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getTileHealthQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof tileHealth>>, QueryKey, GetTileHealthParams['page']> = ({ signal, pageParam }) => tileHealth({...params, 'page': pageParam || params?.['page']}, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof tileHealth>>, TError, TData, QueryKey, GetTileHealthParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type TileHealthInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof tileHealth>>>
+export type TileHealthInfiniteQueryError = ErrorType<unknown>
+
+
+export function useTileHealthInfinite<TData = InfiniteData<Awaited<ReturnType<typeof tileHealth>>, GetTileHealthParams['page']>, TError = ErrorType<unknown>>(
+ params: undefined |  GetTileHealthParams, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof tileHealth>>, TError, TData, QueryKey, GetTileHealthParams['page']>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof tileHealth>>,
+          TError,
+          Awaited<ReturnType<typeof tileHealth>>, QueryKey
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useTileHealthInfinite<TData = InfiniteData<Awaited<ReturnType<typeof tileHealth>>, GetTileHealthParams['page']>, TError = ErrorType<unknown>>(
+ params?: GetTileHealthParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof tileHealth>>, TError, TData, QueryKey, GetTileHealthParams['page']>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof tileHealth>>,
+          TError,
+          Awaited<ReturnType<typeof tileHealth>>, QueryKey
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useTileHealthInfinite<TData = InfiniteData<Awaited<ReturnType<typeof tileHealth>>, GetTileHealthParams['page']>, TError = ErrorType<unknown>>(
+ params?: GetTileHealthParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof tileHealth>>, TError, TData, QueryKey, GetTileHealthParams['page']>>, }
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Retrieve tile health
+ */
+
+export function useTileHealthInfinite<TData = InfiniteData<Awaited<ReturnType<typeof tileHealth>>, GetTileHealthParams['page']>, TError = ErrorType<unknown>>(
+ params?: GetTileHealthParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof tileHealth>>, TError, TData, QueryKey, GetTileHealthParams['page']>>, }
+ , queryClient?: QueryClient 
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getTileHealthInfiniteQueryOptions(params,options)
+
+  const query = useInfiniteQuery(queryOptions , queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+export const getTileHealthQueryOptions = <TData = Awaited<ReturnType<typeof tileHealth>>, TError = ErrorType<unknown>>(params?: GetTileHealthParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof tileHealth>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getTileHealthQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof tileHealth>>> = ({ signal }) => tileHealth(params, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof tileHealth>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type TileHealthQueryResult = NonNullable<Awaited<ReturnType<typeof tileHealth>>>
+export type TileHealthQueryError = ErrorType<unknown>
+
+
+export function useTileHealth<TData = Awaited<ReturnType<typeof tileHealth>>, TError = ErrorType<unknown>>(
+ params: undefined |  GetTileHealthParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof tileHealth>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof tileHealth>>,
+          TError,
+          Awaited<ReturnType<typeof tileHealth>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useTileHealth<TData = Awaited<ReturnType<typeof tileHealth>>, TError = ErrorType<unknown>>(
+ params?: GetTileHealthParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof tileHealth>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof tileHealth>>,
+          TError,
+          Awaited<ReturnType<typeof tileHealth>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useTileHealth<TData = Awaited<ReturnType<typeof tileHealth>>, TError = ErrorType<unknown>>(
+ params?: GetTileHealthParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof tileHealth>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Retrieve tile health
+ */
+
+export function useTileHealth<TData = Awaited<ReturnType<typeof tileHealth>>, TError = ErrorType<unknown>>(
+ params?: GetTileHealthParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof tileHealth>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getTileHealthQueryOptions(params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+/**
+ * Delete all tiles of the specified type
+ * @summary Delete all tiles of a type
+ */
+export const deleteTilesByType = (
+    type: 'upload_hourly' | 'post_pending_hourly',
+    params?: DeleteTilesByTypeParams,
+ ) => {
+      
+      
+      return makeRequest<void | void>(
+      {url: `/health/tiles/${encodeURIComponent(String(type))}`, method: 'DELETE',
+        params
+    },
+      );
+    }
+  
+
+
+export const getDeleteTilesByTypeMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteTilesByType>>, TError,{type: 'upload_hourly' | 'post_pending_hourly';params?: DeleteTilesByTypeParams}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof deleteTilesByType>>, TError,{type: 'upload_hourly' | 'post_pending_hourly';params?: DeleteTilesByTypeParams}, TContext> => {
+
+const mutationKey = ['deleteTilesByType'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteTilesByType>>, {type: 'upload_hourly' | 'post_pending_hourly';params?: DeleteTilesByTypeParams}> = (props) => {
+          const {type,params} = props ?? {};
+
+          return  deleteTilesByType(type,params,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteTilesByTypeMutationResult = NonNullable<Awaited<ReturnType<typeof deleteTilesByType>>>
+    
+    export type DeleteTilesByTypeMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Delete all tiles of a type
+ */
+export const useDeleteTilesByType = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteTilesByType>>, TError,{type: 'upload_hourly' | 'post_pending_hourly';params?: DeleteTilesByTypeParams}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteTilesByType>>,
+        TError,
+        {type: 'upload_hourly' | 'post_pending_hourly';params?: DeleteTilesByTypeParams},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteTilesByTypeMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
