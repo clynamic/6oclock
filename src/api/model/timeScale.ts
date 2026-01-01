@@ -3,12 +3,9 @@
  * Do not edit manually.
  * 5-thirty
  * backend data aggregate for 6 o'clock
- * OpenAPI spec version: 0.0.8
+ * OpenAPI spec version: 1.0.0
  */
 
-/**
- * The time scale of the counter
- */
 export type TimeScale = typeof TimeScale[keyof typeof TimeScale];
 
 

@@ -77,9 +77,14 @@
     },
     "/proxy/*": {
       "get": {
-        "operationId": "ProxyController_proxyRequest",
+        "operationId": "proxyRequest",
+        "summary": "Proxy request to static host",
+        "description": "Proxies a request to the static host and returns the file as a stream",
         "parameters": [],
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": { "description": "File streamed successfully" },
+          "400": { "description": "Invalid path" }
+        },
         "tags": ["Proxy"]
       }
     },
@@ -174,6 +179,104 @@
               }
             }
           }
+        },
+        "tags": ["Health"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/health/tiles": {
+      "get": {
+        "operationId": "getTileHealth",
+        "summary": "Retrieve tile health",
+        "description": "Retrieve tile health and coverage information",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number",
+            "schema": { "minimum": 1, "default": 1, "type": "number" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "minimum": 1,
+              "maximum": 320,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tile health information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/TileHealth" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Health"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/health/tiles/{type}": {
+      "delete": {
+        "operationId": "deleteTilesByType",
+        "summary": "Delete all tiles of a type",
+        "description": "Delete all tiles of the specified type",
+        "parameters": [
+          {
+            "name": "type",
+            "required": true,
+            "in": "path",
+            "description": "The type of tiles to delete",
+            "schema": {
+              "enum": ["upload_hourly", "post_pending_hourly"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "scale",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "cycle",
+            "required": false,
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/TimeScale" }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "date-time", "type": "string" }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "" },
+          "204": { "description": "Tiles deleted successfully" }
         },
         "tags": ["Health"],
         "security": [{ "bearer": [] }]
@@ -435,7 +538,6 @@
       "get": {
         "operationId": "getMotd",
         "summary": "Get today's message of the day",
-        "description": "Returns the message of the day selected for today based on date, schedule, and tier. Unauthenticated users receive the default message.",
         "parameters": [],
         "responses": {
           "200": {
@@ -2405,7 +2507,7 @@
   "info": {
     "title": "5-thirty",
     "description": "backend data aggregate for 6 o'clock",
-    "version": "0.0.8",
+    "version": "1.0.0",
     "contact": {}
   },
   "tags": [],
@@ -2508,6 +2610,56 @@
           "slices"
         ]
       },
+      "TileType": {
+        "type": "string",
+        "enum": ["upload_hourly", "post_pending_hourly"]
+      },
+      "TileSlice": {
+        "type": "object",
+        "properties": {
+          "startDate": { "format": "date-time", "type": "string" },
+          "endDate": { "format": "date-time", "type": "string" },
+          "available": { "type": "number" },
+          "unavailable": { "type": "number" },
+          "none": { "type": "number" }
+        },
+        "required": ["startDate", "endDate", "available", "unavailable", "none"]
+      },
+      "TileHealth": {
+        "type": "object",
+        "properties": {
+          "type": { "$ref": "#/components/schemas/TileType" },
+          "startDate": { "format": "date-time", "type": "string" },
+          "endDate": { "format": "date-time", "type": "string" },
+          "expected": { "type": "number" },
+          "actual": { "type": "number" },
+          "slices": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TileSlice" }
+          }
+        },
+        "required": [
+          "type",
+          "startDate",
+          "endDate",
+          "expected",
+          "actual",
+          "slices"
+        ]
+      },
+      "TimeScale": {
+        "type": "string",
+        "enum": [
+          "minute",
+          "hour",
+          "day",
+          "week",
+          "month",
+          "year",
+          "decade",
+          "all"
+        ]
+      },
       "DashboardPosition": {
         "type": "object",
         "properties": {
@@ -2566,20 +2718,6 @@
           "meta": { "type": "object" }
         }
       },
-      "TimeScale": {
-        "type": "string",
-        "description": "The time scale of the counter",
-        "enum": [
-          "minute",
-          "hour",
-          "day",
-          "week",
-          "month",
-          "year",
-          "decade",
-          "all"
-        ]
-      },
       "ManifestAvailability": {
         "type": "object",
         "properties": {
@@ -2623,7 +2761,6 @@
       },
       "Activity": {
         "type": "string",
-        "description": "The activity key for this counter",
         "enum": [
           "post_create",
           "post_delete",
@@ -2725,7 +2862,8 @@
           "pool": { "type": "number" },
           "set": { "type": "number" },
           "post": { "type": "number" },
-          "dmail": { "type": "number" }
+          "dmail": { "type": "number" },
+          "replacement": { "type": "number" }
         },
         "required": [
           "user",
@@ -2736,7 +2874,8 @@
           "pool",
           "set",
           "post",
-          "dmail"
+          "dmail",
+          "replacement"
         ]
       },
       "TicketAgeSeriesPoint": {
