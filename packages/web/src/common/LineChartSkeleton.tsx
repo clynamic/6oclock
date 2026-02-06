@@ -7,6 +7,18 @@ interface Point {
   y: number;
 }
 
+function smoothPath(points: Point[]): string {
+  if (points.length < 2) return '';
+  const parts: string[] = [`M ${points[0].x},${points[0].y}`];
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[i];
+    const p1 = points[i + 1];
+    const cpx = (p0.x + p1.x) / 2;
+    parts.push(`C ${cpx},${p0.y} ${cpx},${p1.y} ${p1.x},${p1.y}`);
+  }
+  return parts.join(' ');
+}
+
 export const LineChartSkeleton: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [points, setPoints] = useState<Point[]>([]);
@@ -80,8 +92,8 @@ export const LineChartSkeleton: React.FC = () => {
         >
           <Skeleton
             variant="rectangular"
-            component="polyline"
-            points={points.map((p) => `${p.x},${p.y}`).join(' ')}
+            component="path"
+            d={smoothPath(points)}
             fill="none"
             stroke="grey"
             strokeWidth={2}
