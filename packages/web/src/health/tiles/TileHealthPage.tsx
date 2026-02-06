@@ -1,9 +1,10 @@
-import { Box } from '@mui/system';
+import { useMemo } from 'react';
+
+import { Box } from '@mui/material';
 
 import { useTileHealthInfinite } from '../../api';
-import { LimitedList } from '../../common/LimitedList';
-import { LoadMoreHint } from '../../common/LoadMoreHint';
 import { QueryHint } from '../../common/QueryHint';
+import { VirtualizedList } from '../../common/VirtualizedList';
 import { Page } from '../../page/Page';
 import { PageBody } from '../../page/PageBody';
 import { PageFooter } from '../../page/PageFooter';
@@ -12,7 +13,7 @@ import { PageHeader } from '../../page/header/PageHeader';
 import { TileHealthFrame } from './TileHealthFrame';
 
 export const TileHealthPage: React.FC = () => {
-  const query = useTileHealthInfinite(
+  const { data, ...query } = useTileHealthInfinite(
     {},
     {
       query: {
@@ -23,7 +24,7 @@ export const TileHealthPage: React.FC = () => {
     },
   );
 
-  const tiles = query.data?.pages.flatMap((page) => page);
+  const items = useMemo(() => data?.pages.flat() ?? [], [data?.pages]);
 
   return (
     <Page>
@@ -32,18 +33,19 @@ export const TileHealthPage: React.FC = () => {
       <PageBody>
         <Box sx={{ width: '100%', maxWidth: 600, margin: 'auto', p: 2 }}>
           <QueryHint
-            data={tiles}
+            data={data?.pages}
             isLoading={query.isLoading}
-            isEmpty={!tiles?.length}
+            isEmpty={!items.length}
             error={query.error}
           >
-            <LimitedList indicator={() => <LoadMoreHint query={query} />}>
-              {tiles?.map((tile) => (
-                <TileHealthFrame key={tile.type} tile={tile} extended={true} />
-              ))}
-            </LimitedList>
+            <VirtualizedList
+              items={items}
+              renderItem={(_, tile) => (
+                <TileHealthFrame tile={tile} extended={true} />
+              )}
+              query={query}
+            />
           </QueryHint>
-          <LoadMoreHint query={query} />
         </Box>
       </PageBody>
       <PageFooter />
