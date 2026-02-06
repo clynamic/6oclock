@@ -1,8 +1,10 @@
-import { Box, Stack } from '@mui/material';
+import { useMemo } from 'react';
+
+import { Box } from '@mui/material';
 
 import { useTicketReporterSummaryInfinite } from '../../api';
-import { LoadMoreHint } from '../../common/LoadMoreHint';
 import { QueryHint } from '../../common/QueryHint';
+import { VirtualizedList } from '../../common/VirtualizedList';
 import { Page } from '../../page/Page';
 import { PageBody } from '../../page/PageBody';
 import { PageFooter } from '../../page/PageFooter';
@@ -32,6 +34,8 @@ export const TicketReporterPage: React.FC = () => {
     },
   );
 
+  const items = useMemo(() => data?.pages.flat() ?? [], [data?.pages]);
+
   return (
     <Page>
       <PageTitle subtitle="Reporters" />
@@ -43,15 +47,12 @@ export const TicketReporterPage: React.FC = () => {
             isLoading={query.isLoading}
             error={query.error}
           >
-            <Stack sx={{ height: '100%', width: '100%', gap: 1 }}>
-              {data?.pages
-                .flat()
-                .map((item, i) => (
-                  <TicketReporterFrame key={i} summary={item} />
-                ))}
-            </Stack>
+            <VirtualizedList
+              items={items}
+              renderItem={(_, item) => <TicketReporterFrame summary={item} />}
+              query={query}
+            />
           </QueryHint>
-          <LoadMoreHint query={query} />
         </Box>
       </PageBody>
       <PageFooter />

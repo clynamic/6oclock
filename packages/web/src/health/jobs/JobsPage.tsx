@@ -1,8 +1,10 @@
-import { Box, Stack } from '@mui/material';
+import { useMemo } from 'react';
+
+import { Box } from '@mui/material';
 
 import { useJobsInfinite } from '../../api';
-import { LoadMoreHint } from '../../common/LoadMoreHint';
 import { QueryHint } from '../../common/QueryHint';
+import { VirtualizedList } from '../../common/VirtualizedList';
 import { Page } from '../../page/Page';
 import { PageBody } from '../../page/PageBody';
 import { PageFooter } from '../../page/PageFooter';
@@ -24,6 +26,8 @@ export const JobsPage: React.FC = () => {
     },
   });
 
+  const items = useMemo(() => data?.pages.flat() ?? [], [data?.pages]);
+
   return (
     <Page>
       <PageTitle subtitle="Jobs" />
@@ -35,13 +39,12 @@ export const JobsPage: React.FC = () => {
             isLoading={query.isLoading}
             error={query.error}
           >
-            <Stack sx={{ height: '100%', width: '100%', gap: 1 }}>
-              {data?.pages
-                .flat()
-                .map((item, i) => <JobsFrame key={i} job={item} />)}
-            </Stack>
+            <VirtualizedList
+              items={items}
+              renderItem={(_, item) => <JobsFrame job={item} />}
+              query={query}
+            />
           </QueryHint>
-          <LoadMoreHint query={query} />
         </Box>
       </PageBody>
       <PageFooter />
