@@ -1,11 +1,17 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useState } from 'react';
 
 import { Box } from '@mui/material';
 
+import { PageScrollContext } from './PageScrollContext';
+
 export const Page: React.FC<PropsWithChildren> = ({ children }) => {
+  const [scrollParent, setScrollParent] = useState<HTMLElement | null>(null);
+
   return (
-    <Box
-      sx={{
+    <PageScrollContext.Provider value={scrollParent}>
+      <Box
+        ref={setScrollParent}
+        sx={{
         height: '100%',
         width: '100%',
         display: 'flex',
@@ -38,7 +44,8 @@ export const Page: React.FC<PropsWithChildren> = ({ children }) => {
         },
       }}
     >
-      {children}
-    </Box>
+        {children}
+      </Box>
+    </PageScrollContext.Provider>
   );
 };
