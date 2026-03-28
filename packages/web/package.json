@@ -1,8 +1,10 @@
 {
-  "name": "6oclock",
-  "description": "e6 staff dashboard",
-  "private": true,
+  "name": "@6oclock/web",
   "version": "1.0.0",
+  "private": true,
+  "description": "frontend user interface for 6 o'clock",
+  "license": "MIT",
+  "author": "binaryfloof",
   "type": "module",
   "scripts": {
     "dev": "vite",

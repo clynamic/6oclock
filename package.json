@@ -1,0 +1,22 @@
+{
+  "name": "6oclock",
+  "private": true,
+  "description": "e6 staff dashboard",
+  "license": "MIT",
+  "author": "binaryfloof",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "api": "yarn workspace @6oclock/api dev",
+    "web": "yarn workspace @6oclock/web dev",
+    "build:api": "yarn workspace @6oclock/api build",
+    "build:web": "yarn workspace @6oclock/web build",
+    "lint": "yarn workspaces run lint",
+    "format": "yarn workspaces run format"
+  },
+  "engines": {
+    "node": ">=20",
+    "npm": "please-use-yarn"
+  }
+}
