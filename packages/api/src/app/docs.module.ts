@@ -10,13 +10,13 @@ export class DocsModule {
       .setTitle(name)
       .setDescription(description)
       .setVersion(version)
-      .setExternalDoc('/swagger.json', '/swagger.json')
+      .setExternalDoc('/api/swagger.json', '/api/swagger.json')
       .addBearerAuth()
       .build();
 
     const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
-    SwaggerModule.setup('', app, swaggerDocument, {
-      jsonDocumentUrl: '/swagger.json',
+    SwaggerModule.setup('api', app, swaggerDocument, {
+      jsonDocumentUrl: '/api/swagger.json',
     });
   }
 }
