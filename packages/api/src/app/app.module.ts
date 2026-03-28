@@ -30,11 +30,13 @@ import { BrowserModule } from './browser.module';
 import { AppConfigModule } from './config.module';
 import { CorsConfigModule } from './cors.module';
 import { DatabaseModule } from './database.module';
+import { StaticModule } from './static.module';
 
 @Module({
   imports: [
     AppConfigModule,
     ScheduleModule.forRoot(),
+    StaticModule,
     BrowserModule,
     CorsConfigModule,
     DatabaseModule,

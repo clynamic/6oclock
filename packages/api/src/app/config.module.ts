@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
 
 export enum AppConfigKeys {
+  PORT = 'PORT',
   E621_GLOBAL_USERNAME = 'E621_GLOBAL_USERNAME',
   E621_GLOBAL_API_KEY = 'E621_GLOBAL_API_KEY',
   CORS_ALLOWED_ORIGINS = 'CORS_ALLOWED_ORIGINS',
@@ -14,8 +15,9 @@ export enum AppConfigKeys {
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: '../../.env',
       validationSchema: Joi.object<Record<AppConfigKeys, Joi.Schema>>({
+        PORT: Joi.number().optional().default(34571),
         E621_GLOBAL_USERNAME: Joi.string().required(),
         E621_GLOBAL_API_KEY: Joi.string().required(),
         CORS_ALLOWED_ORIGINS: Joi.alternatives()

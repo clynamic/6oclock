@@ -1,0 +1,43 @@
+services:
+  6oclock:
+    build: .
+    container_name: 6oclock
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PORT: 34571
+      DB_HOST: 6oclock-postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: six_oclock
+      DATA_DIR: /data
+      NODE_ENV: production
+    ports:
+      - "34571:34571"
+    volumes:
+      - ./data:/data
+    depends_on:
+      - 6oclock-postgres
+    networks:
+      - default
+
+  6oclock-postgres:
+    image: postgres:latest
+    container_name: 6oclock-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: six_oclock
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    networks:
+      - default
+
+volumes:
+  postgres-data:
+
+networks:
+  default:
