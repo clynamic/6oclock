@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios';
+
 import { login, validateToken } from '../api';
 import { AXIOS_INSTANCE } from './axios';
 
@@ -20,7 +22,14 @@ export const checkAuthToken = async (
   try {
     const result = await validateToken({ token });
     return result === true || result === 'true' ? 'valid' : 'invalid';
-  } catch {
+  } catch (error) {
+    if (
+      error instanceof AxiosError &&
+      error.response &&
+      error.response.status < 500
+    ) {
+      return 'invalid';
+    }
     return 'error';
   }
 };
