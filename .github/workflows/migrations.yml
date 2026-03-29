@@ -10,11 +10,11 @@ jobs:
 
     services:
       postgres:
-        image: postgres:16
+        image: postgres:17
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: five_thirty
+          POSTGRES_DB: six_oclock
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -30,14 +30,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: 22.x
           cache: 'yarn'
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build project
-        run: yarn build
+      - name: Build API
+        run: yarn build:api
 
       - name: Run existing migrations
         env:
@@ -45,9 +45,9 @@ jobs:
           DB_PORT: 5432
           DB_USER: postgres
           DB_PASSWORD: postgres
-          DB_NAME: five_thirty
+          DB_NAME: six_oclock
           NODE_ENV: production
-        run: yarn typeorm migration:run -d dist/data-source.js
+        run: yarn workspace @6oclock/api typeorm migration:run -d dist/data-source.js
 
       - name: Check for unmigrated schema changes
         env:
@@ -55,12 +55,12 @@ jobs:
           DB_PORT: 5432
           DB_USER: postgres
           DB_PASSWORD: postgres
-          DB_NAME: five_thirty
+          DB_NAME: six_oclock
           NODE_ENV: production
         run: |
-          yarn typeorm migration:generate -d dist/data-source.js CheckPending --check || {
+          yarn workspace @6oclock/api typeorm migration:generate -d dist/data-source.js CheckPending --check || {
             echo "❌ Schema changes detected without corresponding migration!"
-            echo "Please run: yarn migrate src/migration/YourMigrationName"
+            echo "Please run: yarn workspace @6oclock/api migrate src/migration/YourMigrationName"
             exit 1
           }
           echo "✓ No unmigrated schema changes detected"
