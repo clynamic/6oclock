@@ -15,7 +15,7 @@ export enum AppConfigKeys {
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '../../.env',
+      envFilePath: ['.env', '../../.env'],
       validationSchema: Joi.object<Record<AppConfigKeys, Joi.Schema>>({
         PORT: Joi.number().optional().default(34571),
         E621_GLOBAL_USERNAME: Joi.string().required(),
