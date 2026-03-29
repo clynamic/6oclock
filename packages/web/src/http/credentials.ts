@@ -19,7 +19,7 @@ export const checkAuthToken = async (
 ): Promise<AuthTokenCheckResult> => {
   try {
     const result = await validateToken({ token });
-    return result ? 'valid' : 'invalid';
+    return result === true || result === 'true' ? 'valid' : 'invalid';
   } catch {
     return 'error';
   }
