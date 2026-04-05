@@ -1,0 +1,35 @@
+services:
+  six-oclock:
+    build: !reset null
+    image: node:22
+    working_dir: /app
+    command: sh -c "yarn install && yarn workspace @6oclock/api dev"
+    environment:
+      DB_HOST: six-oclock-postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: six_oclock
+      NODE_ENV: development
+    volumes:
+      - .:/app
+      - node-modules:/app/node_modules
+
+  six-oclock-web:
+    image: node:22
+    container_name: six-oclock-web
+    working_dir: /app
+    command: sh -c "while ! test -f /app/node_modules/.yarn-integrity; do sleep 2; done && yarn workspace @6oclock/web dev --host"
+    env_file: .env
+    environment:
+      VITE_API_URL: http://localhost:34571
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - node-modules:/app/node_modules
+    depends_on:
+      - six-oclock
+
+volumes:
+  node-modules:
