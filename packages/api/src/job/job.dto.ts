@@ -3,13 +3,23 @@ export class JobInfo {
     Object.assign(this, value);
   }
 
-  id: number;
-  title: string;
-  key?: string;
+  id: string;
+  name: string;
+  queue: string;
+  state: string;
+  scheduledAt?: Date;
   startedAt?: Date;
   endedAt?: Date;
-  succeeded: boolean;
-  failed: boolean;
-  cancelled: boolean;
-  timedOut: boolean;
+  failedReason?: string;
+}
+
+export class SchedulerInfo {
+  constructor(value: SchedulerInfo) {
+    Object.assign(this, value);
+  }
+
+  id: string;
+  queue: string;
+  pattern: string;
+  enabled: boolean;
 }

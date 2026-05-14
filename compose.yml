@@ -12,6 +12,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: six_oclock
+      REDIS_HOST: six-oclock-redis
       DATA_DIR: /data
       NODE_ENV: production
     ports:
@@ -20,6 +21,7 @@ services:
       - ./data:/data
     depends_on:
       - six-oclock-postgres
+      - six-oclock-redis
     networks:
       - default
 
@@ -36,8 +38,18 @@ services:
     networks:
       - default
 
+  six-oclock-redis:
+    image: redis:7-alpine
+    container_name: six-oclock-redis
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks:
+      - default
+
 volumes:
   postgres-data:
+  redis-data:
 
 networks:
   default:

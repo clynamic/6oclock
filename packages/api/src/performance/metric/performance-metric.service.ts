@@ -161,7 +161,7 @@ export class PerformanceMetricService {
           break;
         case Activity.PostReplacementApprove:
         case Activity.PostReplacementPromote:
-        case Activity.PostReplacementReject:
+        case Activity.PostReplacementReject: {
           const actionMap = {
             [Activity.PostReplacementApprove]:
               PostEventAction.replacement_accepted,
@@ -187,6 +187,7 @@ export class PerformanceMetricService {
               ),
           );
           break;
+        }
         case Activity.TicketCreate:
           tasks.push(
             this.ticketRepository

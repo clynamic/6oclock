@@ -23,9 +23,9 @@ export enum UserArea {
   Member = 'member',
 }
 
-export class ActivitySummary
-  implements ConvertKeysToCamelCase<Record<Activity, number>>
-{
+export class ActivitySummary implements ConvertKeysToCamelCase<
+  Record<Activity, number>
+> {
   constructor(value: Raw<ActivitySummary>) {
     Object.assign(this, value);
   }

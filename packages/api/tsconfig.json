@@ -41,5 +41,8 @@
 
     "tsBuildInfoFile": "dist/.tsbuildinfo"
   },
-  "watchOptions": { "watchFile": "fixedPollingInterval" }
+  "watchOptions": {
+    "watchFile": "fixedPollingInterval",
+    "watchDirectory": "fixedPollingInterval"
+  }
 }

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Job } from 'bullmq';
 import { PostReplacement, postReplacements } from 'src/api/e621';
 import { MAX_API_LIMIT } from 'src/api/http/params';
 import { AuthService } from 'src/auth/auth.service';
@@ -13,8 +13,8 @@ import {
   logOrderResult,
   rateLimit,
 } from 'src/common';
-import { Job } from 'src/job/job.entity';
-import { JobService } from 'src/job/job.service';
+import { JobHandler } from 'src/job/job.decorator';
+import { ensureActive } from 'src/job/job.utils';
 import { ItemType } from 'src/label/label.entity';
 import { ManifestService } from 'src/manifest/manifest.service';
 
@@ -27,7 +27,6 @@ import { PostReplacementSyncService } from './post-replacement-sync.service';
 @Injectable()
 export class PostReplacementSyncWorker {
   constructor(
-    private readonly jobService: JobService,
     private readonly authService: AuthService,
     private readonly postReplacementSyncService: PostReplacementSyncService,
     private readonly manifestService: ManifestService,
@@ -35,178 +34,163 @@ export class PostReplacementSyncWorker {
 
   private readonly logger = new Logger(PostReplacementSyncWorker.name);
 
-  @Cron(CronExpression.EVERY_5_MINUTES)
-  runOrders() {
-    this.jobService.add(
-      new Job({
-        title: 'Post Replacement Orders Sync',
-        key: `/${ItemType.postReplacements}/orders`,
-        timeout: 1000 * 60 * 5,
-        execute: async ({ cancelToken }) => {
-          const axiosConfig = this.authService.getServerAxiosConfig();
+  @JobHandler({
+    id: 'postReplacements/orders',
+    queue: 'default',
+    pattern: '*/5 * * * *',
+    timeout: 1000 * 60 * 5,
+  })
+  async runOrders(job: Job): Promise<void> {
+    const axiosConfig = this.authService.getServerAxiosConfig();
 
-          const recentlyRange = DateRange.recentMonths();
+    const recentlyRange = DateRange.recentMonths();
 
-          const orders = await this.manifestService.listOrdersByRange(
-            ItemType.postReplacements,
-            recentlyRange,
-          );
+    const orders = await this.manifestService.listOrdersByRange(
+      ItemType.postReplacements,
+      recentlyRange,
+    );
 
-          for (let order of orders) {
-            const results: PostReplacement[] = [];
-            const loopGuard = new LoopGuard();
-            const inPast = order.inPast;
+    for (let order of orders) {
+      const results: PostReplacement[] = [];
+      const loopGuard = new LoopGuard();
+      const inPast = order.inPast;
 
-            while (true) {
-              cancelToken.ensureRunning();
+      while (true) {
+        await ensureActive(job);
 
-              const { idRange, dateRange } = order;
+        const { idRange, dateRange } = order;
 
-              logOrderFetch(this.logger, ItemType.postReplacements, order);
+        logOrderFetch(this.logger, ItemType.postReplacements, order);
 
-              const result = await rateLimit(
-                postReplacements(
-                  loopGuard.iter({
-                    page: 1,
-                    limit: MAX_API_LIMIT,
-                    'search[created_at]': dateRange.toE621RangeString(),
-                    'search[id]': idRange.toE621RangeString(),
-                    'search[order]': 'id',
-                  }),
-                  axiosConfig,
-                ),
-              );
+        const result = await rateLimit(
+          postReplacements(
+            loopGuard.iter({
+              page: 1,
+              limit: MAX_API_LIMIT,
+              'search[created_at]': dateRange.toE621RangeString(),
+              'search[id]': idRange.toE621RangeString(),
+              'search[order]': 'id',
+            }),
+            axiosConfig,
+          ),
+        );
 
-              results.push(...result);
+        results.push(...result);
 
-              const stored = await this.postReplacementSyncService.save(
-                result.map(
-                  (replacement) =>
-                    new PostReplacementEntity({
-                      ...convertKeysToCamelCase(replacement),
-                      label: new PostReplacementLabelEntity(replacement),
-                    }),
-                ),
-              );
+        const stored = await this.postReplacementSyncService.save(
+          result.map(
+            (replacement) =>
+              new PostReplacementEntity({
+                ...convertKeysToCamelCase(replacement),
+                label: new PostReplacementLabelEntity(replacement),
+              }),
+          ),
+        );
 
-              logOrderResult(this.logger, ItemType.postReplacements, stored);
+        logOrderResult(this.logger, ItemType.postReplacements, stored);
 
-              const exhausted = result.length < MAX_API_LIMIT;
+        const exhausted = result.length < MAX_API_LIMIT;
 
-              order = await this.manifestService.saveResults({
-                type: ItemType.postReplacements,
-                order,
-                items: stored,
-                bottom: exhausted,
-                top: inPast,
-              });
+        order = await this.manifestService.saveResults({
+          type: ItemType.postReplacements,
+          order,
+          items: stored,
+          bottom: exhausted,
+          top: inPast,
+        });
 
-              if (exhausted) {
-                logContiguityGaps(
-                  this.logger,
-                  ItemType.postReplacements,
-                  stored,
-                );
-                break;
-              }
-            }
-          }
+        if (exhausted) {
+          logContiguityGaps(this.logger, ItemType.postReplacements, stored);
+          break;
+        }
+      }
+    }
 
-          await this.manifestService.mergeInRange(
-            ItemType.postReplacements,
-            recentlyRange,
-          );
-        },
-      }),
+    await this.manifestService.mergeInRange(
+      ItemType.postReplacements,
+      recentlyRange,
     );
   }
 
-  @Cron(CronExpression.EVERY_5_MINUTES)
-  runRefresh() {
-    this.jobService.add(
-      new Job({
-        title: 'Post Replacement Refresh Sync',
-        key: `/${ItemType.postReplacements}/refresh`,
-        execute: async ({ cancelToken }) => {
-          const axiosConfig = this.authService.getServerAxiosConfig();
+  @JobHandler({
+    id: 'postReplacements/refresh',
+    queue: 'default',
+    pattern: '*/5 * * * *',
+  })
+  async runRefresh(job: Job): Promise<void> {
+    const axiosConfig = this.authService.getServerAxiosConfig();
 
-          const manifests = await this.manifestService.list(undefined, {
-            type: [ItemType.postReplacements],
-          });
+    const manifests = await this.manifestService.list(undefined, {
+      type: [ItemType.postReplacements],
+    });
 
-          for (const manifest of manifests) {
-            let refreshDate = manifest.refreshedAt;
+    for (const manifest of manifests) {
+      let refreshDate = manifest.refreshedAt;
 
-            if (!refreshDate) {
-              refreshDate = (
-                await this.postReplacementSyncService.firstFromId(
-                  manifest.lowerId,
-                )
-              )?.updatedAt;
-            }
+      if (!refreshDate) {
+        refreshDate = (
+          await this.postReplacementSyncService.firstFromId(manifest.lowerId)
+        )?.updatedAt;
+      }
 
-            if (!refreshDate) continue;
+      if (!refreshDate) continue;
 
-            const now = new Date();
-            const loopGuard = new LoopGuard();
-            let page = 1;
+      const now = new Date();
+      const loopGuard = new LoopGuard();
+      let page = 1;
 
-            while (true) {
-              cancelToken.ensureRunning();
+      while (true) {
+        await ensureActive(job);
 
-              const rangeString = new PartialDateRange({
-                startDate: refreshDate,
-              }).toE621RangeString();
-              const idString = manifest.idRange.toE621RangeString();
+        const rangeString = new PartialDateRange({
+          startDate: refreshDate,
+        }).toE621RangeString();
+        const idString = manifest.idRange.toE621RangeString();
 
-              this.logger.log(
-                `Fetching post replacements for refresh date ${rangeString} with ids ${idString}`,
-              );
+        this.logger.log(
+          `Fetching post replacements for refresh date ${rangeString} with ids ${idString}`,
+        );
 
-              const result = await rateLimit(
-                postReplacements(
-                  loopGuard.iter({
-                    page,
-                    limit: MAX_API_LIMIT,
-                    'search[updated_at]': rangeString,
-                    'search[id]': idString,
-                    'search[order]': 'id',
-                  }),
-                  axiosConfig,
-                ),
-              );
+        const result = await rateLimit(
+          postReplacements(
+            loopGuard.iter({
+              page,
+              limit: MAX_API_LIMIT,
+              'search[updated_at]': rangeString,
+              'search[id]': idString,
+              'search[order]': 'id',
+            }),
+            axiosConfig,
+          ),
+        );
 
-              const updated =
-                await this.postReplacementSyncService.countUpdated(
-                  result.map(convertKeysToCamelCase),
-                );
+        const updated = await this.postReplacementSyncService.countUpdated(
+          result.map(convertKeysToCamelCase),
+        );
 
-              await this.postReplacementSyncService.save(
-                result.map(
-                  (replacement) =>
-                    new PostReplacementEntity({
-                      ...convertKeysToCamelCase(replacement),
-                      label: new PostReplacementLabelEntity(replacement),
-                    }),
-                ),
-              );
+        await this.postReplacementSyncService.save(
+          result.map(
+            (replacement) =>
+              new PostReplacementEntity({
+                ...convertKeysToCamelCase(replacement),
+                label: new PostReplacementLabelEntity(replacement),
+              }),
+          ),
+        );
 
-              this.logger.log(`Found ${updated} updated post replacements`);
+        this.logger.log(`Found ${updated} updated post replacements`);
 
-              const exhausted = result.length < MAX_API_LIMIT;
+        const exhausted = result.length < MAX_API_LIMIT;
 
-              if (exhausted) break;
+        if (exhausted) break;
 
-              page++;
-            }
+        page++;
+      }
 
-            await this.manifestService.save({
-              id: manifest.id,
-              refreshedAt: now,
-            });
-          }
-        },
-      }),
-    );
+      await this.manifestService.save({
+        id: manifest.id,
+        refreshedAt: now,
+      });
+    }
   }
 }

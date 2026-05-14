@@ -1,9 +1,7 @@
 import {
-  Cancel,
   Check,
   ErrorOutline,
   Event,
-  HourglassDisabled,
   HourglassTop,
   Schedule,
 } from '@mui/icons-material';
@@ -16,6 +14,30 @@ export interface JobsFrameProps {
   job: JobInfo;
 }
 
+const stateIcon: Record<string, React.ReactElement> = {
+  completed: <Check />,
+  failed: <ErrorOutline />,
+  active: <HourglassTop />,
+  waiting: <Schedule />,
+  delayed: <Schedule />,
+};
+
+const stateLabel: Record<string, string> = {
+  completed: 'Completed',
+  failed: 'Failed',
+  active: 'Running',
+  waiting: 'Waiting',
+  delayed: 'Scheduled',
+};
+
+const stateColor: Record<string, 'success' | 'error' | 'warning' | 'info'> = {
+  completed: 'success',
+  failed: 'error',
+  active: 'warning',
+  waiting: 'info',
+  delayed: 'info',
+};
+
 export const JobsFrame: React.FC<JobsFrameProps> = ({ job }) => {
   return (
     <Card key={job.id} sx={{ width: '100%' }}>
@@ -25,7 +47,7 @@ export const JobsFrame: React.FC<JobsFrameProps> = ({ job }) => {
           justifyContent="space-between"
           sx={{ width: '100%' }}
         >
-          <Typography variant="h6">{`${job.title}`}</Typography>
+          <Typography variant="h6">{job.name}</Typography>
         </Stack>
         <Stack direction="row" gap={1} sx={{ flexWrap: 'wrap' }}>
           <Chip
@@ -35,47 +57,15 @@ export const JobsFrame: React.FC<JobsFrameProps> = ({ job }) => {
                 ? formatDistanceToNow(job.endedAt, { addSuffix: true })
                 : job.startedAt
                   ? formatDistanceToNow(job.startedAt, { addSuffix: true })
-                  : 'Upcoming'
+                  : job.scheduledAt
+                    ? formatDistanceToNow(job.scheduledAt, { addSuffix: true })
+                    : 'Upcoming'
             }
           />
           <Chip
-            icon={
-              job.succeeded ? (
-                <Check />
-              ) : job.timedOut ? (
-                <HourglassDisabled />
-              ) : job.cancelled ? (
-                <Cancel />
-              ) : job.failed ? (
-                <ErrorOutline />
-              ) : job.startedAt ? (
-                <HourglassTop />
-              ) : (
-                <Schedule />
-              )
-            }
-            label={
-              job.succeeded
-                ? 'Succeeded'
-                : job.timedOut
-                  ? 'Timed Out'
-                  : job.cancelled
-                    ? 'Cancelled'
-                    : job.failed
-                      ? 'Failed'
-                      : job.startedAt
-                        ? 'Running'
-                        : 'Pending'
-            }
-            color={
-              job.succeeded
-                ? 'success'
-                : job.cancelled || job.failed
-                  ? 'error'
-                  : job.startedAt
-                    ? 'warning'
-                    : 'info'
-            }
+            icon={stateIcon[job.state] ?? <Schedule />}
+            label={stateLabel[job.state] ?? job.state}
+            color={stateColor[job.state] ?? 'default'}
           />
         </Stack>
       </Stack>
