@@ -19,7 +19,7 @@ export function convertKeysToCamelCase<T extends Record<string, any>>(
   const newObj: any = {};
 
   for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const camelCaseKey = toCamelCase(key);
       newObj[camelCaseKey] = obj[key];
     }

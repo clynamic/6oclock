@@ -68,21 +68,23 @@ export class ActivityService {
     let value = 0;
 
     switch (activity) {
-      case Activity.TicketHandle:
+      case Activity.TicketHandle: {
         const ticketStatus = await this.ticketMetricService.status(weekRange);
         value = ticketStatus.reduce(
           (sum, point) => sum + point.approved + point.partial,
           0,
         );
         break;
+      }
 
-      case Activity.PostApprove:
+      case Activity.PostApprove: {
         const approvals =
           await this.approvalMetricService.countSeries(weekRange);
         value = approvals.reduce((sum, point) => sum + point.value, 0);
         break;
+      }
 
-      case Activity.PostReplacementApprove:
+      case Activity.PostReplacementApprove: {
         const replacements =
           await this.postReplacementMetricService.status(weekRange);
         value = replacements.reduce(
@@ -91,12 +93,14 @@ export class ActivityService {
           0,
         );
         break;
+      }
 
-      case Activity.PostDelete:
+      case Activity.PostDelete: {
         const deletions =
           await this.deletionMetricService.countSeries(weekRange);
         value = deletions.reduce((sum, point) => sum + point.value, 0);
         break;
+      }
     }
 
     return new DailyActivity({

@@ -1,129 +1,95 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { Job } from 'bullmq';
 import { PaginationParams } from 'src/common';
 
-import { JobInfo } from './job.dto';
-import { Job, JobCancelError } from './job.entity';
+import { QUEUE_NAMES } from './job.constants';
+import { JobDiscoveryService } from './job.discovery';
+import { JobInfo, SchedulerInfo } from './job.dto';
 
 @Injectable()
 export class JobService {
-  private jobs: Job<unknown>[] = [];
-  private queues: Map<string, Job<unknown>[]> = new Map();
-  private processingFlags: Map<string, boolean> = new Map();
-  private readonly logger = new Logger(JobService.name);
+  constructor(private readonly discoveryService: JobDiscoveryService) {}
 
-  add<MetadataType = unknown>(job: Job<MetadataType>): void {
-    const queueKey = job.queue;
+  async list(pages?: PaginationParams): Promise<JobInfo[]> {
+    const allJobs: JobInfo[] = [];
 
-    if (!this.queues.has(queueKey)) {
-      this.queues.set(queueKey, []);
-      this.processingFlags.set(queueKey, false);
-    }
+    for (const queueName of QUEUE_NAMES) {
+      const queue = this.discoveryService.getQueue(queueName);
+      const jobs = await queue.getJobs([
+        'completed',
+        'failed',
+        'active',
+        'waiting',
+        'delayed',
+      ]);
 
-    const queue = this.queues.get(queueKey)!;
-
-    if (job.key) {
-      const existingJob = queue.find((j) => j.key === job.key);
-      if (existingJob) {
-        this.logger.log(
-          `[${queueKey}] Job with key "${job.key}" already queued. Skipping duplicate.`,
-        );
-        return;
+      for (const job of jobs) {
+        allJobs.push(await this.toJobInfo(job, queueName));
       }
     }
 
-    // limit the queue to 1000 items to prevent potential infinite backlog:
-    if (queue.length >= 1000) {
-      this.logger.warn(
-        `[${queueKey}] Queue is full. Skipping job "${job.title}" with key "${job.key}".`,
-      );
-      return;
-    }
-    queue.push(job as Job<unknown>);
-
-    // limit the jobs array to 5000 items to prevent outrageous memory usage:
-    if (this.jobs.length >= 5000) {
-      this.jobs = this.jobs.slice(-5000);
-    }
-    this.jobs.push(job as Job<unknown>);
-
-    this.logger.log(
-      `[#${job.id}] [${job.title}] added to [${queueKey}] queue. (${queue.length} jobs in queue)`,
-    );
-    void this.processQueue(queueKey);
-  }
-
-  private async processQueue(queueKey: string): Promise<void> {
-    if (this.processingFlags.get(queueKey)) return;
-
-    const queue = this.queues.get(queueKey);
-    if (!queue) return;
-
-    this.processingFlags.set(queueKey, true);
-    while (queue.length > 0) {
-      const job = queue.shift();
-      if (job) {
-        this.logger.log(
-          `[#${job.id}] [${job.title}] is starting on [${queueKey}] queue`,
-        );
-        try {
-          job.cancelToken.ensureRunning();
-          let timeout: NodeJS.Timeout | undefined;
-          if (job.timeout) {
-            timeout = setTimeout(() => {
-              job.cancelToken.cancel(`Timed out after ${job.timeout} ms`);
-            }, job.timeout);
-          }
-          await job.run();
-          if (timeout) {
-            clearTimeout(timeout);
-          }
-          this.logger.log(
-            `[#${job.id}] [${job.title}] completed successfully.`,
-          );
-        } catch (error) {
-          if (error instanceof JobCancelError) {
-            this.logger.warn(`[#${job.id}] [${job.title}] was cancelled.`);
-          } else if (error instanceof Error) {
-            const errorMessage = error.message || 'Unknown error';
-            const errorName = error.name || 'Error';
-            const stackTrace = error.stack?.split('\n').slice(0, 5).join('\n');
-
-            this.logger.error(
-              `[#${job.id}] [${job.title}] failed: ${errorName}: ${errorMessage}`,
-              stackTrace,
-            );
-          }
-        }
-      }
-      this.logger.log(
-        `[${queueKey}] (${queue.length} jobs remaining in queue)`,
-      );
-    }
-    this.processingFlags.delete(queueKey);
-    this.queues.delete(queueKey);
-  }
-
-  cancel(jobId: number, reason?: string): void {
-    for (const queue of this.queues.values()) {
-      const job = queue.find((j) => j.id === jobId);
-      if (job) {
-        job.cancelToken.cancel(reason);
-        this.logger.warn(
-          `Job [#${jobId}] ${job.title} has been marked as cancelled${
-            reason ? `: ${reason}` : '.'
-          }`,
-        );
-        return;
-      }
-    }
-  }
-
-  list(pages?: PaginationParams): JobInfo[] {
     const offset = PaginationParams.calculateOffset(pages);
     const limit = pages?.limit ?? PaginationParams.DEFAULT_PAGE_SIZE;
-    return this.jobs
-      .map((job) => job.info)
-      .sort((a, b) => b.id - a.id)
+
+    const stateOrder: Record<string, number> = {
+      active: 0,
+      waiting: 1,
+      delayed: 1,
+      completed: 2,
+      failed: 2,
+    };
+
+    return allJobs
+      .sort((a, b) => {
+        const groupA = stateOrder[a.state] ?? 2;
+        const groupB = stateOrder[b.state] ?? 2;
+        if (groupA !== groupB) return groupA - groupB;
+
+        if (groupA === 1) {
+          return (
+            (a.scheduledAt?.getTime() ?? 0) - (b.scheduledAt?.getTime() ?? 0)
+          );
+        }
+
+        return (
+          (b.endedAt?.getTime() ?? b.startedAt?.getTime() ?? 0) -
+          (a.endedAt?.getTime() ?? a.startedAt?.getTime() ?? 0)
+        );
+      })
       .slice(offset, offset + limit);
+  }
+
+  listSchedulers(): SchedulerInfo[] {
+    return this.discoveryService.getEntries().map(
+      (entry) =>
+        new SchedulerInfo({
+          id: entry.options.id,
+          queue: entry.options.queue,
+          pattern: entry.options.pattern,
+          enabled: entry.options.enabled,
+        }),
+    );
+  }
+
+  async enableScheduler(id: string): Promise<void> {
+    await this.discoveryService.enableScheduler(id);
+  }
+
+  async disableScheduler(id: string): Promise<void> {
+    await this.discoveryService.disableScheduler(id);
+  }
+
+  private async toJobInfo(job: Job, queue: string): Promise<JobInfo> {
+    const state = await job.getState();
+    return new JobInfo({
+      id: job.id ?? '',
+      name: job.name,
+      queue,
+      state,
+      scheduledAt: new Date(job.timestamp + (job.delay ?? 0)),
+      startedAt: job.processedOn ? new Date(job.processedOn) : undefined,
+      endedAt: job.finishedOn ? new Date(job.finishedOn) : undefined,
+      failedReason: job.failedReason ?? undefined,
+    });
   }
 }

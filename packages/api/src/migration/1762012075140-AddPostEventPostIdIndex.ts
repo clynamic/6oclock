@@ -1,8 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddPostEventPostIdIndex1762012075140
-  implements MigrationInterface
-{
+export class AddPostEventPostIdIndex1762012075140 implements MigrationInterface {
   name = 'AddPostEventPostIdIndex1762012075140';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

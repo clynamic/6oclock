@@ -10,6 +10,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: six_oclock
+      REDIS_HOST: six-oclock-redis
       NODE_ENV: development
     volumes:
       - .:/app

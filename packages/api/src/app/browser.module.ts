@@ -160,20 +160,14 @@ export function Invalidates(
     descriptor.value = async function (...args: any[]) {
       const cacheManager = CacheManager.getInstance();
 
-      try {
-        const result = await originalMethod.apply(this, args);
-        const keys = Array.isArray(resourceKeys)
-          ? resourceKeys
-          : [resourceKeys];
+      const result = await originalMethod.apply(this, args);
+      const keys = Array.isArray(resourceKeys) ? resourceKeys : [resourceKeys];
 
-        for (const resourceKey of keys) {
-          await cacheManager.inv(resourceKey);
-        }
-
-        return result;
-      } catch (error) {
-        throw error;
+      for (const resourceKey of keys) {
+        await cacheManager.inv(resourceKey);
       }
+
+      return result;
     };
 
     return descriptor;
@@ -187,18 +181,14 @@ export function withInvalidation<T extends (...args: any[]) => any>(
   return (async (...args: any[]) => {
     const cacheManager = CacheManager.getInstance();
 
-    try {
-      const result = await fn(...args);
-      const keys = Array.isArray(resourceKeys) ? resourceKeys : [resourceKeys];
+    const result = await fn(...args);
+    const keys = Array.isArray(resourceKeys) ? resourceKeys : [resourceKeys];
 
-      for (const entityType of keys) {
-        await cacheManager.inv(entityType);
-      }
-
-      return result;
-    } catch (error) {
-      throw error;
+    for (const entityType of keys) {
+      await cacheManager.inv(entityType);
     }
+
+    return result;
   }) as T;
 }
 

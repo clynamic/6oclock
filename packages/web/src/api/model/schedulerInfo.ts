@@ -6,6 +6,9 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export interface ApprovalCountSummary {
-  total: number;
+export interface SchedulerInfo {
+  id: string;
+  queue: string;
+  pattern: string;
+  enabled: boolean;
 }

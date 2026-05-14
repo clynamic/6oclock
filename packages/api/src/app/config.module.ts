@@ -7,6 +7,8 @@ export enum AppConfigKeys {
   E621_GLOBAL_USERNAME = 'E621_GLOBAL_USERNAME',
   E621_GLOBAL_API_KEY = 'E621_GLOBAL_API_KEY',
   CORS_ALLOWED_ORIGINS = 'CORS_ALLOWED_ORIGINS',
+  REDIS_HOST = 'REDIS_HOST',
+  REDIS_PORT = 'REDIS_PORT',
   DATA_DIR = 'DATA_DIR',
   SERVER_ADMINS = 'SERVER_ADMINS',
 }
@@ -24,6 +26,8 @@ export enum AppConfigKeys {
           .try(Joi.string(), Joi.array().items(Joi.string()))
           .optional()
           .allow(''),
+        REDIS_HOST: Joi.string().optional().default('localhost'),
+        REDIS_PORT: Joi.number().optional().default(6379),
         DATA_DIR: Joi.string().optional().default('./data'),
         SERVER_ADMINS: Joi.string().optional().default('').allow(''),
       }),

@@ -42,9 +42,9 @@ export class ManifestAvailableQuery {
   type?: ItemType[];
 }
 
-export class ManifestAvailability
-  implements ConvertKeysToCamelCase<Partial<Record<ItemType, number>>>
-{
+export class ManifestAvailability implements ConvertKeysToCamelCase<
+  Partial<Record<ItemType, number>>
+> {
   constructor(value: Raw<ManifestAvailability>) {
     Object.assign(this, value);
   }
