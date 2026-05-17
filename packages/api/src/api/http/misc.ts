@@ -1,7 +1,9 @@
 import { AxiosResponse } from 'axios';
 
+import { getContentType } from './headers';
+
 export const miscFixInterceptors = (response: AxiosResponse): AxiosResponse => {
-  if (!response.headers['content-type']?.includes('application/json')) {
+  if (!getContentType(response)?.includes('application/json')) {
     return response;
   }
 

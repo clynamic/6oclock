@@ -1,6 +1,8 @@
 import { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { isValid, parseISO } from 'date-fns';
 
+import { getContentType } from './headers';
+
 const deserializeDates = <T>(body: T): T => {
   if (body === null || (typeof body !== 'object' && typeof body !== 'string')) {
     return body;
@@ -29,7 +31,7 @@ const deserializeDates = <T>(body: T): T => {
 export const dateDeserializeInterceptor = (
   response: AxiosResponse,
 ): AxiosResponse => {
-  if (!response.headers['content-type']?.includes('application/json')) {
+  if (!getContentType(response)?.includes('application/json')) {
     return response;
   }
 
