@@ -7,15 +7,15 @@
  */
 
 export type GetJobsParams = {
-/**
- * Page number
- * @minimum 1
- */
-page?: number;
-/**
- * Page size
- * @minimum 1
- * @maximum 320
- */
-limit?: number;
+  /**
+   * Page number
+   * @minimum 1
+   */
+  page?: number;
+  /**
+   * Page size
+   * @minimum 1
+   * @maximum 320
+   */
+  limit?: number;
 };

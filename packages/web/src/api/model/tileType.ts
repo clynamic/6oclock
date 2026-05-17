@@ -6,8 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type TileType = typeof TileType[keyof typeof TileType];
-
+export type TileType = (typeof TileType)[keyof typeof TileType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileType = {

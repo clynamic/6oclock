@@ -6,8 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type TrendGrade = typeof TrendGrade[keyof typeof TrendGrade];
-
+export type TrendGrade = (typeof TrendGrade)[keyof typeof TrendGrade];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TrendGrade = {

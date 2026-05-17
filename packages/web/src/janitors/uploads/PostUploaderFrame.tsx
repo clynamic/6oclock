@@ -29,16 +29,20 @@ export const PostUploaderFrame: React.FC<PostUploaderFrame> = ({ summary }) => {
           spacing={2}
           sx={{
             p: 2,
-            width: '100%'
-          }}>
+            width: '100%',
+          }}
+        >
           <UserAvatar
             user={summary ? { id: summary.userId, ...summary.head } : undefined}
           />
           <Stack sx={{ flex: 1, minWidth: 0 }}>
             <UsernameText user={summary} />
-            <Typography variant="body2" sx={{
-              color: "text.secondary"
-            }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'text.secondary',
+              }}
+            >
               {summary ? (
                 `${formatNumber(summary.total)} posts`
               ) : (

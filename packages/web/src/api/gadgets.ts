@@ -5,9 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useQuery
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -17,203 +15,258 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult
+  UseQueryResult,
 } from '@tanstack/react-query';
-
-import type {
-  DailyActivity,
-  Motd
-} from './model';
 
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
-
-
-
-
+import type { DailyActivity, Motd } from './model';
 
 /**
  * @summary Get today's message of the day
  */
-export const motd = (
-    
- signal?: AbortSignal
-) => {
-      
-      
-      return makeRequest<Motd>(
-      {url: `/gadgets/motd`, method: 'GET', signal
-    },
-      );
-    }
-  
-
-
+export const motd = (signal?: AbortSignal) => {
+  return makeRequest<Motd>({ url: `/gadgets/motd`, method: 'GET', signal });
+};
 
 export const getMotdQueryKey = () => {
-    return [
-    `/gadgets/motd`
-    ] as const;
-    }
+  return [`/gadgets/motd`] as const;
+};
 
-    
-export const getMotdQueryOptions = <TData = Awaited<ReturnType<typeof motd>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof motd>>, TError, TData>>, }
-) => {
+export const getMotdQueryOptions = <
+  TData = Awaited<ReturnType<typeof motd>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof motd>>, TError, TData>
+  >;
+}) => {
+  const { query: queryOptions } = options ?? {};
 
-const {query: queryOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getMotdQueryKey();
 
-  const queryKey =  queryOptions?.queryKey ?? getMotdQueryKey();
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof motd>>> = ({
+    signal,
+  }) => motd(signal);
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof motd>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof motd>>> = ({ signal }) => motd(signal);
+export type MotdQueryResult = NonNullable<Awaited<ReturnType<typeof motd>>>;
+export type MotdQueryError = ErrorType<unknown>;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof motd>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type MotdQueryResult = NonNullable<Awaited<ReturnType<typeof motd>>>
-export type MotdQueryError = ErrorType<unknown>
-
-
-export function useMotd<TData = Awaited<ReturnType<typeof motd>>, TError = ErrorType<unknown>>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof motd>>, TError, TData>> & Pick<
+export function useMotd<
+  TData = Awaited<ReturnType<typeof motd>>,
+  TError = ErrorType<unknown>,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof motd>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof motd>>,
           TError,
           Awaited<ReturnType<typeof motd>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useMotd<TData = Awaited<ReturnType<typeof motd>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof motd>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useMotd<
+  TData = Awaited<ReturnType<typeof motd>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof motd>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof motd>>,
           TError,
           Awaited<ReturnType<typeof motd>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useMotd<TData = Awaited<ReturnType<typeof motd>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof motd>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useMotd<
+  TData = Awaited<ReturnType<typeof motd>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof motd>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get today's message of the day
  */
 
-export function useMotd<TData = Awaited<ReturnType<typeof motd>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof motd>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useMotd<
+  TData = Awaited<ReturnType<typeof motd>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof motd>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getMotdQueryOptions(options);
 
-  const queryOptions = getMotdQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Returns today's activity counter
  * @summary Get today's activity counter
  */
-export const dailyActivity = (
-    
- signal?: AbortSignal
-) => {
-      
-      
-      return makeRequest<DailyActivity>(
-      {url: `/gadgets/activity`, method: 'GET', signal
-    },
-      );
-    }
-  
-
-
+export const dailyActivity = (signal?: AbortSignal) => {
+  return makeRequest<DailyActivity>({
+    url: `/gadgets/activity`,
+    method: 'GET',
+    signal,
+  });
+};
 
 export const getDailyActivityQueryKey = () => {
-    return [
-    `/gadgets/activity`
-    ] as const;
-    }
+  return [`/gadgets/activity`] as const;
+};
 
-    
-export const getDailyActivityQueryOptions = <TData = Awaited<ReturnType<typeof dailyActivity>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof dailyActivity>>, TError, TData>>, }
-) => {
+export const getDailyActivityQueryOptions = <
+  TData = Awaited<ReturnType<typeof dailyActivity>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof dailyActivity>>, TError, TData>
+  >;
+}) => {
+  const { query: queryOptions } = options ?? {};
 
-const {query: queryOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getDailyActivityQueryKey();
 
-  const queryKey =  queryOptions?.queryKey ?? getDailyActivityQueryKey();
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof dailyActivity>>> = ({
+    signal,
+  }) => dailyActivity(signal);
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof dailyActivity>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof dailyActivity>>> = ({ signal }) => dailyActivity(signal);
+export type DailyActivityQueryResult = NonNullable<
+  Awaited<ReturnType<typeof dailyActivity>>
+>;
+export type DailyActivityQueryError = ErrorType<unknown>;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof dailyActivity>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type DailyActivityQueryResult = NonNullable<Awaited<ReturnType<typeof dailyActivity>>>
-export type DailyActivityQueryError = ErrorType<unknown>
-
-
-export function useDailyActivity<TData = Awaited<ReturnType<typeof dailyActivity>>, TError = ErrorType<unknown>>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof dailyActivity>>, TError, TData>> & Pick<
+export function useDailyActivity<
+  TData = Awaited<ReturnType<typeof dailyActivity>>,
+  TError = ErrorType<unknown>,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof dailyActivity>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof dailyActivity>>,
           TError,
           Awaited<ReturnType<typeof dailyActivity>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDailyActivity<TData = Awaited<ReturnType<typeof dailyActivity>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof dailyActivity>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useDailyActivity<
+  TData = Awaited<ReturnType<typeof dailyActivity>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof dailyActivity>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof dailyActivity>>,
           TError,
           Awaited<ReturnType<typeof dailyActivity>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDailyActivity<TData = Awaited<ReturnType<typeof dailyActivity>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof dailyActivity>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useDailyActivity<
+  TData = Awaited<ReturnType<typeof dailyActivity>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof dailyActivity>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get today's activity counter
  */
 
-export function useDailyActivity<TData = Awaited<ReturnType<typeof dailyActivity>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof dailyActivity>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useDailyActivity<
+  TData = Awaited<ReturnType<typeof dailyActivity>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof dailyActivity>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getDailyActivityQueryOptions(options);
 
-  const queryOptions = getDailyActivityQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
-

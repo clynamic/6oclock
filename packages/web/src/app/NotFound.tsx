@@ -12,9 +12,12 @@ export const NotFoundPage: React.FC = () => {
       <PageTitle subtitle="Not Found" />
       <PageHeader />
       <PageBody>
-        <Stack spacing={2} sx={{
-          alignItems: "center"
-        }}>
+        <Stack
+          spacing={2}
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <Typography variant="h1">404</Typography>
           <Typography>Nothing here but us chickens. 🐔</Typography>
         </Stack>

@@ -5,10 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -21,241 +18,316 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult
+  UseQueryResult,
 } from '@tanstack/react-query';
-
-import type {
-  DashboardConfig,
-  DashboardUpdate
-} from './model';
 
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
-
-
-
-
+import type { DashboardConfig, DashboardUpdate } from './model';
 
 /**
  * Get dashboard by type, for the current user
  * @summary Get dashboard
  */
-export const dashboard = (
-    type: string,
- signal?: AbortSignal
+export const dashboard = (type: string, signal?: AbortSignal) => {
+  return makeRequest<DashboardConfig>({
+    url: `/dashboards/${encodeURIComponent(String(type))}`,
+    method: 'GET',
+    signal,
+  });
+};
+
+export const getDashboardQueryKey = (type?: string) => {
+  return [`/dashboards/${type}`] as const;
+};
+
+export const getDashboardQueryOptions = <
+  TData = Awaited<ReturnType<typeof dashboard>>,
+  TError = ErrorType<void>,
+>(
+  type: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>
+    >;
+  },
 ) => {
-      
-      
-      return makeRequest<DashboardConfig>(
-      {url: `/dashboards/${encodeURIComponent(String(type))}`, method: 'GET', signal
-    },
-      );
-    }
-  
+  const { query: queryOptions } = options ?? {};
 
+  const queryKey = queryOptions?.queryKey ?? getDashboardQueryKey(type);
 
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof dashboard>>> = ({
+    signal,
+  }) => dashboard(type, signal);
 
-export const getDashboardQueryKey = (type?: string,) => {
-    return [
-    `/dashboards/${type}`
-    ] as const;
-    }
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!type,
+    ...queryOptions,
+  } as UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+};
 
-    
-export const getDashboardQueryOptions = <TData = Awaited<ReturnType<typeof dashboard>>, TError = ErrorType<void>>(type: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>>, }
-) => {
+export type DashboardQueryResult = NonNullable<
+  Awaited<ReturnType<typeof dashboard>>
+>;
+export type DashboardQueryError = ErrorType<void>;
 
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getDashboardQueryKey(type);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof dashboard>>> = ({ signal }) => dashboard(type, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(type), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type DashboardQueryResult = NonNullable<Awaited<ReturnType<typeof dashboard>>>
-export type DashboardQueryError = ErrorType<void>
-
-
-export function useDashboard<TData = Awaited<ReturnType<typeof dashboard>>, TError = ErrorType<void>>(
- type: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>> & Pick<
+export function useDashboard<
+  TData = Awaited<ReturnType<typeof dashboard>>,
+  TError = ErrorType<void>,
+>(
+  type: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof dashboard>>,
           TError,
           Awaited<ReturnType<typeof dashboard>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDashboard<TData = Awaited<ReturnType<typeof dashboard>>, TError = ErrorType<void>>(
- type: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useDashboard<
+  TData = Awaited<ReturnType<typeof dashboard>>,
+  TError = ErrorType<void>,
+>(
+  type: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof dashboard>>,
           TError,
           Awaited<ReturnType<typeof dashboard>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDashboard<TData = Awaited<ReturnType<typeof dashboard>>, TError = ErrorType<void>>(
- type: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useDashboard<
+  TData = Awaited<ReturnType<typeof dashboard>>,
+  TError = ErrorType<void>,
+>(
+  type: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get dashboard
  */
 
-export function useDashboard<TData = Awaited<ReturnType<typeof dashboard>>, TError = ErrorType<void>>(
- type: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useDashboard<
+  TData = Awaited<ReturnType<typeof dashboard>>,
+  TError = ErrorType<void>,
+>(
+  type: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof dashboard>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getDashboardQueryOptions(type, options);
 
-  const queryOptions = getDashboardQueryOptions(type,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Update dashboard by type, for the current user
  * @summary Update dashboard
  */
 export const updateDashboard = (
-    type: string,
-    dashboardUpdate: DashboardUpdate,
- signal?: AbortSignal
+  type: string,
+  dashboardUpdate: DashboardUpdate,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return makeRequest<void>(
-      {url: `/dashboards/${encodeURIComponent(String(type))}`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: dashboardUpdate, signal
-    },
-      );
-    }
-  
+  return makeRequest<void>({
+    url: `/dashboards/${encodeURIComponent(String(type))}`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: dashboardUpdate,
+    signal,
+  });
+};
 
+export const getUpdateDashboardMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateDashboard>>,
+    TError,
+    { type: string; data: DashboardUpdate },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateDashboard>>,
+  TError,
+  { type: string; data: DashboardUpdate },
+  TContext
+> => {
+  const mutationKey = ['updateDashboard'];
+  const { mutation: mutationOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
 
-export const getUpdateDashboardMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateDashboard>>, TError,{type: string;data: DashboardUpdate}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof updateDashboard>>, TError,{type: string;data: DashboardUpdate}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateDashboard>>,
+    { type: string; data: DashboardUpdate }
+  > = (props) => {
+    const { type, data } = props ?? {};
 
-const mutationKey = ['updateDashboard'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
+    return updateDashboard(type, data);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type UpdateDashboardMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateDashboard>>
+>;
+export type UpdateDashboardMutationBody = DashboardUpdate;
+export type UpdateDashboardMutationError = ErrorType<unknown>;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateDashboard>>, {type: string;data: DashboardUpdate}> = (props) => {
-          const {type,data} = props ?? {};
-
-          return  updateDashboard(type,data,)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type UpdateDashboardMutationResult = NonNullable<Awaited<ReturnType<typeof updateDashboard>>>
-    export type UpdateDashboardMutationBody = DashboardUpdate
-    export type UpdateDashboardMutationError = ErrorType<unknown>
-
-    /**
+/**
  * @summary Update dashboard
  */
-export const useUpdateDashboard = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateDashboard>>, TError,{type: string;data: DashboardUpdate}, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof updateDashboard>>,
-        TError,
-        {type: string;data: DashboardUpdate},
-        TContext
-      > => {
+export const useUpdateDashboard = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof updateDashboard>>,
+      TError,
+      { type: string; data: DashboardUpdate },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof updateDashboard>>,
+  TError,
+  { type: string; data: DashboardUpdate },
+  TContext
+> => {
+  const mutationOptions = getUpdateDashboardMutationOptions(options);
 
-      const mutationOptions = getUpdateDashboardMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
+  return useMutation(mutationOptions, queryClient);
+};
+/**
  * Delete dashboard by type, for the current user
  * @summary Delete dashboard
  */
-export const deleteDashboard = (
-    type: string,
- signal?: AbortSignal
-) => {
-      
-      
-      return makeRequest<void>(
-      {url: `/dashboards/${encodeURIComponent(String(type))}/delete`, method: 'POST', signal
-    },
-      );
-    }
-  
+export const deleteDashboard = (type: string, signal?: AbortSignal) => {
+  return makeRequest<void>({
+    url: `/dashboards/${encodeURIComponent(String(type))}/delete`,
+    method: 'POST',
+    signal,
+  });
+};
 
+export const getDeleteDashboardMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteDashboard>>,
+    TError,
+    { type: string },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteDashboard>>,
+  TError,
+  { type: string },
+  TContext
+> => {
+  const mutationKey = ['deleteDashboard'];
+  const { mutation: mutationOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
 
-export const getDeleteDashboardMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteDashboard>>, TError,{type: string}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof deleteDashboard>>, TError,{type: string}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteDashboard>>,
+    { type: string }
+  > = (props) => {
+    const { type } = props ?? {};
 
-const mutationKey = ['deleteDashboard'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
+    return deleteDashboard(type);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type DeleteDashboardMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteDashboard>>
+>;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteDashboard>>, {type: string}> = (props) => {
-          const {type} = props ?? {};
+export type DeleteDashboardMutationError = ErrorType<unknown>;
 
-          return  deleteDashboard(type,)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type DeleteDashboardMutationResult = NonNullable<Awaited<ReturnType<typeof deleteDashboard>>>
-    
-    export type DeleteDashboardMutationError = ErrorType<unknown>
-
-    /**
+/**
  * @summary Delete dashboard
  */
-export const useDeleteDashboard = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteDashboard>>, TError,{type: string}, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof deleteDashboard>>,
-        TError,
-        {type: string},
-        TContext
-      > => {
+export const useDeleteDashboard = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof deleteDashboard>>,
+      TError,
+      { type: string },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof deleteDashboard>>,
+  TError,
+  { type: string },
+  TContext
+> => {
+  const mutationOptions = getDeleteDashboardMutationOptions(options);
 
-      const mutationOptions = getDeleteDashboardMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
+  return useMutation(mutationOptions, queryClient);
+};

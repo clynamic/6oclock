@@ -33,8 +33,8 @@ const computeProfileChartIds = (
     .filter(([activityKey]) =>
       activityData.some(
         (point) =>
-          (point[activityKey as keyof Omit<ActivitySeriesPoint, 'date'>] ??
-            0) > 0,
+          (point[activityKey as keyof Omit<ActivitySeriesPoint, 'date'>] ?? 0) >
+          0,
       ),
     )
     .flatMap(([, ids]) => ids);

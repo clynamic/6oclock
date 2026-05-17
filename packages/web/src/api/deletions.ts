@@ -5,9 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useQuery
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -17,411 +15,709 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult
+  UseQueryResult,
 } from '@tanstack/react-query';
 
+import { makeRequest } from '../http/axios';
+import type { ErrorType } from '../http/axios';
 import type {
   GetDeletionActivitySummaryByDeleterParams,
   GetDeletionActivitySummaryParams,
   GetDeletionCountSeriesParams,
   GetDeletionSeriesByDeleterParams,
-  SeriesCountPoint
+  SeriesCountPoint,
 } from './model';
-
-import { makeRequest } from '../http/axios';
-import type { ErrorType } from '../http/axios';
-
-
-
-
 
 /**
  * Get a time series of post deletion counts for a given date range
  * @summary Post deletion series
  */
 export const deletionCountSeries = (
-    params?: GetDeletionCountSeriesParams,
- signal?: AbortSignal
+  params?: GetDeletionCountSeriesParams,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return makeRequest<SeriesCountPoint[]>(
-      {url: `/metrics/deletions/count/series`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  return makeRequest<SeriesCountPoint[]>({
+    url: `/metrics/deletions/count/series`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
 
-
-
-export const getDeletionCountSeriesQueryKey = (params?: GetDeletionCountSeriesParams,) => {
-    return [
-    `/metrics/deletions/count/series`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getDeletionCountSeriesQueryOptions = <TData = Awaited<ReturnType<typeof deletionCountSeries>>, TError = ErrorType<unknown>>(params?: GetDeletionCountSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionCountSeries>>, TError, TData>>, }
+export const getDeletionCountSeriesQueryKey = (
+  params?: GetDeletionCountSeriesParams,
 ) => {
+  return [
+    `/metrics/deletions/count/series`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
-const {query: queryOptions} = options ?? {};
+export const getDeletionCountSeriesQueryOptions = <
+  TData = Awaited<ReturnType<typeof deletionCountSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetDeletionCountSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionCountSeries>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getDeletionCountSeriesQueryKey(params);
+  const queryKey =
+    queryOptions?.queryKey ?? getDeletionCountSeriesQueryKey(params);
 
-  
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof deletionCountSeries>>
+  > = ({ signal }) => deletionCountSeries(params, signal);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof deletionCountSeries>>> = ({ signal }) => deletionCountSeries(params, signal);
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof deletionCountSeries>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type DeletionCountSeriesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof deletionCountSeries>>
+>;
+export type DeletionCountSeriesQueryError = ErrorType<unknown>;
 
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof deletionCountSeries>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type DeletionCountSeriesQueryResult = NonNullable<Awaited<ReturnType<typeof deletionCountSeries>>>
-export type DeletionCountSeriesQueryError = ErrorType<unknown>
-
-
-export function useDeletionCountSeries<TData = Awaited<ReturnType<typeof deletionCountSeries>>, TError = ErrorType<unknown>>(
- params: undefined |  GetDeletionCountSeriesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionCountSeries>>, TError, TData>> & Pick<
+export function useDeletionCountSeries<
+  TData = Awaited<ReturnType<typeof deletionCountSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetDeletionCountSeriesParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionCountSeries>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof deletionCountSeries>>,
           TError,
           Awaited<ReturnType<typeof deletionCountSeries>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDeletionCountSeries<TData = Awaited<ReturnType<typeof deletionCountSeries>>, TError = ErrorType<unknown>>(
- params?: GetDeletionCountSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionCountSeries>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useDeletionCountSeries<
+  TData = Awaited<ReturnType<typeof deletionCountSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetDeletionCountSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionCountSeries>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof deletionCountSeries>>,
           TError,
           Awaited<ReturnType<typeof deletionCountSeries>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDeletionCountSeries<TData = Awaited<ReturnType<typeof deletionCountSeries>>, TError = ErrorType<unknown>>(
- params?: GetDeletionCountSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionCountSeries>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useDeletionCountSeries<
+  TData = Awaited<ReturnType<typeof deletionCountSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetDeletionCountSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionCountSeries>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Post deletion series
  */
 
-export function useDeletionCountSeries<TData = Awaited<ReturnType<typeof deletionCountSeries>>, TError = ErrorType<unknown>>(
- params?: GetDeletionCountSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionCountSeries>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useDeletionCountSeries<
+  TData = Awaited<ReturnType<typeof deletionCountSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetDeletionCountSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionCountSeries>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getDeletionCountSeriesQueryOptions(params, options);
 
-  const queryOptions = getDeletionCountSeriesQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Get a time series of post deletion counts for a given date range by deleter
  * @summary Post deletion series by deleter
  */
 export const deletionSeriesByDeleter = (
-    userId: number,
-    params?: GetDeletionSeriesByDeleterParams,
- signal?: AbortSignal
+  userId: number,
+  params?: GetDeletionSeriesByDeleterParams,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return makeRequest<SeriesCountPoint[]>(
-      {url: `/metrics/deletions/count/series/by/deleter/${encodeURIComponent(String(userId))}`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  return makeRequest<SeriesCountPoint[]>({
+    url: `/metrics/deletions/count/series/by/deleter/${encodeURIComponent(String(userId))}`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
 
-
-
-export const getDeletionSeriesByDeleterQueryKey = (userId?: number,
-    params?: GetDeletionSeriesByDeleterParams,) => {
-    return [
-    `/metrics/deletions/count/series/by/deleter/${userId}`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getDeletionSeriesByDeleterQueryOptions = <TData = Awaited<ReturnType<typeof deletionSeriesByDeleter>>, TError = ErrorType<unknown>>(userId: number,
-    params?: GetDeletionSeriesByDeleterParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionSeriesByDeleter>>, TError, TData>>, }
+export const getDeletionSeriesByDeleterQueryKey = (
+  userId?: number,
+  params?: GetDeletionSeriesByDeleterParams,
 ) => {
+  return [
+    `/metrics/deletions/count/series/by/deleter/${userId}`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
-const {query: queryOptions} = options ?? {};
+export const getDeletionSeriesByDeleterQueryOptions = <
+  TData = Awaited<ReturnType<typeof deletionSeriesByDeleter>>,
+  TError = ErrorType<unknown>,
+>(
+  userId: number,
+  params?: GetDeletionSeriesByDeleterParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionSeriesByDeleter>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getDeletionSeriesByDeleterQueryKey(userId,params);
+  const queryKey =
+    queryOptions?.queryKey ??
+    getDeletionSeriesByDeleterQueryKey(userId, params);
 
-  
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof deletionSeriesByDeleter>>
+  > = ({ signal }) => deletionSeriesByDeleter(userId, params, signal);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof deletionSeriesByDeleter>>> = ({ signal }) => deletionSeriesByDeleter(userId,params, signal);
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!userId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof deletionSeriesByDeleter>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type DeletionSeriesByDeleterQueryResult = NonNullable<
+  Awaited<ReturnType<typeof deletionSeriesByDeleter>>
+>;
+export type DeletionSeriesByDeleterQueryError = ErrorType<unknown>;
 
-      
-
-   return  { queryKey, queryFn, enabled: !!(userId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof deletionSeriesByDeleter>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type DeletionSeriesByDeleterQueryResult = NonNullable<Awaited<ReturnType<typeof deletionSeriesByDeleter>>>
-export type DeletionSeriesByDeleterQueryError = ErrorType<unknown>
-
-
-export function useDeletionSeriesByDeleter<TData = Awaited<ReturnType<typeof deletionSeriesByDeleter>>, TError = ErrorType<unknown>>(
- userId: number,
-    params: undefined |  GetDeletionSeriesByDeleterParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionSeriesByDeleter>>, TError, TData>> & Pick<
+export function useDeletionSeriesByDeleter<
+  TData = Awaited<ReturnType<typeof deletionSeriesByDeleter>>,
+  TError = ErrorType<unknown>,
+>(
+  userId: number,
+  params: undefined | GetDeletionSeriesByDeleterParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionSeriesByDeleter>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof deletionSeriesByDeleter>>,
           TError,
           Awaited<ReturnType<typeof deletionSeriesByDeleter>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDeletionSeriesByDeleter<TData = Awaited<ReturnType<typeof deletionSeriesByDeleter>>, TError = ErrorType<unknown>>(
- userId: number,
-    params?: GetDeletionSeriesByDeleterParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionSeriesByDeleter>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useDeletionSeriesByDeleter<
+  TData = Awaited<ReturnType<typeof deletionSeriesByDeleter>>,
+  TError = ErrorType<unknown>,
+>(
+  userId: number,
+  params?: GetDeletionSeriesByDeleterParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionSeriesByDeleter>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof deletionSeriesByDeleter>>,
           TError,
           Awaited<ReturnType<typeof deletionSeriesByDeleter>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDeletionSeriesByDeleter<TData = Awaited<ReturnType<typeof deletionSeriesByDeleter>>, TError = ErrorType<unknown>>(
- userId: number,
-    params?: GetDeletionSeriesByDeleterParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionSeriesByDeleter>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useDeletionSeriesByDeleter<
+  TData = Awaited<ReturnType<typeof deletionSeriesByDeleter>>,
+  TError = ErrorType<unknown>,
+>(
+  userId: number,
+  params?: GetDeletionSeriesByDeleterParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionSeriesByDeleter>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Post deletion series by deleter
  */
 
-export function useDeletionSeriesByDeleter<TData = Awaited<ReturnType<typeof deletionSeriesByDeleter>>, TError = ErrorType<unknown>>(
- userId: number,
-    params?: GetDeletionSeriesByDeleterParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionSeriesByDeleter>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useDeletionSeriesByDeleter<
+  TData = Awaited<ReturnType<typeof deletionSeriesByDeleter>>,
+  TError = ErrorType<unknown>,
+>(
+  userId: number,
+  params?: GetDeletionSeriesByDeleterParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionSeriesByDeleter>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getDeletionSeriesByDeleterQueryOptions(
+    userId,
+    params,
+    options,
+  );
 
-  const queryOptions = getDeletionSeriesByDeleterQueryOptions(userId,params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Get a hourly summary of post deletion counts for a given date range
  * @summary Post deletion activity summary
  */
 export const deletionActivitySummary = (
-    params?: GetDeletionActivitySummaryParams,
- signal?: AbortSignal
+  params?: GetDeletionActivitySummaryParams,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return makeRequest<SeriesCountPoint[]>(
-      {url: `/metrics/deletions/activity/summary`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  return makeRequest<SeriesCountPoint[]>({
+    url: `/metrics/deletions/activity/summary`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
 
-
-
-export const getDeletionActivitySummaryQueryKey = (params?: GetDeletionActivitySummaryParams,) => {
-    return [
-    `/metrics/deletions/activity/summary`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getDeletionActivitySummaryQueryOptions = <TData = Awaited<ReturnType<typeof deletionActivitySummary>>, TError = ErrorType<unknown>>(params?: GetDeletionActivitySummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionActivitySummary>>, TError, TData>>, }
+export const getDeletionActivitySummaryQueryKey = (
+  params?: GetDeletionActivitySummaryParams,
 ) => {
+  return [
+    `/metrics/deletions/activity/summary`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
-const {query: queryOptions} = options ?? {};
+export const getDeletionActivitySummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof deletionActivitySummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetDeletionActivitySummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionActivitySummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getDeletionActivitySummaryQueryKey(params);
+  const queryKey =
+    queryOptions?.queryKey ?? getDeletionActivitySummaryQueryKey(params);
 
-  
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof deletionActivitySummary>>
+  > = ({ signal }) => deletionActivitySummary(params, signal);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof deletionActivitySummary>>> = ({ signal }) => deletionActivitySummary(params, signal);
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof deletionActivitySummary>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type DeletionActivitySummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof deletionActivitySummary>>
+>;
+export type DeletionActivitySummaryQueryError = ErrorType<unknown>;
 
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof deletionActivitySummary>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type DeletionActivitySummaryQueryResult = NonNullable<Awaited<ReturnType<typeof deletionActivitySummary>>>
-export type DeletionActivitySummaryQueryError = ErrorType<unknown>
-
-
-export function useDeletionActivitySummary<TData = Awaited<ReturnType<typeof deletionActivitySummary>>, TError = ErrorType<unknown>>(
- params: undefined |  GetDeletionActivitySummaryParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionActivitySummary>>, TError, TData>> & Pick<
+export function useDeletionActivitySummary<
+  TData = Awaited<ReturnType<typeof deletionActivitySummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetDeletionActivitySummaryParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionActivitySummary>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof deletionActivitySummary>>,
           TError,
           Awaited<ReturnType<typeof deletionActivitySummary>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDeletionActivitySummary<TData = Awaited<ReturnType<typeof deletionActivitySummary>>, TError = ErrorType<unknown>>(
- params?: GetDeletionActivitySummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionActivitySummary>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useDeletionActivitySummary<
+  TData = Awaited<ReturnType<typeof deletionActivitySummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetDeletionActivitySummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionActivitySummary>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof deletionActivitySummary>>,
           TError,
           Awaited<ReturnType<typeof deletionActivitySummary>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDeletionActivitySummary<TData = Awaited<ReturnType<typeof deletionActivitySummary>>, TError = ErrorType<unknown>>(
- params?: GetDeletionActivitySummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionActivitySummary>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useDeletionActivitySummary<
+  TData = Awaited<ReturnType<typeof deletionActivitySummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetDeletionActivitySummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionActivitySummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Post deletion activity summary
  */
 
-export function useDeletionActivitySummary<TData = Awaited<ReturnType<typeof deletionActivitySummary>>, TError = ErrorType<unknown>>(
- params?: GetDeletionActivitySummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionActivitySummary>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useDeletionActivitySummary<
+  TData = Awaited<ReturnType<typeof deletionActivitySummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetDeletionActivitySummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionActivitySummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getDeletionActivitySummaryQueryOptions(params, options);
 
-  const queryOptions = getDeletionActivitySummaryQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Get a hourly summary of post deletion counts for a given date range by deleter
  * @summary Post deletion activity summary by deleter
  */
 export const deletionActivitySummaryByDeleter = (
-    userId: number,
-    params?: GetDeletionActivitySummaryByDeleterParams,
- signal?: AbortSignal
+  userId: number,
+  params?: GetDeletionActivitySummaryByDeleterParams,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return makeRequest<SeriesCountPoint[]>(
-      {url: `/metrics/deletions/activity/summary/by/deleter/${encodeURIComponent(String(userId))}`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  return makeRequest<SeriesCountPoint[]>({
+    url: `/metrics/deletions/activity/summary/by/deleter/${encodeURIComponent(String(userId))}`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
 
-
-
-export const getDeletionActivitySummaryByDeleterQueryKey = (userId?: number,
-    params?: GetDeletionActivitySummaryByDeleterParams,) => {
-    return [
-    `/metrics/deletions/activity/summary/by/deleter/${userId}`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getDeletionActivitySummaryByDeleterQueryOptions = <TData = Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>, TError = ErrorType<unknown>>(userId: number,
-    params?: GetDeletionActivitySummaryByDeleterParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>, TError, TData>>, }
+export const getDeletionActivitySummaryByDeleterQueryKey = (
+  userId?: number,
+  params?: GetDeletionActivitySummaryByDeleterParams,
 ) => {
+  return [
+    `/metrics/deletions/activity/summary/by/deleter/${userId}`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
-const {query: queryOptions} = options ?? {};
+export const getDeletionActivitySummaryByDeleterQueryOptions = <
+  TData = Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>,
+  TError = ErrorType<unknown>,
+>(
+  userId: number,
+  params?: GetDeletionActivitySummaryByDeleterParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getDeletionActivitySummaryByDeleterQueryKey(userId,params);
+  const queryKey =
+    queryOptions?.queryKey ??
+    getDeletionActivitySummaryByDeleterQueryKey(userId, params);
 
-  
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>
+  > = ({ signal }) => deletionActivitySummaryByDeleter(userId, params, signal);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>> = ({ signal }) => deletionActivitySummaryByDeleter(userId,params, signal);
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!userId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type DeletionActivitySummaryByDeleterQueryResult = NonNullable<
+  Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>
+>;
+export type DeletionActivitySummaryByDeleterQueryError = ErrorType<unknown>;
 
-      
-
-   return  { queryKey, queryFn, enabled: !!(userId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type DeletionActivitySummaryByDeleterQueryResult = NonNullable<Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>>
-export type DeletionActivitySummaryByDeleterQueryError = ErrorType<unknown>
-
-
-export function useDeletionActivitySummaryByDeleter<TData = Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>, TError = ErrorType<unknown>>(
- userId: number,
-    params: undefined |  GetDeletionActivitySummaryByDeleterParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>, TError, TData>> & Pick<
+export function useDeletionActivitySummaryByDeleter<
+  TData = Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>,
+  TError = ErrorType<unknown>,
+>(
+  userId: number,
+  params: undefined | GetDeletionActivitySummaryByDeleterParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>,
           TError,
           Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDeletionActivitySummaryByDeleter<TData = Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>, TError = ErrorType<unknown>>(
- userId: number,
-    params?: GetDeletionActivitySummaryByDeleterParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useDeletionActivitySummaryByDeleter<
+  TData = Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>,
+  TError = ErrorType<unknown>,
+>(
+  userId: number,
+  params?: GetDeletionActivitySummaryByDeleterParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>,
           TError,
           Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDeletionActivitySummaryByDeleter<TData = Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>, TError = ErrorType<unknown>>(
- userId: number,
-    params?: GetDeletionActivitySummaryByDeleterParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useDeletionActivitySummaryByDeleter<
+  TData = Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>,
+  TError = ErrorType<unknown>,
+>(
+  userId: number,
+  params?: GetDeletionActivitySummaryByDeleterParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Post deletion activity summary by deleter
  */
 
-export function useDeletionActivitySummaryByDeleter<TData = Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>, TError = ErrorType<unknown>>(
- userId: number,
-    params?: GetDeletionActivitySummaryByDeleterParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useDeletionActivitySummaryByDeleter<
+  TData = Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>,
+  TError = ErrorType<unknown>,
+>(
+  userId: number,
+  params?: GetDeletionActivitySummaryByDeleterParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof deletionActivitySummaryByDeleter>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getDeletionActivitySummaryByDeleterQueryOptions(
+    userId,
+    params,
+    options,
+  );
 
-  const queryOptions = getDeletionActivitySummaryByDeleterQueryOptions(userId,params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
-

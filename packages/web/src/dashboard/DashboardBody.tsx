@@ -66,17 +66,21 @@ export const DashboardBody = () => {
         sx={{
           gap: 2,
           height: '100%',
-          width: '100%'
-        }}>
+          width: '100%',
+        }}
+      >
         {config?.version && version && config?.version < version && (
           <Alert
             sx={{ margin: 1 }}
             severity="info"
             icon={<NewReleasesOutlined />}
             action={
-              <Stack direction="row" sx={{
-                gap: 1
-              }}>
+              <Stack
+                direction="row"
+                sx={{
+                  gap: 1,
+                }}
+              >
                 <Button color="inherit" size="small" onClick={resetDashboard}>
                   Reset
                 </Button>

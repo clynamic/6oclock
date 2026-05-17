@@ -9,8 +9,6 @@ import React, {
 
 import { Breakpoint, useTheme } from '@mui/material';
 
-import { useChangeEffect } from '../utils/hooks';
-
 import {
   DashboardConfigMeta,
   DashboardPositions,
@@ -18,6 +16,7 @@ import {
   ManifestAvailability,
 } from '../api';
 import { useCurrentBreakpoint } from '../utils/breakpoints';
+import { useChangeEffect } from '../utils/hooks';
 import { DashboardLayout, DashboardLayouts } from './DashboardGrid';
 import { DashboardCatalog, buildCatalogLayout } from './DashboardItem';
 import { useCurrentLayout } from './current-layout';

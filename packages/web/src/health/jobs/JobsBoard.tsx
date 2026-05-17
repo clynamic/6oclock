@@ -28,9 +28,12 @@ export const JobsDisplay = () => {
     >
       <LimitedList
         indicator={() => (
-          <Stack direction="row" sx={{
-            justifyContent: "flex-end"
-          }}>
+          <Stack
+            direction="row"
+            sx={{
+              justifyContent: 'flex-end',
+            }}
+          >
             <Button
               size="small"
               endIcon={<ArrowForward />}
@@ -42,7 +45,9 @@ export const JobsDisplay = () => {
           </Stack>
         )}
       >
-        {data?.map((job) => <JobsFrame key={job.id} job={job} />)}
+        {data?.map((job) => (
+          <JobsFrame key={job.id} job={job} />
+        ))}
       </LimitedList>
     </QueryHint>
   );

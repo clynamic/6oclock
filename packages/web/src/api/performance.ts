@@ -5,9 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useQuery
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -17,208 +15,295 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult
+  UseQueryResult,
 } from '@tanstack/react-query';
 
+import { makeRequest } from '../http/axios';
+import type { ErrorType } from '../http/axios';
 import type {
   ActivitySeriesPoint,
   GetActivityParams,
   GetPerformanceParams,
-  PerformanceSummary
+  PerformanceSummary,
 } from './model';
-
-import { makeRequest } from '../http/axios';
-import type { ErrorType } from '../http/axios';
-
-
-
-
 
 /**
  * Get performance data for an area.
  * @summary Performance
  */
 export const performance = (
-    params?: GetPerformanceParams,
- signal?: AbortSignal
+  params?: GetPerformanceParams,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return makeRequest<PerformanceSummary[]>(
-      {url: `/metrics/performance/performance`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  return makeRequest<PerformanceSummary[]>({
+    url: `/metrics/performance/performance`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
 
+export const getPerformanceQueryKey = (params?: GetPerformanceParams) => {
+  return [
+    `/metrics/performance/performance`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
-
-export const getPerformanceQueryKey = (params?: GetPerformanceParams,) => {
-    return [
-    `/metrics/performance/performance`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getPerformanceQueryOptions = <TData = Awaited<ReturnType<typeof performance>>, TError = ErrorType<unknown>>(params?: GetPerformanceParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>>, }
+export const getPerformanceQueryOptions = <
+  TData = Awaited<ReturnType<typeof performance>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
+    >;
+  },
 ) => {
+  const { query: queryOptions } = options ?? {};
 
-const {query: queryOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getPerformanceQueryKey(params);
 
-  const queryKey =  queryOptions?.queryKey ?? getPerformanceQueryKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof performance>>> = ({
+    signal,
+  }) => performance(params, signal);
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof performance>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof performance>>> = ({ signal }) => performance(params, signal);
+export type PerformanceQueryResult = NonNullable<
+  Awaited<ReturnType<typeof performance>>
+>;
+export type PerformanceQueryError = ErrorType<unknown>;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PerformanceQueryResult = NonNullable<Awaited<ReturnType<typeof performance>>>
-export type PerformanceQueryError = ErrorType<unknown>
-
-
-export function usePerformance<TData = Awaited<ReturnType<typeof performance>>, TError = ErrorType<unknown>>(
- params: undefined |  GetPerformanceParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>> & Pick<
+export function usePerformance<
+  TData = Awaited<ReturnType<typeof performance>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetPerformanceParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof performance>>,
           TError,
           Awaited<ReturnType<typeof performance>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePerformance<TData = Awaited<ReturnType<typeof performance>>, TError = ErrorType<unknown>>(
- params?: GetPerformanceParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function usePerformance<
+  TData = Awaited<ReturnType<typeof performance>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof performance>>,
           TError,
           Awaited<ReturnType<typeof performance>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePerformance<TData = Awaited<ReturnType<typeof performance>>, TError = ErrorType<unknown>>(
- params?: GetPerformanceParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function usePerformance<
+  TData = Awaited<ReturnType<typeof performance>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Performance
  */
 
-export function usePerformance<TData = Awaited<ReturnType<typeof performance>>, TError = ErrorType<unknown>>(
- params?: GetPerformanceParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function usePerformance<
+  TData = Awaited<ReturnType<typeof performance>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof performance>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getPerformanceQueryOptions(params, options);
 
-  const queryOptions = getPerformanceQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Get activity data for the specified range, scale, and cycle.
  * @summary Activity
  */
-export const activity = (
-    params?: GetActivityParams,
- signal?: AbortSignal
+export const activity = (params?: GetActivityParams, signal?: AbortSignal) => {
+  return makeRequest<ActivitySeriesPoint[]>({
+    url: `/metrics/performance/activity`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
+
+export const getActivityQueryKey = (params?: GetActivityParams) => {
+  return [
+    `/metrics/performance/activity`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getActivityQueryOptions = <
+  TData = Awaited<ReturnType<typeof activity>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetActivityParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
+    >;
+  },
 ) => {
-      
-      
-      return makeRequest<ActivitySeriesPoint[]>(
-      {url: `/metrics/performance/activity`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  const { query: queryOptions } = options ?? {};
 
+  const queryKey = queryOptions?.queryKey ?? getActivityQueryKey(params);
 
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof activity>>> = ({
+    signal,
+  }) => activity(params, signal);
 
-export const getActivityQueryKey = (params?: GetActivityParams,) => {
-    return [
-    `/metrics/performance/activity`, ...(params ? [params]: [])
-    ] as const;
-    }
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof activity>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    
-export const getActivityQueryOptions = <TData = Awaited<ReturnType<typeof activity>>, TError = ErrorType<unknown>>(params?: GetActivityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>>, }
-) => {
+export type ActivityQueryResult = NonNullable<
+  Awaited<ReturnType<typeof activity>>
+>;
+export type ActivityQueryError = ErrorType<unknown>;
 
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getActivityQueryKey(params);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof activity>>> = ({ signal }) => activity(params, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ActivityQueryResult = NonNullable<Awaited<ReturnType<typeof activity>>>
-export type ActivityQueryError = ErrorType<unknown>
-
-
-export function useActivity<TData = Awaited<ReturnType<typeof activity>>, TError = ErrorType<unknown>>(
- params: undefined |  GetActivityParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>> & Pick<
+export function useActivity<
+  TData = Awaited<ReturnType<typeof activity>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetActivityParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof activity>>,
           TError,
           Awaited<ReturnType<typeof activity>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useActivity<TData = Awaited<ReturnType<typeof activity>>, TError = ErrorType<unknown>>(
- params?: GetActivityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useActivity<
+  TData = Awaited<ReturnType<typeof activity>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetActivityParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof activity>>,
           TError,
           Awaited<ReturnType<typeof activity>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useActivity<TData = Awaited<ReturnType<typeof activity>>, TError = ErrorType<unknown>>(
- params?: GetActivityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useActivity<
+  TData = Awaited<ReturnType<typeof activity>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetActivityParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Activity
  */
 
-export function useActivity<TData = Awaited<ReturnType<typeof activity>>, TError = ErrorType<unknown>>(
- params?: GetActivityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useActivity<
+  TData = Awaited<ReturnType<typeof activity>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetActivityParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof activity>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getActivityQueryOptions(params, options);
 
-  const queryOptions = getActivityQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
-

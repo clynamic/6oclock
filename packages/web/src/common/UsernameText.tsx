@@ -82,8 +82,9 @@ export const UsernameText = ({ user, variant }: UsernameTextProps) => {
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         color,
-        textDecoration: isBlocked ? 'line-through' : 'none'
-      }}>
+        textDecoration: isBlocked ? 'line-through' : 'none',
+      }}
+    >
       {name.replace(/_/g, ' ')}
     </Typography>
   );

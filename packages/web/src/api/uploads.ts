@@ -5,10 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useInfiniteQuery,
-  useQuery
-} from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -22,281 +19,508 @@ import type {
   UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
   UseQueryOptions,
-  UseQueryResult
+  UseQueryResult,
 } from '@tanstack/react-query';
 
+import { makeRequest } from '../http/axios';
+import type { ErrorType } from '../http/axios';
 import type {
   GetPostUploaderSummaryParams,
   GetUploadCountParams,
   PostUploaderSummary,
-  SeriesCountPoint
+  SeriesCountPoint,
 } from './model';
-
-import { makeRequest } from '../http/axios';
-import type { ErrorType } from '../http/axios';
-
-
-
-
 
 /**
  * Get a time series of upload counts for a given date range
  * @summary Upload series
  */
 export const uploadCount = (
-    params?: GetUploadCountParams,
- signal?: AbortSignal
+  params?: GetUploadCountParams,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return makeRequest<SeriesCountPoint[]>(
-      {url: `/metrics/uploads/count`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  return makeRequest<SeriesCountPoint[]>({
+    url: `/metrics/uploads/count`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
 
+export const getUploadCountQueryKey = (params?: GetUploadCountParams) => {
+  return [`/metrics/uploads/count`, ...(params ? [params] : [])] as const;
+};
 
-
-export const getUploadCountQueryKey = (params?: GetUploadCountParams,) => {
-    return [
-    `/metrics/uploads/count`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getUploadCountQueryOptions = <TData = Awaited<ReturnType<typeof uploadCount>>, TError = ErrorType<unknown>>(params?: GetUploadCountParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof uploadCount>>, TError, TData>>, }
+export const getUploadCountQueryOptions = <
+  TData = Awaited<ReturnType<typeof uploadCount>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetUploadCountParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof uploadCount>>, TError, TData>
+    >;
+  },
 ) => {
+  const { query: queryOptions } = options ?? {};
 
-const {query: queryOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getUploadCountQueryKey(params);
 
-  const queryKey =  queryOptions?.queryKey ?? getUploadCountQueryKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof uploadCount>>> = ({
+    signal,
+  }) => uploadCount(params, signal);
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof uploadCount>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof uploadCount>>> = ({ signal }) => uploadCount(params, signal);
+export type UploadCountQueryResult = NonNullable<
+  Awaited<ReturnType<typeof uploadCount>>
+>;
+export type UploadCountQueryError = ErrorType<unknown>;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof uploadCount>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type UploadCountQueryResult = NonNullable<Awaited<ReturnType<typeof uploadCount>>>
-export type UploadCountQueryError = ErrorType<unknown>
-
-
-export function useUploadCount<TData = Awaited<ReturnType<typeof uploadCount>>, TError = ErrorType<unknown>>(
- params: undefined |  GetUploadCountParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof uploadCount>>, TError, TData>> & Pick<
+export function useUploadCount<
+  TData = Awaited<ReturnType<typeof uploadCount>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetUploadCountParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof uploadCount>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof uploadCount>>,
           TError,
           Awaited<ReturnType<typeof uploadCount>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useUploadCount<TData = Awaited<ReturnType<typeof uploadCount>>, TError = ErrorType<unknown>>(
- params?: GetUploadCountParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof uploadCount>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useUploadCount<
+  TData = Awaited<ReturnType<typeof uploadCount>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetUploadCountParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof uploadCount>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof uploadCount>>,
           TError,
           Awaited<ReturnType<typeof uploadCount>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useUploadCount<TData = Awaited<ReturnType<typeof uploadCount>>, TError = ErrorType<unknown>>(
- params?: GetUploadCountParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof uploadCount>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useUploadCount<
+  TData = Awaited<ReturnType<typeof uploadCount>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetUploadCountParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof uploadCount>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Upload series
  */
 
-export function useUploadCount<TData = Awaited<ReturnType<typeof uploadCount>>, TError = ErrorType<unknown>>(
- params?: GetUploadCountParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof uploadCount>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useUploadCount<
+  TData = Awaited<ReturnType<typeof uploadCount>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetUploadCountParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof uploadCount>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getUploadCountQueryOptions(params, options);
 
-  const queryOptions = getUploadCountQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Get a summary of post uploading counts for a given date range
  * @summary Uploader summary
  */
 export const postUploaderSummary = (
-    params?: GetPostUploaderSummaryParams,
- signal?: AbortSignal
+  params?: GetPostUploaderSummaryParams,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return makeRequest<PostUploaderSummary[]>(
-      {url: `/metrics/uploads/uploader/summary`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  return makeRequest<PostUploaderSummary[]>({
+    url: `/metrics/uploads/uploader/summary`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
 
-
-
-export const getPostUploaderSummaryInfiniteQueryKey = (params?: GetPostUploaderSummaryParams,) => {
-    return [
-    'infinite', `/metrics/uploads/uploader/summary`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-export const getPostUploaderSummaryQueryKey = (params?: GetPostUploaderSummaryParams,) => {
-    return [
-    `/metrics/uploads/uploader/summary`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getPostUploaderSummaryInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof postUploaderSummary>>, GetPostUploaderSummaryParams['page']>, TError = ErrorType<unknown>>(params?: GetPostUploaderSummaryParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof postUploaderSummary>>, TError, TData, QueryKey, GetPostUploaderSummaryParams['page']>>, }
+export const getPostUploaderSummaryInfiniteQueryKey = (
+  params?: GetPostUploaderSummaryParams,
 ) => {
+  return [
+    'infinite',
+    `/metrics/uploads/uploader/summary`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
-const {query: queryOptions} = options ?? {};
+export const getPostUploaderSummaryQueryKey = (
+  params?: GetPostUploaderSummaryParams,
+) => {
+  return [
+    `/metrics/uploads/uploader/summary`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
-  const queryKey =  queryOptions?.queryKey ?? getPostUploaderSummaryInfiniteQueryKey(params);
+export const getPostUploaderSummaryInfiniteQueryOptions = <
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof postUploaderSummary>>,
+    GetPostUploaderSummaryParams['page']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostUploaderSummaryParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof postUploaderSummary>>,
+        TError,
+        TData,
+        QueryKey,
+        GetPostUploaderSummaryParams['page']
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
 
-  
+  const queryKey =
+    queryOptions?.queryKey ?? getPostUploaderSummaryInfiniteQueryKey(params);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof postUploaderSummary>>, QueryKey, GetPostUploaderSummaryParams['page']> = ({ signal, pageParam }) => postUploaderSummary({...params, 'page': pageParam || params?.['page']}, signal);
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof postUploaderSummary>>,
+    QueryKey,
+    GetPostUploaderSummaryParams['page']
+  > = ({ signal, pageParam }) =>
+    postUploaderSummary(
+      { ...params, page: pageParam || params?.['page'] },
+      signal,
+    );
 
-      
+  return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
+    Awaited<ReturnType<typeof postUploaderSummary>>,
+    TError,
+    TData,
+    QueryKey,
+    GetPostUploaderSummaryParams['page']
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type PostUploaderSummaryInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof postUploaderSummary>>
+>;
+export type PostUploaderSummaryInfiniteQueryError = ErrorType<unknown>;
 
-   return  { queryKey, queryFn, ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof postUploaderSummary>>, TError, TData, QueryKey, GetPostUploaderSummaryParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PostUploaderSummaryInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof postUploaderSummary>>>
-export type PostUploaderSummaryInfiniteQueryError = ErrorType<unknown>
-
-
-export function usePostUploaderSummaryInfinite<TData = InfiniteData<Awaited<ReturnType<typeof postUploaderSummary>>, GetPostUploaderSummaryParams['page']>, TError = ErrorType<unknown>>(
- params: undefined |  GetPostUploaderSummaryParams, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof postUploaderSummary>>, TError, TData, QueryKey, GetPostUploaderSummaryParams['page']>> & Pick<
+export function usePostUploaderSummaryInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof postUploaderSummary>>,
+    GetPostUploaderSummaryParams['page']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetPostUploaderSummaryParams,
+  options: {
+    query: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof postUploaderSummary>>,
+        TError,
+        TData,
+        QueryKey,
+        GetPostUploaderSummaryParams['page']
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof postUploaderSummary>>,
           TError,
-          Awaited<ReturnType<typeof postUploaderSummary>>, QueryKey
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostUploaderSummaryInfinite<TData = InfiniteData<Awaited<ReturnType<typeof postUploaderSummary>>, GetPostUploaderSummaryParams['page']>, TError = ErrorType<unknown>>(
- params?: GetPostUploaderSummaryParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof postUploaderSummary>>, TError, TData, QueryKey, GetPostUploaderSummaryParams['page']>> & Pick<
+          Awaited<ReturnType<typeof postUploaderSummary>>,
+          QueryKey
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function usePostUploaderSummaryInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof postUploaderSummary>>,
+    GetPostUploaderSummaryParams['page']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostUploaderSummaryParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof postUploaderSummary>>,
+        TError,
+        TData,
+        QueryKey,
+        GetPostUploaderSummaryParams['page']
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof postUploaderSummary>>,
           TError,
-          Awaited<ReturnType<typeof postUploaderSummary>>, QueryKey
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostUploaderSummaryInfinite<TData = InfiniteData<Awaited<ReturnType<typeof postUploaderSummary>>, GetPostUploaderSummaryParams['page']>, TError = ErrorType<unknown>>(
- params?: GetPostUploaderSummaryParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof postUploaderSummary>>, TError, TData, QueryKey, GetPostUploaderSummaryParams['page']>>, }
- , queryClient?: QueryClient
-  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+          Awaited<ReturnType<typeof postUploaderSummary>>,
+          QueryKey
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function usePostUploaderSummaryInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof postUploaderSummary>>,
+    GetPostUploaderSummaryParams['page']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostUploaderSummaryParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof postUploaderSummary>>,
+        TError,
+        TData,
+        QueryKey,
+        GetPostUploaderSummaryParams['page']
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Uploader summary
  */
 
-export function usePostUploaderSummaryInfinite<TData = InfiniteData<Awaited<ReturnType<typeof postUploaderSummary>>, GetPostUploaderSummaryParams['page']>, TError = ErrorType<unknown>>(
- params?: GetPostUploaderSummaryParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof postUploaderSummary>>, TError, TData, QueryKey, GetPostUploaderSummaryParams['page']>>, }
- , queryClient?: QueryClient 
- ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function usePostUploaderSummaryInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof postUploaderSummary>>,
+    GetPostUploaderSummaryParams['page']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostUploaderSummaryParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof postUploaderSummary>>,
+        TError,
+        TData,
+        QueryKey,
+        GetPostUploaderSummaryParams['page']
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getPostUploaderSummaryInfiniteQueryOptions(
+    params,
+    options,
+  );
 
-  const queryOptions = getPostUploaderSummaryInfiniteQueryOptions(params,options)
+  const query = useInfiniteQuery(
+    queryOptions,
+    queryClient,
+  ) as UseInfiniteQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
 
-  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
 
-
-
-
-export const getPostUploaderSummaryQueryOptions = <TData = Awaited<ReturnType<typeof postUploaderSummary>>, TError = ErrorType<unknown>>(params?: GetPostUploaderSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postUploaderSummary>>, TError, TData>>, }
+export const getPostUploaderSummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof postUploaderSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostUploaderSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postUploaderSummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
 ) => {
+  const { query: queryOptions } = options ?? {};
 
-const {query: queryOptions} = options ?? {};
+  const queryKey =
+    queryOptions?.queryKey ?? getPostUploaderSummaryQueryKey(params);
 
-  const queryKey =  queryOptions?.queryKey ?? getPostUploaderSummaryQueryKey(params);
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof postUploaderSummary>>
+  > = ({ signal }) => postUploaderSummary(params, signal);
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof postUploaderSummary>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof postUploaderSummary>>> = ({ signal }) => postUploaderSummary(params, signal);
+export type PostUploaderSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof postUploaderSummary>>
+>;
+export type PostUploaderSummaryQueryError = ErrorType<unknown>;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof postUploaderSummary>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PostUploaderSummaryQueryResult = NonNullable<Awaited<ReturnType<typeof postUploaderSummary>>>
-export type PostUploaderSummaryQueryError = ErrorType<unknown>
-
-
-export function usePostUploaderSummary<TData = Awaited<ReturnType<typeof postUploaderSummary>>, TError = ErrorType<unknown>>(
- params: undefined |  GetPostUploaderSummaryParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof postUploaderSummary>>, TError, TData>> & Pick<
+export function usePostUploaderSummary<
+  TData = Awaited<ReturnType<typeof postUploaderSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetPostUploaderSummaryParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postUploaderSummary>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof postUploaderSummary>>,
           TError,
           Awaited<ReturnType<typeof postUploaderSummary>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostUploaderSummary<TData = Awaited<ReturnType<typeof postUploaderSummary>>, TError = ErrorType<unknown>>(
- params?: GetPostUploaderSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postUploaderSummary>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function usePostUploaderSummary<
+  TData = Awaited<ReturnType<typeof postUploaderSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostUploaderSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postUploaderSummary>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof postUploaderSummary>>,
           TError,
           Awaited<ReturnType<typeof postUploaderSummary>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostUploaderSummary<TData = Awaited<ReturnType<typeof postUploaderSummary>>, TError = ErrorType<unknown>>(
- params?: GetPostUploaderSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postUploaderSummary>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function usePostUploaderSummary<
+  TData = Awaited<ReturnType<typeof postUploaderSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostUploaderSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postUploaderSummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Uploader summary
  */
 
-export function usePostUploaderSummary<TData = Awaited<ReturnType<typeof postUploaderSummary>>, TError = ErrorType<unknown>>(
- params?: GetPostUploaderSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postUploaderSummary>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function usePostUploaderSummary<
+  TData = Awaited<ReturnType<typeof postUploaderSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostUploaderSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postUploaderSummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getPostUploaderSummaryQueryOptions(params, options);
 
-  const queryOptions = getPostUploaderSummaryQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
-

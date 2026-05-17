@@ -5,8 +5,8 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
-import type { TimeScale } from './timeScale';
 import type { Activity } from './activity';
+import type { TimeScale } from './timeScale';
 
 export interface DailyActivity {
   /** The counter value */
