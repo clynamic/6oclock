@@ -10,6 +10,7 @@ import {
 import { jwtDecode } from 'jwt-decode';
 
 import { clearAxiosAuth, setAxiosAuth } from '../http/credentials';
+import { useChangeEffect } from '../utils/hooks';
 
 export interface AuthPayload {
   userId: number;
@@ -33,6 +34,16 @@ interface Session {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const decodeAuthPayload = (token: string | null): AuthPayload | null => {
+  if (!token) return null;
+  const raw = jwtDecode<AuthPayload>(token);
+  return {
+    userId: Number(raw.userId),
+    username: raw.username,
+    level: raw.level,
+  };
+};
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
@@ -76,6 +87,7 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   }, [token]);
 
   const [session, setSession] = useState<Session | null>(null);
+  useChangeEffect(() => setSession(null), [token]);
 
   const saveSession = (newSession: Session) => {
     setSession(newSession);
@@ -85,21 +97,7 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     setSession(null);
   };
 
-  useEffect(() => {
-    setSession(null);
-  }, [token]);
-
-  const payload = useMemo(() => {
-    if (!token) {
-      return null;
-    }
-    const raw = jwtDecode<AuthPayload>(token);
-    return {
-      userId: Number(raw.userId),
-      username: raw.username,
-      level: raw.level,
-    };
-  }, [token]);
+  const payload = useMemo(() => decodeAuthPayload(token), [token]);
 
   return (
     <AuthContext.Provider

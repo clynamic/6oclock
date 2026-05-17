@@ -21,6 +21,47 @@ const ACTIVITY_TO_CHART_MAP: Record<
   ticketHandle: ['ticketsHandled', 'ticketTypes'],
 };
 
+const computeProfileChartIds = (
+  activityData: ActivitySeriesPoint[] | undefined,
+  userLevel: string | undefined,
+): string[] => {
+  if (!activityData || activityData.length === 0) {
+    return ['userHead'];
+  }
+
+  const activityChartIds = Object.entries(ACTIVITY_TO_CHART_MAP)
+    .filter(([activityKey]) =>
+      activityData.some(
+        (point) =>
+          (point[activityKey as keyof Omit<ActivitySeriesPoint, 'date'>] ??
+            0) > 0,
+      ),
+    )
+    .flatMap(([, ids]) => ids);
+
+  const hasAnyActivity = Object.keys(activityData[0] || {})
+    .filter((key) => key !== 'date')
+    .some((key) =>
+      activityData.some((point) => {
+        const value = point[key as keyof Omit<ActivitySeriesPoint, 'date'>];
+        return (value ?? 0) > 0;
+      }),
+    );
+
+  const isStaff =
+    userLevel &&
+    ['janitor', 'moderator', 'admin'].includes(userLevel.toLowerCase());
+
+  return Array.from(
+    new Set([
+      'userHead',
+      ...activityChartIds,
+      ...(hasAnyActivity ? ['userActivity'] : []),
+      ...(hasAnyActivity && isStaff ? ['userPerformance'] : []),
+    ]),
+  );
+};
+
 export const useProfileCharts = (
   user?: UserLike,
 ): {
@@ -46,49 +87,10 @@ export const useProfileCharts = (
     }),
   );
 
-  const chartIds = useMemo<string[]>(() => {
-    const chartIds = new Set<string>(['userHead']);
-
-    if (!activityData || activityData.length === 0) {
-      return Array.from(chartIds);
-    }
-
-    Object.entries(ACTIVITY_TO_CHART_MAP).forEach(
-      ([activityKey, chartIdList]) => {
-        const hasActivity = activityData.some(
-          (point) =>
-            (point[activityKey as keyof Omit<ActivitySeriesPoint, 'date'>] ??
-              0) > 0,
-        );
-
-        if (hasActivity) {
-          chartIdList.forEach((chartId) => chartIds.add(chartId));
-        }
-      },
-    );
-
-    const hasAnyActivity = Object.keys(activityData[0] || {})
-      .filter((key) => key !== 'date')
-      .some((key) =>
-        activityData.some((point) => {
-          const value = point[key as keyof Omit<ActivitySeriesPoint, 'date'>];
-          return (value ?? 0) > 0;
-        }),
-      );
-
-    const isStaff =
-      user?.level &&
-      ['janitor', 'moderator', 'admin'].includes(user.level.toLowerCase());
-
-    if (hasAnyActivity) {
-      chartIds.add('userActivity');
-      if (isStaff) {
-        chartIds.add('userPerformance');
-      }
-    }
-
-    return Array.from(chartIds);
-  }, [activityData, user?.level]);
+  const chartIds = useMemo(
+    () => computeProfileChartIds(activityData, user?.level),
+    [activityData, user?.level],
+  );
 
   return {
     chartIds,

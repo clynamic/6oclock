@@ -3,12 +3,13 @@ import React, {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from 'react';
 
 import { Breakpoint, useTheme } from '@mui/material';
+
+import { useChangeEffect } from '../utils/hooks';
 
 import {
   DashboardConfigMeta,
@@ -79,15 +80,14 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
   const [initalConfig, setInitialConfig] = useState<
     DashboardConfig | undefined
   >(data);
-
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-
-  useEffect(() => {
+  useChangeEffect(() => {
     setConfig(data);
     if (!initalConfig) {
       setInitialConfig(data);
     }
   }, [data, initalConfig]);
+
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const saveConfig = useCallback(
     async (update: DashboardUpdate) => {

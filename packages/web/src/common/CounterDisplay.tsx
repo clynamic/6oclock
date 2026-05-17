@@ -63,11 +63,12 @@ export const CounterDisplay: React.FC<CounterDisplayProps> = ({
   const [displayNumber, setDisplayNumber] = useState(animate ? 0 : number);
   const animationRef = useRef<number | undefined>(undefined);
 
+  if (!animate && displayNumber !== number) {
+    setDisplayNumber(number);
+  }
+
   useEffect(() => {
-    if (!animate) {
-      setDisplayNumber(number);
-      return;
-    }
+    if (!animate) return;
 
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);

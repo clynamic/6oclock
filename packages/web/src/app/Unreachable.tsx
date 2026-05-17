@@ -14,7 +14,14 @@ import { PageHeader } from '../page/header/PageHeader';
 export const UnreachablePage: React.FC = () => {
   const navigation = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [redirect, setRedirect] = useState<string | null>(null);
+  const [redirect] = useState<string | null>(() => {
+    const param = searchParams.get('redirect');
+    if (!param) return null;
+    const value = decodeURIComponent(param);
+    if (value.startsWith('/')) return value;
+    console.error('Invalid redirect URL', value);
+    return null;
+  });
 
   const { data } = useHealthCheck({
     query: {
@@ -24,14 +31,7 @@ export const UnreachablePage: React.FC = () => {
   });
 
   useEffect(() => {
-    const redirectParam = searchParams.get('redirect');
-    if (redirectParam) {
-      const value = decodeURIComponent(redirectParam);
-      if (value.startsWith('/')) {
-        setRedirect(value);
-      } else {
-        console.error('Invalid redirect URL', value);
-      }
+    if (searchParams.has('redirect')) {
       searchParams.delete('redirect');
       setSearchParams(searchParams);
     }

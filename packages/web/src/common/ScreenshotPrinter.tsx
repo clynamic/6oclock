@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
 import { Box, useTheme } from '@mui/material';
 
@@ -60,7 +60,7 @@ export const ScreenshotPrinter: React.FC<ScreenshotPrinterProps> = ({
     };
   }, []);
 
-  const handlePrint = async () => {
+  const handlePrint = useCallback(async () => {
     const targetElement = targetId
       ? document.getElementById(targetId)
       : screenshotRef.current;
@@ -119,10 +119,11 @@ export const ScreenshotPrinter: React.FC<ScreenshotPrinterProps> = ({
         a.click();
       });
     }
-  };
+  }, [filename, targetId, theme.palette.background.paper]);
 
   return (
     <Box ref={screenshotRef} sx={{ display: 'contents' }}>
+      {/* eslint-disable-next-line react-hooks/refs -- handlePrint reads ref only on invocation (event), not during render */}
       {children(handlePrint)}
     </Box>
   );
