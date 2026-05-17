@@ -192,34 +192,46 @@ export const NavClock: React.FC = () => {
           sx={{
             p: 3,
             minWidth: 240,
-            alignItems: "center"
-          }}>
+            alignItems: 'center',
+          }}
+        >
           <ClockFace time={currentTime} />
 
-          <Stack spacing={1} sx={{
-            alignItems: "center"
-          }}>
+          <Stack
+            spacing={1}
+            sx={{
+              alignItems: 'center',
+            }}
+          >
             <Typography
               variant="h4"
               sx={{ fontFamily: 'monospace', marginBottom: 0 }}
             >
               {format(currentTime, 'HH:mm:ss')}
             </Typography>
-            <Typography variant="body2" sx={{
-              color: "text.secondary"
-            }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'text.secondary',
+              }}
+            >
               {format(currentTime, 'EEEE, MMMM do, yyyy')}
             </Typography>
-            <Stack direction="row" spacing={1} sx={{
-              alignItems: "center"
-            }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                alignItems: 'center',
+              }}
+            >
               <Sailing sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography
                 variant="body2"
                 sx={{
-                  color: "text.secondary",
-                  fontWeight: 500
-                }}>
+                  color: 'text.secondary',
+                  fontWeight: 500,
+                }}
+              >
                 Ship Time
               </Typography>
             </Stack>

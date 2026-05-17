@@ -8,10 +8,10 @@
 import type { TimeScale } from './timeScale';
 
 export type GetPostReplacementHandledParams = {
-scale?: TimeScale;
-cycle?: TimeScale;
-startDate?: Date;
-endDate?: Date;
-timezone?: string;
-userId: number;
+  scale?: TimeScale;
+  cycle?: TimeScale;
+  startDate?: Date;
+  endDate?: Date;
+  timezone?: string;
+  userId: number;
 };

@@ -6,8 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type UserArea = typeof UserArea[keyof typeof UserArea];
-
+export type UserArea = (typeof UserArea)[keyof typeof UserArea];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UserArea = {

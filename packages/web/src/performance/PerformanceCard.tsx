@@ -34,19 +34,32 @@ export const PerformanceCard: React.FC = () => {
     <QueryHint isEmpty={!data && !isLoading} error={error}>
       <Box
         sx={{
-          width: "100%",
-          height: "100%",
-          overflow: "hidden"
-        }}>
-        <Stack direction="column" spacing={2} sx={{
-          height: "100%"
-        }}>
-          <Stack direction="row" spacing={2} sx={{
-            justifyContent: "space-between"
-          }}>
-            <Stack direction="row" spacing={1} sx={{
-              alignItems: "center"
-            }}>
+          width: '100%',
+          height: '100%',
+          overflow: 'hidden',
+        }}
+      >
+        <Stack
+          direction="column"
+          spacing={2}
+          sx={{
+            height: '100%',
+          }}
+        >
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              justifyContent: 'space-between',
+            }}
+          >
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                alignItems: 'center',
+              }}
+            >
               <Whatshot />
               <Typography
                 variant="h6"
@@ -72,8 +85,9 @@ export const PerformanceCard: React.FC = () => {
             spacing={1}
             sx={{
               flex: 1,
-              overflow: "hidden"
-            }}>
+              overflow: 'hidden',
+            }}
+          >
             <LimitedList>
               {data
                 ? Object.entries(data.activity)
@@ -84,7 +98,7 @@ export const PerformanceCard: React.FC = () => {
                         direction="row"
                         spacing={1}
                         sx={{
-                          justifyContent: "space-between"
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Typography variant="body1">
@@ -101,7 +115,7 @@ export const PerformanceCard: React.FC = () => {
                       direction="row"
                       spacing={1}
                       sx={{
-                        justifyContent: "space-between"
+                        justifyContent: 'space-between',
                       }}
                     >
                       <Skeleton variant="text" width={100} />
@@ -110,9 +124,12 @@ export const PerformanceCard: React.FC = () => {
                   ))}
             </LimitedList>
           </Stack>
-          <Stack direction="row" sx={{
-            justifyContent: "flex-end"
-          }}>
+          <Stack
+            direction="row"
+            sx={{
+              justifyContent: 'flex-end',
+            }}
+          >
             <Button
               size="small"
               endIcon={<ArrowForward />}

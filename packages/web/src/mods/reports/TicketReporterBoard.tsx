@@ -26,9 +26,11 @@ export const TicketReporterBoard: React.FC = () => {
       isLoading={isLoading}
       error={error}
       skeleton={
-        <Stack sx={{
-          gap: 1
-        }}>
+        <Stack
+          sx={{
+            gap: 1,
+          }}
+        >
           {Array.from({ length: 5 }).map((_, index) => (
             <TicketReporterFrame key={index} />
           ))}
@@ -37,9 +39,12 @@ export const TicketReporterBoard: React.FC = () => {
     >
       <LimitedList
         indicator={() => (
-          <Stack direction="row" sx={{
-            justifyContent: "flex-end"
-          }}>
+          <Stack
+            direction="row"
+            sx={{
+              justifyContent: 'flex-end',
+            }}
+          >
             <Button
               size="small"
               endIcon={<ArrowForward />}

@@ -5,11 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -26,404 +22,594 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult
+  UseQueryResult,
 } from '@tanstack/react-query';
-
-import type {
-  GetJobsParams,
-  JobInfo,
-  SchedulerInfo
-} from './model';
 
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
-
-
-
-
+import type { GetJobsParams, JobInfo, SchedulerInfo } from './model';
 
 /**
  * Returns a list of all jobs that have been queued or processed.
  * @summary Get all jobs
  */
-export const jobs = (
-    params?: GetJobsParams,
- signal?: AbortSignal
+export const jobs = (params?: GetJobsParams, signal?: AbortSignal) => {
+  return makeRequest<JobInfo[]>({
+    url: `/jobs`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
+
+export const getJobsInfiniteQueryKey = (params?: GetJobsParams) => {
+  return ['infinite', `/jobs`, ...(params ? [params] : [])] as const;
+};
+
+export const getJobsQueryKey = (params?: GetJobsParams) => {
+  return [`/jobs`, ...(params ? [params] : [])] as const;
+};
+
+export const getJobsInfiniteQueryOptions = <
+  TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetJobsParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof jobs>>,
+        TError,
+        TData,
+        QueryKey,
+        GetJobsParams['page']
+      >
+    >;
+  },
 ) => {
-      
-      
-      return makeRequest<JobInfo[]>(
-      {url: `/jobs`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  const { query: queryOptions } = options ?? {};
 
+  const queryKey = queryOptions?.queryKey ?? getJobsInfiniteQueryKey(params);
 
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof jobs>>,
+    QueryKey,
+    GetJobsParams['page']
+  > = ({ signal, pageParam }) =>
+    jobs({ ...params, page: pageParam || params?.['page'] }, signal);
 
-export const getJobsInfiniteQueryKey = (params?: GetJobsParams,) => {
-    return [
-    'infinite', `/jobs`, ...(params ? [params]: [])
-    ] as const;
-    }
+  return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
+    Awaited<ReturnType<typeof jobs>>,
+    TError,
+    TData,
+    QueryKey,
+    GetJobsParams['page']
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-export const getJobsQueryKey = (params?: GetJobsParams,) => {
-    return [
-    `/jobs`, ...(params ? [params]: [])
-    ] as const;
-    }
+export type JobsInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof jobs>>
+>;
+export type JobsInfiniteQueryError = ErrorType<unknown>;
 
-    
-export const getJobsInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>, TError = ErrorType<unknown>>(params?: GetJobsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData, QueryKey, GetJobsParams['page']>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getJobsInfiniteQueryKey(params);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof jobs>>, QueryKey, GetJobsParams['page']> = ({ signal, pageParam }) => jobs({...params, 'page': pageParam || params?.['page']}, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData, QueryKey, GetJobsParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type JobsInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof jobs>>>
-export type JobsInfiniteQueryError = ErrorType<unknown>
-
-
-export function useJobsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>, TError = ErrorType<unknown>>(
- params: undefined |  GetJobsParams, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData, QueryKey, GetJobsParams['page']>> & Pick<
+export function useJobsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetJobsParams,
+  options: {
+    query: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof jobs>>,
+        TError,
+        TData,
+        QueryKey,
+        GetJobsParams['page']
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof jobs>>,
           TError,
-          Awaited<ReturnType<typeof jobs>>, QueryKey
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useJobsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>, TError = ErrorType<unknown>>(
- params?: GetJobsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData, QueryKey, GetJobsParams['page']>> & Pick<
+          Awaited<ReturnType<typeof jobs>>,
+          QueryKey
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useJobsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetJobsParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof jobs>>,
+        TError,
+        TData,
+        QueryKey,
+        GetJobsParams['page']
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof jobs>>,
           TError,
-          Awaited<ReturnType<typeof jobs>>, QueryKey
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useJobsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>, TError = ErrorType<unknown>>(
- params?: GetJobsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData, QueryKey, GetJobsParams['page']>>, }
- , queryClient?: QueryClient
-  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+          Awaited<ReturnType<typeof jobs>>,
+          QueryKey
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useJobsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetJobsParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof jobs>>,
+        TError,
+        TData,
+        QueryKey,
+        GetJobsParams['page']
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get all jobs
  */
 
-export function useJobsInfinite<TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>, TError = ErrorType<unknown>>(
- params?: GetJobsParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData, QueryKey, GetJobsParams['page']>>, }
- , queryClient?: QueryClient 
- ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useJobsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof jobs>>, GetJobsParams['page']>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetJobsParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof jobs>>,
+        TError,
+        TData,
+        QueryKey,
+        GetJobsParams['page']
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getJobsInfiniteQueryOptions(params, options);
 
-  const queryOptions = getJobsInfiniteQueryOptions(params,options)
+  const query = useInfiniteQuery(
+    queryOptions,
+    queryClient,
+  ) as UseInfiniteQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
 
-  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
 
-
-
-
-export const getJobsQueryOptions = <TData = Awaited<ReturnType<typeof jobs>>, TError = ErrorType<unknown>>(params?: GetJobsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>>, }
+export const getJobsQueryOptions = <
+  TData = Awaited<ReturnType<typeof jobs>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetJobsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>
+    >;
+  },
 ) => {
+  const { query: queryOptions } = options ?? {};
 
-const {query: queryOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getJobsQueryKey(params);
 
-  const queryKey =  queryOptions?.queryKey ?? getJobsQueryKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof jobs>>> = ({
+    signal,
+  }) => jobs(params, signal);
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof jobs>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof jobs>>> = ({ signal }) => jobs(params, signal);
+export type JobsQueryResult = NonNullable<Awaited<ReturnType<typeof jobs>>>;
+export type JobsQueryError = ErrorType<unknown>;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type JobsQueryResult = NonNullable<Awaited<ReturnType<typeof jobs>>>
-export type JobsQueryError = ErrorType<unknown>
-
-
-export function useJobs<TData = Awaited<ReturnType<typeof jobs>>, TError = ErrorType<unknown>>(
- params: undefined |  GetJobsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>> & Pick<
+export function useJobs<
+  TData = Awaited<ReturnType<typeof jobs>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetJobsParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof jobs>>,
           TError,
           Awaited<ReturnType<typeof jobs>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useJobs<TData = Awaited<ReturnType<typeof jobs>>, TError = ErrorType<unknown>>(
- params?: GetJobsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useJobs<
+  TData = Awaited<ReturnType<typeof jobs>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetJobsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof jobs>>,
           TError,
           Awaited<ReturnType<typeof jobs>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useJobs<TData = Awaited<ReturnType<typeof jobs>>, TError = ErrorType<unknown>>(
- params?: GetJobsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useJobs<
+  TData = Awaited<ReturnType<typeof jobs>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetJobsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get all jobs
  */
 
-export function useJobs<TData = Awaited<ReturnType<typeof jobs>>, TError = ErrorType<unknown>>(
- params?: GetJobsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useJobs<
+  TData = Awaited<ReturnType<typeof jobs>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetJobsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof jobs>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getJobsQueryOptions(params, options);
 
-  const queryOptions = getJobsQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Returns a list of all registered job schedulers.
  * @summary Get all job schedulers
  */
-export const jobSchedulers = (
-    
- signal?: AbortSignal
-) => {
-      
-      
-      return makeRequest<SchedulerInfo[]>(
-      {url: `/jobs/schedulers`, method: 'GET', signal
-    },
-      );
-    }
-  
-
-
+export const jobSchedulers = (signal?: AbortSignal) => {
+  return makeRequest<SchedulerInfo[]>({
+    url: `/jobs/schedulers`,
+    method: 'GET',
+    signal,
+  });
+};
 
 export const getJobSchedulersQueryKey = () => {
-    return [
-    `/jobs/schedulers`
-    ] as const;
-    }
+  return [`/jobs/schedulers`] as const;
+};
 
-    
-export const getJobSchedulersQueryOptions = <TData = Awaited<ReturnType<typeof jobSchedulers>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobSchedulers>>, TError, TData>>, }
-) => {
+export const getJobSchedulersQueryOptions = <
+  TData = Awaited<ReturnType<typeof jobSchedulers>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof jobSchedulers>>, TError, TData>
+  >;
+}) => {
+  const { query: queryOptions } = options ?? {};
 
-const {query: queryOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getJobSchedulersQueryKey();
 
-  const queryKey =  queryOptions?.queryKey ?? getJobSchedulersQueryKey();
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof jobSchedulers>>> = ({
+    signal,
+  }) => jobSchedulers(signal);
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof jobSchedulers>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof jobSchedulers>>> = ({ signal }) => jobSchedulers(signal);
+export type JobSchedulersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof jobSchedulers>>
+>;
+export type JobSchedulersQueryError = ErrorType<unknown>;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof jobSchedulers>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type JobSchedulersQueryResult = NonNullable<Awaited<ReturnType<typeof jobSchedulers>>>
-export type JobSchedulersQueryError = ErrorType<unknown>
-
-
-export function useJobSchedulers<TData = Awaited<ReturnType<typeof jobSchedulers>>, TError = ErrorType<unknown>>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobSchedulers>>, TError, TData>> & Pick<
+export function useJobSchedulers<
+  TData = Awaited<ReturnType<typeof jobSchedulers>>,
+  TError = ErrorType<unknown>,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof jobSchedulers>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof jobSchedulers>>,
           TError,
           Awaited<ReturnType<typeof jobSchedulers>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useJobSchedulers<TData = Awaited<ReturnType<typeof jobSchedulers>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobSchedulers>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useJobSchedulers<
+  TData = Awaited<ReturnType<typeof jobSchedulers>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof jobSchedulers>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof jobSchedulers>>,
           TError,
           Awaited<ReturnType<typeof jobSchedulers>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useJobSchedulers<TData = Awaited<ReturnType<typeof jobSchedulers>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobSchedulers>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useJobSchedulers<
+  TData = Awaited<ReturnType<typeof jobSchedulers>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof jobSchedulers>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get all job schedulers
  */
 
-export function useJobSchedulers<TData = Awaited<ReturnType<typeof jobSchedulers>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof jobSchedulers>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useJobSchedulers<
+  TData = Awaited<ReturnType<typeof jobSchedulers>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof jobSchedulers>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getJobSchedulersQueryOptions(options);
 
-  const queryOptions = getJobSchedulersQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Enables a previously disabled job scheduler.
  * @summary Enable a job scheduler
  */
-export const enableJobScheduler = (
-    id: string,
- ) => {
-      
-      
-      return makeRequest<void>(
-      {url: `/jobs/schedulers/${encodeURIComponent(String(id))}/enable`, method: 'PUT'
-    },
-      );
-    }
-  
+export const enableJobScheduler = (id: string) => {
+  return makeRequest<void>({
+    url: `/jobs/schedulers/${encodeURIComponent(String(id))}/enable`,
+    method: 'PUT',
+  });
+};
 
+export const getEnableJobSchedulerMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof enableJobScheduler>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof enableJobScheduler>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['enableJobScheduler'];
+  const { mutation: mutationOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
 
-export const getEnableJobSchedulerMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof enableJobScheduler>>, TError,{id: string}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof enableJobScheduler>>, TError,{id: string}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof enableJobScheduler>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
 
-const mutationKey = ['enableJobScheduler'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
+    return enableJobScheduler(id);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type EnableJobSchedulerMutationResult = NonNullable<
+  Awaited<ReturnType<typeof enableJobScheduler>>
+>;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof enableJobScheduler>>, {id: string}> = (props) => {
-          const {id} = props ?? {};
+export type EnableJobSchedulerMutationError = ErrorType<unknown>;
 
-          return  enableJobScheduler(id,)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type EnableJobSchedulerMutationResult = NonNullable<Awaited<ReturnType<typeof enableJobScheduler>>>
-    
-    export type EnableJobSchedulerMutationError = ErrorType<unknown>
-
-    /**
+/**
  * @summary Enable a job scheduler
  */
-export const useEnableJobScheduler = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof enableJobScheduler>>, TError,{id: string}, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof enableJobScheduler>>,
-        TError,
-        {id: string},
-        TContext
-      > => {
+export const useEnableJobScheduler = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof enableJobScheduler>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof enableJobScheduler>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getEnableJobSchedulerMutationOptions(options);
 
-      const mutationOptions = getEnableJobSchedulerMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
+  return useMutation(mutationOptions, queryClient);
+};
+/**
  * Disables a job scheduler, preventing it from creating jobs.
  * @summary Disable a job scheduler
  */
-export const disableJobScheduler = (
-    id: string,
- ) => {
-      
-      
-      return makeRequest<void>(
-      {url: `/jobs/schedulers/${encodeURIComponent(String(id))}/disable`, method: 'PUT'
-    },
-      );
-    }
-  
+export const disableJobScheduler = (id: string) => {
+  return makeRequest<void>({
+    url: `/jobs/schedulers/${encodeURIComponent(String(id))}/disable`,
+    method: 'PUT',
+  });
+};
 
+export const getDisableJobSchedulerMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof disableJobScheduler>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof disableJobScheduler>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['disableJobScheduler'];
+  const { mutation: mutationOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
 
-export const getDisableJobSchedulerMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof disableJobScheduler>>, TError,{id: string}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof disableJobScheduler>>, TError,{id: string}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof disableJobScheduler>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
 
-const mutationKey = ['disableJobScheduler'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
+    return disableJobScheduler(id);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type DisableJobSchedulerMutationResult = NonNullable<
+  Awaited<ReturnType<typeof disableJobScheduler>>
+>;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof disableJobScheduler>>, {id: string}> = (props) => {
-          const {id} = props ?? {};
+export type DisableJobSchedulerMutationError = ErrorType<unknown>;
 
-          return  disableJobScheduler(id,)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type DisableJobSchedulerMutationResult = NonNullable<Awaited<ReturnType<typeof disableJobScheduler>>>
-    
-    export type DisableJobSchedulerMutationError = ErrorType<unknown>
-
-    /**
+/**
  * @summary Disable a job scheduler
  */
-export const useDisableJobScheduler = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof disableJobScheduler>>, TError,{id: string}, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof disableJobScheduler>>,
-        TError,
-        {id: string},
-        TContext
-      > => {
+export const useDisableJobScheduler = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof disableJobScheduler>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof disableJobScheduler>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getDisableJobSchedulerMutationOptions(options);
 
-      const mutationOptions = getDisableJobSchedulerMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
+  return useMutation(mutationOptions, queryClient);
+};

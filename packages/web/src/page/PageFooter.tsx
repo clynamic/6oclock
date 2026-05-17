@@ -27,11 +27,12 @@ export const PageFooter: React.FC = () => {
         direction="row"
         spacing={1}
         sx={{
-          alignItems: "center",
+          alignItems: 'center',
 
           // TODO: find a better way to balance the logo
-          marginLeft: 1.2
-        }}>
+          marginLeft: 1.2,
+        }}
+      >
         <Typography variant="body2">beta</Typography>
         <AppLogo />
         <Typography variant="body2">{'v' + version}</Typography>

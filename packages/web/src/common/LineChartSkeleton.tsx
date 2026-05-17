@@ -65,8 +65,9 @@ export const LineChartSkeleton: React.FC = () => {
         p: 4,
         height: '100%',
         width: '100%',
-        position: 'relative'
-      }}>
+        position: 'relative',
+      }}
+    >
       <Stack
         direction="row"
         ref={containerRef}

@@ -81,10 +81,11 @@ const PageHeaderBar: React.FC = () => {
                     direction="row"
                     spacing={1}
                     sx={{
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      width: '100%'
-                    }}>
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                    }}
+                  >
                     <Typography variant="h6">
                       {currentLink?.label ?? '\u200B'}
                     </Typography>
@@ -161,9 +162,13 @@ const PageHeaderBar: React.FC = () => {
   if (layout === 'wide') {
     return (
       <Box sx={{ marginBottom: 1 }}>
-        <Stack direction="row" spacing={1} sx={{
-          alignItems: "center"
-        }}>
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <AppLogo />
           <Stack
             direction="column"
@@ -179,8 +184,9 @@ const PageHeaderBar: React.FC = () => {
                 gap: 2,
                 paddingLeft: 0.5,
                 paddingRight: 0.5,
-                width: '100%'
-              }}>
+                width: '100%',
+              }}
+            >
               {visibleEntries.map((entry, i) => {
                 if (entry instanceof Object && 'href' in entry) {
                   return (
@@ -203,8 +209,9 @@ const PageHeaderBar: React.FC = () => {
                 backgroundColor: 'background.paper',
                 borderRadius: 1,
                 paddingLeft: 2,
-                paddingRight: 2
-              }}>
+                paddingRight: 2,
+              }}
+            >
               <Box
                 key="empty-subnav"
                 sx={{

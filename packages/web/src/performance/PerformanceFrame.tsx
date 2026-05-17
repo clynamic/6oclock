@@ -47,8 +47,9 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
         <Box
           sx={{
             p: 2,
-            width: '100%'
-          }}>
+            width: '100%',
+          }}
+        >
           <Stack direction="row" spacing={2}>
             <UserAvatar
               user={
@@ -63,17 +64,19 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
                   direction="row"
                   spacing={1}
                   sx={{
-                    justifyContent: "space-between",
-                    alignItems: "center"
-                  }}>
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
                   <UsernameText user={summary} />
                 </Stack>
                 <Stack
                   direction="row"
                   sx={{
                     gap: 1,
-                    flexWrap: 'wrap'
-                  }}>
+                    flexWrap: 'wrap',
+                  }}
+                >
                   {summary ? (
                     <>
                       {Object.entries(summary.activity)
@@ -109,9 +112,10 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
                 <Stack
                   direction="column"
                   sx={{
-                    alignItems: "flex-end",
-                    gap: 1
-                  }}>
+                    alignItems: 'flex-end',
+                    gap: 1,
+                  }}
+                >
                   <Box sx={{ minHeight: 32 }}>
                     <RankingText rank={summary.position}>
                       #{summary.position}

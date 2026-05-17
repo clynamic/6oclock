@@ -5,10 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useInfiniteQuery,
-  useQuery
-} from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -22,9 +19,11 @@ import type {
   UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
   UseQueryOptions,
-  UseQueryResult
+  UseQueryResult,
 } from '@tanstack/react-query';
 
+import { makeRequest } from '../http/axios';
+import type { ErrorType } from '../http/axios';
 import type {
   ApprovalCountSummary,
   ApproverSummary,
@@ -32,469 +31,865 @@ import type {
   GetApprovalCountSeriesParams,
   GetApprovalCountSummaryParams,
   GetApproverSummaryParams,
-  SeriesCountPoint
+  SeriesCountPoint,
 } from './model';
-
-import { makeRequest } from '../http/axios';
-import type { ErrorType } from '../http/axios';
-
-
-
-
 
 /**
  * Get total approval counts for a given date range
  * @summary Approval count summary
  */
 export const approvalCountSummary = (
-    params?: GetApprovalCountSummaryParams,
- signal?: AbortSignal
+  params?: GetApprovalCountSummaryParams,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return makeRequest<ApprovalCountSummary>(
-      {url: `/metrics/approvals/count/summary`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  return makeRequest<ApprovalCountSummary>({
+    url: `/metrics/approvals/count/summary`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
 
-
-
-export const getApprovalCountSummaryQueryKey = (params?: GetApprovalCountSummaryParams,) => {
-    return [
-    `/metrics/approvals/count/summary`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getApprovalCountSummaryQueryOptions = <TData = Awaited<ReturnType<typeof approvalCountSummary>>, TError = ErrorType<unknown>>(params?: GetApprovalCountSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSummary>>, TError, TData>>, }
+export const getApprovalCountSummaryQueryKey = (
+  params?: GetApprovalCountSummaryParams,
 ) => {
+  return [
+    `/metrics/approvals/count/summary`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
-const {query: queryOptions} = options ?? {};
+export const getApprovalCountSummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof approvalCountSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApprovalCountSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getApprovalCountSummaryQueryKey(params);
+  const queryKey =
+    queryOptions?.queryKey ?? getApprovalCountSummaryQueryKey(params);
 
-  
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof approvalCountSummary>>
+  > = ({ signal }) => approvalCountSummary(params, signal);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof approvalCountSummary>>> = ({ signal }) => approvalCountSummary(params, signal);
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof approvalCountSummary>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type ApprovalCountSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof approvalCountSummary>>
+>;
+export type ApprovalCountSummaryQueryError = ErrorType<unknown>;
 
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof approvalCountSummary>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ApprovalCountSummaryQueryResult = NonNullable<Awaited<ReturnType<typeof approvalCountSummary>>>
-export type ApprovalCountSummaryQueryError = ErrorType<unknown>
-
-
-export function useApprovalCountSummary<TData = Awaited<ReturnType<typeof approvalCountSummary>>, TError = ErrorType<unknown>>(
- params: undefined |  GetApprovalCountSummaryParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSummary>>, TError, TData>> & Pick<
+export function useApprovalCountSummary<
+  TData = Awaited<ReturnType<typeof approvalCountSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetApprovalCountSummaryParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSummary>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof approvalCountSummary>>,
           TError,
           Awaited<ReturnType<typeof approvalCountSummary>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useApprovalCountSummary<TData = Awaited<ReturnType<typeof approvalCountSummary>>, TError = ErrorType<unknown>>(
- params?: GetApprovalCountSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSummary>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useApprovalCountSummary<
+  TData = Awaited<ReturnType<typeof approvalCountSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApprovalCountSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSummary>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof approvalCountSummary>>,
           TError,
           Awaited<ReturnType<typeof approvalCountSummary>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useApprovalCountSummary<TData = Awaited<ReturnType<typeof approvalCountSummary>>, TError = ErrorType<unknown>>(
- params?: GetApprovalCountSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSummary>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useApprovalCountSummary<
+  TData = Awaited<ReturnType<typeof approvalCountSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApprovalCountSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Approval count summary
  */
 
-export function useApprovalCountSummary<TData = Awaited<ReturnType<typeof approvalCountSummary>>, TError = ErrorType<unknown>>(
- params?: GetApprovalCountSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSummary>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useApprovalCountSummary<
+  TData = Awaited<ReturnType<typeof approvalCountSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApprovalCountSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getApprovalCountSummaryQueryOptions(params, options);
 
-  const queryOptions = getApprovalCountSummaryQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Get a time series of approval counts for a given date range
  * @summary Approval count series
  */
 export const approvalCountSeries = (
-    params?: GetApprovalCountSeriesParams,
- signal?: AbortSignal
+  params?: GetApprovalCountSeriesParams,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return makeRequest<SeriesCountPoint[]>(
-      {url: `/metrics/approvals/count/series`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  return makeRequest<SeriesCountPoint[]>({
+    url: `/metrics/approvals/count/series`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
 
-
-
-export const getApprovalCountSeriesQueryKey = (params?: GetApprovalCountSeriesParams,) => {
-    return [
-    `/metrics/approvals/count/series`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getApprovalCountSeriesQueryOptions = <TData = Awaited<ReturnType<typeof approvalCountSeries>>, TError = ErrorType<unknown>>(params?: GetApprovalCountSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSeries>>, TError, TData>>, }
+export const getApprovalCountSeriesQueryKey = (
+  params?: GetApprovalCountSeriesParams,
 ) => {
+  return [
+    `/metrics/approvals/count/series`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
-const {query: queryOptions} = options ?? {};
+export const getApprovalCountSeriesQueryOptions = <
+  TData = Awaited<ReturnType<typeof approvalCountSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApprovalCountSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSeries>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getApprovalCountSeriesQueryKey(params);
+  const queryKey =
+    queryOptions?.queryKey ?? getApprovalCountSeriesQueryKey(params);
 
-  
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof approvalCountSeries>>
+  > = ({ signal }) => approvalCountSeries(params, signal);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof approvalCountSeries>>> = ({ signal }) => approvalCountSeries(params, signal);
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof approvalCountSeries>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type ApprovalCountSeriesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof approvalCountSeries>>
+>;
+export type ApprovalCountSeriesQueryError = ErrorType<unknown>;
 
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof approvalCountSeries>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ApprovalCountSeriesQueryResult = NonNullable<Awaited<ReturnType<typeof approvalCountSeries>>>
-export type ApprovalCountSeriesQueryError = ErrorType<unknown>
-
-
-export function useApprovalCountSeries<TData = Awaited<ReturnType<typeof approvalCountSeries>>, TError = ErrorType<unknown>>(
- params: undefined |  GetApprovalCountSeriesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSeries>>, TError, TData>> & Pick<
+export function useApprovalCountSeries<
+  TData = Awaited<ReturnType<typeof approvalCountSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetApprovalCountSeriesParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSeries>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof approvalCountSeries>>,
           TError,
           Awaited<ReturnType<typeof approvalCountSeries>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useApprovalCountSeries<TData = Awaited<ReturnType<typeof approvalCountSeries>>, TError = ErrorType<unknown>>(
- params?: GetApprovalCountSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSeries>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useApprovalCountSeries<
+  TData = Awaited<ReturnType<typeof approvalCountSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApprovalCountSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSeries>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof approvalCountSeries>>,
           TError,
           Awaited<ReturnType<typeof approvalCountSeries>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useApprovalCountSeries<TData = Awaited<ReturnType<typeof approvalCountSeries>>, TError = ErrorType<unknown>>(
- params?: GetApprovalCountSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSeries>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useApprovalCountSeries<
+  TData = Awaited<ReturnType<typeof approvalCountSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApprovalCountSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSeries>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Approval count series
  */
 
-export function useApprovalCountSeries<TData = Awaited<ReturnType<typeof approvalCountSeries>>, TError = ErrorType<unknown>>(
- params?: GetApprovalCountSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSeries>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useApprovalCountSeries<
+  TData = Awaited<ReturnType<typeof approvalCountSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApprovalCountSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSeries>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getApprovalCountSeriesQueryOptions(params, options);
 
-  const queryOptions = getApprovalCountSeriesQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Get a time series of approval counts for a given date range by approver
  * @summary Approval count series by approver
  */
 export const approvalCountSeriesByApprover = (
-    approverId: number,
-    params?: GetApprovalCountSeriesByApproverParams,
- signal?: AbortSignal
+  approverId: number,
+  params?: GetApprovalCountSeriesByApproverParams,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return makeRequest<SeriesCountPoint[]>(
-      {url: `/metrics/approvals/count/series/by/approver/${encodeURIComponent(String(approverId))}`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  return makeRequest<SeriesCountPoint[]>({
+    url: `/metrics/approvals/count/series/by/approver/${encodeURIComponent(String(approverId))}`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
 
-
-
-export const getApprovalCountSeriesByApproverQueryKey = (approverId?: number,
-    params?: GetApprovalCountSeriesByApproverParams,) => {
-    return [
-    `/metrics/approvals/count/series/by/approver/${approverId}`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getApprovalCountSeriesByApproverQueryOptions = <TData = Awaited<ReturnType<typeof approvalCountSeriesByApprover>>, TError = ErrorType<unknown>>(approverId: number,
-    params?: GetApprovalCountSeriesByApproverParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSeriesByApprover>>, TError, TData>>, }
+export const getApprovalCountSeriesByApproverQueryKey = (
+  approverId?: number,
+  params?: GetApprovalCountSeriesByApproverParams,
 ) => {
+  return [
+    `/metrics/approvals/count/series/by/approver/${approverId}`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
-const {query: queryOptions} = options ?? {};
+export const getApprovalCountSeriesByApproverQueryOptions = <
+  TData = Awaited<ReturnType<typeof approvalCountSeriesByApprover>>,
+  TError = ErrorType<unknown>,
+>(
+  approverId: number,
+  params?: GetApprovalCountSeriesByApproverParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSeriesByApprover>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getApprovalCountSeriesByApproverQueryKey(approverId,params);
+  const queryKey =
+    queryOptions?.queryKey ??
+    getApprovalCountSeriesByApproverQueryKey(approverId, params);
 
-  
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof approvalCountSeriesByApprover>>
+  > = ({ signal }) => approvalCountSeriesByApprover(approverId, params, signal);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof approvalCountSeriesByApprover>>> = ({ signal }) => approvalCountSeriesByApprover(approverId,params, signal);
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!approverId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof approvalCountSeriesByApprover>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type ApprovalCountSeriesByApproverQueryResult = NonNullable<
+  Awaited<ReturnType<typeof approvalCountSeriesByApprover>>
+>;
+export type ApprovalCountSeriesByApproverQueryError = ErrorType<unknown>;
 
-      
-
-   return  { queryKey, queryFn, enabled: !!(approverId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof approvalCountSeriesByApprover>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ApprovalCountSeriesByApproverQueryResult = NonNullable<Awaited<ReturnType<typeof approvalCountSeriesByApprover>>>
-export type ApprovalCountSeriesByApproverQueryError = ErrorType<unknown>
-
-
-export function useApprovalCountSeriesByApprover<TData = Awaited<ReturnType<typeof approvalCountSeriesByApprover>>, TError = ErrorType<unknown>>(
- approverId: number,
-    params: undefined |  GetApprovalCountSeriesByApproverParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSeriesByApprover>>, TError, TData>> & Pick<
+export function useApprovalCountSeriesByApprover<
+  TData = Awaited<ReturnType<typeof approvalCountSeriesByApprover>>,
+  TError = ErrorType<unknown>,
+>(
+  approverId: number,
+  params: undefined | GetApprovalCountSeriesByApproverParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSeriesByApprover>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof approvalCountSeriesByApprover>>,
           TError,
           Awaited<ReturnType<typeof approvalCountSeriesByApprover>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useApprovalCountSeriesByApprover<TData = Awaited<ReturnType<typeof approvalCountSeriesByApprover>>, TError = ErrorType<unknown>>(
- approverId: number,
-    params?: GetApprovalCountSeriesByApproverParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSeriesByApprover>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useApprovalCountSeriesByApprover<
+  TData = Awaited<ReturnType<typeof approvalCountSeriesByApprover>>,
+  TError = ErrorType<unknown>,
+>(
+  approverId: number,
+  params?: GetApprovalCountSeriesByApproverParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSeriesByApprover>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof approvalCountSeriesByApprover>>,
           TError,
           Awaited<ReturnType<typeof approvalCountSeriesByApprover>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useApprovalCountSeriesByApprover<TData = Awaited<ReturnType<typeof approvalCountSeriesByApprover>>, TError = ErrorType<unknown>>(
- approverId: number,
-    params?: GetApprovalCountSeriesByApproverParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSeriesByApprover>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useApprovalCountSeriesByApprover<
+  TData = Awaited<ReturnType<typeof approvalCountSeriesByApprover>>,
+  TError = ErrorType<unknown>,
+>(
+  approverId: number,
+  params?: GetApprovalCountSeriesByApproverParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSeriesByApprover>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Approval count series by approver
  */
 
-export function useApprovalCountSeriesByApprover<TData = Awaited<ReturnType<typeof approvalCountSeriesByApprover>>, TError = ErrorType<unknown>>(
- approverId: number,
-    params?: GetApprovalCountSeriesByApproverParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approvalCountSeriesByApprover>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useApprovalCountSeriesByApprover<
+  TData = Awaited<ReturnType<typeof approvalCountSeriesByApprover>>,
+  TError = ErrorType<unknown>,
+>(
+  approverId: number,
+  params?: GetApprovalCountSeriesByApproverParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approvalCountSeriesByApprover>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getApprovalCountSeriesByApproverQueryOptions(
+    approverId,
+    params,
+    options,
+  );
 
-  const queryOptions = getApprovalCountSeriesByApproverQueryOptions(approverId,params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Get a summary of approvals by approver for a given date range
  * @summary Approver summary
  */
 export const approverSummary = (
-    params?: GetApproverSummaryParams,
- signal?: AbortSignal
+  params?: GetApproverSummaryParams,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return makeRequest<ApproverSummary[]>(
-      {url: `/metrics/approvals/approver/summary`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  return makeRequest<ApproverSummary[]>({
+    url: `/metrics/approvals/approver/summary`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
 
-
-
-export const getApproverSummaryInfiniteQueryKey = (params?: GetApproverSummaryParams,) => {
-    return [
-    'infinite', `/metrics/approvals/approver/summary`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-export const getApproverSummaryQueryKey = (params?: GetApproverSummaryParams,) => {
-    return [
-    `/metrics/approvals/approver/summary`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getApproverSummaryInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof approverSummary>>, GetApproverSummaryParams['page']>, TError = ErrorType<unknown>>(params?: GetApproverSummaryParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof approverSummary>>, TError, TData, QueryKey, GetApproverSummaryParams['page']>>, }
+export const getApproverSummaryInfiniteQueryKey = (
+  params?: GetApproverSummaryParams,
 ) => {
+  return [
+    'infinite',
+    `/metrics/approvals/approver/summary`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
-const {query: queryOptions} = options ?? {};
+export const getApproverSummaryQueryKey = (
+  params?: GetApproverSummaryParams,
+) => {
+  return [
+    `/metrics/approvals/approver/summary`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
-  const queryKey =  queryOptions?.queryKey ?? getApproverSummaryInfiniteQueryKey(params);
+export const getApproverSummaryInfiniteQueryOptions = <
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof approverSummary>>,
+    GetApproverSummaryParams['page']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApproverSummaryParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData,
+        QueryKey,
+        GetApproverSummaryParams['page']
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
 
-  
+  const queryKey =
+    queryOptions?.queryKey ?? getApproverSummaryInfiniteQueryKey(params);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof approverSummary>>, QueryKey, GetApproverSummaryParams['page']> = ({ signal, pageParam }) => approverSummary({...params, 'page': pageParam || params?.['page']}, signal);
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof approverSummary>>,
+    QueryKey,
+    GetApproverSummaryParams['page']
+  > = ({ signal, pageParam }) =>
+    approverSummary({ ...params, page: pageParam || params?.['page'] }, signal);
 
-      
+  return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
+    Awaited<ReturnType<typeof approverSummary>>,
+    TError,
+    TData,
+    QueryKey,
+    GetApproverSummaryParams['page']
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type ApproverSummaryInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof approverSummary>>
+>;
+export type ApproverSummaryInfiniteQueryError = ErrorType<unknown>;
 
-   return  { queryKey, queryFn, ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof approverSummary>>, TError, TData, QueryKey, GetApproverSummaryParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ApproverSummaryInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof approverSummary>>>
-export type ApproverSummaryInfiniteQueryError = ErrorType<unknown>
-
-
-export function useApproverSummaryInfinite<TData = InfiniteData<Awaited<ReturnType<typeof approverSummary>>, GetApproverSummaryParams['page']>, TError = ErrorType<unknown>>(
- params: undefined |  GetApproverSummaryParams, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof approverSummary>>, TError, TData, QueryKey, GetApproverSummaryParams['page']>> & Pick<
+export function useApproverSummaryInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof approverSummary>>,
+    GetApproverSummaryParams['page']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetApproverSummaryParams,
+  options: {
+    query: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData,
+        QueryKey,
+        GetApproverSummaryParams['page']
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof approverSummary>>,
           TError,
-          Awaited<ReturnType<typeof approverSummary>>, QueryKey
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useApproverSummaryInfinite<TData = InfiniteData<Awaited<ReturnType<typeof approverSummary>>, GetApproverSummaryParams['page']>, TError = ErrorType<unknown>>(
- params?: GetApproverSummaryParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof approverSummary>>, TError, TData, QueryKey, GetApproverSummaryParams['page']>> & Pick<
+          Awaited<ReturnType<typeof approverSummary>>,
+          QueryKey
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useApproverSummaryInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof approverSummary>>,
+    GetApproverSummaryParams['page']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApproverSummaryParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData,
+        QueryKey,
+        GetApproverSummaryParams['page']
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof approverSummary>>,
           TError,
-          Awaited<ReturnType<typeof approverSummary>>, QueryKey
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useApproverSummaryInfinite<TData = InfiniteData<Awaited<ReturnType<typeof approverSummary>>, GetApproverSummaryParams['page']>, TError = ErrorType<unknown>>(
- params?: GetApproverSummaryParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof approverSummary>>, TError, TData, QueryKey, GetApproverSummaryParams['page']>>, }
- , queryClient?: QueryClient
-  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+          Awaited<ReturnType<typeof approverSummary>>,
+          QueryKey
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useApproverSummaryInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof approverSummary>>,
+    GetApproverSummaryParams['page']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApproverSummaryParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData,
+        QueryKey,
+        GetApproverSummaryParams['page']
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Approver summary
  */
 
-export function useApproverSummaryInfinite<TData = InfiniteData<Awaited<ReturnType<typeof approverSummary>>, GetApproverSummaryParams['page']>, TError = ErrorType<unknown>>(
- params?: GetApproverSummaryParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof approverSummary>>, TError, TData, QueryKey, GetApproverSummaryParams['page']>>, }
- , queryClient?: QueryClient 
- ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useApproverSummaryInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof approverSummary>>,
+    GetApproverSummaryParams['page']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApproverSummaryParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData,
+        QueryKey,
+        GetApproverSummaryParams['page']
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getApproverSummaryInfiniteQueryOptions(params, options);
 
-  const queryOptions = getApproverSummaryInfiniteQueryOptions(params,options)
+  const query = useInfiniteQuery(
+    queryOptions,
+    queryClient,
+  ) as UseInfiniteQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
 
-  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
 
-
-
-
-export const getApproverSummaryQueryOptions = <TData = Awaited<ReturnType<typeof approverSummary>>, TError = ErrorType<unknown>>(params?: GetApproverSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approverSummary>>, TError, TData>>, }
+export const getApproverSummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof approverSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApproverSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
 ) => {
+  const { query: queryOptions } = options ?? {};
 
-const {query: queryOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getApproverSummaryQueryKey(params);
 
-  const queryKey =  queryOptions?.queryKey ?? getApproverSummaryQueryKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof approverSummary>>> = ({
+    signal,
+  }) => approverSummary(params, signal);
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof approverSummary>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof approverSummary>>> = ({ signal }) => approverSummary(params, signal);
+export type ApproverSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof approverSummary>>
+>;
+export type ApproverSummaryQueryError = ErrorType<unknown>;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof approverSummary>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ApproverSummaryQueryResult = NonNullable<Awaited<ReturnType<typeof approverSummary>>>
-export type ApproverSummaryQueryError = ErrorType<unknown>
-
-
-export function useApproverSummary<TData = Awaited<ReturnType<typeof approverSummary>>, TError = ErrorType<unknown>>(
- params: undefined |  GetApproverSummaryParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof approverSummary>>, TError, TData>> & Pick<
+export function useApproverSummary<
+  TData = Awaited<ReturnType<typeof approverSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetApproverSummaryParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof approverSummary>>,
           TError,
           Awaited<ReturnType<typeof approverSummary>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useApproverSummary<TData = Awaited<ReturnType<typeof approverSummary>>, TError = ErrorType<unknown>>(
- params?: GetApproverSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approverSummary>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useApproverSummary<
+  TData = Awaited<ReturnType<typeof approverSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApproverSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof approverSummary>>,
           TError,
           Awaited<ReturnType<typeof approverSummary>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useApproverSummary<TData = Awaited<ReturnType<typeof approverSummary>>, TError = ErrorType<unknown>>(
- params?: GetApproverSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approverSummary>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useApproverSummary<
+  TData = Awaited<ReturnType<typeof approverSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApproverSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Approver summary
  */
 
-export function useApproverSummary<TData = Awaited<ReturnType<typeof approverSummary>>, TError = ErrorType<unknown>>(
- params?: GetApproverSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof approverSummary>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useApproverSummary<
+  TData = Awaited<ReturnType<typeof approverSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetApproverSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof approverSummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getApproverSummaryQueryOptions(params, options);
 
-  const queryOptions = getApproverSummaryQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
-

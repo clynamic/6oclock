@@ -115,9 +115,13 @@ export const CounterDisplay: React.FC<CounterDisplayProps> = ({
   const digits = getDigitsFromNumber(displayNumber);
 
   return (
-    <Stack direction="row" spacing={0.25} sx={{
-      alignItems: "center"
-    }}>
+    <Stack
+      direction="row"
+      spacing={0.25}
+      sx={{
+        alignItems: 'center',
+      }}
+    >
       {digits.map((digit, index) => (
         <Box
           key={index}

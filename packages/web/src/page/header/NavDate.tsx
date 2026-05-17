@@ -186,14 +186,16 @@ export const NavDate: React.FC = () => {
           spacing={2}
           sx={{
             p: 2,
-            minWidth: 300
-          }}>
+            minWidth: 300,
+          }}
+        >
           <Stack
             direction="row"
             sx={{
-              justifyContent: "space-between",
-              alignItems: "center"
-            }}>
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
             <Typography variant="h6">Select Date Range</Typography>
             <IconButton
               onClick={() => {
@@ -254,9 +256,13 @@ export const NavDate: React.FC = () => {
             />
           </LocalizationProvider>
 
-          <Stack direction="row" spacing={2} sx={{
-            justifyContent: "flex-end"
-          }}>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              justifyContent: 'flex-end',
+            }}
+          >
             <Button
               variant="text"
               onClick={resetToDefaultRange}
@@ -294,9 +300,13 @@ const DatePageButtons = ({
   if (!isWideLayout) return <>{children}</>;
 
   return (
-    <Stack direction="row" spacing={1} sx={{
-      alignItems: "center"
-    }}>
+    <Stack
+      direction="row"
+      spacing={1}
+      sx={{
+        alignItems: 'center',
+      }}
+    >
       <IconButton
         size="small"
         style={{ padding: 4 }}

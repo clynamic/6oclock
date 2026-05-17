@@ -5,9 +5,7 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useQuery
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -17,208 +15,344 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult
+  UseQueryResult,
 } from '@tanstack/react-query';
 
+import { makeRequest } from '../http/axios';
+import type { ErrorType } from '../http/axios';
 import type {
   GetPostPendingSeriesParams,
   GetPostStatusSummaryParams,
   PostStatusSummary,
-  SeriesCountPoint
+  SeriesCountPoint,
 } from './model';
-
-import { makeRequest } from '../http/axios';
-import type { ErrorType } from '../http/axios';
-
-
-
-
 
 /**
  * Get post status (approved, deleted, permitted) counts for a given date range
  * @summary Post status summary
  */
 export const postStatusSummary = (
-    params?: GetPostStatusSummaryParams,
- signal?: AbortSignal
+  params?: GetPostStatusSummaryParams,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return makeRequest<PostStatusSummary>(
-      {url: `/metrics/posts/status/summary`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  return makeRequest<PostStatusSummary>({
+    url: `/metrics/posts/status/summary`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
 
-
-
-export const getPostStatusSummaryQueryKey = (params?: GetPostStatusSummaryParams,) => {
-    return [
-    `/metrics/posts/status/summary`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getPostStatusSummaryQueryOptions = <TData = Awaited<ReturnType<typeof postStatusSummary>>, TError = ErrorType<unknown>>(params?: GetPostStatusSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postStatusSummary>>, TError, TData>>, }
+export const getPostStatusSummaryQueryKey = (
+  params?: GetPostStatusSummaryParams,
 ) => {
+  return [
+    `/metrics/posts/status/summary`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
-const {query: queryOptions} = options ?? {};
+export const getPostStatusSummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof postStatusSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostStatusSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postStatusSummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getPostStatusSummaryQueryKey(params);
+  const queryKey =
+    queryOptions?.queryKey ?? getPostStatusSummaryQueryKey(params);
 
-  
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof postStatusSummary>>
+  > = ({ signal }) => postStatusSummary(params, signal);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof postStatusSummary>>> = ({ signal }) => postStatusSummary(params, signal);
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof postStatusSummary>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type PostStatusSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof postStatusSummary>>
+>;
+export type PostStatusSummaryQueryError = ErrorType<unknown>;
 
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof postStatusSummary>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PostStatusSummaryQueryResult = NonNullable<Awaited<ReturnType<typeof postStatusSummary>>>
-export type PostStatusSummaryQueryError = ErrorType<unknown>
-
-
-export function usePostStatusSummary<TData = Awaited<ReturnType<typeof postStatusSummary>>, TError = ErrorType<unknown>>(
- params: undefined |  GetPostStatusSummaryParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof postStatusSummary>>, TError, TData>> & Pick<
+export function usePostStatusSummary<
+  TData = Awaited<ReturnType<typeof postStatusSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetPostStatusSummaryParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postStatusSummary>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof postStatusSummary>>,
           TError,
           Awaited<ReturnType<typeof postStatusSummary>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostStatusSummary<TData = Awaited<ReturnType<typeof postStatusSummary>>, TError = ErrorType<unknown>>(
- params?: GetPostStatusSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postStatusSummary>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function usePostStatusSummary<
+  TData = Awaited<ReturnType<typeof postStatusSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostStatusSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postStatusSummary>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof postStatusSummary>>,
           TError,
           Awaited<ReturnType<typeof postStatusSummary>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostStatusSummary<TData = Awaited<ReturnType<typeof postStatusSummary>>, TError = ErrorType<unknown>>(
- params?: GetPostStatusSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postStatusSummary>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function usePostStatusSummary<
+  TData = Awaited<ReturnType<typeof postStatusSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostStatusSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postStatusSummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Post status summary
  */
 
-export function usePostStatusSummary<TData = Awaited<ReturnType<typeof postStatusSummary>>, TError = ErrorType<unknown>>(
- params?: GetPostStatusSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postStatusSummary>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function usePostStatusSummary<
+  TData = Awaited<ReturnType<typeof postStatusSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostStatusSummaryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postStatusSummary>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getPostStatusSummaryQueryOptions(params, options);
 
-  const queryOptions = getPostStatusSummaryQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Get post pending series for a given date range
  * @summary Post pending series
  */
 export const postPendingSeries = (
-    params?: GetPostPendingSeriesParams,
- signal?: AbortSignal
+  params?: GetPostPendingSeriesParams,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return makeRequest<SeriesCountPoint[]>(
-      {url: `/metrics/posts/pending/series`, method: 'GET',
-        params, signal
-    },
-      );
-    }
-  
+  return makeRequest<SeriesCountPoint[]>({
+    url: `/metrics/posts/pending/series`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
 
-
-
-export const getPostPendingSeriesQueryKey = (params?: GetPostPendingSeriesParams,) => {
-    return [
-    `/metrics/posts/pending/series`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getPostPendingSeriesQueryOptions = <TData = Awaited<ReturnType<typeof postPendingSeries>>, TError = ErrorType<unknown>>(params?: GetPostPendingSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postPendingSeries>>, TError, TData>>, }
+export const getPostPendingSeriesQueryKey = (
+  params?: GetPostPendingSeriesParams,
 ) => {
+  return [
+    `/metrics/posts/pending/series`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
-const {query: queryOptions} = options ?? {};
+export const getPostPendingSeriesQueryOptions = <
+  TData = Awaited<ReturnType<typeof postPendingSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostPendingSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postPendingSeries>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getPostPendingSeriesQueryKey(params);
+  const queryKey =
+    queryOptions?.queryKey ?? getPostPendingSeriesQueryKey(params);
 
-  
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof postPendingSeries>>
+  > = ({ signal }) => postPendingSeries(params, signal);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof postPendingSeries>>> = ({ signal }) => postPendingSeries(params, signal);
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof postPendingSeries>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type PostPendingSeriesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof postPendingSeries>>
+>;
+export type PostPendingSeriesQueryError = ErrorType<unknown>;
 
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof postPendingSeries>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PostPendingSeriesQueryResult = NonNullable<Awaited<ReturnType<typeof postPendingSeries>>>
-export type PostPendingSeriesQueryError = ErrorType<unknown>
-
-
-export function usePostPendingSeries<TData = Awaited<ReturnType<typeof postPendingSeries>>, TError = ErrorType<unknown>>(
- params: undefined |  GetPostPendingSeriesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof postPendingSeries>>, TError, TData>> & Pick<
+export function usePostPendingSeries<
+  TData = Awaited<ReturnType<typeof postPendingSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetPostPendingSeriesParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postPendingSeries>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof postPendingSeries>>,
           TError,
           Awaited<ReturnType<typeof postPendingSeries>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostPendingSeries<TData = Awaited<ReturnType<typeof postPendingSeries>>, TError = ErrorType<unknown>>(
- params?: GetPostPendingSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postPendingSeries>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function usePostPendingSeries<
+  TData = Awaited<ReturnType<typeof postPendingSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostPendingSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postPendingSeries>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof postPendingSeries>>,
           TError,
           Awaited<ReturnType<typeof postPendingSeries>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostPendingSeries<TData = Awaited<ReturnType<typeof postPendingSeries>>, TError = ErrorType<unknown>>(
- params?: GetPostPendingSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postPendingSeries>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function usePostPendingSeries<
+  TData = Awaited<ReturnType<typeof postPendingSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostPendingSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postPendingSeries>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Post pending series
  */
 
-export function usePostPendingSeries<TData = Awaited<ReturnType<typeof postPendingSeries>>, TError = ErrorType<unknown>>(
- params?: GetPostPendingSeriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postPendingSeries>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function usePostPendingSeries<
+  TData = Awaited<ReturnType<typeof postPendingSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPostPendingSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postPendingSeries>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getPostPendingSeriesQueryOptions(params, options);
 
-  const queryOptions = getPostPendingSeriesQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
-

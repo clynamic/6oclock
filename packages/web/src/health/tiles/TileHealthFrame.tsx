@@ -69,14 +69,16 @@ export const TileHealthFrame: React.FC<TileHealthFrameProps> = ({
               spacing={1}
               sx={{
                 p: 2,
-                width: '100%'
-              }}>
+                width: '100%',
+              }}
+            >
               <Stack
                 direction="row"
                 sx={{
-                  justifyContent: "space-between",
-                  width: '100%'
-                }}>
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}
+              >
                 <Typography variant="h6">
                   {tile ? tile.type : <Skeleton width={200} />}
                 </Typography>
@@ -109,8 +111,9 @@ export const TileHealthFrame: React.FC<TileHealthFrameProps> = ({
                 direction="row"
                 sx={{
                   gap: 1,
-                  flexWrap: 'wrap'
-                }}>
+                  flexWrap: 'wrap',
+                }}
+              >
                 {tile ? (
                   <>
                     <Chip
@@ -243,9 +246,12 @@ export const TileHealthFrame: React.FC<TileHealthFrameProps> = ({
                       );
                     })
                 ) : (
-                  <Stack direction="row" sx={{
-                    justifyContent: "space-between"
-                  }}>
+                  <Stack
+                    direction="row"
+                    sx={{
+                      justifyContent: 'space-between',
+                    }}
+                  >
                     {[...Array(30)].map((_, index) => (
                       <Skeleton
                         variant="rectangular"

@@ -30,9 +30,12 @@ export const LogoutPage: React.FC = () => {
       <PageTitle subtitle="Logging out..." />
       <PageHeader />
       <PageBody>
-        <Stack spacing={2} sx={{
-          alignItems: "center"
-        }}>
+        <Stack
+          spacing={2}
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <Logout sx={{ fontSize: 96 }} />
           <Typography>You are being logged out.</Typography>
           <CircularProgress />

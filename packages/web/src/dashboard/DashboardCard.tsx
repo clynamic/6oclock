@@ -78,15 +78,17 @@ export const DashboardCard = createDashboardChild<DashboardCardProps>(
               '& > *:not(.react-resizable-handle)': {
                 transition: 'opacity 0.2s',
                 opacity: isEditing ? 0.5 : 1,
-              }
-            }}>
+              },
+            }}
+          >
             <Stack
               direction="row"
               spacing={2}
               sx={{
-                justifyContent: "space-between",
-                flexShrink: 0
-              }}>
+                justifyContent: 'space-between',
+                flexShrink: 0,
+              }}
+            >
               <Typography variant="h6">{title}</Typography>
               {availabilityChip && (
                 <Stack direction="row" spacing={0.5}>

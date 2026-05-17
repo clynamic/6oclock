@@ -5,8 +5,8 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
-import type { TileType } from './tileType';
 import type { TileSlice } from './tileSlice';
+import type { TileType } from './tileType';
 
 export interface TileHealth {
   type: TileType;

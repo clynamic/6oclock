@@ -34,10 +34,11 @@ export const ErrorHint: React.FC<ErrorHintProps> = ({ error }) => {
     <Stack
       spacing={2}
       sx={{
-        alignItems: "center",
-        justifyContent: "center",
-        height: '100%'
-      }}>
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+      }}
+    >
       <WarningAmberOutlined sx={{ fontSize: 48 }} />
       <Typography
         variant="h6"

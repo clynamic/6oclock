@@ -77,9 +77,10 @@ export const HomeActivity: React.FC = () => {
       <Stack
         direction="row"
         sx={{
-          justifyContent: "center",
-          mb: 2
-        }}>
+          justifyContent: 'center',
+          mb: 2,
+        }}
+      >
         <CounterDisplay number={counterValue} />
       </Stack>
       <Typography

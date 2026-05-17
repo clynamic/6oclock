@@ -67,14 +67,16 @@ export const ManifestHealthFrame: React.FC<ManifestHealthFrameProps> = ({
               spacing={1}
               sx={{
                 p: 2,
-                width: '100%'
-              }}>
+                width: '100%',
+              }}
+            >
               <Stack
                 direction="row"
                 sx={{
-                  justifyContent: "space-between",
-                  width: '100%'
-                }}>
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}
+              >
                 <Typography variant="h6">
                   {manifest ? (
                     `${manifest.type} #${manifest.id}`
@@ -111,8 +113,9 @@ export const ManifestHealthFrame: React.FC<ManifestHealthFrameProps> = ({
                 direction="row"
                 sx={{
                   gap: 1,
-                  flexWrap: 'wrap'
-                }}>
+                  flexWrap: 'wrap',
+                }}
+              >
                 {manifest ? (
                   <>
                     <Chip
@@ -270,9 +273,12 @@ export const ManifestHealthFrame: React.FC<ManifestHealthFrameProps> = ({
                       );
                     })
                 ) : (
-                  <Stack direction="row" sx={{
-                    justifyContent: "space-between"
-                  }}>
+                  <Stack
+                    direction="row"
+                    sx={{
+                      justifyContent: 'space-between',
+                    }}
+                  >
                     {[...Array(30)].map((_, index) => (
                       <Skeleton
                         variant="rectangular"

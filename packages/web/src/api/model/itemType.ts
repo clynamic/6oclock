@@ -6,8 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type ItemType = typeof ItemType[keyof typeof ItemType];
-
+export type ItemType = (typeof ItemType)[keyof typeof ItemType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ItemType = {
