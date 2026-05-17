@@ -1,5 +1,4 @@
-import { oas30 } from 'openapi3-ts';
-import { defineConfig } from 'orval';
+import { InputTransformerFn, defineConfig } from 'orval';
 
 interface Node {
   $ref?: string;
@@ -44,7 +43,7 @@ const unwrapSingleArrayProp = (item: unknown): unknown => {
 };
 
 // Promote an inline `array of $ref Foo` schema to a named component `FooList`.
-// Orval 7.0.1 emits `unknown` for inline array schemas at response level;
+// Orval emits `unknown` for inline array schemas at response level;
 // referencing a named component makes it generate the proper `Foo[]` type.
 const registerArrayComponent = (
   schemas: Record<string, unknown>,
@@ -64,7 +63,7 @@ const registerArrayComponent = (
   return { $ref: `#/components/schemas/${name}` };
 };
 
-const ignoreV2 = (spec: oas30.OpenAPIObject): oas30.OpenAPIObject => {
+const ignoreV2: InputTransformerFn = (spec) => {
   const root = spec as unknown as Node;
   const components = (root.components ??= {});
   const schemas = (components.schemas ??= {});
@@ -95,7 +94,7 @@ const ignoreV2 = (spec: oas30.OpenAPIObject): oas30.OpenAPIObject => {
 
   stripV2(root);
 
-  // Drop now-unreferenced v2 components. Orval 7.0.1 does not auto-prune.
+  // Drop now-unreferenced v2 components. Orval does not auto-prune.
   const componentsRecord = components as Record<string, unknown>;
   for (const collectionKey of ['schemas', 'parameters']) {
     const collection = componentsRecord[collectionKey];
@@ -108,11 +107,12 @@ const ignoreV2 = (spec: oas30.OpenAPIObject): oas30.OpenAPIObject => {
   return spec;
 };
 
-const config: ReturnType<typeof defineConfig> = defineConfig({
+export default defineConfig({
   api: {
     input: {
       target: './api.yml',
       filters: {
+        mode: 'include',
         tags: [
           'posts',
           'users',
@@ -163,5 +163,3 @@ const config: ReturnType<typeof defineConfig> = defineConfig({
     },
   },
 });
-
-export default config;
