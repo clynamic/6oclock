@@ -4,7 +4,7 @@ import { Box, Stack } from '@mui/material';
 
 const COUNTER_IMAGES = Array.from(
   { length: 10 },
-  (_, i) => `/counter/${i}.png`,
+  (_, i) => `/counter/${i}.svg`,
 );
 
 const useCounterImagePreloader = () => {
@@ -126,12 +126,11 @@ export const CounterDisplay: React.FC<CounterDisplayProps> = ({
         <Box
           key={index}
           component="img"
-          src={`/counter/${digit}.png`}
+          src={`/counter/${digit}.svg`}
           alt={`${digit}`}
           sx={{
             height: 64,
             width: 'auto',
-            imageRendering: 'pixelated',
             display: 'block',
           }}
         />
