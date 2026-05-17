@@ -1,6 +1,6 @@
 import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
 import { Global, Inject, Injectable, Module } from '@nestjs/common';
-import { Cache, Store } from 'cache-manager';
+import { Cache } from 'cache-manager';
 import { kebabCase } from 'lodash';
 import { toRawUrl } from 'src/common';
 
@@ -11,11 +11,11 @@ const getResourceKey = (key: ResourceKey): string =>
   typeof key === 'string' ? key : key.name;
 
 @Injectable()
-export class CacheManager<S extends Store = Store> implements Cache<S> {
+export class CacheManager {
   private static instance: CacheManager;
   private deps = new Map<string, Set<string>>();
 
-  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache<S>) {
+  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {
     CacheManager.instance = this;
   }
 
@@ -65,7 +65,7 @@ export class CacheManager<S extends Store = Store> implements Cache<S> {
     }
   }
 
-  store = this.cacheManager.store;
+  stores = this.cacheManager.stores;
   /**
    * Set a value in the cache.
    */
@@ -79,9 +79,9 @@ export class CacheManager<S extends Store = Store> implements Cache<S> {
    */
   del = this.cacheManager.del;
   /**
-   * Reset the cache.
+   * Clear the cache.
    */
-  reset = this.cacheManager.reset;
+  clear = this.cacheManager.clear;
   /**
    * Listen for cache events.
    */
@@ -89,7 +89,7 @@ export class CacheManager<S extends Store = Store> implements Cache<S> {
   /**
    * Remove a listener for cache events.
    */
-  removeListener = this.cacheManager.removeListener;
+  off = this.cacheManager.off;
   /**
    * Wrap a function with caching.
    */

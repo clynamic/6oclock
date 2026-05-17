@@ -24,7 +24,7 @@ export class ProxyController {
     this.axios = AXIOS_INSTANCE;
   }
 
-  @Get('*')
+  @Get('*path')
   @ApiOperation({
     summary: 'Proxy request to static host',
     description:
