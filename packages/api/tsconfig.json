@@ -35,6 +35,7 @@
 
     "incremental": true,
     "skipLibCheck": true,
+    "ignoreDeprecations": "6.0",
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": false,

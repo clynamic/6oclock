@@ -18,5 +18,8 @@
   "engines": {
     "node": ">=20",
     "npm": "please-use-yarn"
+  },
+  "resolutions": {
+    "typescript": "^6.0.3"
   }
 }
