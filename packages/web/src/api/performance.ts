@@ -45,7 +45,7 @@ export const performance = (
       
       
       return makeRequest<PerformanceSummary[]>(
-      {url: `/api/metrics/performance/performance`, method: 'GET',
+      {url: `/metrics/performance/performance`, method: 'GET',
         params, signal
     },
       );
@@ -56,7 +56,7 @@ export const performance = (
 
 export const getPerformanceQueryKey = (params?: GetPerformanceParams,) => {
     return [
-    `/api/metrics/performance/performance`, ...(params ? [params]: [])
+    `/metrics/performance/performance`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -139,7 +139,7 @@ export const activity = (
       
       
       return makeRequest<ActivitySeriesPoint[]>(
-      {url: `/api/metrics/performance/activity`, method: 'GET',
+      {url: `/metrics/performance/activity`, method: 'GET',
         params, signal
     },
       );
@@ -150,7 +150,7 @@ export const activity = (
 
 export const getActivityQueryKey = (params?: GetActivityParams,) => {
     return [
-    `/api/metrics/performance/activity`, ...(params ? [params]: [])
+    `/metrics/performance/activity`, ...(params ? [params]: [])
     ] as const;
     }
 

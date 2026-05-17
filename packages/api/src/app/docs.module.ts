@@ -14,7 +14,9 @@ export class DocsModule {
       .addBearerAuth()
       .build();
 
-    const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+    const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig, {
+      ignoreGlobalPrefix: true,
+    });
     SwaggerModule.setup('api', app, swaggerDocument, {
       jsonDocumentUrl: '/api/swagger.json',
     });

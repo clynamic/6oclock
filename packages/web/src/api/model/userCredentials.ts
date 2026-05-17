@@ -9,6 +9,6 @@
 export interface UserCredentials {
   /** @minLength 1 */
   username: string;
-  /** @pattern /^[a-zA-Z0-9]{24,32}$/ */
+  /** @pattern ^[a-zA-Z0-9]{24,32}$ */
   password: string;
 }

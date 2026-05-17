@@ -46,7 +46,7 @@ export const deletionCountSeries = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/deletions/count/series`, method: 'GET',
+      {url: `/metrics/deletions/count/series`, method: 'GET',
         params, signal
     },
       );
@@ -57,7 +57,7 @@ export const deletionCountSeries = (
 
 export const getDeletionCountSeriesQueryKey = (params?: GetDeletionCountSeriesParams,) => {
     return [
-    `/api/metrics/deletions/count/series`, ...(params ? [params]: [])
+    `/metrics/deletions/count/series`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -141,7 +141,7 @@ export const deletionSeriesByDeleter = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/deletions/count/series/by/deleter/${encodeURIComponent(String(userId))}`, method: 'GET',
+      {url: `/metrics/deletions/count/series/by/deleter/${encodeURIComponent(String(userId))}`, method: 'GET',
         params, signal
     },
       );
@@ -153,7 +153,7 @@ export const deletionSeriesByDeleter = (
 export const getDeletionSeriesByDeleterQueryKey = (userId?: number,
     params?: GetDeletionSeriesByDeleterParams,) => {
     return [
-    `/api/metrics/deletions/count/series/by/deleter/${userId}`, ...(params ? [params]: [])
+    `/metrics/deletions/count/series/by/deleter/${userId}`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -241,7 +241,7 @@ export const deletionActivitySummary = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/deletions/activity/summary`, method: 'GET',
+      {url: `/metrics/deletions/activity/summary`, method: 'GET',
         params, signal
     },
       );
@@ -252,7 +252,7 @@ export const deletionActivitySummary = (
 
 export const getDeletionActivitySummaryQueryKey = (params?: GetDeletionActivitySummaryParams,) => {
     return [
-    `/api/metrics/deletions/activity/summary`, ...(params ? [params]: [])
+    `/metrics/deletions/activity/summary`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -336,7 +336,7 @@ export const deletionActivitySummaryByDeleter = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/deletions/activity/summary/by/deleter/${encodeURIComponent(String(userId))}`, method: 'GET',
+      {url: `/metrics/deletions/activity/summary/by/deleter/${encodeURIComponent(String(userId))}`, method: 'GET',
         params, signal
     },
       );
@@ -348,7 +348,7 @@ export const deletionActivitySummaryByDeleter = (
 export const getDeletionActivitySummaryByDeleterQueryKey = (userId?: number,
     params?: GetDeletionActivitySummaryByDeleterParams,) => {
     return [
-    `/api/metrics/deletions/activity/summary/by/deleter/${userId}`, ...(params ? [params]: [])
+    `/metrics/deletions/activity/summary/by/deleter/${userId}`, ...(params ? [params]: [])
     ] as const;
     }
 

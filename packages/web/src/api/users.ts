@@ -42,7 +42,7 @@ export const userHead = (
       
       
       return makeRequest<UserHead>(
-      {url: `/api/users/head/${encodeURIComponent(String(id))}`, method: 'GET', signal
+      {url: `/users/head/${encodeURIComponent(String(id))}`, method: 'GET', signal
     },
       );
     }
@@ -52,7 +52,7 @@ export const userHead = (
 
 export const getUserHeadQueryKey = (id?: number,) => {
     return [
-    `/api/users/head/${id}`
+    `/users/head/${id}`
     ] as const;
     }
 

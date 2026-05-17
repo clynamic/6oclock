@@ -7,7 +7,7 @@ import {
   Req,
   StreamableFile,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AxiosInstance } from 'axios';
 import { Request } from 'express';
 import { AXIOS_INSTANCE, getContentType } from 'src/api';
@@ -30,6 +30,12 @@ export class ProxyController {
     description:
       'Proxies a request to the static host and returns the file as a stream',
     operationId: 'proxyRequest',
+  })
+  @ApiParam({
+    name: 'path',
+    description: 'Static path to proxy',
+    required: true,
+    schema: { type: 'string' },
   })
   @ApiResponse({
     status: 200,

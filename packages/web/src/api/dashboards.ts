@@ -47,7 +47,7 @@ export const dashboard = (
       
       
       return makeRequest<DashboardConfig>(
-      {url: `/api/dashboards/${encodeURIComponent(String(type))}`, method: 'GET', signal
+      {url: `/dashboards/${encodeURIComponent(String(type))}`, method: 'GET', signal
     },
       );
     }
@@ -57,7 +57,7 @@ export const dashboard = (
 
 export const getDashboardQueryKey = (type?: string,) => {
     return [
-    `/api/dashboards/${type}`
+    `/dashboards/${type}`
     ] as const;
     }
 
@@ -140,8 +140,8 @@ export const updateDashboard = (
 ) => {
       
       
-      return makeRequest<void | void>(
-      {url: `/api/dashboards/${encodeURIComponent(String(type))}`, method: 'POST',
+      return makeRequest<void>(
+      {url: `/dashboards/${encodeURIComponent(String(type))}`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: dashboardUpdate, signal
     },
@@ -205,8 +205,8 @@ export const deleteDashboard = (
 ) => {
       
       
-      return makeRequest<void | void>(
-      {url: `/api/dashboards/${encodeURIComponent(String(type))}/delete`, method: 'POST', signal
+      return makeRequest<void>(
+      {url: `/dashboards/${encodeURIComponent(String(type))}/delete`, method: 'POST', signal
     },
       );
     }

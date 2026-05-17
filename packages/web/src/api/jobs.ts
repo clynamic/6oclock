@@ -53,7 +53,7 @@ export const jobs = (
       
       
       return makeRequest<JobInfo[]>(
-      {url: `/api/jobs`, method: 'GET',
+      {url: `/jobs`, method: 'GET',
         params, signal
     },
       );
@@ -64,13 +64,13 @@ export const jobs = (
 
 export const getJobsInfiniteQueryKey = (params?: GetJobsParams,) => {
     return [
-    'infinite', `/api/jobs`, ...(params ? [params]: [])
+    'infinite', `/jobs`, ...(params ? [params]: [])
     ] as const;
     }
 
 export const getJobsQueryKey = (params?: GetJobsParams,) => {
     return [
-    `/api/jobs`, ...(params ? [params]: [])
+    `/jobs`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -220,7 +220,7 @@ export const jobSchedulers = (
       
       
       return makeRequest<SchedulerInfo[]>(
-      {url: `/api/jobs/schedulers`, method: 'GET', signal
+      {url: `/jobs/schedulers`, method: 'GET', signal
     },
       );
     }
@@ -230,7 +230,7 @@ export const jobSchedulers = (
 
 export const getJobSchedulersQueryKey = () => {
     return [
-    `/api/jobs/schedulers`
+    `/jobs/schedulers`
     ] as const;
     }
 
@@ -312,7 +312,7 @@ export const enableJobScheduler = (
       
       
       return makeRequest<void>(
-      {url: `/api/jobs/schedulers/${encodeURIComponent(String(id))}/enable`, method: 'PUT'
+      {url: `/jobs/schedulers/${encodeURIComponent(String(id))}/enable`, method: 'PUT'
     },
       );
     }
@@ -374,7 +374,7 @@ export const disableJobScheduler = (
       
       
       return makeRequest<void>(
-      {url: `/api/jobs/schedulers/${encodeURIComponent(String(id))}/disable`, method: 'PUT'
+      {url: `/jobs/schedulers/${encodeURIComponent(String(id))}/disable`, method: 'PUT'
     },
       );
     }

@@ -49,7 +49,7 @@ export const checkManifestAvailability = (
       
       
       return makeRequest<ManifestAvailability>(
-      {url: `/api/manifests/available`, method: 'GET',
+      {url: `/manifests/available`, method: 'GET',
         params, signal
     },
       );
@@ -60,7 +60,7 @@ export const checkManifestAvailability = (
 
 export const getCheckManifestAvailabilityQueryKey = (params?: CheckManifestAvailabilityParams,) => {
     return [
-    `/api/manifests/available`, ...(params ? [params]: [])
+    `/manifests/available`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -143,7 +143,7 @@ export const manifest = (
       
       
       return makeRequest<Manifest>(
-      {url: `/api/manifests/${encodeURIComponent(String(id))}`, method: 'GET', signal
+      {url: `/manifests/${encodeURIComponent(String(id))}`, method: 'GET', signal
     },
       );
     }
@@ -153,7 +153,7 @@ export const manifest = (
 
 export const getManifestQueryKey = (id?: number,) => {
     return [
-    `/api/manifests/${id}`
+    `/manifests/${id}`
     ] as const;
     }
 
@@ -235,7 +235,7 @@ export const deleteManifest = (
       
       
       return makeRequest<void>(
-      {url: `/api/manifests/${encodeURIComponent(String(id))}`, method: 'DELETE'
+      {url: `/manifests/${encodeURIComponent(String(id))}`, method: 'DELETE'
     },
       );
     }
@@ -298,7 +298,7 @@ export const listManifests = (
       
       
       return makeRequest<Manifest[]>(
-      {url: `/api/manifests`, method: 'GET',
+      {url: `/manifests`, method: 'GET',
         params, signal
     },
       );
@@ -309,7 +309,7 @@ export const listManifests = (
 
 export const getListManifestsQueryKey = (params?: ListManifestsParams,) => {
     return [
-    `/api/manifests`, ...(params ? [params]: [])
+    `/manifests`, ...(params ? [params]: [])
     ] as const;
     }
 

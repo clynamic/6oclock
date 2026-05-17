@@ -65,7 +65,7 @@ export const ticketStatus = (
       
       
       return makeRequest<TicketStatusSeriesPoint[]>(
-      {url: `/api/metrics/tickets/status`, method: 'GET',
+      {url: `/metrics/tickets/status`, method: 'GET',
         params, signal
     },
       );
@@ -76,7 +76,7 @@ export const ticketStatus = (
 
 export const getTicketStatusQueryKey = (params?: GetTicketStatusParams,) => {
     return [
-    `/api/metrics/tickets/status`, ...(params ? [params]: [])
+    `/metrics/tickets/status`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -159,7 +159,7 @@ export const ticketTypeSummary = (
       
       
       return makeRequest<TicketTypeSummary>(
-      {url: `/api/metrics/tickets/type/summary`, method: 'GET',
+      {url: `/metrics/tickets/type/summary`, method: 'GET',
         params, signal
     },
       );
@@ -170,7 +170,7 @@ export const ticketTypeSummary = (
 
 export const getTicketTypeSummaryQueryKey = (params?: GetTicketTypeSummaryParams,) => {
     return [
-    `/api/metrics/tickets/type/summary`, ...(params ? [params]: [])
+    `/metrics/tickets/type/summary`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -254,7 +254,7 @@ export const ticketTypeSummaryByHandler = (
       
       
       return makeRequest<TicketTypeSummary>(
-      {url: `/api/metrics/tickets/type/summary/by/handler/${encodeURIComponent(String(claimantId))}`, method: 'GET',
+      {url: `/metrics/tickets/type/summary/by/handler/${encodeURIComponent(String(claimantId))}`, method: 'GET',
         params, signal
     },
       );
@@ -266,7 +266,7 @@ export const ticketTypeSummaryByHandler = (
 export const getTicketTypeSummaryByHandlerQueryKey = (claimantId?: number,
     params?: GetTicketTypeSummaryByHandlerParams,) => {
     return [
-    `/api/metrics/tickets/type/summary/by/handler/${claimantId}`, ...(params ? [params]: [])
+    `/metrics/tickets/type/summary/by/handler/${claimantId}`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -354,7 +354,7 @@ export const ticketOpenSeries = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/tickets/open/series`, method: 'GET',
+      {url: `/metrics/tickets/open/series`, method: 'GET',
         params, signal
     },
       );
@@ -365,7 +365,7 @@ export const ticketOpenSeries = (
 
 export const getTicketOpenSeriesQueryKey = (params?: GetTicketOpenSeriesParams,) => {
     return [
-    `/api/metrics/tickets/open/series`, ...(params ? [params]: [])
+    `/metrics/tickets/open/series`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -448,7 +448,7 @@ export const ticketCreatedSeries = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/tickets/created/series`, method: 'GET',
+      {url: `/metrics/tickets/created/series`, method: 'GET',
         params, signal
     },
       );
@@ -459,7 +459,7 @@ export const ticketCreatedSeries = (
 
 export const getTicketCreatedSeriesQueryKey = (params?: GetTicketCreatedSeriesParams,) => {
     return [
-    `/api/metrics/tickets/created/series`, ...(params ? [params]: [])
+    `/metrics/tickets/created/series`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -543,7 +543,7 @@ export const ticketCreatedSeriesByReporter = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/tickets/created/series/by/reporter/${encodeURIComponent(String(repoterId))}`, method: 'GET',
+      {url: `/metrics/tickets/created/series/by/reporter/${encodeURIComponent(String(repoterId))}`, method: 'GET',
         params, signal
     },
       );
@@ -555,7 +555,7 @@ export const ticketCreatedSeriesByReporter = (
 export const getTicketCreatedSeriesByReporterQueryKey = (repoterId?: number,
     params?: GetTicketCreatedSeriesByReporterParams,) => {
     return [
-    `/api/metrics/tickets/created/series/by/reporter/${repoterId}`, ...(params ? [params]: [])
+    `/metrics/tickets/created/series/by/reporter/${repoterId}`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -643,7 +643,7 @@ export const ticketClosedSeries = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/tickets/closed/series`, method: 'GET',
+      {url: `/metrics/tickets/closed/series`, method: 'GET',
         params, signal
     },
       );
@@ -654,7 +654,7 @@ export const ticketClosedSeries = (
 
 export const getTicketClosedSeriesQueryKey = (params?: GetTicketClosedSeriesParams,) => {
     return [
-    `/api/metrics/tickets/closed/series`, ...(params ? [params]: [])
+    `/metrics/tickets/closed/series`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -738,7 +738,7 @@ export const ticketClosedSeriesByHandler = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/tickets/closed/series/by/handler/${encodeURIComponent(String(handlerId))}`, method: 'GET',
+      {url: `/metrics/tickets/closed/series/by/handler/${encodeURIComponent(String(handlerId))}`, method: 'GET',
         params, signal
     },
       );
@@ -750,7 +750,7 @@ export const ticketClosedSeriesByHandler = (
 export const getTicketClosedSeriesByHandlerQueryKey = (handlerId?: number,
     params?: GetTicketClosedSeriesByHandlerParams,) => {
     return [
-    `/api/metrics/tickets/closed/series/by/handler/${handlerId}`, ...(params ? [params]: [])
+    `/metrics/tickets/closed/series/by/handler/${handlerId}`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -838,7 +838,7 @@ export const ticketAgeSeries = (
       
       
       return makeRequest<TicketAgeSeriesPoint[]>(
-      {url: `/api/metrics/tickets/age/series`, method: 'GET',
+      {url: `/metrics/tickets/age/series`, method: 'GET',
         params, signal
     },
       );
@@ -849,7 +849,7 @@ export const ticketAgeSeries = (
 
 export const getTicketAgeSeriesQueryKey = (params?: GetTicketAgeSeriesParams,) => {
     return [
-    `/api/metrics/tickets/age/series`, ...(params ? [params]: [])
+    `/metrics/tickets/age/series`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -932,7 +932,7 @@ export const ticketAgeSummary = (
       
       
       return makeRequest<TicketAgeSummary>(
-      {url: `/api/metrics/tickets/age/summary`, method: 'GET',
+      {url: `/metrics/tickets/age/summary`, method: 'GET',
         params, signal
     },
       );
@@ -943,7 +943,7 @@ export const ticketAgeSummary = (
 
 export const getTicketAgeSummaryQueryKey = (params?: GetTicketAgeSummaryParams,) => {
     return [
-    `/api/metrics/tickets/age/summary`, ...(params ? [params]: [])
+    `/metrics/tickets/age/summary`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -1026,7 +1026,7 @@ export const ticketHandlerSummary = (
       
       
       return makeRequest<TicketHandlerSummary[]>(
-      {url: `/api/metrics/tickets/handler/summary`, method: 'GET',
+      {url: `/metrics/tickets/handler/summary`, method: 'GET',
         params, signal
     },
       );
@@ -1037,13 +1037,13 @@ export const ticketHandlerSummary = (
 
 export const getTicketHandlerSummaryInfiniteQueryKey = (params?: GetTicketHandlerSummaryParams,) => {
     return [
-    'infinite', `/api/metrics/tickets/handler/summary`, ...(params ? [params]: [])
+    'infinite', `/metrics/tickets/handler/summary`, ...(params ? [params]: [])
     ] as const;
     }
 
 export const getTicketHandlerSummaryQueryKey = (params?: GetTicketHandlerSummaryParams,) => {
     return [
-    `/api/metrics/tickets/handler/summary`, ...(params ? [params]: [])
+    `/metrics/tickets/handler/summary`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -1193,7 +1193,7 @@ export const ticketReporterSummary = (
       
       
       return makeRequest<TicketReporterSummary[]>(
-      {url: `/api/metrics/tickets/reporter/summary`, method: 'GET',
+      {url: `/metrics/tickets/reporter/summary`, method: 'GET',
         params, signal
     },
       );
@@ -1204,13 +1204,13 @@ export const ticketReporterSummary = (
 
 export const getTicketReporterSummaryInfiniteQueryKey = (params?: GetTicketReporterSummaryParams,) => {
     return [
-    'infinite', `/api/metrics/tickets/reporter/summary`, ...(params ? [params]: [])
+    'infinite', `/metrics/tickets/reporter/summary`, ...(params ? [params]: [])
     ] as const;
     }
 
 export const getTicketReporterSummaryQueryKey = (params?: GetTicketReporterSummaryParams,) => {
     return [
-    `/api/metrics/tickets/reporter/summary`, ...(params ? [params]: [])
+    `/metrics/tickets/reporter/summary`, ...(params ? [params]: [])
     ] as const;
     }
 

@@ -23,7 +23,7 @@ services:
     command: sh -c "while ! test -f /app/node_modules/.yarn-integrity; do sleep 2; done && yarn workspace @6oclock/web dev --host"
     env_file: .env
     environment:
-      VITE_API_URL: http://localhost:34571
+      VITE_API_URL: http://localhost:34571/api
     ports:
       - "5173:5173"
     volumes:

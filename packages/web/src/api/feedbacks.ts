@@ -43,7 +43,7 @@ export const feedbackTypeSeries = (
       
       
       return makeRequest<FeedbackTypeSeriesPoint[]>(
-      {url: `/api/metrics/feedbacks/type`, method: 'GET',
+      {url: `/metrics/feedbacks/type`, method: 'GET',
         params, signal
     },
       );
@@ -54,7 +54,7 @@ export const feedbackTypeSeries = (
 
 export const getFeedbackTypeSeriesQueryKey = (params?: GetFeedbackTypeSeriesParams,) => {
     return [
-    `/api/metrics/feedbacks/type`, ...(params ? [params]: [])
+    `/metrics/feedbacks/type`, ...(params ? [params]: [])
     ] as const;
     }
 

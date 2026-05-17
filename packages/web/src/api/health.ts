@@ -55,7 +55,7 @@ export const healthCheck = (
       
       
       return makeRequest<void>(
-      {url: `/api/health`, method: 'GET', signal
+      {url: `/health`, method: 'GET', signal
     },
       );
     }
@@ -65,7 +65,7 @@ export const healthCheck = (
 
 export const getHealthCheckQueryKey = () => {
     return [
-    `/api/health`
+    `/health`
     ] as const;
     }
 
@@ -148,7 +148,7 @@ export const manifestHealth = (
       
       
       return makeRequest<ManifestHealth[]>(
-      {url: `/api/health/manifests`, method: 'GET',
+      {url: `/health/manifests`, method: 'GET',
         params, signal
     },
       );
@@ -159,13 +159,13 @@ export const manifestHealth = (
 
 export const getManifestHealthInfiniteQueryKey = (params?: GetManifestHealthParams,) => {
     return [
-    'infinite', `/api/health/manifests`, ...(params ? [params]: [])
+    'infinite', `/health/manifests`, ...(params ? [params]: [])
     ] as const;
     }
 
 export const getManifestHealthQueryKey = (params?: GetManifestHealthParams,) => {
     return [
-    `/api/health/manifests`, ...(params ? [params]: [])
+    `/health/manifests`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -315,7 +315,7 @@ export const tileHealth = (
       
       
       return makeRequest<TileHealth[]>(
-      {url: `/api/health/tiles`, method: 'GET',
+      {url: `/health/tiles`, method: 'GET',
         params, signal
     },
       );
@@ -326,13 +326,13 @@ export const tileHealth = (
 
 export const getTileHealthInfiniteQueryKey = (params?: GetTileHealthParams,) => {
     return [
-    'infinite', `/api/health/tiles`, ...(params ? [params]: [])
+    'infinite', `/health/tiles`, ...(params ? [params]: [])
     ] as const;
     }
 
 export const getTileHealthQueryKey = (params?: GetTileHealthParams,) => {
     return [
-    `/api/health/tiles`, ...(params ? [params]: [])
+    `/health/tiles`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -481,8 +481,8 @@ export const deleteTilesByType = (
  ) => {
       
       
-      return makeRequest<void | void>(
-      {url: `/api/health/tiles/${encodeURIComponent(String(type))}`, method: 'DELETE',
+      return makeRequest<void>(
+      {url: `/health/tiles/${encodeURIComponent(String(type))}`, method: 'DELETE',
         params
     },
       );

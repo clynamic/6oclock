@@ -42,7 +42,7 @@ export const motd = (
       
       
       return makeRequest<Motd>(
-      {url: `/api/gadgets/motd`, method: 'GET', signal
+      {url: `/gadgets/motd`, method: 'GET', signal
     },
       );
     }
@@ -52,7 +52,7 @@ export const motd = (
 
 export const getMotdQueryKey = () => {
     return [
-    `/api/gadgets/motd`
+    `/gadgets/motd`
     ] as const;
     }
 
@@ -135,7 +135,7 @@ export const dailyActivity = (
       
       
       return makeRequest<DailyActivity>(
-      {url: `/api/gadgets/activity`, method: 'GET', signal
+      {url: `/gadgets/activity`, method: 'GET', signal
     },
       );
     }
@@ -145,7 +145,7 @@ export const dailyActivity = (
 
 export const getDailyActivityQueryKey = () => {
     return [
-    `/api/gadgets/activity`
+    `/gadgets/activity`
     ] as const;
     }
 
