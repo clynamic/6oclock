@@ -3,37 +3,47 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
 
 /**
  * The action that was performed on the post
  */
 export enum PostEventAction {
-  deleted= 'deleted',
-  undeleted= 'undeleted',
-  approved= 'approved',
-  unapproved= 'unapproved',
-  flag_created= 'flag_created',
-  flag_removed= 'flag_removed',
-  favorites_moved= 'favorites_moved',
-  favorites_received= 'favorites_received',
-  rating_locked= 'rating_locked',
-  rating_unlocked= 'rating_unlocked',
-  status_locked= 'status_locked',
-  status_unlocked= 'status_unlocked',
-  note_locked= 'note_locked',
-  note_unlocked= 'note_unlocked',
-  comment_locked= 'comment_locked',
-  comment_unlocked= 'comment_unlocked',
-  comment_disabled= 'comment_disabled',
-  comment_enabled= 'comment_enabled',
-  replacement_accepted= 'replacement_accepted',
-  replacement_rejected= 'replacement_rejected',
-  replacement_promoted= 'replacement_promoted',
-  replacement_deleted= 'replacement_deleted',
-  expunged= 'expunged',
-  changed_bg_color= 'changed_bg_color',
-  replacement_penalty_changed= 'replacement_penalty_changed',
-
+  deleted = 'deleted',
+  undeleted = 'undeleted',
+  approved = 'approved',
+  unapproved = 'unapproved',
+  flag_created = 'flag_created',
+  flag_removed = 'flag_removed',
+  favorites_moved = 'favorites_moved',
+  favorites_received = 'favorites_received',
+  rating_locked = 'rating_locked',
+  rating_unlocked = 'rating_unlocked',
+  status_locked = 'status_locked',
+  status_unlocked = 'status_unlocked',
+  note_locked = 'note_locked',
+  note_unlocked = 'note_unlocked',
+  comment_locked = 'comment_locked',
+  comment_unlocked = 'comment_unlocked',
+  comment_disabled = 'comment_disabled',
+  comment_enabled = 'comment_enabled',
+  replacement_accepted = 'replacement_accepted',
+  replacement_rejected = 'replacement_rejected',
+  replacement_promoted = 'replacement_promoted',
+  replacement_deleted = 'replacement_deleted',
+  expunged = 'expunged',
+  changed_bg_color = 'changed_bg_color',
+  replacement_penalty_changed = 'replacement_penalty_changed',
 }

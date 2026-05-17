@@ -3,95 +3,106 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
-import type { GetPostVersionsSearchRatingChanged } from './getPostVersionsSearchRatingChanged';
 import type { GetPostVersionsSearchRating } from './getPostVersionsSearchRating';
+import type { GetPostVersionsSearchRatingChanged } from './getPostVersionsSearchRatingChanged';
 import type { GetPostVersionsSearchUploads } from './getPostVersionsSearchUploads';
 
 export type GetPostVersionsParams = {
-/**
- * The page number for pagination
- */
-page?: number;
-/**
- * The number of post versions to retrieve per page
- */
-limit?: number;
-/**
- * Filter post versions by the updater's username
- */
-'search[updater_name]'?: string;
-/**
- * Filter post versions by post ID
- */
-'search[post_id]'?: number;
-/**
- * Filter post versions by the reason for the update
- */
-'search[reason]'?: string;
-/**
- * Filter post versions by description
- */
-'search[description]'?: string;
-/**
- * Filter post versions by whether the description was changed
- */
-'search[description_changed]'?: boolean;
-/**
- * Filter post versions by whether the rating was changed
- */
-'search[rating_changed]'?: GetPostVersionsSearchRatingChanged;
-/**
- * Filter post versions by rating
- */
-'search[rating]'?: GetPostVersionsSearchRating;
-/**
- * Filter post versions by parent post ID
- */
-'search[parent_id]'?: number;
-/**
- * Filter post versions by whether the parent ID was changed
- */
-'search[parent_id_changed]'?: boolean;
-/**
- * Filter post versions by tags
- */
-'search[tags]'?: string;
-/**
- * Filter post versions by tags added
- */
-'search[tags_added]'?: string;
-/**
- * Filter post versions by tags removed
- */
-'search[tags_removed]'?: string;
-/**
- * Filter post versions by locked tags
- */
-'search[locked_tags]'?: string;
-/**
- * Filter post versions by locked tags added
- */
-'search[locked_tags_added]'?: string;
-/**
- * Filter post versions by locked tags removed
- */
-'search[locked_tags_removed]'?: string;
-/**
- * Filter post versions by whether the source was changed
- */
-'search[source_changed]'?: boolean;
-/**
- * Filter post versions by uploads status
- */
-'search[uploads]'?: GetPostVersionsSearchUploads;
-/**
- * Filter post versions by creation date
- */
-'search[created_at]'?: string;
-/**
- * Filter post versions by last update date
- */
-'search[updated_at]'?: string;
+  /**
+   * The page number for pagination
+   */
+  page?: number;
+  /**
+   * The number of post versions to retrieve per page
+   */
+  limit?: number;
+  /**
+   * Filter post versions by the updater's username
+   */
+  'search[updater_name]'?: string;
+  /**
+   * Filter post versions by post ID
+   */
+  'search[post_id]'?: number;
+  /**
+   * Filter post versions by the reason for the update
+   */
+  'search[reason]'?: string;
+  /**
+   * Filter post versions by description
+   */
+  'search[description]'?: string;
+  /**
+   * Filter post versions by whether the description was changed
+   */
+  'search[description_changed]'?: boolean;
+  /**
+   * Filter post versions by whether the rating was changed
+   */
+  'search[rating_changed]'?: GetPostVersionsSearchRatingChanged;
+  /**
+   * Filter post versions by rating
+   */
+  'search[rating]'?: GetPostVersionsSearchRating;
+  /**
+   * Filter post versions by parent post ID
+   */
+  'search[parent_id]'?: number;
+  /**
+   * Filter post versions by whether the parent ID was changed
+   */
+  'search[parent_id_changed]'?: boolean;
+  /**
+   * Filter post versions by tags
+   */
+  'search[tags]'?: string;
+  /**
+   * Filter post versions by tags added
+   */
+  'search[tags_added]'?: string;
+  /**
+   * Filter post versions by tags removed
+   */
+  'search[tags_removed]'?: string;
+  /**
+   * Filter post versions by locked tags
+   */
+  'search[locked_tags]'?: string;
+  /**
+   * Filter post versions by locked tags added
+   */
+  'search[locked_tags_added]'?: string;
+  /**
+   * Filter post versions by locked tags removed
+   */
+  'search[locked_tags_removed]'?: string;
+  /**
+   * Filter post versions by whether the source was changed
+   */
+  'search[source_changed]'?: boolean;
+  /**
+   * Filter post versions by uploads status
+   */
+  'search[uploads]'?: GetPostVersionsSearchUploads;
+  /**
+   * Filter post versions by creation date
+   */
+  'search[created_at]'?: string;
+  /**
+   * Filter post versions by last update date
+   */
+  'search[updated_at]'?: string;
 };

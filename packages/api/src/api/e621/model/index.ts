@@ -3,21 +3,64 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
 
+export * from './apiKey';
+export * from './appeal';
+export * from './appealQtype';
+export * from './appealStatus';
 export * from './approval';
+export * from './approvePostReplacementParams';
+export * from './artist';
+export * from './artistUrl';
+export * from './artistVersion';
+export * from './avoidPosting';
+export * from './avoidPostingVersion';
+export * from './ban';
+export * from './blip';
 export * from './bulkUpdateRequest';
 export * from './bulkUpdateRequestStatus';
+export * from './comment';
+export * from './commentVote';
+export * from './commentVoteScore';
+export * from './createBulkUpdateRequestBody';
+export * from './createPostFlagBody';
+export * from './createPostFlagBodyPostFlag';
+export * from './createPostReplacement200';
+export * from './createPostReplacementBody';
+export * from './createUserBody';
+export * from './createUserBodyUser';
+export * from './dmail';
+export * from './editHistory';
+export * from './editHistoryVersionableType';
+export * from './emailBlacklist';
 export * from './file';
 export * from './fileExt';
 export * from './flags';
+export * from './forumPost';
+export * from './forumPostVote';
+export * from './forumPostVoteScore';
+export * from './forumTopic';
 export * from './getBulkUpdateRequestsParams';
 export * from './getBulkUpdateRequestsSearchOrder';
 export * from './getBulkUpdateRequestsSearchStatus';
 export * from './getModActionsParams';
 export * from './getModActionsSearchAction';
-export * from './getPostApprovalsParams';
+export * from './getPopularPostsParams';
+export * from './getPopularPostsScale';
+export * from './getPost200';
 export * from './getPostEventsParams';
 export * from './getPostEventsSearchAction';
 export * from './getPostFlagsParams';
@@ -38,43 +81,80 @@ export * from './getTagImplicationsSearchStatus';
 export * from './getTicketsParams';
 export * from './getTicketsSearchQtype';
 export * from './getTicketsSearchStatus';
-export * from './getUploadsParams';
-export * from './getUploadsSearchStatus';
 export * from './getUserFeedbacksParams';
 export * from './getUserFeedbacksSearchCategory';
 export * from './getUserFeedbacksSearchDeleted';
 export * from './getUsersParams';
 export * from './getUsersSearchOrder';
+export * from './helpPage';
+export * from './ipBan';
+export * from './iqdbQuery';
+export * from './mascot';
 export * from './modAction';
 export * from './modActionAction';
 export * from './modActionValues';
+export * from './newsUpdate';
+export * from './note';
+export * from './noteVersion';
+export * from './pool';
+export * from './poolCategory';
+export * from './poolVersion';
 export * from './post';
+export * from './postDisapproval';
+export * from './postDisapprovalReason';
 export * from './postEvent';
 export * from './postEventAction';
+export * from './postEventExtraData';
+export * from './postEventList';
 export * from './postFlag';
 export * from './postFlagType';
+export * from './postList';
 export * from './postRating';
 export * from './postReplacement';
 export * from './postReplacementStatus';
+export * from './postSet';
 export * from './postVersion';
 export * from './postVersionRating';
+export * from './postVote';
 export * from './preview';
+export * from './relatedTag';
 export * from './relationships';
+export * from './resolvePostFlagApproval';
+export * from './resolvePostFlagParams';
 export * from './sample';
 export * from './sampleAlternates';
+export * from './sampleAlternatesOriginal';
+export * from './sampleAlternatesSamples';
+export * from './sampleAlternatesVariants';
 export * from './score';
+export * from './staffNote';
+export * from './tag';
 export * from './tagAlias';
 export * from './tagAliasStatus';
 export * from './tagImplication';
 export * from './tagImplicationStatus';
+export * from './tagTypeVersion';
 export * from './tags';
+export * from './takedown';
+export * from './takedownStatus';
 export * from './ticket';
 export * from './ticketQtype';
 export * from './ticketStatus';
+export * from './updateBulkUpdateRequestBody';
+export * from './updateTicketBody';
+export * from './updateTicketBodyTicketStatus';
+export * from './updateUserBody';
+export * from './updateUserBodyUser';
+export * from './updateUserFeedbackBody';
+export * from './updateUserFeedbackBodyUserFeedback';
+export * from './updateUserFeedbackBodyUserFeedbackCategory';
 export * from './upload';
 export * from './uploadRating';
-export * from './uploadStatus';
+export * from './uploadWhitelist';
 export * from './user';
 export * from './userFeedback';
 export * from './userFeedbackCategory';
+export * from './userNameChangeRequest';
 export * from './userProfile';
+export * from './wikiPage';
+export * from './wikiPageVersion';

@@ -3,43 +3,111 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
+import { makeRequest } from '../http/axios';
 import type {
   GetUserFeedbacksParams,
-  UserFeedback
-} from './model'
-import { makeRequest } from '../http/axios';
-
-
+  UpdateUserFeedbackBody,
+  UserFeedback,
+} from './model';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
-
-  /**
+/**
  * Returns a list of user feedbacks based on search criteria.
  * @summary Get a list of user feedbacks
  */
 export const userFeedbacks = (
-    params?: GetUserFeedbacksParams,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<UserFeedback[]>(
-      {url: `/user_feedbacks.json`, method: 'GET',
-        params
-    },
-      options);
-    }
-  /**
+  params?: GetUserFeedbacksParams,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<UserFeedback[]>(
+    { url: `/user_feedbacks.json`, method: 'GET', params },
+    options,
+  );
+};
+/**
  * Returns detailed information about a specific user feedback identified by its ID.
  * @summary Get a user feedback by ID
  */
 export const userFeedback = (
-    id: number,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<UserFeedback>(
-      {url: `/user_feedbacks/${id}.json`, method: 'GET'
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<UserFeedback>(
+    { url: `/user_feedbacks/${id}.json`, method: 'GET' },
+    options,
+  );
+};
+/**
+ * Updates the body and/or category of an existing user feedback.
+ * @summary Update a user feedback
+ */
+export const updateUserFeedback = (
+  id: number,
+  updateUserFeedbackBody: UpdateUserFeedbackBody,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<UserFeedback>(
+    {
+      url: `/user_feedbacks/${id}.json`,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      data: updateUserFeedbackBody,
     },
-      options);
-    }
-  export type UserFeedbacksResult = NonNullable<Awaited<ReturnType<typeof userFeedbacks>>>
-export type UserFeedbackResult = NonNullable<Awaited<ReturnType<typeof userFeedback>>>
+    options,
+  );
+};
+/**
+ * Marks a user feedback as deleted without permanently removing it.
+ * @summary Soft-delete a user feedback
+ */
+export const deleteUserFeedback = (
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<void>(
+    { url: `/user_feedbacks/${id}/delete.json`, method: 'PUT' },
+    options,
+  );
+};
+/**
+ * Restores a previously soft-deleted user feedback.
+ * @summary Undelete a user feedback
+ */
+export const undeleteUserFeedback = (
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<void>(
+    { url: `/user_feedbacks/${id}/undelete.json`, method: 'PUT' },
+    options,
+  );
+};
+export type UserFeedbacksResult = NonNullable<
+  Awaited<ReturnType<typeof userFeedbacks>>
+>;
+export type UserFeedbackResult = NonNullable<
+  Awaited<ReturnType<typeof userFeedback>>
+>;
+export type UpdateUserFeedbackResult = NonNullable<
+  Awaited<ReturnType<typeof updateUserFeedback>>
+>;
+export type DeleteUserFeedbackResult = NonNullable<
+  Awaited<ReturnType<typeof deleteUserFeedback>>
+>;
+export type UndeleteUserFeedbackResult = NonNullable<
+  Awaited<ReturnType<typeof undeleteUserFeedback>>
+>;

@@ -3,53 +3,64 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
 import type { GetPostReplacementsSearchStatus } from './getPostReplacementsSearchStatus';
 
 export type GetPostReplacementsParams = {
-/**
- * The page number to retrieve
- */
-page?: number;
-/**
- * The number of replacements to retrieve per page
- */
-limit?: number;
-/**
- * Filter replacements by the MD5 hash of the file
- */
-'search[md5]'?: string;
-/**
- * Filter replacements by post ID
- */
-'search[post_id]'?: number;
-/**
- * Filter replacements by the creator's username
- */
-'search[creator_name]'?: string;
-/**
- * Filter replacements by the approver's username
- */
-'search[approver_name]'?: string;
-/**
- * Filter replacements by the uploader's username at approval time
- */
-'search[uploader_name_on_approve]'?: string;
-/**
- * Filter replacements by status
- */
-'search[status]'?: GetPostReplacementsSearchStatus;
-/**
- * Filter replacements by creation date
- */
-'search[created_at]'?: string;
-/**
- * Filter replacements by last update date
- */
-'search[updated_at]'?: string;
-/**
- * Filter replacements by replacement ID
- */
-'search[id]'?: string;
+  /**
+   * The page number to retrieve
+   */
+  page?: number;
+  /**
+   * The number of replacements to retrieve per page
+   */
+  limit?: number;
+  /**
+   * Filter replacements by the MD5 hash of the file
+   */
+  'search[md5]'?: string;
+  /**
+   * Filter replacements by post ID
+   */
+  'search[post_id]'?: number;
+  /**
+   * Filter replacements by the creator's username
+   */
+  'search[creator_name]'?: string;
+  /**
+   * Filter replacements by the approver's username
+   */
+  'search[approver_name]'?: string;
+  /**
+   * Filter replacements by the uploader's username at approval time
+   */
+  'search[uploader_name_on_approve]'?: string;
+  /**
+   * Filter replacements by status
+   */
+  'search[status]'?: GetPostReplacementsSearchStatus;
+  /**
+   * Filter replacements by creation date
+   */
+  'search[created_at]'?: string;
+  /**
+   * Filter replacements by last update date
+   */
+  'search[updated_at]'?: string;
+  /**
+   * Filter replacements by replacement ID
+   */
+  'search[id]'?: string;
 };

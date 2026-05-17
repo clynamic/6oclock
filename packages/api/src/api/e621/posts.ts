@@ -3,43 +3,83 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
-import type {
-  GetPostsParams,
-  Post
-} from './model'
 import { makeRequest } from '../http/axios';
-
-
+import type {
+  GetPopularPostsParams,
+  GetPost200,
+  GetPostsParams,
+  PostList,
+} from './model';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
-
-  /**
+/**
  * Returns a list of posts filtered by tags.
+
+When `v2=true`, the response uses the v2 Post format selected by `mode`
+(`basic` default, `extended`, or `thumbnail`). Otherwise the legacy
+format wrapped in `{ "posts": [...] }` is returned.
+
  * @summary Get a list of posts
  */
 export const posts = (
-    params?: GetPostsParams,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<Post[]>(
-      {url: `/posts.json`, method: 'GET',
-        params
-    },
-      options);
-    }
-  /**
+  params?: GetPostsParams,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<PostList>(
+    { url: `/posts.json`, method: 'GET', params },
+    options,
+  );
+};
+/**
  * Returns detailed information about a specific post identified by its ID.
+
+When `v2=true`, the response uses the v2 Post format selected by `mode`
+(`basic` default, `extended`, or `thumbnail`). Otherwise the legacy
+format wrapped in `{ "post": {...} }` is returned.
+
  * @summary Get a post by ID
  */
 export const post = (
-    id: number,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<Post>(
-      {url: `/posts/${id}.json`, method: 'GET'
-    },
-      options);
-    }
-  export type PostsResult = NonNullable<Awaited<ReturnType<typeof posts>>>
-export type PostResult = NonNullable<Awaited<ReturnType<typeof post>>>
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<GetPost200>(
+    { url: `/posts/${id}.json`, method: 'GET' },
+    options,
+  );
+};
+/**
+ * Returns a list of popular posts for a given date and time scale.
+
+Accepts the same `v2` and `mode` parameters as `/posts.json`.
+
+ * @summary Get popular posts
+ */
+export const popularPosts = (
+  params?: GetPopularPostsParams,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<PostList>(
+    { url: `/popular.json`, method: 'GET', params },
+    options,
+  );
+};
+export type PostsResult = NonNullable<Awaited<ReturnType<typeof posts>>>;
+export type PostResult = NonNullable<Awaited<ReturnType<typeof post>>>;
+export type PopularPostsResult = NonNullable<
+  Awaited<ReturnType<typeof popularPosts>>
+>;

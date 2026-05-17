@@ -3,30 +3,41 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
-import type {
-  GetPostEventsParams,
-  PostEvent
-} from './model'
 import { makeRequest } from '../http/axios';
-
-
+import type { GetPostEventsParams, PostEventList } from './model';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
-
-  /**
+/**
  * Returns a list of post events filtered by various criteria.
+
+When `v2=true`, the response is an unwrapped array. Otherwise the array is
+wrapped under `post_events`.
+
  * @summary Get a list of post events
  */
 export const postEvents = (
-    params?: GetPostEventsParams,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<PostEvent[]>(
-      {url: `/post_events.json`, method: 'GET',
-        params
-    },
-      options);
-    }
-  export type PostEventsResult = NonNullable<Awaited<ReturnType<typeof postEvents>>>
+  params?: GetPostEventsParams,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<PostEventList>(
+    { url: `/post_events.json`, method: 'GET', params },
+    options,
+  );
+};
+export type PostEventsResult = NonNullable<
+  Awaited<ReturnType<typeof postEvents>>
+>;

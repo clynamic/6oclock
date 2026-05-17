@@ -3,33 +3,44 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
 import type { GetModActionsSearchAction } from './getModActionsSearchAction';
 
 export type GetModActionsParams = {
-/**
- * Filter by the name of the creator of the moderation action
- */
-'search[creator_name]'?: string;
-/**
- * Filter by the ID of the creator of the moderation action
- */
-'search[creator_id]'?: number;
-/**
- * Filter by the creation date of the moderation action
- */
-'search[created_at]'?: string;
-/**
- * Filter by the last update date of the moderation action
- */
-'search[updated_at]'?: string;
-/**
- * Filter by the ID of the moderation action
- */
-'search[id]'?: string;
-/**
- * Filter by the type of moderation action
- */
-'search[action]'?: GetModActionsSearchAction;
+  /**
+   * Filter by the name of the creator of the moderation action
+   */
+  'search[creator_name]'?: string;
+  /**
+   * Filter by the ID of the creator of the moderation action
+   */
+  'search[creator_id]'?: number;
+  /**
+   * Filter by the creation date of the moderation action
+   */
+  'search[created_at]'?: string;
+  /**
+   * Filter by the last update date of the moderation action
+   */
+  'search[updated_at]'?: string;
+  /**
+   * Filter by the ID of the moderation action
+   */
+  'search[id]'?: string;
+  /**
+   * Filter by the type of moderation action
+   */
+  'search[action]'?: GetModActionsSearchAction;
 };

@@ -3,15 +3,29 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
 
 /**
  * The file extension (e.g., jpg, png, webm)
  */
 export enum FileExt {
-  jpg= 'jpg',
-  png= 'png',
-  webm= 'webm',
-
+  jpg = 'jpg',
+  png = 'png',
+  gif = 'gif',
+  webm = 'webm',
+  mp4 = 'mp4',
+  swf = 'swf',
+  apng = 'apng',
 }
