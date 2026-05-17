@@ -1,5 +1,5 @@
 import { Box, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 export const AppLogo = () => {
   return (

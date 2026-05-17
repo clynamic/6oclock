@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { WifiTetheringOff } from '@mui/icons-material';
 import { Stack, Typography } from '@mui/material';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router';
 
 import { useHealthCheck } from '../api';
 import { Page } from '../page/Page';

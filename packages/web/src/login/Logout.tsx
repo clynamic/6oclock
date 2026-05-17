@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Logout } from '@mui/icons-material';
 import { CircularProgress, Stack, Typography } from '@mui/material';
 import { useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { useAuth } from '../auth/context';
 import { Page } from '../page/Page';

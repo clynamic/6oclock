@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import MD5 from 'crypto-js/md5';
 import { addHours, isBefore } from 'date-fns';
-import { Outlet, matchPath, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, matchPath, useLocation, useNavigate } from 'react-router';
 
 import { checkAuthToken } from '../http/credentials';
 import { useAuth } from './context';

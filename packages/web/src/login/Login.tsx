@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router';
 
 import { useAuth } from '../auth/context';
 import { getAuthToken } from '../http/credentials';

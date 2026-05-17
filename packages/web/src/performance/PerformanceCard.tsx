@@ -1,6 +1,6 @@
 import { ArrowForward, Whatshot } from '@mui/icons-material';
 import { Box, Button, Skeleton, Stack, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { usePerformance } from '../api';
 import { LimitedList } from '../common/LimitedList';

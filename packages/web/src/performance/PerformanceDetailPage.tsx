@@ -10,7 +10,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { SparkLineChart } from '@mui/x-charts';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import { usePerformance } from '../api';
 import { QueryHint } from '../common/QueryHint';

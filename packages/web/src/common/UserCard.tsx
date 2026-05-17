@@ -1,6 +1,6 @@
 import { OpenInNew } from '@mui/icons-material';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { useUserHead } from '../api';
 import { useChartValue } from '../utils/charts';

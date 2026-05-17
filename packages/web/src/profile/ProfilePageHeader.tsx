@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { Settings } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { useAuth } from '../auth/context';
 import { DashboardEditHeader } from '../dashboard/DashboardEditHeader';

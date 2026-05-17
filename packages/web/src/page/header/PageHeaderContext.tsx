@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 
 import { PopupState } from 'material-ui-popup-state/hooks';
-import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+import { NavigateFunction, useLocation, useNavigate } from 'react-router';
 
 import { useCurrentBreakpoint } from '../../utils/breakpoints';
 import {

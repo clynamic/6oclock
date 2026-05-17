@@ -1,5 +1,5 @@
 import { Avatar, Button } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router';
 
 import { useCurrentUserHead } from '../../auth/user';
 
