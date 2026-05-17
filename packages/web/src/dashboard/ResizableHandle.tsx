@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 
 import { ArrowBackIos } from '@mui/icons-material';
 import { Box } from '@mui/material';
-import { ReactGridLayoutProps } from 'react-grid-layout';
+import { ReactGridLayoutProps } from 'react-grid-layout/legacy';
 
 import { DashboardChildForwardProps } from './DashboardChild';
 

@@ -7,7 +7,7 @@ import {
   Responsive,
   ResponsiveProps,
   WidthProvider,
-} from 'react-grid-layout';
+} from 'react-grid-layout/legacy';
 
 import { useDashboard } from './DashboardContext';
 import { HandleDirection, ResizableHandle } from './ResizableHandle';
