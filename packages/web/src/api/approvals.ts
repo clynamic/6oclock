@@ -53,7 +53,7 @@ export const approvalCountSummary = (
       
       
       return makeRequest<ApprovalCountSummary>(
-      {url: `/api/metrics/approvals/count/summary`, method: 'GET',
+      {url: `/metrics/approvals/count/summary`, method: 'GET',
         params, signal
     },
       );
@@ -64,7 +64,7 @@ export const approvalCountSummary = (
 
 export const getApprovalCountSummaryQueryKey = (params?: GetApprovalCountSummaryParams,) => {
     return [
-    `/api/metrics/approvals/count/summary`, ...(params ? [params]: [])
+    `/metrics/approvals/count/summary`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -147,7 +147,7 @@ export const approvalCountSeries = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/approvals/count/series`, method: 'GET',
+      {url: `/metrics/approvals/count/series`, method: 'GET',
         params, signal
     },
       );
@@ -158,7 +158,7 @@ export const approvalCountSeries = (
 
 export const getApprovalCountSeriesQueryKey = (params?: GetApprovalCountSeriesParams,) => {
     return [
-    `/api/metrics/approvals/count/series`, ...(params ? [params]: [])
+    `/metrics/approvals/count/series`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -242,7 +242,7 @@ export const approvalCountSeriesByApprover = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/approvals/count/series/by/approver/${encodeURIComponent(String(approverId))}`, method: 'GET',
+      {url: `/metrics/approvals/count/series/by/approver/${encodeURIComponent(String(approverId))}`, method: 'GET',
         params, signal
     },
       );
@@ -254,7 +254,7 @@ export const approvalCountSeriesByApprover = (
 export const getApprovalCountSeriesByApproverQueryKey = (approverId?: number,
     params?: GetApprovalCountSeriesByApproverParams,) => {
     return [
-    `/api/metrics/approvals/count/series/by/approver/${approverId}`, ...(params ? [params]: [])
+    `/metrics/approvals/count/series/by/approver/${approverId}`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -342,7 +342,7 @@ export const approverSummary = (
       
       
       return makeRequest<ApproverSummary[]>(
-      {url: `/api/metrics/approvals/approver/summary`, method: 'GET',
+      {url: `/metrics/approvals/approver/summary`, method: 'GET',
         params, signal
     },
       );
@@ -353,13 +353,13 @@ export const approverSummary = (
 
 export const getApproverSummaryInfiniteQueryKey = (params?: GetApproverSummaryParams,) => {
     return [
-    'infinite', `/api/metrics/approvals/approver/summary`, ...(params ? [params]: [])
+    'infinite', `/metrics/approvals/approver/summary`, ...(params ? [params]: [])
     ] as const;
     }
 
 export const getApproverSummaryQueryKey = (params?: GetApproverSummaryParams,) => {
     return [
-    `/api/metrics/approvals/approver/summary`, ...(params ? [params]: [])
+    `/metrics/approvals/approver/summary`, ...(params ? [params]: [])
     ] as const;
     }
 

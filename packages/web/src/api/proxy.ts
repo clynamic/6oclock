@@ -32,13 +32,13 @@ import type { ErrorType } from '../http/axios';
  * @summary Proxy request to static host
  */
 export const proxyRequest = (
-    
+    path: string,
  signal?: AbortSignal
 ) => {
       
       
       return makeRequest<void>(
-      {url: `/api/proxy/*`, method: 'GET', signal
+      {url: `/proxy/${encodeURIComponent(String(path))}`, method: 'GET', signal
     },
       );
     }
@@ -46,29 +46,29 @@ export const proxyRequest = (
 
 
 
-export const getProxyRequestQueryKey = () => {
+export const getProxyRequestQueryKey = (path?: string,) => {
     return [
-    `/api/proxy/*`
+    `/proxy/${path}`
     ] as const;
     }
 
     
-export const getProxyRequestQueryOptions = <TData = Awaited<ReturnType<typeof proxyRequest>>, TError = ErrorType<void>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>>, }
+export const getProxyRequestQueryOptions = <TData = Awaited<ReturnType<typeof proxyRequest>>, TError = ErrorType<void>>(path: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getProxyRequestQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getProxyRequestQueryKey(path);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof proxyRequest>>> = ({ signal }) => proxyRequest(signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof proxyRequest>>> = ({ signal }) => proxyRequest(path, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: !!(path), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
 export type ProxyRequestQueryResult = NonNullable<Awaited<ReturnType<typeof proxyRequest>>>
@@ -76,7 +76,7 @@ export type ProxyRequestQueryError = ErrorType<void>
 
 
 export function useProxyRequest<TData = Awaited<ReturnType<typeof proxyRequest>>, TError = ErrorType<void>>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>> & Pick<
+ path: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof proxyRequest>>,
           TError,
@@ -86,7 +86,7 @@ export function useProxyRequest<TData = Awaited<ReturnType<typeof proxyRequest>>
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useProxyRequest<TData = Awaited<ReturnType<typeof proxyRequest>>, TError = ErrorType<void>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>> & Pick<
+ path: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof proxyRequest>>,
           TError,
@@ -96,7 +96,7 @@ export function useProxyRequest<TData = Awaited<ReturnType<typeof proxyRequest>>
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useProxyRequest<TData = Awaited<ReturnType<typeof proxyRequest>>, TError = ErrorType<void>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>>, }
+ path: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
@@ -104,11 +104,11 @@ export function useProxyRequest<TData = Awaited<ReturnType<typeof proxyRequest>>
  */
 
 export function useProxyRequest<TData = Awaited<ReturnType<typeof proxyRequest>>, TError = ErrorType<void>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>>, }
+ path: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>>, }
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getProxyRequestQueryOptions(options)
+  const queryOptions = getProxyRequestQueryOptions(path,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

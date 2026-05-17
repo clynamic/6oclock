@@ -47,7 +47,7 @@ export const postReplacementCreated = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/post-replacements/created`, method: 'GET',
+      {url: `/metrics/post-replacements/created`, method: 'GET',
         params, signal
     },
       );
@@ -58,7 +58,7 @@ export const postReplacementCreated = (
 
 export const getPostReplacementCreatedQueryKey = (params?: GetPostReplacementCreatedParams,) => {
     return [
-    `/api/metrics/post-replacements/created`, ...(params ? [params]: [])
+    `/metrics/post-replacements/created`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -141,7 +141,7 @@ export const postReplacementStatus = (
       
       
       return makeRequest<PostReplacementStatusPoint[]>(
-      {url: `/api/metrics/post-replacements/status`, method: 'GET',
+      {url: `/metrics/post-replacements/status`, method: 'GET',
         params, signal
     },
       );
@@ -152,7 +152,7 @@ export const postReplacementStatus = (
 
 export const getPostReplacementStatusQueryKey = (params?: GetPostReplacementStatusParams,) => {
     return [
-    `/api/metrics/post-replacements/status`, ...(params ? [params]: [])
+    `/metrics/post-replacements/status`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -235,7 +235,7 @@ export const postReplacementHandled = (
       
       
       return makeRequest<PostReplacementHandledPoint[]>(
-      {url: `/api/metrics/post-replacements/handled`, method: 'GET',
+      {url: `/metrics/post-replacements/handled`, method: 'GET',
         params, signal
     },
       );
@@ -246,7 +246,7 @@ export const postReplacementHandled = (
 
 export const getPostReplacementHandledQueryKey = (params?: GetPostReplacementHandledParams,) => {
     return [
-    `/api/metrics/post-replacements/handled`, ...(params ? [params]: [])
+    `/metrics/post-replacements/handled`, ...(params ? [params]: [])
     ] as const;
     }
 

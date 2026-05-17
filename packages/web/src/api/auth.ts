@@ -47,7 +47,7 @@ export const login = (
       
       
       return makeRequest<string>(
-      {url: `/api/auth/login`, method: 'POST',
+      {url: `/auth/login`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: userCredentials, signal
     },
@@ -112,7 +112,7 @@ export const validateToken = (
       
       
       return makeRequest<boolean>(
-      {url: `/api/auth/validate`, method: 'POST',
+      {url: `/auth/validate`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: tokenValidation, signal
     },
@@ -176,8 +176,8 @@ export const isAdmin = (
 ) => {
       
       
-      return makeRequest<boolean | boolean>(
-      {url: `/api/auth/is-admin`, method: 'GET', signal
+      return makeRequest<boolean>(
+      {url: `/auth/is-admin`, method: 'GET', signal
     },
       );
     }
@@ -187,7 +187,7 @@ export const isAdmin = (
 
 export const getIsAdminQueryKey = () => {
     return [
-    `/api/auth/is-admin`
+    `/auth/is-admin`
     ] as const;
     }
 

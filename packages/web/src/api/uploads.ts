@@ -50,7 +50,7 @@ export const uploadCount = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/uploads/count`, method: 'GET',
+      {url: `/metrics/uploads/count`, method: 'GET',
         params, signal
     },
       );
@@ -61,7 +61,7 @@ export const uploadCount = (
 
 export const getUploadCountQueryKey = (params?: GetUploadCountParams,) => {
     return [
-    `/api/metrics/uploads/count`, ...(params ? [params]: [])
+    `/metrics/uploads/count`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -144,7 +144,7 @@ export const postUploaderSummary = (
       
       
       return makeRequest<PostUploaderSummary[]>(
-      {url: `/api/metrics/uploads/uploader/summary`, method: 'GET',
+      {url: `/metrics/uploads/uploader/summary`, method: 'GET',
         params, signal
     },
       );
@@ -155,13 +155,13 @@ export const postUploaderSummary = (
 
 export const getPostUploaderSummaryInfiniteQueryKey = (params?: GetPostUploaderSummaryParams,) => {
     return [
-    'infinite', `/api/metrics/uploads/uploader/summary`, ...(params ? [params]: [])
+    'infinite', `/metrics/uploads/uploader/summary`, ...(params ? [params]: [])
     ] as const;
     }
 
 export const getPostUploaderSummaryQueryKey = (params?: GetPostUploaderSummaryParams,) => {
     return [
-    `/api/metrics/uploads/uploader/summary`, ...(params ? [params]: [])
+    `/metrics/uploads/uploader/summary`, ...(params ? [params]: [])
     ] as const;
     }
 

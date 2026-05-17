@@ -45,7 +45,7 @@ export const postStatusSummary = (
       
       
       return makeRequest<PostStatusSummary>(
-      {url: `/api/metrics/posts/status/summary`, method: 'GET',
+      {url: `/metrics/posts/status/summary`, method: 'GET',
         params, signal
     },
       );
@@ -56,7 +56,7 @@ export const postStatusSummary = (
 
 export const getPostStatusSummaryQueryKey = (params?: GetPostStatusSummaryParams,) => {
     return [
-    `/api/metrics/posts/status/summary`, ...(params ? [params]: [])
+    `/metrics/posts/status/summary`, ...(params ? [params]: [])
     ] as const;
     }
 
@@ -139,7 +139,7 @@ export const postPendingSeries = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/posts/pending/series`, method: 'GET',
+      {url: `/metrics/posts/pending/series`, method: 'GET',
         params, signal
     },
       );
@@ -150,7 +150,7 @@ export const postPendingSeries = (
 
 export const getPostPendingSeriesQueryKey = (params?: GetPostPendingSeriesParams,) => {
     return [
-    `/api/metrics/posts/pending/series`, ...(params ? [params]: [])
+    `/metrics/posts/pending/series`, ...(params ? [params]: [])
     ] as const;
     }
 

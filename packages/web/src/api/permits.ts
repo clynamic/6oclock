@@ -43,7 +43,7 @@ export const permitCount = (
       
       
       return makeRequest<SeriesCountPoint[]>(
-      {url: `/api/metrics/permits/count`, method: 'GET',
+      {url: `/metrics/permits/count`, method: 'GET',
         params, signal
     },
       );
@@ -54,7 +54,7 @@ export const permitCount = (
 
 export const getPermitCountQueryKey = (params?: GetPermitCountParams,) => {
     return [
-    `/api/metrics/permits/count`, ...(params ? [params]: [])
+    `/metrics/permits/count`, ...(params ? [params]: [])
     ] as const;
     }
 
