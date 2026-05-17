@@ -3,10 +3,20 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
 import type { UploadRating } from './uploadRating';
-import type { UploadStatus } from './uploadStatus';
 
 /**
  * An upload object representing a user's uploaded content.
@@ -52,8 +62,8 @@ export interface Upload {
   rating: UploadRating;
   /** The source URL of the upload, if provided */
   source: string;
-  /** The current status of the upload */
-  status: UploadStatus;
+  /** The current status of the upload. May include details like "duplicate: 12345" or "error: message" */
+  status: string;
   /** The tags associated with the upload */
   tag_string?: string;
   /** The timestamp when the upload was last updated */

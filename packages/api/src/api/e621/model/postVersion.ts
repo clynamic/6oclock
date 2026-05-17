@@ -3,7 +3,18 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
 import type { PostVersionRating } from './postVersionRating';
 
@@ -21,21 +32,13 @@ export interface PostVersion {
   description_changed?: boolean;
   /** The unique ID of the post version */
   id: number;
+  /** Whether this version is hidden */
+  is_hidden?: boolean;
   /**
    * The locked tags associated with the post version
    * @nullable
    */
   locked_tags?: string | null;
-  /**
-   * Obsolete tags added in this version
-   * @nullable
-   */
-  obsolete_added_tags?: string | null;
-  /**
-   * Obsolete tags removed in this version
-   * @nullable
-   */
-  obsolete_removed_tags?: string | null;
   /** Whether the parent ID was changed in this version */
   parent_changed?: boolean;
   /**
@@ -64,8 +67,6 @@ export interface PostVersion {
   source_changed?: boolean;
   /** The tags associated with the post version */
   tags: string;
-  /** The tags that remained unchanged in this version */
-  unchanged_tags?: string;
   /** The timestamp when the post version was updated */
   updated_at: Date;
   /** The ID of the user who updated the post */

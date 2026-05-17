@@ -3,44 +3,127 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
-import type {
-  GetUsersParams,
-  User,
-  UserProfile
-} from './model'
 import { makeRequest } from '../http/axios';
-
-
+import type {
+  CreateUserBody,
+  GetUsersParams,
+  UpdateUserBody,
+  User,
+  UserProfile,
+} from './model';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
-
-  /**
+/**
  * Returns a list of users based on search criteria.
  * @summary Get a list of users
  */
 export const users = (
-    params?: GetUsersParams,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<User[]>(
-      {url: `/users.json`, method: 'GET',
-        params
+  params?: GetUsersParams,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<User[]>(
+    { url: `/users.json`, method: 'GET', params },
+    options,
+  );
+};
+/**
+ * Registers a new user account. Only available when not logged in and signups are enabled.
+ * @summary Create a new user account
+ */
+export const createUser = (
+  createUserBody: CreateUserBody,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<User>(
+    {
+      url: `/users.json`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createUserBody,
     },
-      options);
-    }
-  /**
+    options,
+  );
+};
+/**
  * Returns detailed information about a user identified by their ID or username.
  * @summary Get user information by ID or username
  */
 export const user = (
-    id: string,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<UserProfile>(
-      {url: `/users/${id}.json`, method: 'GET'
+  id: string,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<UserProfile>(
+    { url: `/users/${id}.json`, method: 'GET' },
+    options,
+  );
+};
+/**
+ * Updates the currently authenticated user's account settings. Users can only update their own account unless they are an admin.
+ * @summary Update the current user's settings
+ */
+export const updateUser = (
+  id: number,
+  updateUserBody: UpdateUserBody,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<UserProfile>(
+    {
+      url: `/users/${id}.json`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: updateUserBody,
     },
-      options);
-    }
-  export type UsersResult = NonNullable<Awaited<ReturnType<typeof users>>>
-export type UserResult = NonNullable<Awaited<ReturnType<typeof user>>>
+    options,
+  );
+};
+/**
+ * Returns the currently authenticated user's full profile information.
+ * @summary Get the current authenticated user
+ */
+export const currentUser = (options?: SecondParameter<typeof makeRequest>) => {
+  return makeRequest<UserProfile>(
+    { url: `/users/me.json`, method: 'GET' },
+    options,
+  );
+};
+/**
+ * Returns detailed upload limit information for a user.
+ * @summary Get a user's upload limit information
+ */
+export const userUploadLimit = (
+  id: string,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<UserProfile>(
+    { url: `/users/${id}/upload_limit.json`, method: 'GET' },
+    options,
+  );
+};
+export type UsersResult = NonNullable<Awaited<ReturnType<typeof users>>>;
+export type CreateUserResult = NonNullable<
+  Awaited<ReturnType<typeof createUser>>
+>;
+export type UserResult = NonNullable<Awaited<ReturnType<typeof user>>>;
+export type UpdateUserResult = NonNullable<
+  Awaited<ReturnType<typeof updateUser>>
+>;
+export type CurrentUserResult = NonNullable<
+  Awaited<ReturnType<typeof currentUser>>
+>;
+export type UserUploadLimitResult = NonNullable<
+  Awaited<ReturnType<typeof userUploadLimit>>
+>;

@@ -3,30 +3,85 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
-import type {
-  GetPostVersionsParams,
-  PostVersion
-} from './model'
 import { makeRequest } from '../http/axios';
-
-
+import type { GetPostVersionsParams, PostVersion } from './model';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
-
-  /**
+/**
  * Returns a list of post versions based on search criteria.
  * @summary Get a list of post versions
  */
 export const postVersions = (
-    params?: GetPostVersionsParams,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<PostVersion[]>(
-      {url: `/post_versions.json`, method: 'GET',
-        params
-    },
-      options);
-    }
-  export type PostVersionsResult = NonNullable<Awaited<ReturnType<typeof postVersions>>>
+  params?: GetPostVersionsParams,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<PostVersion[]>(
+    { url: `/post_versions.json`, method: 'GET', params },
+    options,
+  );
+};
+/**
+ * Reverts the changes made in a specific post version.
+ * @summary Undo a post version
+ */
+export const undoPostVersion = (
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<void>(
+    { url: `/post_versions/${id}/undo.json`, method: 'PUT' },
+    options,
+  );
+};
+/**
+ * Hides a post version from public view.
+ * @summary Hide a post version
+ */
+export const hidePostVersion = (
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<unknown>(
+    { url: `/post_versions/${id}/hide.json`, method: 'PUT' },
+    options,
+  );
+};
+/**
+ * Restores a hidden post version to public view.
+ * @summary Unhide a post version
+ */
+export const unhidePostVersion = (
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<unknown>(
+    { url: `/post_versions/${id}/unhide.json`, method: 'PUT' },
+    options,
+  );
+};
+export type PostVersionsResult = NonNullable<
+  Awaited<ReturnType<typeof postVersions>>
+>;
+export type UndoPostVersionResult = NonNullable<
+  Awaited<ReturnType<typeof undoPostVersion>>
+>;
+export type HidePostVersionResult = NonNullable<
+  Awaited<ReturnType<typeof hidePostVersion>>
+>;
+export type UnhidePostVersionResult = NonNullable<
+  Awaited<ReturnType<typeof unhidePostVersion>>
+>;

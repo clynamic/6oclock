@@ -3,57 +3,68 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
 import type { GetUsersSearchOrder } from './getUsersSearchOrder';
 
 export type GetUsersParams = {
-/**
- * The page number to retrieve
- */
-page?: number;
-/**
- * The number of users to retrieve per page
- */
-limit?: number;
-/**
- * Filter by user ID
- */
-'search[id]'?: string;
-/**
- * Filter by username
- */
-'search[name]'?: string;
-/**
- * Filter by user's "About" section
- */
-'search[about]'?: string;
-/**
- * Filter by avatar ID
- */
-'search[avatar_id]'?: number;
-/**
- * Filter by user's access level
- */
-'search[level]'?: number;
-/**
- * Filter by minimum access level
- */
-'search[min_level]'?: number;
-/**
- * Filter by maximum access level
- */
-'search[max_level]'?: number;
-/**
- * Filter by upload permissions
- */
-'search[can_upload_free]'?: boolean;
-/**
- * Filter by post approval permissions
- */
-'search[can_approve_posts]'?: boolean;
-/**
- * Order the results by a specific field
- */
-'search[order]'?: GetUsersSearchOrder;
+  /**
+   * The page number to retrieve
+   */
+  page?: number;
+  /**
+   * The number of users to retrieve per page
+   */
+  limit?: number;
+  /**
+   * Filter by user ID
+   */
+  'search[id]'?: string;
+  /**
+   * Filter by username
+   */
+  'search[name]'?: string;
+  /**
+   * Filter by user's "About" section
+   */
+  'search[about]'?: string;
+  /**
+   * Filter by avatar ID
+   */
+  'search[avatar_id]'?: number;
+  /**
+   * Filter by user's access level
+   */
+  'search[level]'?: number;
+  /**
+   * Filter by minimum access level
+   */
+  'search[min_level]'?: number;
+  /**
+   * Filter by maximum access level
+   */
+  'search[max_level]'?: number;
+  /**
+   * Filter by upload permissions
+   */
+  'search[can_upload_free]'?: boolean;
+  /**
+   * Filter by post approval permissions
+   */
+  'search[can_approve_posts]'?: boolean;
+  /**
+   * Order the results by a specific field
+   */
+  'search[order]'?: GetUsersSearchOrder;
 };

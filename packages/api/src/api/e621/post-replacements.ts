@@ -3,30 +3,184 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
-import type {
-  GetPostReplacementsParams,
-  PostReplacement
-} from './model'
 import { makeRequest } from '../http/axios';
-
-
+import type {
+  ApprovePostReplacementParams,
+  CreatePostReplacement200,
+  CreatePostReplacementBody,
+  GetPostReplacementsParams,
+  Post,
+  PostReplacement,
+} from './model';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
-
-  /**
+/**
  * Returns a list of post replacements based on search criteria.
  * @summary Get a list of post replacements
  */
 export const postReplacements = (
-    params?: GetPostReplacementsParams,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<PostReplacement[]>(
-      {url: `/post_replacements.json`, method: 'GET',
-        params
+  params?: GetPostReplacementsParams,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<PostReplacement[]>(
+    { url: `/post_replacements.json`, method: 'GET', params },
+    options,
+  );
+};
+/**
+ * Creates a new post replacement for a given post.
+ * @summary Create a post replacement
+ */
+export const createPostReplacement = (
+  createPostReplacementBody: CreatePostReplacementBody,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  const formData = new FormData();
+  formData.append('post_id', createPostReplacementBody.post_id.toString());
+  if (
+    createPostReplacementBody['post_replacement[replacement_url]'] !== undefined
+  ) {
+    formData.append(
+      'post_replacement[replacement_url]',
+      createPostReplacementBody['post_replacement[replacement_url]'],
+    );
+  }
+  if (
+    createPostReplacementBody['post_replacement[replacement_file]'] !==
+    undefined
+  ) {
+    formData.append(
+      'post_replacement[replacement_file]',
+      createPostReplacementBody['post_replacement[replacement_file]'],
+    );
+  }
+  if (createPostReplacementBody['post_replacement[reason]'] !== undefined) {
+    formData.append(
+      'post_replacement[reason]',
+      createPostReplacementBody['post_replacement[reason]'],
+    );
+  }
+  if (createPostReplacementBody['post_replacement[source]'] !== undefined) {
+    formData.append(
+      'post_replacement[source]',
+      createPostReplacementBody['post_replacement[source]'],
+    );
+  }
+  if (createPostReplacementBody['post_replacement[as_pending]'] !== undefined) {
+    formData.append(
+      'post_replacement[as_pending]',
+      createPostReplacementBody['post_replacement[as_pending]'].toString(),
+    );
+  }
+
+  return makeRequest<CreatePostReplacement200>(
+    {
+      url: `/post_replacements.json`,
+      method: 'POST',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      data: formData,
     },
-      options);
-    }
-  export type PostReplacementsResult = NonNullable<Awaited<ReturnType<typeof postReplacements>>>
+    options,
+  );
+};
+/**
+ * Permanently removes a post replacement.
+ * @summary Destroy a post replacement
+ */
+export const destroyPostReplacement = (
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<PostReplacement>(
+    { url: `/post_replacements/${id}.json`, method: 'DELETE' },
+    options,
+  );
+};
+/**
+ * Approves a pending post replacement.
+ * @summary Approve a post replacement
+ */
+export const approvePostReplacement = (
+  id: number,
+  params?: ApprovePostReplacementParams,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<PostReplacement>(
+    { url: `/post_replacements/${id}/approve.json`, method: 'PUT', params },
+    options,
+  );
+};
+/**
+ * Rejects a pending post replacement.
+ * @summary Reject a post replacement
+ */
+export const rejectPostReplacement = (
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<PostReplacement>(
+    { url: `/post_replacements/${id}/reject.json`, method: 'PUT' },
+    options,
+  );
+};
+/**
+ * Promotes a post replacement to a new post.
+ * @summary Promote a post replacement
+ */
+export const promotePostReplacement = (
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<Post>(
+    { url: `/post_replacements/${id}/promote.json`, method: 'POST' },
+    options,
+  );
+};
+/**
+ * Toggles the penalize flag on a post replacement.
+ * @summary Toggle penalize on a post replacement
+ */
+export const togglePenalizePostReplacement = (
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<PostReplacement>(
+    { url: `/post_replacements/${id}/toggle_penalize.json`, method: 'PUT' },
+    options,
+  );
+};
+export type PostReplacementsResult = NonNullable<
+  Awaited<ReturnType<typeof postReplacements>>
+>;
+export type CreatePostReplacementResult = NonNullable<
+  Awaited<ReturnType<typeof createPostReplacement>>
+>;
+export type DestroyPostReplacementResult = NonNullable<
+  Awaited<ReturnType<typeof destroyPostReplacement>>
+>;
+export type ApprovePostReplacementResult = NonNullable<
+  Awaited<ReturnType<typeof approvePostReplacement>>
+>;
+export type RejectPostReplacementResult = NonNullable<
+  Awaited<ReturnType<typeof rejectPostReplacement>>
+>;
+export type PromotePostReplacementResult = NonNullable<
+  Awaited<ReturnType<typeof promotePostReplacement>>
+>;
+export type TogglePenalizePostReplacementResult = NonNullable<
+  Awaited<ReturnType<typeof togglePenalizePostReplacement>>
+>;

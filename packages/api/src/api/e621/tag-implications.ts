@@ -3,43 +3,53 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
-import type {
-  GetTagImplicationsParams,
-  TagImplication
-} from './model'
 import { makeRequest } from '../http/axios';
-
-
+import type { GetTagImplicationsParams, TagImplication } from './model';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
-
-  /**
+/**
  * Returns a list of tag implications filtered by various criteria.
  * @summary Get a list of tag implications
  */
 export const tagImplications = (
-    params?: GetTagImplicationsParams,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<TagImplication[]>(
-      {url: `/tag_implications.json`, method: 'GET',
-        params
-    },
-      options);
-    }
-  /**
+  params?: GetTagImplicationsParams,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<TagImplication[]>(
+    { url: `/tag_implications.json`, method: 'GET', params },
+    options,
+  );
+};
+/**
  * Returns detailed information about a specific tag implication identified by its ID.
  * @summary Get a tag implication by ID
  */
 export const tagImplication = (
-    id: number,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<TagImplication>(
-      {url: `/tag_implications/${id}.json`, method: 'GET'
-    },
-      options);
-    }
-  export type TagImplicationsResult = NonNullable<Awaited<ReturnType<typeof tagImplications>>>
-export type TagImplicationResult = NonNullable<Awaited<ReturnType<typeof tagImplication>>>
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<TagImplication>(
+    { url: `/tag_implications/${id}.json`, method: 'GET' },
+    options,
+  );
+};
+export type TagImplicationsResult = NonNullable<
+  Awaited<ReturnType<typeof tagImplications>>
+>;
+export type TagImplicationResult = NonNullable<
+  Awaited<ReturnType<typeof tagImplication>>
+>;

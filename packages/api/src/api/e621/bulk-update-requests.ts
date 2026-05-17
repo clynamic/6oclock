@@ -3,43 +3,133 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
+import { makeRequest } from '../http/axios';
 import type {
   BulkUpdateRequest,
-  GetBulkUpdateRequestsParams
-} from './model'
-import { makeRequest } from '../http/axios';
-
-
+  CreateBulkUpdateRequestBody,
+  GetBulkUpdateRequestsParams,
+  UpdateBulkUpdateRequestBody,
+} from './model';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
-
-  /**
+/**
  * Returns a list of bulk update requests filtered by various criteria.
  * @summary Get a list of bulk update requests
  */
 export const bulkUpdateRequests = (
-    params?: GetBulkUpdateRequestsParams,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<BulkUpdateRequest[]>(
-      {url: `/bulk_update_requests.json`, method: 'GET',
-        params
+  params?: GetBulkUpdateRequestsParams,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<BulkUpdateRequest[]>(
+    { url: `/bulk_update_requests.json`, method: 'GET', params },
+    options,
+  );
+};
+/**
+ * Creates a new bulk update request.
+ * @summary Create a bulk update request
+ */
+export const createBulkUpdateRequest = (
+  createBulkUpdateRequestBody: CreateBulkUpdateRequestBody,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<BulkUpdateRequest>(
+    {
+      url: `/bulk_update_requests.json`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createBulkUpdateRequestBody,
     },
-      options);
-    }
-  /**
+    options,
+  );
+};
+/**
  * Returns detailed information about a specific bulk update request identified by its ID.
  * @summary Get a bulk update request by ID
  */
 export const bulkUpdateRequest = (
-    id: number,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<BulkUpdateRequest>(
-      {url: `/bulk_update_requests/${id}.json`, method: 'GET'
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<BulkUpdateRequest>(
+    { url: `/bulk_update_requests/${id}.json`, method: 'GET' },
+    options,
+  );
+};
+/**
+ * Updates an existing bulk update request. Only the creator or admin can update.
+ * @summary Update a bulk update request
+ */
+export const updateBulkUpdateRequest = (
+  id: number,
+  updateBulkUpdateRequestBody: UpdateBulkUpdateRequestBody,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<BulkUpdateRequest>(
+    {
+      url: `/bulk_update_requests/${id}.json`,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      data: updateBulkUpdateRequestBody,
     },
-      options);
-    }
-  export type BulkUpdateRequestsResult = NonNullable<Awaited<ReturnType<typeof bulkUpdateRequests>>>
-export type BulkUpdateRequestResult = NonNullable<Awaited<ReturnType<typeof bulkUpdateRequest>>>
+    options,
+  );
+};
+/**
+ * Rejects a bulk update request. Only the creator or admin can reject.
+ * @summary Reject a bulk update request
+ */
+export const destroyBulkUpdateRequest = (
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<BulkUpdateRequest>(
+    { url: `/bulk_update_requests/${id}.json`, method: 'DELETE' },
+    options,
+  );
+};
+/**
+ * Approves and executes a bulk update request.
+ * @summary Approve a bulk update request
+ */
+export const approveBulkUpdateRequest = (
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<BulkUpdateRequest>(
+    { url: `/bulk_update_requests/${id}/approve.json`, method: 'POST' },
+    options,
+  );
+};
+export type BulkUpdateRequestsResult = NonNullable<
+  Awaited<ReturnType<typeof bulkUpdateRequests>>
+>;
+export type CreateBulkUpdateRequestResult = NonNullable<
+  Awaited<ReturnType<typeof createBulkUpdateRequest>>
+>;
+export type BulkUpdateRequestResult = NonNullable<
+  Awaited<ReturnType<typeof bulkUpdateRequest>>
+>;
+export type UpdateBulkUpdateRequestResult = NonNullable<
+  Awaited<ReturnType<typeof updateBulkUpdateRequest>>
+>;
+export type DestroyBulkUpdateRequestResult = NonNullable<
+  Awaited<ReturnType<typeof destroyBulkUpdateRequest>>
+>;
+export type ApproveBulkUpdateRequestResult = NonNullable<
+  Awaited<ReturnType<typeof approveBulkUpdateRequest>>
+>;

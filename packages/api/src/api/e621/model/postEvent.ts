@@ -3,9 +3,21 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
 import type { PostEventAction } from './postEventAction';
+import type { PostEventExtraData } from './postEventExtraData';
 
 export interface PostEvent {
   /** The action that was performed on the post */
@@ -14,6 +26,11 @@ export interface PostEvent {
   created_at: Date;
   /** The ID of the user who performed the action */
   creator_id: number;
+  /**
+   * Additional contextual data about the event
+   * @nullable
+   */
+  extra_data: PostEventExtraData;
   /** The unique ID of the post event */
   id: number;
   /** The ID of the post that was affected */

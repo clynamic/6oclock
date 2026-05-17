@@ -3,50 +3,61 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
-import type { GetBulkUpdateRequestsSearchStatus } from './getBulkUpdateRequestsSearchStatus';
 import type { GetBulkUpdateRequestsSearchOrder } from './getBulkUpdateRequestsSearchOrder';
+import type { GetBulkUpdateRequestsSearchStatus } from './getBulkUpdateRequestsSearchStatus';
 
 export type GetBulkUpdateRequestsParams = {
-/**
- * The page number to retrieve
- */
-page?: number;
-/**
- * The number of bulk update requests to retrieve per page
- */
-limit?: number;
-/**
- * Filter by the username of the creator
- */
-'search[user_name]'?: string;
-/**
- * Filter by the username of the approver
- */
-'search[approver_name]'?: string;
-/**
- * Filter by the title of the request
- */
-'search[title_matches]'?: string;
-/**
- * Filter by script content in the request
- */
-'search[script_matches]'?: string;
-/**
- * Filter by the status of the request
- */
-'search[status]'?: GetBulkUpdateRequestsSearchStatus;
-/**
- * Order the results by a specific field
- */
-'search[order]'?: GetBulkUpdateRequestsSearchOrder;
-/**
- * Filter by the creation date of the request
- */
-'search[created_at]'?: string;
-/**
- * Filter by the last update date of the request
- */
-'search[updated_at]'?: string;
+  /**
+   * The page number to retrieve
+   */
+  page?: number;
+  /**
+   * The number of bulk update requests to retrieve per page
+   */
+  limit?: number;
+  /**
+   * Filter by the username of the creator
+   */
+  'search[user_name]'?: string;
+  /**
+   * Filter by the username of the approver
+   */
+  'search[approver_name]'?: string;
+  /**
+   * Filter by the title of the request
+   */
+  'search[title_matches]'?: string;
+  /**
+   * Filter by script content in the request
+   */
+  'search[script_matches]'?: string;
+  /**
+   * Filter by the status of the request
+   */
+  'search[status]'?: GetBulkUpdateRequestsSearchStatus;
+  /**
+   * Order the results by a specific field
+   */
+  'search[order]'?: GetBulkUpdateRequestsSearchOrder;
+  /**
+   * Filter by the creation date of the request
+   */
+  'search[created_at]'?: string;
+  /**
+   * Filter by the last update date of the request
+   */
+  'search[updated_at]'?: string;
 };

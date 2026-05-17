@@ -3,54 +3,69 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
 import type { GetTicketsSearchQtype } from './getTicketsSearchQtype';
 import type { GetTicketsSearchStatus } from './getTicketsSearchStatus';
 
 export type GetTicketsParams = {
-/**
- * The page number to retrieve
- */
-page?: number;
-/**
- * The number of tickets to retrieve per page
- */
-limit?: number;
-/**
- * Filter by the creation date of the ticket
- */
-'search[created_at]'?: string;
-/**
- * Filter by the last update date of the ticket
- */
-'search[updated_at]'?: string;
-/**
- * Filter by ticket ID
- */
-'search[id]'?: string;
-/**
- * Filter by the creator's username
- */
-'search[creator_name]'?: string;
-/**
- * Filter by the accused user's username
- */
-'search[accused_name]'?: string;
-/**
- * Filter by the claimant's username
- */
-'search[claimant_name]'?: string;
-/**
- * Filter by the reason for the ticket
- */
-'search[reason]'?: string;
-/**
- * Filter by the type of the ticket (e.g., user, comment, post)
- */
-'search[qtype]'?: GetTicketsSearchQtype;
-/**
- * Filter by the status of the ticket
- */
-'search[status]'?: GetTicketsSearchStatus;
+  /**
+   * The page number to retrieve
+   */
+  page?: number;
+  /**
+   * The number of tickets to retrieve per page
+   */
+  limit?: number;
+  /**
+   * Filter by the creation date of the ticket
+   */
+  'search[created_at]'?: string;
+  /**
+   * Filter by the last update date of the ticket
+   */
+  'search[updated_at]'?: string;
+  /**
+   * Filter by ticket ID
+   */
+  'search[id]'?: string;
+  /**
+   * Filter by the creator's username
+   */
+  'search[creator_name]'?: string;
+  /**
+   * Filter by the accused user's username
+   */
+  'search[accused_name]'?: string;
+  /**
+   * Filter by the claimant's username
+   */
+  'search[claimant_name]'?: string;
+  /**
+   * Filter by the reason for the ticket
+   */
+  'search[reason]'?: string;
+  /**
+   * Filter by the type of the ticket (e.g., user, comment, post)
+   */
+  'search[qtype]'?: GetTicketsSearchQtype;
+  /**
+   * Filter by the status of the ticket
+   */
+  'search[status]'?: GetTicketsSearchStatus;
+  /**
+   * Filter by the reported content ID
+   */
+  'search[disp_id]'?: number;
 };

@@ -3,43 +3,110 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
-import type {
-  GetPostFlagsParams,
-  PostFlag
-} from './model'
 import { makeRequest } from '../http/axios';
-
-
+import type {
+  CreatePostFlagBody,
+  GetPostFlagsParams,
+  PostFlag,
+  ResolvePostFlagParams,
+} from './model';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
-
-  /**
+/**
  * Returns a list of post flags based on search criteria.
  * @summary Get a list of post flags
  */
 export const postFlags = (
-    params?: GetPostFlagsParams,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<PostFlag[]>(
-      {url: `/post_flags.json`, method: 'GET',
-        params
+  params?: GetPostFlagsParams,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<PostFlag[]>(
+    { url: `/post_flags.json`, method: 'GET', params },
+    options,
+  );
+};
+/**
+ * Creates a new flag or deletion request for a post.
+ * @summary Create a post flag
+ */
+export const createPostFlag = (
+  createPostFlagBody: CreatePostFlagBody,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<PostFlag>(
+    {
+      url: `/post_flags.json`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createPostFlagBody,
     },
-      options);
-    }
-  /**
+    options,
+  );
+};
+/**
  * Returns detailed information about a specific post flag identified by its ID.
  * @summary Get a post flag by ID
  */
 export const postFlag = (
-    id: number,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<PostFlag>(
-      {url: `/post_flags/${id}.json`, method: 'GET'
-    },
-      options);
-    }
-  export type PostFlagsResult = NonNullable<Awaited<ReturnType<typeof postFlags>>>
-export type PostFlagResult = NonNullable<Awaited<ReturnType<typeof postFlag>>>
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<PostFlag>(
+    { url: `/post_flags/${id}.json`, method: 'GET' },
+    options,
+  );
+};
+/**
+ * Removes the note from the specified post flag.
+ * @summary Clear a post flag note
+ */
+export const clearPostFlagNote = (
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<PostFlag>(
+    { url: `/post_flags/${id}/clear_note.json`, method: 'POST' },
+    options,
+  );
+};
+/**
+ * Resolves the active flag on a post, optionally approving the post.
+ * @summary Resolve a post flag
+ */
+export const resolvePostFlag = (
+  postId: number,
+  params?: ResolvePostFlagParams,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<void>(
+    { url: `/posts/${postId}/flag.json`, method: 'DELETE', params },
+    options,
+  );
+};
+export type PostFlagsResult = NonNullable<
+  Awaited<ReturnType<typeof postFlags>>
+>;
+export type CreatePostFlagResult = NonNullable<
+  Awaited<ReturnType<typeof createPostFlag>>
+>;
+export type PostFlagResult = NonNullable<Awaited<ReturnType<typeof postFlag>>>;
+export type ClearPostFlagNoteResult = NonNullable<
+  Awaited<ReturnType<typeof clearPostFlagNote>>
+>;
+export type ResolvePostFlagResult = NonNullable<
+  Awaited<ReturnType<typeof resolvePostFlag>>
+>;

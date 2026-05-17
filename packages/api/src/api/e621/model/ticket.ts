@@ -3,7 +3,18 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
 import type { TicketQtype } from './ticketQtype';
 import type { TicketStatus } from './ticketStatus';
@@ -26,7 +37,7 @@ export interface Ticket {
   created_at: Date;
   /** The ID of the user who created the ticket */
   creator_id: number;
-  /** The post ID associated with the ticket */
+  /** The ID of the reported content associated with the ticket */
   disp_id: number;
   /** The ID of the user handling the ticket */
   handler_id: number;

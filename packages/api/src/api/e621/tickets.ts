@@ -3,43 +3,103 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
-import type {
-  GetTicketsParams,
-  Ticket
-} from './model'
 import { makeRequest } from '../http/axios';
-
-
+import type { GetTicketsParams, Ticket, UpdateTicketBody } from './model';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
-
-  /**
+/**
  * Returns a list of tickets based on search criteria.
  * @summary Get a list of tickets
  */
 export const tickets = (
-    params?: GetTicketsParams,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<Ticket[]>(
-      {url: `/tickets.json`, method: 'GET',
-        params
-    },
-      options);
-    }
-  /**
+  params?: GetTicketsParams,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<Ticket[]>(
+    { url: `/tickets.json`, method: 'GET', params },
+    options,
+  );
+};
+/**
  * Returns detailed information about a specific ticket identified by its ID.
  * @summary Get a ticket by ID
  */
 export const ticket = (
-    id: number,
- options?: SecondParameter<typeof makeRequest>,) => {
-      return makeRequest<Ticket>(
-      {url: `/tickets/${id}.json`, method: 'GET'
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<Ticket>(
+    { url: `/tickets/${id}.json`, method: 'GET' },
+    options,
+  );
+};
+/**
+ * Updates a ticket's status and response. Automatically claims the ticket for the current user.
+ * @summary Update a ticket
+ */
+export const updateTicket = (
+  id: number,
+  updateTicketBody: UpdateTicketBody,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<Ticket>(
+    {
+      url: `/tickets/${id}.json`,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      data: updateTicketBody,
     },
-      options);
-    }
-  export type TicketsResult = NonNullable<Awaited<ReturnType<typeof tickets>>>
-export type TicketResult = NonNullable<Awaited<ReturnType<typeof ticket>>>
+    options,
+  );
+};
+/**
+ * Claims a pending ticket to indicate you are handling it.
+ * @summary Claim a ticket
+ */
+export const claimTicket = (
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<Ticket>(
+    { url: `/tickets/${id}/claim.json`, method: 'POST' },
+    options,
+  );
+};
+/**
+ * Releases your claim on a ticket so others can handle it.
+ * @summary Unclaim a ticket
+ */
+export const unclaimTicket = (
+  id: number,
+  options?: SecondParameter<typeof makeRequest>,
+) => {
+  return makeRequest<Ticket>(
+    { url: `/tickets/${id}/unclaim.json`, method: 'POST' },
+    options,
+  );
+};
+export type TicketsResult = NonNullable<Awaited<ReturnType<typeof tickets>>>;
+export type TicketResult = NonNullable<Awaited<ReturnType<typeof ticket>>>;
+export type UpdateTicketResult = NonNullable<
+  Awaited<ReturnType<typeof updateTicket>>
+>;
+export type ClaimTicketResult = NonNullable<
+  Awaited<ReturnType<typeof claimTicket>>
+>;
+export type UnclaimTicketResult = NonNullable<
+  Awaited<ReturnType<typeof unclaimTicket>>
+>;

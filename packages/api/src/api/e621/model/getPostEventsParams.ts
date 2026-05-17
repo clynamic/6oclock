@@ -3,41 +3,52 @@
  * Do not edit manually.
  * e621 API
  * An API for accessing user information and other resources on e621 and e926.
- * OpenAPI spec version: 1.0.0
+
+## Authentication
+
+Endpoints with `x-access-level` above `anonymous` require authentication.
+Credentials are the account username and an API key issued by `/api_keys.json`,
+submitted as either HTTP Basic (username, API key) or the query/body parameters
+`login` and `api_key`.
+
+The `x-access-level` extension declares the minimum privilege level for an
+operation: `anonymous`, `logged_in`, `member`, `janitor`, `moderator`, `admin`.
+
+ * OpenAPI spec version: dadc1e4c50658851c0205e6ecbfa4723a976b0ab
  */
 import type { GetPostEventsSearchAction } from './getPostEventsSearchAction';
 
 export type GetPostEventsParams = {
-/**
- * The page number to retrieve
- */
-page?: number;
-/**
- * The number of post events to retrieve per page
- */
-limit?: number;
-/**
- * Filter by post ID
- */
-'search[post_id]'?: number;
-/**
- * Filter by the creator's username
- */
-'search[creator_name]'?: string;
-/**
- * Filter by the creator's ID
- */
-'search[creator_id]'?: number;
-/**
- * Filter by the action performed
- */
-'search[action]'?: GetPostEventsSearchAction;
-/**
- * Filter by the creation date of the event
- */
-'search[created_at]'?: string;
-/**
- * Filter by event ID
- */
-'search[id]'?: string;
+  /**
+   * The page number to retrieve
+   */
+  page?: number;
+  /**
+   * The number of post events to retrieve per page
+   */
+  limit?: number;
+  /**
+   * Filter by post ID
+   */
+  'search[post_id]'?: number;
+  /**
+   * Filter by the creator's username
+   */
+  'search[creator_name]'?: string;
+  /**
+   * Filter by the creator's ID
+   */
+  'search[creator_id]'?: number;
+  /**
+   * Filter by the action performed
+   */
+  'search[action]'?: GetPostEventsSearchAction;
+  /**
+   * Filter by the creation date of the event
+   */
+  'search[created_at]'?: string;
+  /**
+   * Filter by event ID
+   */
+  'search[id]'?: string;
 };
