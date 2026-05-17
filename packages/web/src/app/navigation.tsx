@@ -1,6 +1,6 @@
 import { ReactElement, Suspense, lazy } from 'react';
 
-import { Route, useParams } from 'react-router-dom';
+import { Route, useParams } from 'react-router';
 
 import { useIsAdmin } from '../api';
 import { useAuth } from '../auth/context';

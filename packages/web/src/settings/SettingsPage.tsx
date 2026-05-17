@@ -1,6 +1,6 @@
 import { Logout, Shield, ShieldOutlined } from '@mui/icons-material';
 import { Button, Card, CardContent, Stack, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { Page } from '../page/Page';
 import { PageBody } from '../page/PageBody';

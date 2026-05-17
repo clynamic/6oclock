@@ -1,6 +1,6 @@
 import { ArrowForward } from '@mui/icons-material';
 import { Button, Stack } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { useManifestHealth } from '../../api';
 import { LimitedList } from '../../common/LimitedList';

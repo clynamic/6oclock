@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { addDays, addMonths, addWeeks, addYears, format } from 'date-fns';
 import { mix } from 'polished';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { PerformanceGrade, TrendGrade, usePerformance } from '../api';
 import { QueryHint } from '../common/QueryHint';

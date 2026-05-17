@@ -7,7 +7,7 @@ import {
   Skeleton,
   Stack,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { PerformanceSummary } from '../api';
 import { RankingText } from '../common/RankingText';

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import { UserArea, useUserHead } from '../api';
 import { DashboardBody } from '../dashboard/DashboardBody';

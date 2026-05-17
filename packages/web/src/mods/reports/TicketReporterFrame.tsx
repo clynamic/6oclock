@@ -5,7 +5,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { TicketReporterSummary } from '../../api';
 import { UserAvatar } from '../../common/UserAvatar';

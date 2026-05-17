@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { Fragment } from 'react/jsx-runtime';
 
 import { AppLogo } from '../../common/AppLogo';
