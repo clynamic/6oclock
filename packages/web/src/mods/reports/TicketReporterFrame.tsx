@@ -28,18 +28,19 @@ export const TicketReporterFrame: React.FC<TicketReporterFrameProps> = ({
       >
         <Stack
           direction="row"
-          p={2}
           spacing={2}
           sx={{
-            width: '100%',
-          }}
-        >
+            p: 2,
+            width: '100%'
+          }}>
           <UserAvatar
             user={summary ? { id: summary.userId, ...summary.head } : undefined}
           />
           <Stack sx={{ flex: 1, minWidth: 0 }}>
             <UsernameText user={summary} />
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               {summary ? (
                 `${formatNumber(summary.total)} reports`
               ) : (

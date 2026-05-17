@@ -72,11 +72,7 @@ export const ApprovalCountSeriesByApproverChart: React.FC = () => {
         stack: 'handled',
       },
     ],
-    slotProps: {
-      noDataOverlay: {
-        message: 'No data',
-      },
-    },
+    localeText: { noData: 'No data' },
   };
 
   return (

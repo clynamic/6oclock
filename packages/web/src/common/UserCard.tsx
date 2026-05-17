@@ -16,11 +16,15 @@ export const UserCard: React.FC = () => {
   });
 
   return (
-    <Stack direction="row" spacing={2} alignItems="center">
+    <Stack direction="row" spacing={2} sx={{
+      alignItems: "center"
+    }}>
       <UserAvatar user={user} shape="rounded" size={64} />
       <Stack>
         <UsernameText user={user} />
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{
+          color: "text.secondary"
+        }}>
           {user?.level}
         </Typography>
       </Stack>

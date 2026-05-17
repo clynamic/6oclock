@@ -35,7 +35,9 @@ export const ManifestHealthDisplay = () => {
     >
       <LimitedList
         indicator={() => (
-          <Stack direction="row" justifyContent="flex-end">
+          <Stack direction="row" sx={{
+            justifyContent: "flex-end"
+          }}>
             <Button
               size="small"
               endIcon={<ArrowForward />}

@@ -20,7 +20,9 @@ export const AppLogo = () => {
         component={'img'}
         src="/assets/6oclock.svg"
         alt="6oclock logo"
-        height={48}
+        sx={{
+          height: 48
+        }}
       />
     </Button>
   );

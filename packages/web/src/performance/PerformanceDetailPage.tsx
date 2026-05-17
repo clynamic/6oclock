@@ -108,9 +108,15 @@ export const PerformanceDetailPage: React.FC = () => {
                   width: '100%',
                 }}
               >
-                <Box id="performance-detail-root" p={2}>
+                <Box id="performance-detail-root" sx={{
+                  p: 2
+                }}>
                   <Card sx={{ minWidth: 550 }}>
-                    <Box p={4} sx={{ width: '100%' }}>
+                    <Box
+                      sx={{
+                        p: 4,
+                        width: '100%'
+                      }}>
                       <QueryHint error={error} isEmpty={!summary && !isLoading}>
                         <Stack direction="column" spacing={2}>
                           <Stack direction="row" spacing={2}>
@@ -144,7 +150,9 @@ export const PerformanceDetailPage: React.FC = () => {
                                   </Typography>
                                   <Typography
                                     variant="caption"
-                                    color="text.secondary"
+                                    sx={{
+                                      color: "text.secondary"
+                                    }}
                                   >
                                     {`${range.startDate.toLocaleDateString()} - ${range.endDate.toLocaleDateString()}`}
                                   </Typography>
@@ -153,9 +161,10 @@ export const PerformanceDetailPage: React.FC = () => {
                               {summary ? (
                                 <Stack
                                   direction="column"
-                                  alignItems={'center'}
-                                  gap={2}
-                                >
+                                  sx={{
+                                    alignItems: 'center',
+                                    gap: 2
+                                  }}>
                                   <Stamp
                                     size={90}
                                     color={getScoreGradeColor(
@@ -176,14 +185,15 @@ export const PerformanceDetailPage: React.FC = () => {
                           </Stack>
                           <Stack
                             direction="row"
-                            justifyContent={'space-between'}
-                            gap={2}
                             sx={{
+                              justifyContent: 'space-between',
+                              gap: 2,
                               alignSelf: 'center',
-                              width: 400,
-                            }}
-                          >
-                            <Stack direction="column" alignItems="center">
+                              width: 400
+                            }}>
+                            <Stack direction="column" sx={{
+                              alignItems: "center"
+                            }}>
                               {summary ? (
                                 <RankingText
                                   rank={summary.position}
@@ -199,7 +209,9 @@ export const PerformanceDetailPage: React.FC = () => {
                               <Typography variant="subtitle1">Rank</Typography>
                             </Stack>
                             <Divider orientation="vertical" flexItem />
-                            <Stack direction="column" alignItems="center">
+                            <Stack direction="column" sx={{
+                              alignItems: "center"
+                            }}>
                               <Typography
                                 variant="h4"
                                 sx={{
@@ -217,7 +229,9 @@ export const PerformanceDetailPage: React.FC = () => {
                               <Typography variant="subtitle1">Score</Typography>
                             </Stack>
                             <Divider orientation="vertical" flexItem />
-                            <Stack direction="column" alignItems="center">
+                            <Stack direction="column" sx={{
+                              alignItems: "center"
+                            }}>
                               <Typography
                                 variant="h4"
                                 sx={{
@@ -238,7 +252,9 @@ export const PerformanceDetailPage: React.FC = () => {
                               <Typography variant="subtitle1">Trend</Typography>
                             </Stack>
                           </Stack>
-                          <Stack direction="row" gap={2}>
+                          <Stack direction="row" sx={{
+                            gap: 2
+                          }}>
                             <Stack
                               direction="column"
                               sx={{
@@ -283,9 +299,10 @@ export const PerformanceDetailPage: React.FC = () => {
                               {summary ? (
                                 <Stack
                                   direction="row"
-                                  gap={1}
-                                  justifyContent="space-between"
-                                >
+                                  sx={{
+                                    gap: 1,
+                                    justifyContent: "space-between"
+                                  }}>
                                   <Typography variant="caption">
                                     {`Active Days`}
                                   </Typography>
@@ -304,9 +321,10 @@ export const PerformanceDetailPage: React.FC = () => {
                                         <Stack
                                           key={type}
                                           direction="row"
-                                          gap={1}
-                                          justifyContent="space-between"
-                                        >
+                                          sx={{
+                                            gap: 1,
+                                            justifyContent: "space-between"
+                                          }}>
                                           <Typography variant="caption">
                                             {getActivityName(
                                               getActivityFromKey(type),
@@ -322,9 +340,10 @@ export const PerformanceDetailPage: React.FC = () => {
                                         <Stack
                                           key={index}
                                           direction="row"
-                                          gap={1}
-                                          justifyContent="space-between"
-                                        >
+                                          sx={{
+                                            gap: 1,
+                                            justifyContent: "space-between"
+                                          }}>
                                           <Skeleton
                                             variant="text"
                                             width={100}

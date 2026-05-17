@@ -1,6 +1,6 @@
 import {
   Check,
-  ErrorOutline,
+  ErrorOutlined,
   Event,
   HourglassTop,
   Schedule,
@@ -16,7 +16,7 @@ export interface JobsFrameProps {
 
 const stateIcon: Record<string, React.ReactElement> = {
   completed: <Check />,
-  failed: <ErrorOutline />,
+  failed: <ErrorOutlined />,
   active: <HourglassTop />,
   waiting: <Schedule />,
   delayed: <Schedule />,
@@ -41,15 +41,26 @@ const stateColor: Record<string, 'success' | 'error' | 'warning' | 'info'> = {
 export const JobsFrame: React.FC<JobsFrameProps> = ({ job }) => {
   return (
     <Card key={job.id} sx={{ width: '100%' }}>
-      <Stack p={2} spacing={1} sx={{ width: '100%' }}>
+      <Stack
+        spacing={1}
+        sx={{
+          p: 2,
+          width: '100%'
+        }}>
         <Stack
           direction="row"
-          justifyContent="space-between"
-          sx={{ width: '100%' }}
-        >
+          sx={{
+            justifyContent: "space-between",
+            width: '100%'
+          }}>
           <Typography variant="h6">{job.name}</Typography>
         </Stack>
-        <Stack direction="row" gap={1} sx={{ flexWrap: 'wrap' }}>
+        <Stack
+          direction="row"
+          sx={{
+            gap: 1,
+            flexWrap: 'wrap'
+          }}>
           <Chip
             icon={<Event />}
             label={

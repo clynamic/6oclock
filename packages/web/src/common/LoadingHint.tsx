@@ -8,10 +8,11 @@ export const LoadingHint: React.FC<LoadingHintProps> = ({ message }) => {
   return (
     <Stack
       spacing={2}
-      alignItems="center"
-      justifyContent="center"
-      sx={{ height: '100%' }}
-    >
+      sx={{
+        alignItems: "center",
+        justifyContent: "center",
+        height: '100%'
+      }}>
       <CircularProgress size={48} />
       {message && <Typography variant="h6">{message}</Typography>}
     </Stack>

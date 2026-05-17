@@ -28,12 +28,14 @@ export const UsernameField: React.FC<UsernameFieldProps> = ({
           fullWidth
           error={!!errors.username}
           helperText={errors.username?.message?.toString()}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Person />
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Person />
+                </InputAdornment>
+              ),
+            },
           }}
         />
       )}

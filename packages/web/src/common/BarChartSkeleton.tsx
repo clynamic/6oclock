@@ -54,24 +54,22 @@ export const BarChartSkeleton: React.FC = () => {
 
   return (
     <Box
-      p={4}
       sx={{
+        p: 4,
         height: '100%',
-        width: '100%',
-      }}
-    >
+        width: '100%'
+      }}>
       <Stack
         direction="row"
         ref={containerRef}
         sx={{
+          gap: 1,
           height: '100%',
           justifyContent: 'center',
           alignItems: 'flex-end',
           position: 'relative',
-          overflow: 'hidden',
-        }}
-        gap={1}
-      >
+          overflow: 'hidden'
+        }}>
         {barHeights.map((height, index) => (
           <Skeleton
             key={barHeights.length + index + height}

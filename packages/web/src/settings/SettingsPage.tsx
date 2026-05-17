@@ -27,7 +27,9 @@ export const SettingsPage: React.FC = () => {
                 <Typography variant="h6" component="h2">
                   Safe Mode
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   Hide explicit content from your browsing experience.
                 </Typography>
                 <Button
@@ -50,7 +52,9 @@ export const SettingsPage: React.FC = () => {
                 <Typography variant="h6" component="h2">
                   Account
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   Sign out of your account and return to the login page.
                 </Typography>
                 <Button

@@ -180,7 +180,6 @@ export const NavClock: React.FC = () => {
       >
         {format(currentTime, 'HH:mm')}
       </NavButton>
-
       <Popover
         open={isOpen}
         anchorEl={anchorEl}
@@ -188,26 +187,39 @@ export const NavClock: React.FC = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         transformOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Stack spacing={3} p={3} minWidth={240} alignItems="center">
+        <Stack
+          spacing={3}
+          sx={{
+            p: 3,
+            minWidth: 240,
+            alignItems: "center"
+          }}>
           <ClockFace time={currentTime} />
 
-          <Stack alignItems="center" spacing={1}>
+          <Stack spacing={1} sx={{
+            alignItems: "center"
+          }}>
             <Typography
               variant="h4"
               sx={{ fontFamily: 'monospace', marginBottom: 0 }}
             >
               {format(currentTime, 'HH:mm:ss')}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               {format(currentTime, 'EEEE, MMMM do, yyyy')}
             </Typography>
-            <Stack direction="row" alignItems="center" spacing={1}>
+            <Stack direction="row" spacing={1} sx={{
+              alignItems: "center"
+            }}>
               <Sailing sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography
                 variant="body2"
-                color="text.secondary"
-                sx={{ fontWeight: 500 }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  fontWeight: 500
+                }}>
                 Ship Time
               </Typography>
             </Stack>

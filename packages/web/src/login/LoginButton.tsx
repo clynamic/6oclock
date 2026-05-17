@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ArrowForward } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
+import { Button } from '@mui/material';
 
 export interface LoginButtonProps {
   loading: boolean;
@@ -9,7 +9,7 @@ export interface LoginButtonProps {
 
 export const LoginButton: React.FC<LoginButtonProps> = ({ loading }) => {
   return (
-    <LoadingButton
+    <Button
       variant="contained"
       endIcon={<ArrowForward />}
       type="submit"
@@ -24,6 +24,6 @@ export const LoginButton: React.FC<LoginButtonProps> = ({ loading }) => {
       }}
     >
       Log In
-    </LoadingButton>
+    </Button>
   );
 };

@@ -44,11 +44,7 @@ export const TicketCreatedSeriesByReporterChart: React.FC<
       },
     ],
     hideLegend: true,
-    slotProps: {
-      noDataOverlay: {
-        message: 'No data',
-      },
-    },
+    localeText: { noData: 'No data' },
   };
 
   const Chart = useMemo(() => {

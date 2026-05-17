@@ -71,10 +71,8 @@ export const TicketTypeSummaryChart: React.FC = () => {
               gap: 2,
             },
           },
-          noDataOverlay: {
-            message: 'No data',
-          },
         }}
+        localeText={{ noData: 'No data' }}
       />
     </QueryHint>
   );
