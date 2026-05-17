@@ -2,22 +2,22 @@ import { Ref } from 'react';
 
 import { Box, useTheme } from '@mui/material';
 import {
-  Layout,
-  Layouts,
+  LayoutItem,
+  LegacyResponsiveReactGridLayoutProps,
   Responsive,
-  ResponsiveProps,
+  ResponsiveLayouts,
   WidthProvider,
 } from 'react-grid-layout/legacy';
 
 import { useDashboard } from './DashboardContext';
 import { HandleDirection, ResizableHandle } from './ResizableHandle';
 
-export type DashboardLayout = Layout;
-export type DashboardLayouts = Layouts;
+export type DashboardLayout = LayoutItem;
+export type DashboardLayouts = ResponsiveLayouts;
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-export type DashboardGridProps = ResponsiveProps;
+export type DashboardGridProps = Omit<LegacyResponsiveReactGridLayoutProps, 'width'>;
 
 export const DashboardGrid: React.FC<DashboardGridProps> = ({ ...rest }) => {
   const { breakpoints } = useTheme();

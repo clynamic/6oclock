@@ -61,11 +61,7 @@ export const TicketStatusSeriesChart: React.FC<TicketTurnaroundChartProps> = ({
         color: theme.palette.secondary.main,
       },
     ],
-    slotProps: {
-      noDataOverlay: {
-        message: 'No data',
-      },
-    },
+    localeText: { noData: 'No data' },
   };
 
   const Chart = useMemo(() => {

@@ -75,11 +75,7 @@ export const PostReplacementStatusSeriesChart: React.FC = () => {
         stack: 'handled',
       },
     ],
-    slotProps: {
-      noDataOverlay: {
-        message: 'No data',
-      },
-    },
+    localeText: { noData: 'No data' },
   };
 
   return (

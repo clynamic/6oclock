@@ -74,7 +74,12 @@ export const HomeActivity: React.FC = () => {
         backgroundColor: hexagonColors.section,
       }}
     >
-      <Stack direction="row" justifyContent="center" sx={{ mb: 2 }}>
+      <Stack
+        direction="row"
+        sx={{
+          justifyContent: "center",
+          mb: 2
+        }}>
         <CounterDisplay number={counterValue} />
       </Stack>
       <Typography

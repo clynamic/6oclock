@@ -5,7 +5,7 @@ import { DashboardLayout, DashboardLayouts } from './DashboardGrid';
 
 export const useCurrentLayout = (
   layouts?: DashboardLayouts,
-): DashboardLayout[] | undefined => {
+): readonly DashboardLayout[] | undefined => {
   const currentBreakpoint = useCurrentBreakpoint();
   const currentLayout = useMemo(() => {
     if (!layouts || !currentBreakpoint) return undefined;

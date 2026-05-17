@@ -61,14 +61,22 @@ export const DashboardBody = () => {
       error={error}
       skeleton={<LoadingHint message="Loading dashboard..." />}
     >
-      <Stack direction="column" gap={2} sx={{ height: '100%', width: '100%' }}>
+      <Stack
+        direction="column"
+        sx={{
+          gap: 2,
+          height: '100%',
+          width: '100%'
+        }}>
         {config?.version && version && config?.version < version && (
           <Alert
             sx={{ margin: 1 }}
             severity="info"
             icon={<NewReleasesOutlined />}
             action={
-              <Stack direction="row" gap={1}>
+              <Stack direction="row" sx={{
+                gap: 1
+              }}>
                 <Button color="inherit" size="small" onClick={resetDashboard}>
                   Reset
                 </Button>

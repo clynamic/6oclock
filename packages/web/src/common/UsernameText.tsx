@@ -76,15 +76,14 @@ export const UsernameText = ({ user, variant }: UsernameTextProps) => {
   return (
     <Typography
       variant={variant ?? 'h6'}
-      sx={{
-        color,
-        textDecoration: isBlocked ? 'line-through' : 'none',
-      }}
       noWrap
-      textOverflow={'ellipsis'}
-      whiteSpace={'nowrap'}
-      overflow={'hidden'}
-    >
+      sx={{
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        color,
+        textDecoration: isBlocked ? 'line-through' : 'none'
+      }}>
       {name.replace(/_/g, ' ')}
     </Typography>
   );

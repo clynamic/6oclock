@@ -31,12 +31,14 @@ export const ApiKeyField: React.FC<ApiKeyFieldProps> = ({
           fullWidth
           error={!!errors.password}
           helperText={errors.password?.message?.toString()}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Key />
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Key />
+                </InputAdornment>
+              ),
+            },
           }}
         />
       )}

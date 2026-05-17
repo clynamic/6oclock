@@ -26,8 +26,12 @@ export const HomePage: React.FC = () => {
       <PageTitle subtitle="Home" />
       <PageHeader />
       <PageBody>
-        <Stack direction="column" spacing={2} p={2}>
-          <Box height="150px" /* This balances the counter space */ />
+        <Stack direction="column" spacing={2} sx={{
+          p: 2
+        }}>
+          <Box sx={{
+            height: "150px"
+          }} />
           <Stack
             direction={{
               sm: 'row',
@@ -37,9 +41,10 @@ export const HomePage: React.FC = () => {
               xs: 2,
               sm: 6,
             }}
-            justifyContent="center"
-            alignItems="center"
-          >
+            sx={{
+              justifyContent: "center",
+              alignItems: "center"
+            }}>
             <ThemeProvider<Theme>
               theme={(theme) => ({
                 ...theme,
@@ -64,13 +69,17 @@ export const HomePage: React.FC = () => {
               })}
             >
               <Button component={Link} to="/janitors">
-                <Stack direction="row" alignItems="center" spacing={1}>
+                <Stack direction="row" spacing={1} sx={{
+                  alignItems: "center"
+                }}>
                   <Beenhere sx={{ fontSize: 32 }} />
                   <Typography variant="h5">Janitors</Typography>
                 </Stack>
               </Button>
               <Button component={Link} to="/mods">
-                <Stack direction="row" alignItems="center" spacing={1}>
+                <Stack direction="row" spacing={1} sx={{
+                  alignItems: "center"
+                }}>
                   <Shield sx={{ fontSize: 32 }} />
                   <Typography variant="h5">Mods</Typography>
                 </Stack>

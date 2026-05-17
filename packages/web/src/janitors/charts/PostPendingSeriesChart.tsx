@@ -39,14 +39,11 @@ export const PostPendingSeriesChart: React.FC = () => {
             dataKey: 'value',
             label: 'Pending Posts',
             color: theme.palette.primary.main,
+            showMark: true,
           },
         ]}
         hideLegend={true}
-        slotProps={{
-          noDataOverlay: {
-            message: 'No data',
-          },
-        }}
+        localeText={{ noData: 'No data' }}
       />
     </QueryHint>
   );

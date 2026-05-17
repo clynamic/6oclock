@@ -39,11 +39,7 @@ export const UserActivitySeriesChart: React.FC = () => {
         stack: 'action',
       })),
     hideLegend: true,
-    slotProps: {
-      noDataOverlay: {
-        message: 'No data',
-      },
-    },
+    localeText: { noData: 'No data' },
   };
 
   return (

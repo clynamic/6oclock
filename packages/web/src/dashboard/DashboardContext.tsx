@@ -27,7 +27,7 @@ interface DashboardContextType {
   config?: DashboardConfig;
   layouts?: DashboardLayouts;
   currentBreakpoint?: Breakpoint;
-  currentLayout?: DashboardLayout[];
+  currentLayout?: readonly DashboardLayout[];
   catalog: DashboardCatalog;
   version?: number;
   isLoading?: boolean;

@@ -21,16 +21,21 @@ export const PieChartSkeleton: React.FC = () => {
       <Box sx={{ width: 150 }} />
       <Stack
         sx={{
+          gap: 1,
           position: 'absolute',
           top: 0,
           right: 0,
           bottom: 0,
-          justifyContent: 'center',
-        }}
-        gap={1}
-      >
+          justifyContent: 'center'
+        }}>
         {[...Array(3)].map((_, index) => (
-          <Stack direction={'row'} key={index} gap={1} alignItems={'center'}>
+          <Stack
+            direction={'row'}
+            key={index}
+            sx={{
+              gap: 1,
+              alignItems: 'center'
+            }}>
             <Skeleton variant="rectangular" width={20} height={20} />
             <Skeleton width={100} />
           </Stack>

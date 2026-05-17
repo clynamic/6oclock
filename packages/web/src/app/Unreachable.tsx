@@ -48,7 +48,9 @@ export const UnreachablePage: React.FC = () => {
       <PageTitle subtitle="Unreachable" />
       <PageHeader />
       <PageBody>
-        <Stack spacing={2} alignItems="center">
+        <Stack spacing={2} sx={{
+          alignItems: "center"
+        }}>
           <WifiTetheringOff sx={{ fontSize: 96 }} />
           <Typography>
             Oops! Look's like our servers are offline. Please try again later.

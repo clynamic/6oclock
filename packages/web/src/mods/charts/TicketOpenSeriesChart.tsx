@@ -38,14 +38,11 @@ export const TicketOpenSeriesChart: React.FC = () => {
             dataKey: 'value',
             label: 'Open Tickets',
             color: theme.palette.primary.main,
+            showMark: true,
           },
         ]}
         hideLegend={true}
-        slotProps={{
-          noDataOverlay: {
-            message: 'No data',
-          },
-        }}
+        localeText={{ noData: 'No data' }}
       />
     </QueryHint>
   );

@@ -47,11 +47,7 @@ export const TicketAgeSeriesChart: React.FC = () => {
           Object.keys(TicketAgeLabels).indexOf(b.dataKey) -
           Object.keys(TicketAgeLabels).indexOf(a.dataKey),
       ),
-    slotProps: {
-      noDataOverlay: {
-        message: 'No data',
-      },
-    },
+    localeText: { noData: 'No data' },
   };
 
   return (

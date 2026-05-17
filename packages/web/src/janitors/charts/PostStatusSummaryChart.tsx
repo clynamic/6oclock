@@ -64,11 +64,7 @@ export const PostStatusSummaryChart: React.FC = () => {
           },
         ]}
         loading={isLoading}
-        slotProps={{
-          noDataOverlay: {
-            message: 'No data',
-          },
-        }}
+        localeText={{ noData: 'No data' }}
       />
     </QueryHint>
   );

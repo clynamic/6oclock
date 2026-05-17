@@ -65,12 +65,18 @@ export const TileHealthFrame: React.FC<TileHealthFrameProps> = ({
       {function (popupState) {
         return (
           <Card sx={{ width: '100%' }}>
-            <Stack p={2} spacing={1} sx={{ width: '100%' }}>
+            <Stack
+              spacing={1}
+              sx={{
+                p: 2,
+                width: '100%'
+              }}>
               <Stack
                 direction="row"
-                justifyContent="space-between"
-                sx={{ width: '100%' }}
-              >
+                sx={{
+                  justifyContent: "space-between",
+                  width: '100%'
+                }}>
                 <Typography variant="h6">
                   {tile ? tile.type : <Skeleton width={200} />}
                 </Typography>
@@ -99,7 +105,12 @@ export const TileHealthFrame: React.FC<TileHealthFrameProps> = ({
                   </>
                 )}
               </Stack>
-              <Stack direction="row" gap={1} sx={{ flexWrap: 'wrap' }}>
+              <Stack
+                direction="row"
+                sx={{
+                  gap: 1,
+                  flexWrap: 'wrap'
+                }}>
                 {tile ? (
                   <>
                     <Chip
@@ -226,15 +237,15 @@ export const TileHealthFrame: React.FC<TileHealthFrameProps> = ({
                               },
                             ]}
                             hideLegend={true}
-                            slotProps={{
-                              noDataOverlay: { message: 'No data available' },
-                            }}
+                            localeText={{ noData: 'No data available' }}
                           />
                         </Box>
                       );
                     })
                 ) : (
-                  <Stack direction="row" justifyContent="space-between">
+                  <Stack direction="row" sx={{
+                    justifyContent: "space-between"
+                  }}>
                     {[...Array(30)].map((_, index) => (
                       <Skeleton
                         variant="rectangular"

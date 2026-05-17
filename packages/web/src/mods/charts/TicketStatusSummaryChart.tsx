@@ -64,11 +64,7 @@ export const TicketStatusSummaryChart: React.FC = () => {
             cy: '50%',
           },
         ]}
-        slotProps={{
-          noDataOverlay: {
-            message: 'No data',
-          },
-        }}
+        localeText={{ noData: 'No data' }}
       />
     </QueryHint>
   );
