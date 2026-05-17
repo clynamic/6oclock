@@ -10,7 +10,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AxiosInstance } from 'axios';
 import { Request } from 'express';
-import { AXIOS_INSTANCE } from 'src/api';
+import { AXIOS_INSTANCE, getContentType } from 'src/api';
 import { Readable } from 'stream';
 
 @ApiTags('Proxy')
@@ -59,7 +59,7 @@ export class ProxyController {
     const stream = response.data as Readable;
 
     return new StreamableFile(stream, {
-      type: response.headers['content-type'],
+      type: getContentType(response),
       disposition: `inline; filename="${proxyPath.split('/').pop()}"`,
     });
   }
