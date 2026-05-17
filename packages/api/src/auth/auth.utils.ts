@@ -8,7 +8,7 @@ import { UserCredentials } from './auth.dto';
 
 export const readJwtSecret = (config: ConfigService) => {
   const file = join(config.get<string>(AppConfigKeys.DATA_DIR)!, '.jwt-secret');
-  let secret = '';
+  let secret: string;
 
   try {
     secret = fs.readFileSync(file, 'utf-8');

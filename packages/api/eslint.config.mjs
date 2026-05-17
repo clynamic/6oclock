@@ -17,6 +17,9 @@ export default tseslint.config(
     languageOptions: {
       ecmaVersion: 2020,
       sourceType: 'module',
+      parserOptions: {
+        tsconfigRootDir: import.meta.dirname,
+      },
       globals: {
         ...globals.node,
         ...globals.jest,

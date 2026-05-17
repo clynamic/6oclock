@@ -4,7 +4,6 @@ import React, {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -14,6 +13,7 @@ import type { BarChart } from '@mui/x-charts/BarChart';
 import type { LineChart } from '@mui/x-charts/LineChart';
 
 import { UserArea } from '../api';
+import { useChangeEffect } from './hooks';
 import { DateRange, getCurrentMonthRange } from './ranges';
 
 export type SeriesChartProps = Parameters<typeof BarChart>[0] &
@@ -139,7 +139,7 @@ export const ChartParamsProvider: React.FC<ChartParamsProviderProps> = ({
     [],
   );
 
-  useEffect(() => {
+  useChangeEffect(() => {
     setValue((prev) => ({
       ...defaultParams,
       ...params,

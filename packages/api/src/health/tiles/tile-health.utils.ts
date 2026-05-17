@@ -35,7 +35,6 @@ export const generateTileSlices = ({
       ),
     );
 
-    let available = 0;
     let unavailable = 0;
 
     while (
@@ -52,7 +51,7 @@ export const generateTileSlices = ({
       (sliceEnd.getTime() - sliceStart.getTime()) /
         (intervalHours * 60 * 60 * 1000),
     );
-    available = Math.max(0, expectedInSlice - unavailable);
+    const available = Math.max(0, expectedInSlice - unavailable);
     const none = tilesPerSlice - (available + unavailable);
 
     slices.push(

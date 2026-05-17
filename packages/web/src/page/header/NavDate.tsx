@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { TZDate } from '@date-fns/tz';
 import {
@@ -29,6 +29,7 @@ import { isAfter, isBefore } from 'date-fns';
 
 import { useCurrentUserHead } from '../../auth/user';
 import { useChartContext } from '../../utils/charts';
+import { useChangeEffect } from '../../utils/hooks';
 import {
   TimeDuration,
   addPeriods,
@@ -100,16 +101,14 @@ export const NavDate: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const isOpen = Boolean(anchorEl);
 
-  useEffect(() => {
-    setView(calendarViews.at(-1)!);
-  }, [calendarViews]);
+  useChangeEffect(() => setView(calendarViews.at(-1)!), [calendarViews]);
 
   const resetCurrentState = useCallback(() => {
     setCurrentDate(startDate);
     setCurrentDuration(chartDuration);
   }, [startDate, chartDuration]);
 
-  useEffect(() => {
+  useChangeEffect(() => {
     setCurrentDate(startDate);
     setCurrentDuration(chartDuration);
   }, [startDate, endDate, chartDuration]);

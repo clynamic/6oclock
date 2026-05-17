@@ -101,10 +101,7 @@ export class ManifestHealthService {
       const repository = this.itemRepositories[manifest.type];
       if (!repository) continue;
 
-      let allIds: { id: number }[] = [];
-      let slices: any[] = [];
-
-      allIds = await repository.find({
+      const allIds = await repository.find({
         select: ['id'],
         where: {
           id: Between(manifest.lowerId, manifest.upperId),
@@ -114,7 +111,7 @@ export class ManifestHealthService {
         },
       });
 
-      slices = generateManifestSlices({
+      const slices = generateManifestSlices({
         allIds,
         lowerId: manifest.lowerId,
         upperId: manifest.upperId,
