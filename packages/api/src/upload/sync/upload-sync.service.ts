@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MAX_API_LIMIT } from 'src/api/http/params';
 import { withInvalidation } from 'src/app/browser.module';
 import { DateRange } from 'src/common';
 import { PostVersionEntity } from 'src/post-version/post-version.entity';
@@ -27,7 +28,7 @@ export class UploadSyncService {
         .andWhere('post_version.version = 1')
         .groupBy('post_version.updater_id')
         .orderBy('uploaded', 'DESC')
-        .take(100)
+        .take(MAX_API_LIMIT)
         .getRawMany<{
           user_id: string;
           uploaded: string;

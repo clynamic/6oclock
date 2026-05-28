@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MAX_API_LIMIT } from 'src/api/http/params';
 import { withInvalidation } from 'src/app/browser.module';
 import {
   DateRange,
@@ -26,7 +27,7 @@ export class TicketSyncService {
         .where(DateRange.fill(range).where())
         .groupBy('ticket.creator_id')
         .orderBy('reported', 'DESC')
-        .take(100)
+        .take(MAX_API_LIMIT)
         .getRawMany<{
           user_id: string;
           reported: string;
