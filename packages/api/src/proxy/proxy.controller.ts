@@ -3,13 +3,12 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Param,
   Query,
-  Req,
   StreamableFile,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AxiosInstance } from 'axios';
-import { Request } from 'express';
 import { AXIOS_INSTANCE, getContentType } from 'src/api';
 import { Readable } from 'stream';
 
@@ -46,10 +45,10 @@ export class ProxyController {
     description: 'Invalid path',
   })
   async proxyRequest(
+    @Param('path') path: string[],
     @Query() queryParams: Record<string, string>,
-    @Req() req: Request,
   ): Promise<StreamableFile> {
-    const proxyPath = req.originalUrl.replace(/^\/proxy\//, '');
+    const proxyPath = path.join('/');
 
     if (!proxyPath || proxyPath.includes('://')) {
       throw new HttpException('Invalid path', HttpStatus.BAD_REQUEST);
