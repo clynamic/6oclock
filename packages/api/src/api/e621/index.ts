@@ -1,6 +1,7 @@
 export * from './posts';
 export * from './users';
 export * from './tickets';
+export * from './appeals';
 export * from './user-feedbacks';
 export * from './post-flags';
 export * from './post-versions';
