@@ -3,6 +3,7 @@ import { Logger } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { Job } from 'bullmq';
 
+import { JOB_TIMED_OUT_PREFIX } from './job.constants';
 import { JobDiscoveryService } from './job.discovery';
 
 abstract class JobProcessor extends WorkerHost {
@@ -44,7 +45,10 @@ abstract class JobProcessor extends WorkerHost {
     let timeoutId: NodeJS.Timeout | undefined;
     const timeoutPromise = new Promise<never>((_, reject) => {
       timeoutId = setTimeout(
-        () => reject(new Error(`Timed out after ${entry.options.timeout}ms`)),
+        () =>
+          reject(
+            new Error(`${JOB_TIMED_OUT_PREFIX} ${entry.options.timeout}ms`),
+          ),
         entry.options.timeout,
       );
     });
