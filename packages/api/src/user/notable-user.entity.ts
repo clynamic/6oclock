@@ -4,6 +4,7 @@ export enum NotabilityType {
   staff = 'staff',
   reporter = 'reporter',
   uploader = 'uploader',
+  appellant = 'appellant',
 }
 
 @Entity('notable_users')

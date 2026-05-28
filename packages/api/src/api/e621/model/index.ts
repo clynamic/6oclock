@@ -92,6 +92,7 @@ export * from './flags';
 export * from './forumPost';
 export * from './forumPostVote';
 export * from './forumTopic';
+export * from './getAppealsParams';
 export * from './getAppealsSearchStatus';
 export * from './getArtistVersionsSearchOrder';
 export * from './getArtistsSearchOrder';

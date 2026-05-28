@@ -8999,6 +8999,16 @@ components:
         Field visibility depends on viewer permissions: users without view access
         do not receive `creator_id`, `accused_id`, `reason`, or `response`; non-staff
         users do not receive `claimant_id`.
+      required:
+        - "id"
+        - "creator_id"
+        - "disp_id"
+        - "qtype"
+        - "status"
+        - "reason"
+        - "response"
+        - "created_at"
+        - "updated_at"
       properties:
         id:
           type: "integer"

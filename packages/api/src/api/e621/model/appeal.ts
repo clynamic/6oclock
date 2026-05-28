@@ -28,19 +28,19 @@ users do not receive `claimant_id`.
  */
 export interface Appeal {
   /** The unique ID of the appeal */
-  id?: number;
+  id: number;
   /** The ID of the user who created the appeal */
-  creator_id?: number;
+  creator_id: number;
   /** The IP address from which the appeal was created (staff only) */
   creator_ip_addr?: string;
   /** The ID of the appealed record (e.g. a PostFlag ID when `qtype=flag`) */
-  disp_id?: number;
-  qtype?: AppealQtype;
-  status?: AppealStatus;
+  disp_id: number;
+  qtype: AppealQtype;
+  status: AppealStatus;
   /** The reason given for the appeal */
-  reason?: string;
+  reason: string;
   /** The handler's response to the appeal */
-  response?: string;
+  response: string;
   /**
    * The ID of the staff member currently claiming the appeal
    * @nullable
@@ -57,7 +57,7 @@ export interface Appeal {
    */
   accused_id?: number | null;
   /** The time the appeal was created */
-  created_at?: Date;
+  created_at: Date;
   /** The last time the appeal was updated */
-  updated_at?: Date;
+  updated_at: Date;
 }

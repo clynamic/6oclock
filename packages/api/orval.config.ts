@@ -126,6 +126,7 @@ export default defineConfig({
           'tag_aliases',
           'tag_implications',
           'bulk_update_requests',
+          'appeals',
         ],
       },
       override: {

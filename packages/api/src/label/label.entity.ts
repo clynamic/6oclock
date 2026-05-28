@@ -12,6 +12,7 @@ export enum ItemType {
   users = 'users',
   userProfiles = 'user_profiles',
   flags = 'flags',
+  appeals = 'appeals',
   feedbacks = 'feedbacks',
   postVersions = 'post_versions',
   postReplacements = 'post_replacements',

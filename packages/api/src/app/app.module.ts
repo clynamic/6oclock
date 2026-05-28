@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AppealModule } from 'src/appeal/appeal.module';
 import { ApprovalModule } from 'src/approval/approval.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { BulkUpdateRequestModule } from 'src/bulk-update-request/bulk-update-request.module';
@@ -53,6 +54,7 @@ import { StaticModule } from './static.module';
     PostModule,
     PostEventModule,
     FlagModule,
+    AppealModule,
     DeletionModule,
     FeedbackModule,
     PostVersionModule,
