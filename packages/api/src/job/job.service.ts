@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { PaginationParams } from 'src/common';
 
-import { QUEUE_NAMES } from './job.constants';
+import { JOB_TIMED_OUT_PREFIX, JobState, QUEUE_NAMES } from './job.constants';
 import { JobDiscoveryService } from './job.discovery';
 import { JobInfo, SchedulerInfo } from './job.dto';
 
@@ -37,6 +37,7 @@ export class JobService {
       delayed: 1,
       completed: 2,
       failed: 2,
+      timedOut: 2,
     };
 
     return allJobs
@@ -80,7 +81,13 @@ export class JobService {
   }
 
   private async toJobInfo(job: Job, queue: string): Promise<JobInfo> {
-    const state = await job.getState();
+    const rawState = await job.getState();
+    const state: JobState =
+      rawState === 'failed' &&
+      job.failedReason?.startsWith(JOB_TIMED_OUT_PREFIX)
+        ? 'timedOut'
+        : (rawState as JobState);
+
     return new JobInfo({
       id: job.id ?? '',
       name: job.name,
