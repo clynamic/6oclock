@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { PostFlag, postFlags } from 'src/api';
 import { MAX_API_LIMIT } from 'src/api/http/params';
-import { CacheManager } from 'src/app/browser.module';
 import { AuthService } from 'src/auth/auth.service';
 import {
   DateRange,
@@ -28,7 +27,6 @@ export class FlagSyncWorker {
     private readonly authService: AuthService,
     private readonly flagSyncService: FlagSyncService,
     private readonly manifestService: ManifestService,
-    private readonly cacheManager: CacheManager,
   ) {}
 
   private readonly logger = new Logger(FlagSyncWorker.name);
@@ -96,10 +94,6 @@ export class FlagSyncWorker {
           bottom: exhausted,
           top: inPast,
         });
-
-        if (results.length) {
-          this.cacheManager.inv(FlagEntity);
-        }
 
         if (exhausted) {
           logContiguityGaps(this.logger, ItemType.flags, results);

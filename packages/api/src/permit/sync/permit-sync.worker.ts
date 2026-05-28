@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { posts } from 'src/api';
 import { MAX_API_LIMIT } from 'src/api/http/params';
-import { CacheManager } from 'src/app/browser.module';
 import { AuthService } from 'src/auth/auth.service';
 import {
   DateRange,
@@ -25,7 +24,6 @@ export class PermitSyncWorker {
     private readonly authService: AuthService,
     private readonly permitSyncService: PermitSyncService,
     private readonly manifestService: ManifestService,
-    private readonly cacheManager: CacheManager,
   ) {}
 
   private readonly logger = new Logger(PermitSyncWorker.name);
@@ -104,10 +102,6 @@ export class PermitSyncWorker {
           top: inPast,
         });
 
-        if (permits.length) {
-          this.cacheManager.inv(PermitEntity);
-        }
-
         if (exhausted) {
           // This sync is porous and always has gaps.
           // logContiguityGaps(this.logger, ItemType.permits, results);
@@ -128,7 +122,6 @@ export class PermitSyncWorker {
     if (invalidPermits.length > 0) {
       await this.permitSyncService.remove(invalidPermits);
       this.logger.log(`Cleaned up ${invalidPermits.length} invalid permits`);
-      this.cacheManager.inv(PermitEntity);
     }
   }
 }
