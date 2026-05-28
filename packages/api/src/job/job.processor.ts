@@ -35,21 +35,25 @@ abstract class JobProcessor extends WorkerHost {
       return;
     }
 
-    let timeout: NodeJS.Timeout | undefined;
-    if (entry.options.timeout) {
-      timeout = setTimeout(() => {
-        job.moveToFailed(
-          new Error(`Timed out after ${entry.options.timeout}ms`),
-          this.worker.id,
-          true,
-        );
-      }, entry.options.timeout);
+    const handlerPromise = entry.handler(job);
+
+    if (!entry.options.timeout) {
+      return handlerPromise;
     }
 
+    let timeoutId: NodeJS.Timeout | undefined;
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      timeoutId = setTimeout(
+        () => reject(new Error(`Timed out after ${entry.options.timeout}ms`)),
+        entry.options.timeout,
+      );
+    });
+
     try {
-      await entry.handler(job);
+      await Promise.race([handlerPromise, timeoutPromise]);
     } finally {
-      if (timeout) clearTimeout(timeout);
+      if (timeoutId) clearTimeout(timeoutId);
+      handlerPromise.catch(() => undefined);
     }
   }
 }

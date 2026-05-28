@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import 'reflect-metadata';
@@ -10,6 +10,16 @@ import { AppLogger, RequestLogger } from './app/logger.service';
 
 async function bootstrap() {
   process.env['TZ'] = 'UTC';
+
+  const processLogger = new Logger('Process');
+  process.on('unhandledRejection', (reason) => {
+    processLogger.error(
+      `Unhandled rejection: ${reason instanceof Error ? reason.stack : String(reason)}`,
+    );
+  });
+  process.on('uncaughtException', (err) => {
+    processLogger.error(`Uncaught exception: ${err.stack ?? err.message}`);
+  });
 
   const app = await NestFactory.create(AppModule, {
     logger: new AppLogger(),
