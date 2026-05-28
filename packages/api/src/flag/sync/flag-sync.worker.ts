@@ -12,6 +12,7 @@ import {
   logOrderFetch,
   logOrderResult,
   rateLimit,
+  resolveWithDate,
 } from 'src/common';
 import { JobHandler } from 'src/job/job.decorator';
 import { ensureActive } from 'src/job/job.utils';
@@ -115,8 +116,10 @@ export class FlagSyncWorker {
       let refreshDate = manifest.refreshedAt;
 
       if (!refreshDate) {
-        refreshDate = (await this.flagSyncService.firstFromId(manifest.lowerId))
-          ?.updatedAt;
+        refreshDate = resolveWithDate(
+          (await this.flagSyncService.firstFromId(manifest.lowerId)) ??
+            undefined,
+        );
       }
 
       if (!refreshDate) continue;

@@ -16,6 +16,7 @@ import {
   logOrderFetch,
   logOrderResult,
   rateLimit,
+  resolveWithDate,
 } from 'src/common';
 import { JobHandler } from 'src/job/job.decorator';
 import { ensureActive } from 'src/job/job.utils';
@@ -127,9 +128,11 @@ export class TagImplicationSyncWorker {
     for (const manifest of manifests) {
       let refreshDate = manifest.refreshedAt;
       if (!refreshDate) {
-        refreshDate = (
-          await this.tagImplicationSyncService.firstFromId(manifest.lowerId)
-        )?.updatedAt;
+        refreshDate = resolveWithDate(
+          (await this.tagImplicationSyncService.firstFromId(
+            manifest.lowerId,
+          )) ?? undefined,
+        );
       }
       if (!refreshDate) continue;
 

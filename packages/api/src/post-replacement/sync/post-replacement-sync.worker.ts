@@ -12,6 +12,7 @@ import {
   logOrderFetch,
   logOrderResult,
   rateLimit,
+  resolveWithDate,
 } from 'src/common';
 import { JobHandler } from 'src/job/job.decorator';
 import { ensureActive } from 'src/job/job.utils';
@@ -128,9 +129,11 @@ export class PostReplacementSyncWorker {
       let refreshDate = manifest.refreshedAt;
 
       if (!refreshDate) {
-        refreshDate = (
-          await this.postReplacementSyncService.firstFromId(manifest.lowerId)
-        )?.updatedAt;
+        refreshDate = resolveWithDate(
+          (await this.postReplacementSyncService.firstFromId(
+            manifest.lowerId,
+          )) ?? undefined,
+        );
       }
 
       if (!refreshDate) continue;
