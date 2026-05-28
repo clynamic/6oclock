@@ -1,4 +1,4 @@
-import { PostVersion, PostVersionRating } from 'src/api/e621';
+import { PostRating, PostVersion } from 'src/api/e621';
 import { ItemType, LabelEntity, LabelLink } from 'src/label/label.entity';
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
@@ -22,8 +22,8 @@ export class PostVersionEntity extends LabelLink {
   @Column({ type: 'boolean' })
   descriptionChanged: boolean;
 
-  @Column({ type: 'simple-enum', enum: PostVersionRating })
-  rating: PostVersionRating;
+  @Column({ type: 'simple-enum', enum: PostRating })
+  rating: PostRating;
 
   @Column({ type: 'boolean' })
   ratingChanged: boolean;
