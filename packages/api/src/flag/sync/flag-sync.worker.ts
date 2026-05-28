@@ -102,6 +102,8 @@ export class FlagSyncWorker {
         }
       }
     }
+
+    await this.manifestService.mergeInRange(ItemType.flags, recentlyRange);
   }
 
   @JobHandler({ id: 'flags/refresh', queue: 'default', pattern: '*/5 * * * *' })
