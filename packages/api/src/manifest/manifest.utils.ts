@@ -250,18 +250,30 @@ export class ManifestUtils {
    * or extending an existing upper boundary downwards.
    * If this is not the case, you are doing something wrong, and this code needs to be modified.
    */
-  static computeSaveResults(save: OrderResults): ManifestOrderRewrite {
+  static computeSaveResults(
+    save: OrderResults,
+    currentTime: Date,
+  ): ManifestOrderRewrite {
     const { type, order, items, bottom, top } = save;
 
     if (!bottom && items.length === 0) {
       return { discard: [], save: [], order };
     }
 
+    // Clamp the order's upper boundary to currentTime so an empty fetch
+    // (no items to anchor the date) cannot persist a manifest endDate in
+    // the future. Without this clamp, a low-volume sync with a rolling
+    // recentMonths() window can mark future dates as covered, which
+    // permanently suppresses further orders for that range.
+    const effectiveUpperDate = isAfter(order.upperDate, currentTime)
+      ? currentTime
+      : order.upperDate;
+
     const oldestDate =
       (bottom ? null : resolveWithDate(findLowestDate(items))) ??
       order.lowerDate;
     const newestDate =
-      resolveWithDate(findHighestDate(items)) ?? order.upperDate;
+      resolveWithDate(findHighestDate(items)) ?? effectiveUpperDate;
     const buckets = this.createBucketsWithItems(
       items,
       oldestDate,
@@ -315,14 +327,14 @@ export class ManifestUtils {
       const newestBucketItems = buckets[newestBucketDate.getTime()]!;
 
       if (top) {
-        newestManifest.endDate = order.upperDate;
+        newestManifest.endDate = effectiveUpperDate;
       } else {
         const itemDate = resolveWithDate(findHighestDate(newestBucketItems));
         newestManifest.endDate = itemDate
-          ? isAfter(itemDate, order.upperDate)
-            ? order.upperDate
+          ? isAfter(itemDate, effectiveUpperDate)
+            ? effectiveUpperDate
             : itemDate
-          : order.upperDate;
+          : effectiveUpperDate;
       }
     }
 

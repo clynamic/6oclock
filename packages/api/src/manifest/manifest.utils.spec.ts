@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { DateRange } from 'src/common';
 import { ItemType } from 'src/label/label.entity';
 
@@ -748,6 +749,11 @@ describe('ManifestUtils', () => {
   });
 
   describe('computeSaveResults', () => {
+    // Sentinel "now" for tests that don't exercise the future-clamp behavior.
+    // Far enough in the future that no test fixture's upperDate exceeds it,
+    // so the clamp is a no-op and pre-existing assertions stay valid.
+    const farFuture = new Date('2099-01-01T00:00:00Z');
+
     const mockItems = [
       { id: 100, updatedAt: new Date('2023-01-01') },
       { id: 200, updatedAt: new Date('2023-01-02') },
@@ -773,7 +779,7 @@ describe('ManifestUtils', () => {
         items: mockItems,
         bottom: false,
         top: false,
-      });
+      }, farFuture);
 
       expect(instruction.order.upper).toBeInstanceOf(ManifestEntity);
       const extendedUpper = instruction.order.upper as ManifestEntity;
@@ -810,7 +816,7 @@ describe('ManifestUtils', () => {
         items: itemsAcrossMonths,
         bottom: false,
         top: false,
-      });
+      }, farFuture);
 
       // Should not discard anything (extending in place)
       expect(instruction.discard).toEqual([]);
@@ -866,7 +872,7 @@ describe('ManifestUtils', () => {
         items: itemsAcrossMonths,
         bottom: false,
         top: false,
-      });
+      }, farFuture);
 
       // Should not discard anything (no existing manifest)
       expect(instruction.discard).toEqual([]);
@@ -916,7 +922,7 @@ describe('ManifestUtils', () => {
         items: mockItems,
         bottom: false,
         top: false,
-      });
+      }, farFuture);
 
       expect(instruction.order.upper).toBeInstanceOf(ManifestEntity);
       const newUpper = instruction.order.upper as ManifestEntity;
@@ -954,7 +960,7 @@ describe('ManifestUtils', () => {
         items: itemsAcrossMonths,
         bottom: true,
         top: false,
-      });
+      }, farFuture);
 
       // Should not discard anything
       expect(instruction.discard).toEqual([]);
@@ -1032,7 +1038,7 @@ describe('ManifestUtils', () => {
         items: itemsAcrossMonths,
         bottom: true,
         top: true,
-      });
+      }, farFuture);
 
       expect(instruction.discard).toEqual([]);
       expect(instruction.save).toBeDefined();
@@ -1089,7 +1095,7 @@ describe('ManifestUtils', () => {
         items: mockItems,
         bottom: true,
         top: false,
-      });
+      }, farFuture);
 
       expect(instruction.discard).toHaveLength(1);
       expect(instruction.discard[0]!.id).toBe(2);
@@ -1116,7 +1122,7 @@ describe('ManifestUtils', () => {
         items: [],
         bottom: true,
         top: false,
-      });
+      }, farFuture);
 
       expect(instruction.discard).toEqual([]);
       expect(instruction.order.upper).toBeInstanceOf(ManifestEntity);
@@ -1128,6 +1134,44 @@ describe('ManifestUtils', () => {
       // Lower boundary is Date (promotion principle)
       expect(instruction.order.lower).toBeInstanceOf(Date);
       expect(instruction.order.lower).toEqual(new Date('2023-01-01'));
+    });
+
+    it('should clamp manifest endDate to currentTime when exhausted with no items and upper is in the future', () => {
+      const currentTime = new Date('2026-05-28T09:00:00Z');
+      const lowerManifest = new ManifestEntity({
+        id: 470,
+        type: ItemType.flags,
+        startDate: new Date('2026-04-01T00:00:00Z'),
+        endDate: new Date('2026-05-08T22:57:30Z'),
+        lowerId: 920000,
+        upperId: 931652,
+      });
+
+      const order = new Order({
+        lower: lowerManifest,
+        upper: new Date('2026-06-02T00:00:00Z'),
+      });
+
+      const instruction = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.flags,
+          order,
+          items: [],
+          bottom: true,
+          top: false,
+        },
+        currentTime,
+      );
+
+      expect(instruction.order.upper).toBeInstanceOf(ManifestEntity);
+      const newestManifest = instruction.order.upper as ManifestEntity;
+      expect(newestManifest.endDate.getTime()).toBeLessThanOrEqual(
+        currentTime.getTime(),
+      );
+      for (const m of instruction.save) {
+        expect(m.startDate.getTime()).toBeLessThanOrEqual(currentTime.getTime());
+        expect(m.endDate.getTime()).toBeLessThanOrEqual(currentTime.getTime());
+      }
     });
 
     it('should split into monthly manifests when exhausted with no items across month boundaries', () => {
@@ -1142,7 +1186,7 @@ describe('ManifestUtils', () => {
         items: [],
         bottom: true,
         top: false,
-      });
+      }, farFuture);
 
       expect(instruction.discard).toEqual([]);
       expect(instruction.save.length).toBe(3);
@@ -1191,7 +1235,7 @@ describe('ManifestUtils', () => {
         items: [],
         bottom: false,
         top: false,
-      });
+      }, farFuture);
 
       expect(instruction.discard).toEqual([]);
       expect(instruction.order).toBe(order);
@@ -1224,7 +1268,7 @@ describe('ManifestUtils', () => {
         items: newItems,
         bottom: true,
         top: false,
-      });
+      }, farFuture);
 
       // Merged manifest becomes upper boundary (promoted)
       expect(result.order.upper).toBeInstanceOf(ManifestEntity);
@@ -1269,7 +1313,7 @@ describe('ManifestUtils', () => {
         items: itemsAcrossMonths,
         bottom: true,
         top: false,
-      });
+      }, farFuture);
 
       // Should not discard anything
       expect(instruction.discard).toEqual([]);
@@ -1329,7 +1373,7 @@ describe('ManifestUtils', () => {
         items: itemsAcrossMonths,
         bottom: true,
         top: false,
-      });
+      }, farFuture);
 
       expect(instruction.discard).toEqual([]);
       expect(instruction.save).toBeDefined();

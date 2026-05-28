@@ -130,7 +130,7 @@ export class ManifestService {
       discard,
       save,
       order: update,
-    } = ManifestUtils.computeSaveResults(results);
+    } = ManifestUtils.computeSaveResults(results, new Date());
 
     await this.remove(discard);
     await this.save(save);
