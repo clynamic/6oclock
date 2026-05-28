@@ -773,13 +773,16 @@ describe('ManifestUtils', () => {
         upper: upperManifest,
       });
 
-      const instruction = ManifestUtils.computeSaveResults({
-        type: ItemType.posts,
-        order,
-        items: mockItems,
-        bottom: false,
-        top: false,
-      }, farFuture);
+      const instruction = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.posts,
+          order,
+          items: mockItems,
+          bottom: false,
+          top: false,
+        },
+        farFuture,
+      );
 
       expect(instruction.order.upper).toBeInstanceOf(ManifestEntity);
       const extendedUpper = instruction.order.upper as ManifestEntity;
@@ -810,13 +813,16 @@ describe('ManifestUtils', () => {
         { id: 100, updatedAt: new Date('2023-01-15') },
       ];
 
-      const instruction = ManifestUtils.computeSaveResults({
-        type: ItemType.posts,
-        order,
-        items: itemsAcrossMonths,
-        bottom: false,
-        top: false,
-      }, farFuture);
+      const instruction = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.posts,
+          order,
+          items: itemsAcrossMonths,
+          bottom: false,
+          top: false,
+        },
+        farFuture,
+      );
 
       // Should not discard anything (extending in place)
       expect(instruction.discard).toEqual([]);
@@ -866,13 +872,16 @@ describe('ManifestUtils', () => {
         { id: 100, updatedAt: new Date('2023-01-15') },
       ];
 
-      const instruction = ManifestUtils.computeSaveResults({
-        type: ItemType.posts,
-        order,
-        items: itemsAcrossMonths,
-        bottom: false,
-        top: false,
-      }, farFuture);
+      const instruction = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.posts,
+          order,
+          items: itemsAcrossMonths,
+          bottom: false,
+          top: false,
+        },
+        farFuture,
+      );
 
       // Should not discard anything (no existing manifest)
       expect(instruction.discard).toEqual([]);
@@ -916,13 +925,16 @@ describe('ManifestUtils', () => {
         upper: new Date('2023-01-10'),
       });
 
-      const instruction = ManifestUtils.computeSaveResults({
-        type: ItemType.posts,
-        order,
-        items: mockItems,
-        bottom: false,
-        top: false,
-      }, farFuture);
+      const instruction = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.posts,
+          order,
+          items: mockItems,
+          bottom: false,
+          top: false,
+        },
+        farFuture,
+      );
 
       expect(instruction.order.upper).toBeInstanceOf(ManifestEntity);
       const newUpper = instruction.order.upper as ManifestEntity;
@@ -954,13 +966,16 @@ describe('ManifestUtils', () => {
         { id: 100, updatedAt: new Date('2023-01-15') },
       ];
 
-      const instruction = ManifestUtils.computeSaveResults({
-        type: ItemType.posts,
-        order,
-        items: itemsAcrossMonths,
-        bottom: true,
-        top: false,
-      }, farFuture);
+      const instruction = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.posts,
+          order,
+          items: itemsAcrossMonths,
+          bottom: true,
+          top: false,
+        },
+        farFuture,
+      );
 
       // Should not discard anything
       expect(instruction.discard).toEqual([]);
@@ -1032,13 +1047,16 @@ describe('ManifestUtils', () => {
         { id: 300, updatedAt: new Date('2023-03-05') },
       ];
 
-      const instruction = ManifestUtils.computeSaveResults({
-        type: ItemType.posts,
-        order,
-        items: itemsAcrossMonths,
-        bottom: true,
-        top: true,
-      }, farFuture);
+      const instruction = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.posts,
+          order,
+          items: itemsAcrossMonths,
+          bottom: true,
+          top: true,
+        },
+        farFuture,
+      );
 
       expect(instruction.discard).toEqual([]);
       expect(instruction.save).toBeDefined();
@@ -1089,13 +1107,16 @@ describe('ManifestUtils', () => {
         upper: upperManifest,
       });
 
-      const instruction = ManifestUtils.computeSaveResults({
-        type: ItemType.posts,
-        order,
-        items: mockItems,
-        bottom: true,
-        top: false,
-      }, farFuture);
+      const instruction = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.posts,
+          order,
+          items: mockItems,
+          bottom: true,
+          top: false,
+        },
+        farFuture,
+      );
 
       expect(instruction.discard).toHaveLength(1);
       expect(instruction.discard[0]!.id).toBe(2);
@@ -1116,13 +1137,16 @@ describe('ManifestUtils', () => {
         upper: new Date('2023-01-10'),
       });
 
-      const instruction = ManifestUtils.computeSaveResults({
-        type: ItemType.posts,
-        order,
-        items: [],
-        bottom: true,
-        top: false,
-      }, farFuture);
+      const instruction = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.posts,
+          order,
+          items: [],
+          bottom: true,
+          top: false,
+        },
+        farFuture,
+      );
 
       expect(instruction.discard).toEqual([]);
       expect(instruction.order.upper).toBeInstanceOf(ManifestEntity);
@@ -1169,7 +1193,9 @@ describe('ManifestUtils', () => {
         currentTime.getTime(),
       );
       for (const m of instruction.save) {
-        expect(m.startDate.getTime()).toBeLessThanOrEqual(currentTime.getTime());
+        expect(m.startDate.getTime()).toBeLessThanOrEqual(
+          currentTime.getTime(),
+        );
         expect(m.endDate.getTime()).toBeLessThanOrEqual(currentTime.getTime());
       }
     });
@@ -1180,13 +1206,16 @@ describe('ManifestUtils', () => {
         upper: new Date('2023-04-20'),
       });
 
-      const instruction = ManifestUtils.computeSaveResults({
-        type: ItemType.posts,
-        order,
-        items: [],
-        bottom: true,
-        top: false,
-      }, farFuture);
+      const instruction = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.posts,
+          order,
+          items: [],
+          bottom: true,
+          top: false,
+        },
+        farFuture,
+      );
 
       expect(instruction.discard).toEqual([]);
       expect(instruction.save.length).toBe(3);
@@ -1229,13 +1258,16 @@ describe('ManifestUtils', () => {
         upper: new Date('2023-01-10'),
       });
 
-      const instruction = ManifestUtils.computeSaveResults({
-        type: ItemType.posts,
-        order,
-        items: [],
-        bottom: false,
-        top: false,
-      }, farFuture);
+      const instruction = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.posts,
+          order,
+          items: [],
+          bottom: false,
+          top: false,
+        },
+        farFuture,
+      );
 
       expect(instruction.discard).toEqual([]);
       expect(instruction.order).toBe(order);
@@ -1262,13 +1294,16 @@ describe('ManifestUtils', () => {
         { id: 300, updatedAt: new Date('2023-01-20') },
       ];
 
-      const result = ManifestUtils.computeSaveResults({
-        type: ItemType.posts,
-        order,
-        items: newItems,
-        bottom: true,
-        top: false,
-      }, farFuture);
+      const result = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.posts,
+          order,
+          items: newItems,
+          bottom: true,
+          top: false,
+        },
+        farFuture,
+      );
 
       // Merged manifest becomes upper boundary (promoted)
       expect(result.order.upper).toBeInstanceOf(ManifestEntity);
@@ -1307,13 +1342,16 @@ describe('ManifestUtils', () => {
         { id: 300, updatedAt: new Date('2023-03-05') },
       ];
 
-      const instruction = ManifestUtils.computeSaveResults({
-        type: ItemType.posts,
-        order,
-        items: itemsAcrossMonths,
-        bottom: true,
-        top: false,
-      }, farFuture);
+      const instruction = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.posts,
+          order,
+          items: itemsAcrossMonths,
+          bottom: true,
+          top: false,
+        },
+        farFuture,
+      );
 
       // Should not discard anything
       expect(instruction.discard).toEqual([]);
@@ -1367,13 +1405,16 @@ describe('ManifestUtils', () => {
         { id: 100, updatedAt: new Date('2023-01-15') },
       ];
 
-      const instruction = ManifestUtils.computeSaveResults({
-        type: ItemType.posts,
-        order,
-        items: itemsAcrossMonths,
-        bottom: true,
-        top: false,
-      }, farFuture);
+      const instruction = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.posts,
+          order,
+          items: itemsAcrossMonths,
+          bottom: true,
+          top: false,
+        },
+        farFuture,
+      );
 
       expect(instruction.discard).toEqual([]);
       expect(instruction.save).toBeDefined();
