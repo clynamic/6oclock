@@ -106,5 +106,7 @@ export class FeedbackSyncWorker {
         }
       }
     }
+
+    await this.manifestService.mergeInRange(ItemType.feedbacks, recentlyRange);
   }
 }
