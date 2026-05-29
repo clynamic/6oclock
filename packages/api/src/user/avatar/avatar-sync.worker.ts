@@ -37,7 +37,7 @@ export class AvatarSyncWorker {
 
     const notStoredIds = await this.avatarSyncService.findNotStored(avatars);
 
-    postsMany(notStoredIds, axiosConfig, async (result) => {
+    await postsMany(notStoredIds, axiosConfig, async (result) => {
       await this.avatarSyncService.create(
         result.map((post) => PostEntity.fromPost(post)),
       );
