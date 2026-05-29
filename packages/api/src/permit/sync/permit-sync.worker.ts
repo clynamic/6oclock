@@ -109,6 +109,8 @@ export class PermitSyncWorker {
         }
       }
     }
+
+    await this.manifestService.mergeInRange(ItemType.permits, recentlyRange);
   }
 
   @JobHandler({
