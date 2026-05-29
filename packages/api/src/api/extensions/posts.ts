@@ -10,7 +10,7 @@ export const postsMany = async (
 ): Promise<Post[]> => {
   const results: Post[] = [];
 
-  const limit = 40; // API allows up to 40
+  const limit = 320; // API allows up to 320
   const chunks = chunk(ids, limit);
 
   for (const chunk of chunks) {
