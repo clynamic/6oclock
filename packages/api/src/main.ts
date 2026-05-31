@@ -1,6 +1,7 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import 'reflect-metadata';
 
 import { AppModule } from './app/app.module';
@@ -21,11 +22,14 @@ async function bootstrap() {
     processLogger.error(`Uncaught exception: ${err.stack ?? err.message}`);
   });
 
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: new AppLogger(),
   });
   const corsConfig = app.get(CorsConfigModule);
   const configService = app.get(ConfigService);
+
+  // Express 5 defaults to a parser that never builds arrays from `foo[]=`.
+  app.set('query parser', 'extended');
 
   app.setGlobalPrefix('api');
 
