@@ -1,6 +1,7 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import 'reflect-metadata';
 
 import { AppModule } from './app/app.module';
@@ -21,11 +22,16 @@ async function bootstrap() {
     processLogger.error(`Uncaught exception: ${err.stack ?? err.message}`);
   });
 
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: new AppLogger(),
   });
   const corsConfig = app.get(CorsConfigModule);
   const configService = app.get(ConfigService);
+
+  // Express 5 defaults to the "simple" query parser, which leaves `foo[]=`
+  // brackets in the key and never produces arrays. The qs-based "extended"
+  // parser is required for array query params like `activities[]`.
+  app.set('query parser', 'extended');
 
   app.setGlobalPrefix('api');
 
