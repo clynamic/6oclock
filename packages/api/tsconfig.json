@@ -7,6 +7,7 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
+    "types": ["node", "jest"],
 
     "outDir": "./dist",
     "sourceMap": true,
