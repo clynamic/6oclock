@@ -1,13 +1,14 @@
 import { ItemType } from '../../api';
 import { DashboardCatalog, createLayout } from '../../dashboard/DashboardItem';
 import { PerformanceLeaderboard } from '../../performance/PerformanceBoard';
+import { FlagPendingSeriesChart } from '../charts/FlagPendingSeriesChart';
 import { PostPendingSeriesChart } from '../charts/PostPendingSeriesChart';
 import { PostStatusSeriesChart } from '../charts/PostStatusSeriesChart';
 import { PostStatusSummaryChart } from '../charts/PostStatusSummaryChart';
 import { PostReplacementStatusSeriesChart } from '../charts/ReplacementStatusSeriesChart';
 import { PostUploaderBoard } from '../uploads/PostUploaderBoard';
 
-export const janitorDashboardCatalogVersion = 3;
+export const janitorDashboardCatalogVersion = 4;
 
 export const janitorDashboardCatalog: DashboardCatalog = {
   performanceLeaderboard: {
@@ -144,5 +145,25 @@ export const janitorDashboardCatalog: DashboardCatalog = {
     card: { title: 'Replacements' },
     items: [ItemType.post_replacements],
     component: PostReplacementStatusSeriesChart,
+  },
+  flagsPending: {
+    name: 'Flags Pending by Day',
+    layout: createLayout(
+      {
+        minW: 4,
+        minH: 3,
+        maxH: 9,
+      },
+      {
+        xs: { x: 0, y: 24, w: 4, h: 6 },
+        sm: { x: 0, y: 22, w: 6, h: 5 },
+        md: { x: 0, y: 17, w: 5, h: 6 },
+        lg: { x: 3, y: 12, w: 5, h: 6 },
+        xl: { x: 4, y: 12, w: 7, h: 6 },
+      },
+    ),
+    card: { title: 'Flags' },
+    items: [ItemType.flags, ItemType.post_events],
+    component: FlagPendingSeriesChart,
   },
 };
