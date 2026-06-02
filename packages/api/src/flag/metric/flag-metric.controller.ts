@@ -9,6 +9,7 @@ import { AuthLevel, RolesGuard } from 'src/auth/auth.guard';
 import { UserLevel } from 'src/auth/auth.level';
 import { PartialDateRange, SeriesCountPoint } from 'src/common';
 
+import { FlagHandledPoint, FlagHandledQuery } from './flag-metric.dto';
 import { FlagMetricService } from './flag-metric.service';
 
 @ApiTags('Flags')
@@ -33,5 +34,22 @@ export class FlagMetricController {
     @Query() range?: PartialDateRange,
   ): Promise<SeriesCountPoint[]> {
     return this.flagMetricService.pendingSeries(range);
+  }
+
+  @Get('handled')
+  @ApiOperation({
+    summary: 'Flag handled series',
+    description: 'Get flag handled series for a given date range',
+    operationId: 'getFlagHandled',
+  })
+  @ApiResponse({
+    status: 200,
+    type: [FlagHandledPoint],
+  })
+  async handled(
+    @Query() range?: PartialDateRange,
+    @Query() query?: FlagHandledQuery,
+  ): Promise<FlagHandledPoint[]> {
+    return this.flagMetricService.handled(range, query);
   }
 }

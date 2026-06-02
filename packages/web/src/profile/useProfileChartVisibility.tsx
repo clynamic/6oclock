@@ -17,6 +17,7 @@ const ACTIVITY_TO_CHART_MAP: Record<
   postReplacementCreate: ['replacementsHandled'],
   postReplacementPromote: ['replacementsHandled'],
   postReplacementReject: ['replacementsHandled'],
+  flagHandle: ['flagsHandled'],
   ticketCreate: ['ticketsCreated'],
   ticketHandle: ['ticketsHandled', 'ticketTypes'],
 };

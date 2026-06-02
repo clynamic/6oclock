@@ -12,6 +12,7 @@ export enum Activity {
   PostReplacementApprove = 'post_replacement_approve',
   PostReplacementPromote = 'post_replacement_promote',
   PostReplacementReject = 'post_replacement_reject',
+  FlagHandle = 'flag_handle',
   TicketCreate = 'ticket_create',
   TicketHandle = 'ticket_handle',
 }
@@ -37,6 +38,7 @@ export class ActivitySummary implements ConvertKeysToCamelCase<
   postReplacementApprove: number;
   postReplacementReject: number;
   postReplacementPromote: number;
+  flagHandle: number;
   ticketCreate: number;
   ticketHandle: number;
 }
@@ -79,6 +81,8 @@ export const getActivityScore = (activity: Activity): number => {
     case Activity.PostReplacementApprove:
     case Activity.PostReplacementReject:
     case Activity.PostReplacementPromote:
+      return 1.1;
+    case Activity.FlagHandle:
       return 1.1;
     default:
       return 0;

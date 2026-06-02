@@ -7,6 +7,7 @@ import { TicketClosedSeriesByHandlerChart } from '../mods/charts/TicketClosedSer
 import { TicketCreatedSeriesByReporterChart } from '../mods/charts/TicketCreatedSeriesByReporterChart';
 import { TicketTypeSummaryByHandlerTypeChart } from '../mods/charts/TicketTypeSummaryByHandlerTypeChart';
 import { PerformanceCard } from '../performance/PerformanceCard';
+import { FlagHandledSeriesChart } from './charts/FlagHandledSeriesChart';
 import { ReplacementHandledSeriesChart } from './charts/ReplacementHandledSeriesChart';
 import { UserActivitySeriesChart } from './charts/UserActivitySeriesChart';
 
@@ -191,5 +192,26 @@ export const profileCatalog: DashboardCatalog = {
     ),
     card: { title: 'Replacements Handled' },
     component: ReplacementHandledSeriesChart,
+  },
+  flagsHandled: {
+    name: 'Flags Handled',
+    layout: createLayout(
+      {
+        minW: 2,
+        maxW: 9,
+        minH: 2,
+        maxH: 5,
+      },
+      {
+        xs: { x: 0, y: 27, w: 4, h: 5 },
+        sm: { x: 0, y: 27, w: 6, h: 5 },
+        md: { x: 0, y: 22, w: 9, h: 5 },
+        lg: { x: 0, y: 15, w: 6, h: 5 },
+        xl: { x: 10, y: 10, w: 5, h: 5 },
+      },
+    ),
+    items: [ItemType.flags, ItemType.post_events],
+    card: { title: 'Flags Handled' },
+    component: FlagHandledSeriesChart,
   },
 };

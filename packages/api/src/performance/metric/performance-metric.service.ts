@@ -12,6 +12,7 @@ import {
   getClosestTimeScale,
   getDurationKeyForScale,
 } from 'src/common';
+import { FlagLifecycleEntity } from 'src/flag/lifecycle/flag-lifecycle.entity';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
 import { PostReplacementEntity } from 'src/post-replacement/post-replacement.entity';
 import { PostVersionEntity } from 'src/post-version/post-version.entity';
@@ -47,6 +48,8 @@ export class PerformanceMetricService {
     private readonly ticketRepository: Repository<TicketEntity>,
     @InjectRepository(PostEventEntity)
     private readonly postEventRepository: Repository<PostEventEntity>,
+    @InjectRepository(FlagLifecycleEntity)
+    private readonly flagLifecycleRepository: Repository<FlagLifecycleEntity>,
   ) {}
 
   private async findActivities(
@@ -231,6 +234,27 @@ export class PerformanceMetricService {
               ),
           );
           break;
+        case Activity.FlagHandle:
+          tasks.push(
+            this.flagLifecycleRepository
+              .find({
+                where: {
+                  handledAt: range.find(),
+                  handlerId: userId ? userId : Not(IsNull()),
+                },
+                select: ['handlerId', 'handledAt'],
+              })
+              .then((episodes) =>
+                episodes.forEach((episode) =>
+                  storeItem(
+                    Activity.FlagHandle,
+                    episode.handlerId!,
+                    episode.handledAt!,
+                  ),
+                ),
+              ),
+          );
+          break;
       }
     }
 
@@ -248,6 +272,7 @@ export class PerformanceMetricService {
       PostReplacementEntity,
       TicketEntity,
       PostEventEntity,
+      FlagLifecycleEntity,
     ],
   })
   async performance(
@@ -286,6 +311,7 @@ export class PerformanceMetricService {
             Activity.PostReplacementReject,
             Activity.PostReplacementPromote,
             Activity.PostDelete,
+            Activity.FlagHandle,
           ];
           break;
         case UserArea.Member:
@@ -460,6 +486,7 @@ export class PerformanceMetricService {
       PostReplacementEntity,
       TicketEntity,
       PostEventEntity,
+      FlagLifecycleEntity,
     ],
   })
   async activity(
@@ -505,6 +532,7 @@ export class PerformanceMetricService {
             Activity.PostReplacementApprove,
             Activity.PostReplacementReject,
             Activity.PostReplacementPromote,
+            Activity.FlagHandle,
           ];
           break;
         case UserArea.Member:

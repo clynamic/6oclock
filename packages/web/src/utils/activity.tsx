@@ -1,6 +1,13 @@
 import { ReactElement } from 'react';
 
-import { Beenhere, Flag, RestartAlt, Sell, Upload } from '@mui/icons-material';
+import {
+  Beenhere,
+  Delete,
+  OutlinedFlag,
+  RestartAlt,
+  Sell,
+  Upload,
+} from '@mui/icons-material';
 
 import { Activity } from '../api';
 
@@ -32,6 +39,8 @@ export const getActivityName = (activity: Activity): string => {
       return 'Post Replacements promoted';
     case Activity.post_replacement_reject:
       return 'Post Replacements rejected';
+    case Activity.flag_handle:
+      return 'Flags handled';
     case Activity.ticket_create:
       return 'Tickets created';
     case Activity.ticket_handle:
@@ -55,6 +64,8 @@ export const getActivityNoun = (activity: Activity): string => {
       return 'Promotions';
     case Activity.post_replacement_reject:
       return 'Rejections';
+    case Activity.flag_handle:
+      return 'Flags';
     case Activity.ticket_create:
       return 'Reports';
     case Activity.ticket_handle:
@@ -71,9 +82,11 @@ export const getActivityIcon = (
     case Activity.post_approve:
       return <Beenhere />;
     case Activity.post_delete:
-      return <Flag />;
+      return <Delete />;
     case Activity.post_replacement_approve:
       return <RestartAlt />;
+    case Activity.flag_handle:
+      return <OutlinedFlag />;
     case Activity.ticket_handle:
       return <Sell />;
     default:

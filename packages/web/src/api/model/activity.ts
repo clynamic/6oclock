@@ -17,6 +17,7 @@ export const Activity = {
   post_replacement_approve: 'post_replacement_approve',
   post_replacement_promote: 'post_replacement_promote',
   post_replacement_reject: 'post_replacement_reject',
+  flag_handle: 'flag_handle',
   ticket_create: 'ticket_create',
   ticket_handle: 'ticket_handle',
 } as const;

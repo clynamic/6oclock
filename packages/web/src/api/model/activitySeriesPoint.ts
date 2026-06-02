@@ -14,6 +14,7 @@ export interface ActivitySeriesPoint {
   postReplacementApprove: number;
   postReplacementReject: number;
   postReplacementPromote: number;
+  flagHandle: number;
   ticketCreate: number;
   ticketHandle: number;
   date: Date;
