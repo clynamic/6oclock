@@ -8,15 +8,24 @@ import {
   TimeScale,
   expandInto,
   generateSeriesLastTileCountPoints,
+  generateSeriesRecordPoints,
 } from 'src/common';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
 import { Repository } from 'typeorm';
+
+import {
+  FlagHandling,
+  FlagLifecycleEntity,
+} from '../lifecycle/flag-lifecycle.entity';
+import { FlagHandledPoint, FlagHandledQuery } from './flag-metric.dto';
 
 @Injectable()
 export class FlagMetricService {
   constructor(
     @InjectRepository(PostEventEntity)
     private readonly postEventRepository: Repository<PostEventEntity>,
+    @InjectRepository(FlagLifecycleEntity)
+    private readonly lifecycleRepository: Repository<FlagLifecycleEntity>,
   ) {}
 
   @Cacheable({
@@ -106,6 +115,42 @@ export class FlagMetricService {
       result.map((row) => new DateRange(expandInto(row.time, TimeScale.Hour))),
       result.map((row) => parseInt(row.count, 10)),
       range,
+    );
+  }
+
+  @Cacheable({
+    prefix: 'flag',
+    ttl: 5 * 60 * 1000,
+    dependencies: [FlagLifecycleEntity],
+  })
+  async handled(
+    partialRange?: PartialDateRange,
+    query?: FlagHandledQuery,
+  ): Promise<FlagHandledPoint[]> {
+    const range = DateRange.fill(partialRange);
+
+    const episodes = await this.lifecycleRepository.find({
+      where: {
+        handledAt: range.find(),
+        ...query?.where(),
+      },
+      select: ['handledAt', 'handling'],
+    });
+
+    const allKeys = [FlagHandling.removed, FlagHandling.deleted] as const;
+
+    return generateSeriesRecordPoints<Record<FlagHandling, number>>(
+      episodes.map((episode) => episode.handledAt!),
+      episodes.map((episode) => episode.handling!),
+      allKeys,
+      range,
+    ).map(
+      (point) =>
+        new FlagHandledPoint({
+          removed: point.value[FlagHandling.removed],
+          deleted: point.value[FlagHandling.deleted],
+          date: point.date,
+        }),
     );
   }
 }
