@@ -12,6 +12,7 @@ export * from './replacements';
 export * from './tickets';
 export * from './performance';
 export * from './posts';
+export * from './flags';
 export * from './feedbacks';
 export * from './uploads';
 export * from './permits';

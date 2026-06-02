@@ -32,6 +32,7 @@ export * from './getDeletionActivitySummaryParams';
 export * from './getDeletionCountSeriesParams';
 export * from './getDeletionSeriesByDeleterParams';
 export * from './getFeedbackTypeSeriesParams';
+export * from './getFlagPendingSeriesParams';
 export * from './getJobsParams';
 export * from './getManifestHealthParams';
 export * from './getPerformanceParams';
