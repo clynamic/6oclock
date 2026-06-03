@@ -10,7 +10,7 @@ e6 staff dashboard
 
 1. Install [Node.js](https://nodejs.org/en/download/) (20+)
 2. Install [Yarn](https://yarnpkg.com/en/docs/install)
-3. Install [PostgreSQL](https://www.postgresql.org/download/)
+3. Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
 
 ### Getting Started
 
@@ -26,20 +26,18 @@ git clone https://github.com/clynamic/6oclock.git
 yarn
 ```
 
-3. Set up your database
-
-Create a PostgreSQL database for the project.
-
-4. Set up your environment
+3. Set up your environment
 
 Copy `.env.example` to `.env` and fill in the required values.
+Copy `compose.override.example.yml` to `compose.override.yml`.
 
-5. Start the development servers
+4. Start the development servers
 
 ```bash
-yarn api
-yarn web
+yarn dev
 ```
+
+This brings up PostgreSQL and Redis in Docker, then runs the API and web dev servers on the host.
 
 ## Deployment
 
