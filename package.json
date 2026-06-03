@@ -8,12 +8,17 @@
     "packages/*"
   ],
   "scripts": {
+    "dev": "docker compose up -d --wait && concurrently -k -n api,web -c blue,magenta \"yarn api\" \"cross-env VITE_API_URL=http://localhost:34571/api yarn web\"",
     "api": "yarn workspace @6oclock/api dev",
     "web": "yarn workspace @6oclock/web dev",
     "build:api": "yarn workspace @6oclock/api build",
     "build:web": "yarn workspace @6oclock/web build",
     "lint": "yarn workspaces run lint",
     "format": "yarn workspaces run format"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3"
   },
   "engines": {
     "node": ">=20",

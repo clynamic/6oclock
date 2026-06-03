@@ -1,36 +1,22 @@
 services:
   six-oclock:
-    build: !reset null
-    image: node:22
-    working_dir: /app
-    command: sh -c "yarn install && yarn workspace @6oclock/api dev"
-    environment:
-      DB_HOST: six-oclock-postgres
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: six_oclock
-      REDIS_HOST: six-oclock-redis
-      NODE_ENV: development
-    volumes:
-      - .:/app
-      - node-modules:/app/node_modules
+    profiles:
+      - app
 
-  six-oclock-web:
-    image: node:22
-    container_name: six-oclock-web
-    working_dir: /app
-    command: sh -c "while ! test -f /app/node_modules/.yarn-integrity; do sleep 2; done && yarn workspace @6oclock/web dev --host"
-    env_file: .env
-    environment:
-      VITE_API_URL: http://localhost:34571/api
+  six-oclock-postgres:
     ports:
-      - "47823:47823"
-    volumes:
-      - .:/app
-      - node-modules:/app/node_modules
-    depends_on:
-      - six-oclock
+      - "127.0.0.1:34572:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
 
-volumes:
-  node-modules:
+  six-oclock-redis:
+    ports:
+      - "127.0.0.1:34573:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
