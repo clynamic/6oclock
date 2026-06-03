@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { max } from 'date-fns';
 import { Cacheable } from 'src/app/browser.module';
 import {
   DateRange,
@@ -11,13 +12,18 @@ import {
   generateSeriesRecordPoints,
 } from 'src/common';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
-import { Repository } from 'typeorm';
+import { IsNull, LessThan, Repository } from 'typeorm';
 
 import {
   FlagHandling,
   FlagLifecycleEntity,
 } from '../lifecycle/flag-lifecycle.entity';
-import { FlagHandledPoint, FlagHandledQuery } from './flag-metric.dto';
+import {
+  FlagHandledPoint,
+  FlagHandledQuery,
+  FlagStatus,
+  FlagStatusSeriesPoint,
+} from './flag-metric.dto';
 
 @Injectable()
 export class FlagMetricService {
@@ -150,6 +156,43 @@ export class FlagMetricService {
           removed: point.value[FlagHandling.removed],
           deleted: point.value[FlagHandling.deleted],
           date: point.date,
+        }),
+    );
+  }
+
+  @Cacheable({
+    prefix: 'flag',
+    ttl: 5 * 60 * 1000,
+    dependencies: [FlagLifecycleEntity],
+  })
+  async status(
+    partialRange?: PartialDateRange,
+  ): Promise<FlagStatusSeriesPoint[]> {
+    const range = DateRange.fill(partialRange);
+
+    const episodes = await this.lifecycleRepository.find({
+      where: [
+        { flaggedAt: range.find() },
+        { handledAt: range.find() },
+        { flaggedAt: LessThan(range.endDate!), handledAt: IsNull() },
+      ],
+      select: ['flaggedAt', 'handledAt', 'handling'],
+    });
+
+    return generateSeriesRecordPoints<Record<FlagStatus, number>>(
+      episodes.map((episode) => max([episode.flaggedAt, range.startDate!])),
+      episodes.map((episode) =>
+        episode.handledAt === null
+          ? FlagStatus.open
+          : (episode.handling as unknown as FlagStatus),
+      ),
+      Object.values(FlagStatus),
+      range,
+    ).map(
+      (point) =>
+        new FlagStatusSeriesPoint({
+          date: point.date,
+          ...point.value,
         }),
     );
   }

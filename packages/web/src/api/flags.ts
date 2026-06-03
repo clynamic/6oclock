@@ -22,8 +22,10 @@ import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
 import type {
   FlagHandledPoint,
+  FlagStatusSeriesPoint,
   GetFlagHandledParams,
   GetFlagPendingSeriesParams,
+  GetFlagStatusParams,
   SeriesCountPoint,
 } from './model';
 
@@ -320,6 +322,145 @@ export function useFlagHandled<
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
   const queryOptions = getFlagHandledQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * Get flag status series for a given date range
+ * @summary Flag status series
+ */
+export const flagStatus = (
+  params?: GetFlagStatusParams,
+  signal?: AbortSignal,
+) => {
+  return makeRequest<FlagStatusSeriesPoint[]>({
+    url: `/metrics/flags/status`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
+
+export const getFlagStatusQueryKey = (params?: GetFlagStatusParams) => {
+  return [`/metrics/flags/status`, ...(params ? [params] : [])] as const;
+};
+
+export const getFlagStatusQueryOptions = <
+  TData = Awaited<ReturnType<typeof flagStatus>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetFlagStatusParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof flagStatus>>, TError, TData>
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getFlagStatusQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof flagStatus>>> = ({
+    signal,
+  }) => flagStatus(params, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof flagStatus>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type FlagStatusQueryResult = NonNullable<
+  Awaited<ReturnType<typeof flagStatus>>
+>;
+export type FlagStatusQueryError = ErrorType<unknown>;
+
+export function useFlagStatus<
+  TData = Awaited<ReturnType<typeof flagStatus>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetFlagStatusParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof flagStatus>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof flagStatus>>,
+          TError,
+          Awaited<ReturnType<typeof flagStatus>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useFlagStatus<
+  TData = Awaited<ReturnType<typeof flagStatus>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetFlagStatusParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof flagStatus>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof flagStatus>>,
+          TError,
+          Awaited<ReturnType<typeof flagStatus>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useFlagStatus<
+  TData = Awaited<ReturnType<typeof flagStatus>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetFlagStatusParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof flagStatus>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+/**
+ * @summary Flag status series
+ */
+
+export function useFlagStatus<
+  TData = Awaited<ReturnType<typeof flagStatus>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetFlagStatusParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof flagStatus>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getFlagStatusQueryOptions(params, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,

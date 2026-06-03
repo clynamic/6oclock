@@ -25,7 +25,7 @@ import type { ErrorType } from '../http/axios';
  * Proxies a request to the static host and returns the file as a stream
  * @summary Proxy request to static host
  */
-export const proxyRequest = (path: string, signal?: AbortSignal) => {
+export const proxyRequest = (path: string[], signal?: AbortSignal) => {
   return makeRequest<void>({
     url: `/proxy/${encodeURIComponent(String(path))}`,
     method: 'GET',
@@ -33,7 +33,7 @@ export const proxyRequest = (path: string, signal?: AbortSignal) => {
   });
 };
 
-export const getProxyRequestQueryKey = (path?: string) => {
+export const getProxyRequestQueryKey = (path?: string[]) => {
   return [`/proxy/${path}`] as const;
 };
 
@@ -41,7 +41,7 @@ export const getProxyRequestQueryOptions = <
   TData = Awaited<ReturnType<typeof proxyRequest>>,
   TError = ErrorType<void>,
 >(
-  path: string,
+  path: string[],
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>
@@ -77,7 +77,7 @@ export function useProxyRequest<
   TData = Awaited<ReturnType<typeof proxyRequest>>,
   TError = ErrorType<void>,
 >(
-  path: string,
+  path: string[],
   options: {
     query: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>
@@ -99,7 +99,7 @@ export function useProxyRequest<
   TData = Awaited<ReturnType<typeof proxyRequest>>,
   TError = ErrorType<void>,
 >(
-  path: string,
+  path: string[],
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>
@@ -121,7 +121,7 @@ export function useProxyRequest<
   TData = Awaited<ReturnType<typeof proxyRequest>>,
   TError = ErrorType<void>,
 >(
-  path: string,
+  path: string[],
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>
@@ -139,7 +139,7 @@ export function useProxyRequest<
   TData = Awaited<ReturnType<typeof proxyRequest>>,
   TError = ErrorType<void>,
 >(
-  path: string,
+  path: string[],
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof proxyRequest>>, TError, TData>

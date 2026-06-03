@@ -15,6 +15,7 @@ export const ItemType = {
   users: 'users',
   user_profiles: 'user_profiles',
   flags: 'flags',
+  appeals: 'appeals',
   feedbacks: 'feedbacks',
   post_versions: 'post_versions',
   post_replacements: 'post_replacements',

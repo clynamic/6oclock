@@ -14,6 +14,24 @@ export class FlagHandledPoint {
   deleted: number;
 }
 
+export enum FlagStatus {
+  open = 'open',
+  removed = 'removed',
+  deleted = 'deleted',
+}
+
+export class FlagStatusSeriesPoint {
+  constructor(value: FlagStatusSeriesPoint) {
+    Object.assign(this, value);
+  }
+
+  date: Date;
+
+  open: number;
+  removed: number;
+  deleted: number;
+}
+
 export class FlagHandledQuery {
   constructor(value: Raw<FlagHandledQuery>) {
     Object.assign(this, value);

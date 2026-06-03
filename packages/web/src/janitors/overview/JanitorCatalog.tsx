@@ -2,13 +2,14 @@ import { ItemType } from '../../api';
 import { DashboardCatalog, createLayout } from '../../dashboard/DashboardItem';
 import { PerformanceLeaderboard } from '../../performance/PerformanceBoard';
 import { FlagPendingSeriesChart } from '../charts/FlagPendingSeriesChart';
+import { FlagStatusSummaryChart } from '../charts/FlagStatusSummaryChart';
 import { PostPendingSeriesChart } from '../charts/PostPendingSeriesChart';
 import { PostStatusSeriesChart } from '../charts/PostStatusSeriesChart';
 import { PostStatusSummaryChart } from '../charts/PostStatusSummaryChart';
 import { PostReplacementStatusSeriesChart } from '../charts/ReplacementStatusSeriesChart';
 import { PostUploaderBoard } from '../uploads/PostUploaderBoard';
 
-export const janitorDashboardCatalogVersion = 4;
+export const janitorDashboardCatalogVersion = 5;
 
 export const janitorDashboardCatalog: DashboardCatalog = {
   performanceLeaderboard: {
@@ -165,5 +166,26 @@ export const janitorDashboardCatalog: DashboardCatalog = {
     card: { title: 'Flags' },
     items: [ItemType.flags, ItemType.post_events],
     component: FlagPendingSeriesChart,
+  },
+  flagStatus: {
+    name: 'Flag Status Summary',
+    component: FlagStatusSummaryChart,
+    layout: createLayout(
+      {
+        minW: 3,
+        maxW: 8,
+        minH: 4,
+        maxH: 9,
+      },
+      {
+        xs: { x: 0, y: 30, w: 4, h: 6 },
+        sm: { x: 0, y: 27, w: 6, h: 5 },
+        md: { x: 5, y: 17, w: 4, h: 6 },
+        lg: { x: 8, y: 18, w: 4, h: 6 },
+        xl: { x: 11, y: 18, w: 5, h: 6 },
+      },
+    ),
+    items: [ItemType.flags, ItemType.post_events],
+    card: { title: 'Flag Status' },
   },
 };
