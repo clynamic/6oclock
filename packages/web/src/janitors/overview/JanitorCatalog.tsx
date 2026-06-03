@@ -7,9 +7,10 @@ import { PostPendingSeriesChart } from '../charts/PostPendingSeriesChart';
 import { PostStatusSeriesChart } from '../charts/PostStatusSeriesChart';
 import { PostStatusSummaryChart } from '../charts/PostStatusSummaryChart';
 import { PostReplacementStatusSeriesChart } from '../charts/ReplacementStatusSeriesChart';
+import { ReplacementStatusSummaryChart } from '../charts/ReplacementStatusSummaryChart';
 import { PostUploaderBoard } from '../uploads/PostUploaderBoard';
 
-export const janitorDashboardCatalogVersion = 5;
+export const janitorDashboardCatalogVersion = 6;
 
 export const janitorDashboardCatalog: DashboardCatalog = {
   performanceLeaderboard: {
@@ -187,5 +188,26 @@ export const janitorDashboardCatalog: DashboardCatalog = {
     ),
     items: [ItemType.flags, ItemType.post_events],
     card: { title: 'Flag Status' },
+  },
+  replacementStatus: {
+    name: 'Replacement Status Summary',
+    component: ReplacementStatusSummaryChart,
+    layout: createLayout(
+      {
+        minW: 3,
+        maxW: 8,
+        minH: 4,
+        maxH: 9,
+      },
+      {
+        xs: { x: 0, y: 40, w: 4, h: 6 },
+        sm: { x: 0, y: 37, w: 6, h: 5 },
+        md: { x: 0, y: 23, w: 4, h: 6 },
+        lg: { x: 0, y: 18, w: 3, h: 6 },
+        xl: { x: 0, y: 18, w: 4, h: 6 },
+      },
+    ),
+    items: [ItemType.post_replacements],
+    card: { title: 'Replacement Status' },
   },
 };
