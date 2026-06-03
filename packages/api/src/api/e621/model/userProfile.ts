@@ -75,4 +75,6 @@ export interface UserProfile {
   avatar_id?: number;
   /** Whether the user has verified their email */
   is_verified?: boolean;
+  /** Whether the user has a server-side cropped avatar */
+  has_cropped_avatar?: boolean;
 }

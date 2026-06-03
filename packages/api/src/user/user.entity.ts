@@ -27,6 +27,9 @@ export class UserEntity extends LabelLink {
   @Column({ type: 'int', nullable: true })
   avatarId: number | null;
 
+  @Column({ type: 'boolean', default: false })
+  hasCroppedAvatar: boolean;
+
   @Column({ type: 'int' })
   baseUploadLimit: number;
 
