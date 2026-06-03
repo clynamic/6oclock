@@ -18,6 +18,23 @@ export interface UserHeadParams {
   safeMode?: boolean;
 }
 
+/**
+ * Builds the URL for a user's server-side cropped avatar. Cropped avatars live
+ * on the same host as post files, so the host is taken from `reference` (any
+ * media URL of the avatar post) by replacing everything from `/data/` onwards.
+ * `avatarId` is appended as a cache-busting token so a changed avatar is
+ * refetched. Returns undefined when `reference` has no `/data/` segment.
+ */
+const croppedAvatarUrl = (
+  reference: string,
+  userId: number,
+  avatarId: number,
+): string | undefined => {
+  const index = reference.indexOf('/data/');
+  if (index === -1) return undefined;
+  return `${reference.substring(0, index)}/data/avatars/${userId}.jpg?t=${avatarId}`;
+};
+
 @Injectable()
 export class UserHeadService {
   constructor(
@@ -55,7 +72,7 @@ export class UserHeadService {
             }
           : undefined,
       },
-      select: ['id', 'name', 'avatarId', 'levelString'],
+      select: ['id', 'name', 'avatarId', 'hasCroppedAvatar', 'levelString'],
       relations: ['label'],
     });
 
@@ -126,17 +143,20 @@ export class UserHeadService {
       }
     }
 
-    const result = users.map(
-      (user) =>
-        new UserHead({
-          id: user.id,
-          name: user.name,
-          avatar:
-            avatars.find((avatar) => avatar.id === user.avatarId)?.preview ??
-            undefined,
-          level: user.levelString,
-        }),
-    );
+    const result = users.map((user) => {
+      const post = avatars.find((avatar) => avatar.id === user.avatarId);
+      const preview = post?.preview ?? undefined;
+
+      return new UserHead({
+        id: user.id,
+        name: user.name,
+        avatar:
+          post && preview && user.hasCroppedAvatar
+            ? (croppedAvatarUrl(preview, user.id, post.id) ?? preview)
+            : preview,
+        level: user.levelString,
+      });
+    });
 
     if (isArray) {
       return result;

@@ -8875,6 +8875,9 @@ components:
         is_verified:
           type: "boolean"
           description: "Whether the user has verified their email"
+        has_cropped_avatar:
+          type: "boolean"
+          description: "Whether the user has a server-side cropped avatar"
     User:
       type: "object"
       description: "A simplified representation of a user with core attributes."
@@ -8935,6 +8938,9 @@ components:
         is_verified:
           type: "boolean"
           description: "Whether the user has verified their email"
+        has_cropped_avatar:
+          type: "boolean"
+          description: "Whether the user has a server-side cropped avatar"
     Ticket:
       type: "object"
       description: "A ticket object representing a user complaint or moderation issue."
