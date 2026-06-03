@@ -50,6 +50,12 @@ export const DashboardGrid: React.FC<DashboardGridProps> = ({ ...rest }) => {
           )) as any
         }
         compactType={'horizontal'}
+        // Transforms only while editing: a transformed ancestor traps the chart
+        // tooltip's fixed positioning inside the card, letting neighbor cards
+        // overlap it (MUI X Charts portals the tooltip into the chart container,
+        // not the body). Charts are not hoverable while editing, so top/left
+        // positioning when idle costs nothing and keeps transforms for dragging.
+        useCSSTransforms={isEditing}
         breakpoints={breakpoints.values}
         cols={{ xl: 16, lg: 12, md: 9, sm: 6, xs: 4 }}
         rowHeight={50}
