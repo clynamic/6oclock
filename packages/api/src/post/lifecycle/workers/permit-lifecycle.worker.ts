@@ -26,7 +26,7 @@ export class PermitLifecycleWorker {
   private lastProcessedTime: Date | null = null;
 
   @JobHandler({
-    id: 'post-lifecycle/permits',
+    id: 'postLifecycle/permits',
     queue: 'tiling',
     pattern: '*/3 * * * *',
     timeout: 1000 * 60 * 5,

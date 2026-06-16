@@ -38,7 +38,7 @@ export class FlagLifecycleWorker {
   private lastProcessedTime: Date | null = null;
 
   @JobHandler({
-    id: 'flag-lifecycle/post-events',
+    id: 'flagLifecycle/postEvents',
     queue: 'tiling',
     pattern: '*/3 * * * *',
     timeout: 1000 * 60 * 5,

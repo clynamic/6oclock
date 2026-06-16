@@ -27,7 +27,7 @@ export class PostEventLifecycleWorker {
   private lastProcessedTime: Date | null = null;
 
   @JobHandler({
-    id: 'post-lifecycle/post-events',
+    id: 'postLifecycle/postEvents',
     queue: 'tiling',
     pattern: '*/3 * * * *',
     timeout: 1000 * 60 * 5,

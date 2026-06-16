@@ -26,7 +26,7 @@ export class UploadLifecycleWorker {
   private lastProcessedTime: Date | null = null;
 
   @JobHandler({
-    id: 'post-lifecycle/uploads',
+    id: 'postLifecycle/uploads',
     queue: 'tiling',
     pattern: '*/3 * * * *',
     timeout: 1000 * 60 * 5,
