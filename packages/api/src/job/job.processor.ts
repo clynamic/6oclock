@@ -36,7 +36,11 @@ abstract class JobProcessor extends WorkerHost {
       return;
     }
 
-    const handlerPromise = entry.handler(job);
+    const handlerPromise = entry.handler({
+      id: job.id ?? '',
+      name: job.name,
+      data: job.data,
+    });
 
     if (!entry.options.timeout) {
       return handlerPromise;

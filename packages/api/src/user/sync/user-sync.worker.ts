@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Job } from 'bullmq';
 import { sub } from 'date-fns';
 import { usersMany } from 'src/api';
 import { users } from 'src/api/e621';
 import { UserLevel } from 'src/auth/auth.level';
 import { AuthService } from 'src/auth/auth.service';
 import { LoopGuard, convertKeysToCamelCase, rateLimit } from 'src/common';
+import { Job } from 'src/job/job.constants';
 import { JobHandler } from 'src/job/job.decorator';
 import { ensureActive } from 'src/job/job.utils';
 

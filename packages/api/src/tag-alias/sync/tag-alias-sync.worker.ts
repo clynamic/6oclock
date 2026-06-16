@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Job } from 'bullmq';
 import { GetTagAliasesSearchOrder, TagAlias, tagAliases } from 'src/api';
 import { MAX_API_LIMIT } from 'src/api/http/params';
 import { AuthService } from 'src/auth/auth.service';
@@ -14,6 +13,7 @@ import {
   rateLimit,
   resolveWithDate,
 } from 'src/common';
+import { Job } from 'src/job/job.constants';
 import { JobHandler } from 'src/job/job.decorator';
 import { ensureActive } from 'src/job/job.utils';
 import { ItemType } from 'src/label/label.entity';

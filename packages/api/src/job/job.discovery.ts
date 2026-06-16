@@ -1,10 +1,16 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService, Reflector } from '@nestjs/core';
-import { Job, Queue } from 'bullmq';
+import { Queue } from 'bullmq';
 
-import { JOB_HANDLER_METADATA, JobQueue } from './job.constants';
+import {
+  Job,
+  JOB_HANDLER_METADATA,
+  JobQueue,
+  QUEUE_NAMES,
+} from './job.constants';
 import { JobHandlerOptions } from './job.decorator';
+import { setActiveCheck } from './job.utils';
 
 export interface JobHandlerEntry {
   options: Required<JobHandlerOptions>;
@@ -29,6 +35,7 @@ export class JobDiscoveryService implements OnModuleInit {
       this.discover();
       await this.registerSchedulers();
       await this.defaultQueue.setGlobalConcurrency(1);
+      this.armActiveCheck();
       this.ready = true;
     } catch (error) {
       this.logger.error('Failed to initialize job discovery', error);
@@ -37,6 +44,17 @@ export class JobDiscoveryService implements OnModuleInit {
 
   isReady(): boolean {
     return this.ready;
+  }
+
+  // Bridges the engine-agnostic ensureActive seam to bullmq job state.
+  private armActiveCheck(): void {
+    setActiveCheck(async (job) => {
+      for (const name of QUEUE_NAMES) {
+        const found = await this.getQueue(name).getJob(job.id);
+        if (found) return found.getState();
+      }
+      return undefined;
+    });
   }
 
   private discover(): void {

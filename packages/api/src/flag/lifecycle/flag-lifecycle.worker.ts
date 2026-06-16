@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Job } from 'bullmq';
 import { PostEventAction } from 'src/api';
 import { DateRange, chunkDateRange } from 'src/common';
+import { Job } from 'src/job/job.constants';
 import { JobHandler } from 'src/job/job.decorator';
 import { ensureActive } from 'src/job/job.utils';
 import { ItemType } from 'src/label/label.entity';
@@ -11,7 +11,10 @@ import { PostEventEntity } from 'src/post-event/post-event.entity';
 import { MoreThan, Repository } from 'typeorm';
 
 import { FlagHandling } from './flag-lifecycle.entity';
-import { FlagEpisodeData, FlagLifecycleService } from './flag-lifecycle.service';
+import {
+  FlagEpisodeData,
+  FlagLifecycleService,
+} from './flag-lifecycle.service';
 
 interface FlagEvent {
   post_id: number;
