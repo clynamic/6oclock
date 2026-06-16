@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Job } from 'bullmq';
 import {
   BulkUpdateRequest,
   GetBulkUpdateRequestsSearchOrder,
@@ -18,6 +17,7 @@ import {
   rateLimit,
   resolveWithDate,
 } from 'src/common';
+import { Job } from 'src/job/job.constants';
 import { JobHandler } from 'src/job/job.decorator';
 import { ensureActive } from 'src/job/job.utils';
 import { ItemType } from 'src/label/label.entity';

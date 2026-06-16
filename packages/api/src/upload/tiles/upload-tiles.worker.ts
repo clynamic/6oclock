@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Job } from 'bullmq';
+import { Job } from 'src/job/job.constants';
 import { JobHandler } from 'src/job/job.decorator';
 import { ensureActive } from 'src/job/job.utils';
 

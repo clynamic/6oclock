@@ -13,3 +13,9 @@ export type JobState =
   | 'completed'
   | 'failed'
   | 'timedOut';
+
+export interface Job<T = unknown> {
+  id: string;
+  name: string;
+  data: T;
+}

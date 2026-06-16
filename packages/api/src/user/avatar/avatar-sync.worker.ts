@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Job } from 'bullmq';
 import { sub } from 'date-fns';
 import { postsMany } from 'src/api';
 import { AuthService } from 'src/auth/auth.service';
+import { Job } from 'src/job/job.constants';
 import { JobHandler } from 'src/job/job.decorator';
 import { ensureActive } from 'src/job/job.utils';
 import { PostEntity } from 'src/post/post.entity';
