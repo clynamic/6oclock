@@ -1,32 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { Job } from 'bullmq';
+import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationParams } from 'src/common';
+import { In, Repository } from 'typeorm';
 
 import { JOB_TIMED_OUT_PREFIX, JobState, QUEUE_NAMES } from './job.constants';
 import { JobDiscoveryService } from './job.discovery';
 import { JobInfo, SchedulerInfo } from './job.dto';
+import { PgBossJobEntity } from './pgboss-job.entity';
 
 @Injectable()
 export class JobService {
-  constructor(private readonly discoveryService: JobDiscoveryService) {}
+  constructor(
+    private readonly discoveryService: JobDiscoveryService,
+    @InjectRepository(PgBossJobEntity)
+    private readonly jobRepository: Repository<PgBossJobEntity>,
+  ) {}
 
   async list(pages?: PaginationParams): Promise<JobInfo[]> {
-    const allJobs: JobInfo[] = [];
+    const rows = await this.jobRepository.find({
+      where: { name: In(QUEUE_NAMES) },
+    });
 
-    for (const queueName of QUEUE_NAMES) {
-      const queue = this.discoveryService.getQueue(queueName);
-      const jobs = await queue.getJobs([
-        'completed',
-        'failed',
-        'active',
-        'waiting',
-        'delayed',
-      ]);
-
-      for (const job of jobs) {
-        allJobs.push(await this.toJobInfo(job, queueName));
-      }
-    }
+    const allJobs = rows.map((row) => this.toJobInfo(row));
 
     const offset = PaginationParams.calculateOffset(pages);
     const limit = pages?.limit ?? PaginationParams.DEFAULT_PAGE_SIZE;
@@ -80,23 +75,41 @@ export class JobService {
     await this.discoveryService.disableScheduler(id);
   }
 
-  private async toJobInfo(job: Job, queue: string): Promise<JobInfo> {
-    const rawState = await job.getState();
-    const state: JobState =
-      rawState === 'failed' &&
-      job.failedReason?.startsWith(JOB_TIMED_OUT_PREFIX)
-        ? 'timedOut'
-        : (rawState as JobState);
+  private toJobInfo(row: PgBossJobEntity): JobInfo {
+    const failedReason = row.output?.message
+      ? row.output.message
+      : row.output
+        ? JSON.stringify(row.output)
+        : undefined;
 
     return new JobInfo({
-      id: job.id ?? '',
-      name: job.name,
-      queue,
-      state,
-      scheduledAt: new Date(job.timestamp + (job.delay ?? 0)),
-      startedAt: job.processedOn ? new Date(job.processedOn) : undefined,
-      endedAt: job.finishedOn ? new Date(job.finishedOn) : undefined,
-      failedReason: job.failedReason ?? undefined,
+      id: row.id,
+      name: row.data?.handlerId ?? row.name,
+      queue: row.name,
+      state: this.mapState(row.state, failedReason),
+      scheduledAt: row.startAfter ?? undefined,
+      startedAt: row.startedOn ?? undefined,
+      endedAt: row.completedOn ?? undefined,
+      failedReason,
     });
+  }
+
+  private mapState(pgState: string, failedReason?: string): JobState {
+    switch (pgState) {
+      case 'active':
+        return 'active';
+      case 'created':
+        return 'waiting';
+      case 'retry':
+        return 'delayed';
+      case 'completed':
+        return 'completed';
+      case 'failed':
+        return failedReason?.startsWith(JOB_TIMED_OUT_PREFIX)
+          ? 'timedOut'
+          : 'failed';
+      default:
+        return 'failed';
+    }
   }
 }

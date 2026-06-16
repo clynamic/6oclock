@@ -37,7 +37,7 @@ Copy `compose.override.example.yml` to `compose.override.yml`.
 yarn dev
 ```
 
-This brings up PostgreSQL and Redis in Docker, then runs the API and web dev servers on the host.
+This brings up PostgreSQL in Docker, then runs the API and web dev servers on the host.
 
 ## Deployment
 

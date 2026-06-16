@@ -11,12 +11,3 @@ services:
       interval: 2s
       timeout: 3s
       retries: 15
-
-  six-oclock-redis:
-    ports:
-      - "127.0.0.1:34573:6379"
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 2s
-      timeout: 3s
-      retries: 15
