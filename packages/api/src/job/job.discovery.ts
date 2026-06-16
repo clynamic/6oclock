@@ -1,29 +1,27 @@
-import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService, Reflector } from '@nestjs/core';
-import { Queue } from 'bullmq';
+import { policies } from 'pg-boss';
 
-import {
-  Job,
-  JOB_HANDLER_METADATA,
-  JobQueue,
-  QUEUE_NAMES,
-} from './job.constants';
+import { JobBoss } from './job.boss';
+import { JOB_HANDLER_METADATA, Job, QUEUE_NAMES } from './job.constants';
 import { JobHandlerOptions } from './job.decorator';
-import { setActiveCheck } from './job.utils';
+import { JobProcessor } from './job.processor';
 
 export interface JobHandlerEntry {
   options: Required<JobHandlerOptions>;
   handler: (job: Job) => Promise<void>;
 }
 
+const EXPIRE_SECONDS = 600;
+const RETENTION_SECONDS = 7 * 24 * 60 * 60;
+
 @Injectable()
 export class JobDiscoveryService implements OnModuleInit {
   constructor(
+    private readonly jobBoss: JobBoss,
     private readonly discoveryService: DiscoveryService,
     private readonly reflector: Reflector,
-    @InjectQueue('default') private readonly defaultQueue: Queue,
-    @InjectQueue('tiling') private readonly tilingQueue: Queue,
+    private readonly processor: JobProcessor,
   ) {}
 
   private readonly logger = new Logger(JobDiscoveryService.name);
@@ -32,10 +30,11 @@ export class JobDiscoveryService implements OnModuleInit {
 
   async onModuleInit(): Promise<void> {
     try {
+      await this.jobBoss.start();
       this.discover();
+      await this.createQueues();
+      await this.registerWorkers();
       await this.registerSchedulers();
-      await this.defaultQueue.setGlobalConcurrency(1);
-      this.armActiveCheck();
       this.ready = true;
     } catch (error) {
       this.logger.error('Failed to initialize job discovery', error);
@@ -44,17 +43,6 @@ export class JobDiscoveryService implements OnModuleInit {
 
   isReady(): boolean {
     return this.ready;
-  }
-
-  // Bridges the engine-agnostic ensureActive seam to bullmq job state.
-  private armActiveCheck(): void {
-    setActiveCheck(async (job) => {
-      for (const name of QUEUE_NAMES) {
-        const found = await this.getQueue(name).getJob(job.id);
-        if (found) return found.getState();
-      }
-      return undefined;
-    });
   }
 
   private discover(): void {
@@ -101,24 +89,68 @@ export class JobDiscoveryService implements OnModuleInit {
     }
   }
 
+  private async createQueues(): Promise<void> {
+    const boss = this.jobBoss.instance;
+
+    await boss.createQueue('default', {
+      policy: policies.singleton,
+      retryLimit: 0,
+      expireInSeconds: EXPIRE_SECONDS,
+      deleteAfterSeconds: RETENTION_SECONDS,
+    });
+
+    await boss.createQueue('tiling', {
+      policy: policies.standard,
+      retryLimit: 0,
+      expireInSeconds: EXPIRE_SECONDS,
+      deleteAfterSeconds: RETENTION_SECONDS,
+    });
+  }
+
+  private async registerWorkers(): Promise<void> {
+    const boss = this.jobBoss.instance;
+
+    for (const queue of QUEUE_NAMES) {
+      await boss.work<{ handlerId?: string }>(
+        queue,
+        { batchSize: 1 },
+        async (jobs) => {
+          const job = jobs[0];
+          if (!job) return;
+
+          const handlerId = job.data?.handlerId;
+          if (!handlerId) {
+            this.logger.warn(`Job on ${queue} missing handlerId`);
+            return;
+          }
+
+          const entry = this.handlers.get(handlerId);
+          if (!entry) {
+            this.logger.warn(`No handler found for job: ${handlerId}`);
+            return;
+          }
+
+          await this.processor.process(entry, job);
+        },
+      );
+    }
+  }
+
   private async registerSchedulers(): Promise<void> {
+    const boss = this.jobBoss.instance;
+
     for (const [, entry] of this.handlers) {
       if (!entry.options.enabled) continue;
 
-      const queue = this.getQueue(entry.options.queue);
-
-      await queue.upsertJobScheduler(
-        entry.options.id,
-        { pattern: entry.options.pattern },
-        { name: entry.options.id },
+      await boss.schedule(
+        entry.options.queue,
+        entry.options.pattern,
+        { handlerId: entry.options.id },
+        { key: entry.options.id },
       );
 
       this.logger.log(`Registered scheduler: ${entry.options.id}`);
     }
-  }
-
-  getHandler(jobName: string): ((job: Job) => Promise<void>) | undefined {
-    return this.handlers.get(jobName)?.handler;
   }
 
   getEntries(): JobHandlerEntry[] {
@@ -129,24 +161,15 @@ export class JobDiscoveryService implements OnModuleInit {
     return this.handlers.get(id);
   }
 
-  getQueue(name: JobQueue): Queue {
-    switch (name) {
-      case 'default':
-        return this.defaultQueue;
-      case 'tiling':
-        return this.tilingQueue;
-    }
-  }
-
   async enableScheduler(id: string): Promise<void> {
     const entry = this.handlers.get(id);
     if (!entry) throw new Error(`Unknown scheduler: ${id}`);
 
-    const queue = this.getQueue(entry.options.queue);
-    await queue.upsertJobScheduler(
-      id,
-      { pattern: entry.options.pattern },
-      { name: id },
+    await this.jobBoss.instance.schedule(
+      entry.options.queue,
+      entry.options.pattern,
+      { handlerId: id },
+      { key: id },
     );
 
     entry.options.enabled = true;
@@ -157,8 +180,7 @@ export class JobDiscoveryService implements OnModuleInit {
     const entry = this.handlers.get(id);
     if (!entry) throw new Error(`Unknown scheduler: ${id}`);
 
-    const queue = this.getQueue(entry.options.queue);
-    await queue.removeJobScheduler(id);
+    await this.jobBoss.instance.unschedule(entry.options.queue, id);
 
     entry.options.enabled = false;
     this.logger.log(`Disabled scheduler: ${id}`);
