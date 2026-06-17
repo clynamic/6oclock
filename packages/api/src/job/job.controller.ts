@@ -5,7 +5,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ServerAdminGuard } from 'src/auth/auth.guard';
+import { TechnicianGuard } from 'src/auth/auth.guard';
 import { PaginationParams } from 'src/common';
 
 import { JobInfo, SchedulerInfo } from './job.dto';
@@ -13,7 +13,7 @@ import { JobService } from './job.service';
 
 @ApiTags('Jobs')
 @Controller('jobs')
-@UseGuards(ServerAdminGuard)
+@UseGuards(TechnicianGuard)
 @ApiBearerAuth()
 export class JobController {
   constructor(private readonly jobService: JobService) {}

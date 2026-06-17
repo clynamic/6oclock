@@ -13,7 +13,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ServerAdminGuard } from 'src/auth/auth.guard';
+import { TechnicianGuard } from 'src/auth/auth.guard';
 import { PartialDateRange, TileType } from 'src/common';
 import { PaginationParams } from 'src/common/pagination.dto';
 
@@ -36,7 +36,7 @@ export class TileHealthController {
     description: 'Tile health information',
     type: [TileHealth],
   })
-  @UseGuards(ServerAdminGuard)
+  @UseGuards(TechnicianGuard)
   @ApiBearerAuth()
   async getTileHealth(
     @Query() pages?: PaginationParams,
@@ -60,7 +60,7 @@ export class TileHealthController {
     status: 204,
     description: 'Tiles deleted successfully',
   })
-  @UseGuards(ServerAdminGuard)
+  @UseGuards(TechnicianGuard)
   @ApiBearerAuth()
   async deleteTilesByType(
     @Param('type') type: TileType,

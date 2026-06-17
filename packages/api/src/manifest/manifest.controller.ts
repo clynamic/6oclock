@@ -13,7 +13,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ServerAdminGuard } from 'src/auth/auth.guard';
+import { TechnicianGuard } from 'src/auth/auth.guard';
 import { DateRange, PartialDateRange } from 'src/common';
 
 import {
@@ -26,7 +26,7 @@ import { ManifestService } from './manifest.service';
 
 @ApiTags('Manifests')
 @Controller('manifests')
-@UseGuards(ServerAdminGuard)
+@UseGuards(TechnicianGuard)
 @ApiBearerAuth()
 export class ManifestController {
   constructor(private readonly manifestService: ManifestService) {}

@@ -89,7 +89,7 @@ export class AuthService {
     }
   }
 
-  readServerAdminCredentials = (): UserCredentials => ({
+  readServiceAccountCredentials = (): UserCredentials => ({
     username: this.configService
       .getOrThrow<string>(AppConfigKeys.E621_GLOBAL_USERNAME)
       .trim(),
@@ -98,39 +98,39 @@ export class AuthService {
       .trim(),
   });
 
-  private getServerAdminUsernames(): string[] {
-    const serverAdmins = this.configService
-      .get<string>(AppConfigKeys.SERVER_ADMINS, '')
+  private getTechnicianUsernames(): string[] {
+    const technicians = this.configService
+      .get<string>(AppConfigKeys.TECHNICIANS, '')
       .trim();
 
-    if (!serverAdmins) {
+    if (!technicians) {
       return [];
     }
 
-    return serverAdmins
+    return technicians
       .split(',')
       .map((username) => username.trim().toLowerCase())
       .filter((username) => username.length > 0);
   }
 
-  isServerAdmin = (user: DecodedJwt): boolean => {
-    const adminUsernames = this.getServerAdminUsernames();
-    if (adminUsernames.includes(user.username.toLowerCase())) {
+  isTechnician = (user: DecodedJwt): boolean => {
+    const technicianUsernames = this.getTechnicianUsernames();
+    if (technicianUsernames.includes(user.username.toLowerCase())) {
       return true;
     }
 
     const userCredentials = user.credentials;
-    const adminCredentials = this.readServerAdminCredentials();
+    const serviceAccountCredentials = this.readServiceAccountCredentials();
     return (
       userCredentials.username.toLowerCase() ===
-        adminCredentials.username.toLowerCase() &&
-      userCredentials.password === adminCredentials.password
+        serviceAccountCredentials.username.toLowerCase() &&
+      userCredentials.password === serviceAccountCredentials.password
     );
   };
 
   getServerAxiosConfig = (): AxiosRequestConfig => ({
     headers: {
-      Authorization: encodeCredentials(this.readServerAdminCredentials()),
+      Authorization: encodeCredentials(this.readServiceAccountCredentials()),
     },
   });
 }

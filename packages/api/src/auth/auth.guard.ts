@@ -57,7 +57,7 @@ export class RolesGuard extends JwtAuthGuard {
 }
 
 @Injectable()
-export class ServerAdminGuard extends JwtAuthGuard {
+export class TechnicianGuard extends JwtAuthGuard {
   constructor(private authService: AuthService) {
     super();
   }
@@ -67,7 +67,7 @@ export class ServerAdminGuard extends JwtAuthGuard {
 
     const user = context.switchToHttp().getRequest().user as DecodedJwt;
 
-    if (this.authService.isServerAdmin(user)) {
+    if (this.authService.isTechnician(user)) {
       return true;
     } else {
       throw new ForbiddenException('Insufficient level');

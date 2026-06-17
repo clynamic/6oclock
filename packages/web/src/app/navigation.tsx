@@ -2,7 +2,7 @@ import { ReactElement, Suspense, lazy } from 'react';
 
 import { Route, useParams } from 'react-router';
 
-import { useIsAdmin } from '../api';
+import { useIsTechnician } from '../api';
 import { useAuth } from '../auth/context';
 import { LoadingPage } from '../page/LoadingPage';
 import { NavClock } from '../page/header/NavClock';
@@ -79,10 +79,10 @@ export const useResolveUserId = (): Record<string, string> => {
 
 export const useIsHealthHidden = (): boolean => {
   const { session } = useAuth();
-  const { data: isAdmin } = useIsAdmin({
+  const { data: isTechnician } = useIsTechnician({
     query: { enabled: session != null },
   });
-  return !isAdmin;
+  return !isTechnician;
 };
 
 export const appNavNodes: NavNode[] = [

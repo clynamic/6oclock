@@ -65,20 +65,20 @@ export class AuthController {
     }
   }
 
-  @Get('is-admin')
+  @Get('is-technician')
   @ApiOperation({
-    summary: 'Check if the current user is admin',
-    description: 'Check if the current user is admin',
-    operationId: 'isAdmin',
+    summary: 'Check if the current user is a technician',
+    description: 'Check if the current user is a technician',
+    operationId: 'isTechnician',
   })
   @ApiResponse({
     status: 201,
-    description: 'Whether the user is admin',
+    description: 'Whether the user is a technician',
     type: Boolean,
   })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  async isAdmin(@Req() req: { user: DecodedJwt }): Promise<boolean> {
-    return this.authService.isServerAdmin(req.user);
+  async isTechnician(@Req() req: { user: DecodedJwt }): Promise<boolean> {
+    return this.authService.isTechnician(req.user);
   }
 }

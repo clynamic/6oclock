@@ -5,7 +5,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ServerAdminGuard } from 'src/auth/auth.guard';
+import { TechnicianGuard } from 'src/auth/auth.guard';
 import { PaginationParams } from 'src/common/pagination.dto';
 
 import { ManifestHealth } from './manifest-health.dto';
@@ -27,7 +27,7 @@ export class ManifestHealthController {
     description: 'Manifest health',
     type: [ManifestHealth],
   })
-  @UseGuards(ServerAdminGuard)
+  @UseGuards(TechnicianGuard)
   @ApiBearerAuth()
   async getManifestHealth(
     @Query() pages?: PaginationParams,

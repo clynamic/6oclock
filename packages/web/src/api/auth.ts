@@ -195,58 +195,62 @@ export const useValidateToken = <
   return useMutation(mutationOptions, queryClient);
 };
 /**
- * Check if the current user is admin
- * @summary Check if the current user is admin
+ * Check if the current user is a technician
+ * @summary Check if the current user is a technician
  */
-export const isAdmin = (signal?: AbortSignal) => {
-  return makeRequest<boolean>({ url: `/auth/is-admin`, method: 'GET', signal });
+export const isTechnician = (signal?: AbortSignal) => {
+  return makeRequest<boolean>({
+    url: `/auth/is-technician`,
+    method: 'GET',
+    signal,
+  });
 };
 
-export const getIsAdminQueryKey = () => {
-  return [`/auth/is-admin`] as const;
+export const getIsTechnicianQueryKey = () => {
+  return [`/auth/is-technician`] as const;
 };
 
-export const getIsAdminQueryOptions = <
-  TData = Awaited<ReturnType<typeof isAdmin>>,
+export const getIsTechnicianQueryOptions = <
+  TData = Awaited<ReturnType<typeof isTechnician>>,
   TError = ErrorType<unknown>,
 >(options?: {
   query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
+    UseQueryOptions<Awaited<ReturnType<typeof isTechnician>>, TError, TData>
   >;
 }) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getIsAdminQueryKey();
+  const queryKey = queryOptions?.queryKey ?? getIsTechnicianQueryKey();
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof isAdmin>>> = ({
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof isTechnician>>> = ({
     signal,
-  }) => isAdmin(signal);
+  }) => isTechnician(signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof isAdmin>>,
+    Awaited<ReturnType<typeof isTechnician>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type IsAdminQueryResult = NonNullable<
-  Awaited<ReturnType<typeof isAdmin>>
+export type IsTechnicianQueryResult = NonNullable<
+  Awaited<ReturnType<typeof isTechnician>>
 >;
-export type IsAdminQueryError = ErrorType<unknown>;
+export type IsTechnicianQueryError = ErrorType<unknown>;
 
-export function useIsAdmin<
-  TData = Awaited<ReturnType<typeof isAdmin>>,
+export function useIsTechnician<
+  TData = Awaited<ReturnType<typeof isTechnician>>,
   TError = ErrorType<unknown>,
 >(
   options: {
     query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof isTechnician>>, TError, TData>
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof isAdmin>>,
+          Awaited<ReturnType<typeof isTechnician>>,
           TError,
-          Awaited<ReturnType<typeof isAdmin>>
+          Awaited<ReturnType<typeof isTechnician>>
         >,
         'initialData'
       >;
@@ -255,19 +259,19 @@ export function useIsAdmin<
 ): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useIsAdmin<
-  TData = Awaited<ReturnType<typeof isAdmin>>,
+export function useIsTechnician<
+  TData = Awaited<ReturnType<typeof isTechnician>>,
   TError = ErrorType<unknown>,
 >(
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof isTechnician>>, TError, TData>
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof isAdmin>>,
+          Awaited<ReturnType<typeof isTechnician>>,
           TError,
-          Awaited<ReturnType<typeof isAdmin>>
+          Awaited<ReturnType<typeof isTechnician>>
         >,
         'initialData'
       >;
@@ -276,13 +280,13 @@ export function useIsAdmin<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useIsAdmin<
-  TData = Awaited<ReturnType<typeof isAdmin>>,
+export function useIsTechnician<
+  TData = Awaited<ReturnType<typeof isTechnician>>,
   TError = ErrorType<unknown>,
 >(
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof isTechnician>>, TError, TData>
     >;
   },
   queryClient?: QueryClient,
@@ -290,23 +294,23 @@ export function useIsAdmin<
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 /**
- * @summary Check if the current user is admin
+ * @summary Check if the current user is a technician
  */
 
-export function useIsAdmin<
-  TData = Awaited<ReturnType<typeof isAdmin>>,
+export function useIsTechnician<
+  TData = Awaited<ReturnType<typeof isTechnician>>,
   TError = ErrorType<unknown>,
 >(
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof isAdmin>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof isTechnician>>, TError, TData>
     >;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getIsAdminQueryOptions(options);
+  const queryOptions = getIsTechnicianQueryOptions(options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
