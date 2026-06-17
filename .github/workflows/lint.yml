@@ -18,19 +18,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          cache: 'yarn'
+          cache: 'npm'
+
+      - name: Upgrade npm
+        run: npm install -g npm@^11.10.0
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Lint API
-        run: yarn workspace @6oclock/api lint --max-warnings 0
+        run: npm run lint -w @6oclock/api -- --max-warnings 0
 
       - name: Lint Web
-        run: yarn workspace @6oclock/web lint --max-warnings 0
+        run: npm run lint -w @6oclock/web -- --max-warnings 0
 
       - name: Build API
-        run: yarn build:api
+        run: npm run build:api
 
       - name: Build Web
-        run: yarn build:web
+        run: npm run build:web

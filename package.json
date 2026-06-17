@@ -8,23 +8,24 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "docker compose up -d --wait && concurrently -k -n api,web -c blue,magenta \"yarn api\" \"cross-env VITE_API_URL=http://localhost:34571/api yarn web\"",
-    "api": "yarn workspace @6oclock/api dev",
-    "web": "yarn workspace @6oclock/web dev",
-    "build:api": "yarn workspace @6oclock/api build",
-    "build:web": "yarn workspace @6oclock/web build",
-    "lint": "yarn workspaces run lint",
-    "format": "yarn workspaces run format"
+    "dev": "docker compose up -d --wait && concurrently -k -n api,web -c blue,magenta \"npm run api\" \"cross-env VITE_API_URL=http://localhost:34571/api npm run web\"",
+    "api": "npm run dev -w @6oclock/api",
+    "web": "npm run dev -w @6oclock/web",
+    "build:api": "npm run build -w @6oclock/api",
+    "build:web": "npm run build -w @6oclock/web",
+    "lint": "npm run lint --workspaces --if-present",
+    "format": "npm run format --workspaces --if-present"
   },
   "devDependencies": {
+    "commander": "~14.0.1",
     "concurrently": "^9.1.0",
     "cross-env": "^7.0.3"
   },
   "engines": {
     "node": ">=22.12.0",
-    "npm": "please-use-yarn"
+    "npm": ">=11.10.0"
   },
-  "resolutions": {
+  "overrides": {
     "typescript": "^6.0.3"
   }
 }

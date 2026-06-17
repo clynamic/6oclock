@@ -68,6 +68,6 @@
   },
   "engines": {
     "node": ">=20",
-    "npm": "please-use-yarn"
+    "npm": ">=11.10.0"
   }
 }

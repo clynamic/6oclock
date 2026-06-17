@@ -8,9 +8,8 @@ e6 staff dashboard
 
 ### Prerequisites
 
-1. Install [Node.js](https://nodejs.org/en/download/) (20+)
-2. Install [Yarn](https://yarnpkg.com/en/docs/install)
-3. Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
+1. Install [Node.js](https://nodejs.org/en/download/) (22.12+) with npm 11.10+
+2. Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
 
 ### Getting Started
 
@@ -23,7 +22,7 @@ git clone https://github.com/clynamic/6oclock.git
 2. Install dependencies
 
 ```bash
-yarn
+npm install
 ```
 
 3. Set up your environment
@@ -34,7 +33,7 @@ Copy `compose.override.example.yml` to `compose.override.yml`.
 4. Start the development servers
 
 ```bash
-yarn dev
+npm run dev
 ```
 
 This brings up PostgreSQL in Docker, then runs the API and web dev servers on the host.
@@ -78,7 +77,7 @@ docker compose up -d
 ### Shared
 
 - [TypeScript](https://www.typescriptlang.org/) - javascript with types
-- [Yarn](https://yarnpkg.com/) - package manager
+- [npm](https://www.npmjs.com/) - package manager
 - [ESLint](https://eslint.org/) - linting
 - [Prettier](https://prettier.io/) - code formatting
 - [Orval](https://orval.dev/) - API client generator
