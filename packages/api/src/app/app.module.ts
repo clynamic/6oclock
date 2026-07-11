@@ -35,7 +35,7 @@ import { StaticModule } from './static.module';
 @Module({
   imports: [
     AppConfigModule,
-    StaticModule,
+    ...(process.env['NODE_ENV'] === 'production' ? [StaticModule] : []),
     BrowserModule,
     CorsConfigModule,
     DatabaseModule,
