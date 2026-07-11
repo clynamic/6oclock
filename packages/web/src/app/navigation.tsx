@@ -78,9 +78,9 @@ export const useResolveUserId = (): Record<string, string> => {
 };
 
 export const useIsHealthHidden = (): boolean => {
-  const { session } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { data: isTechnician } = useIsTechnician({
-    query: { enabled: session != null },
+    query: { enabled: isAuthenticated },
   });
   return !isTechnician;
 };

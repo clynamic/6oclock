@@ -30,9 +30,9 @@ export const App: React.FC = () => {
   const queryClient = useMemo(() => new QueryClient(), []);
 
   return (
-    <AuthProvider>
-      <SafeModeProvider>
-        <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <SafeModeProvider>
           <ThemeProvider theme={theme}>
             <NavigationEntryProvider entries={appNavNodes}>
               <ChartParamsProvider>
@@ -65,8 +65,8 @@ export const App: React.FC = () => {
               </ChartParamsProvider>
             </NavigationEntryProvider>
           </ThemeProvider>
-        </QueryClientProvider>
-      </SafeModeProvider>
-    </AuthProvider>
+        </SafeModeProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 };

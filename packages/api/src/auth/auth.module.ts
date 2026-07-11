@@ -1,26 +1,41 @@
 import { Global, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AuthController } from './auth.controller';
-import { JwtAuthGuard, RolesGuard } from './auth.guard';
+import {
+  AuthGuard,
+  OptionalAuthGuard,
+  RolesGuard,
+  TechnicianGuard,
+} from './auth.guard';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './auth.stragety';
-import { readJwtSecret } from './auth.utils';
+import { OidcService } from './oidc.service';
+import { SessionEntity } from './session.entity';
+import { SessionService } from './session.service';
+import { TechnicianService } from './technician.service';
 
 @Global()
 @Module({
-  imports: [
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (config: ConfigService) => ({
-        secret: readJwtSecret(config),
-      }),
-    }),
-  ],
+  imports: [TypeOrmModule.forFeature([SessionEntity])],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, JwtAuthGuard, RolesGuard],
-  exports: [AuthService, JwtModule, JwtAuthGuard, RolesGuard],
+  providers: [
+    AuthService,
+    OidcService,
+    SessionService,
+    TechnicianService,
+    AuthGuard,
+    OptionalAuthGuard,
+    RolesGuard,
+    TechnicianGuard,
+  ],
+  exports: [
+    AuthService,
+    SessionService,
+    TechnicianService,
+    AuthGuard,
+    OptionalAuthGuard,
+    RolesGuard,
+    TechnicianGuard,
+  ],
 })
 export class AuthModule {}

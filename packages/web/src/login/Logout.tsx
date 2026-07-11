@@ -2,8 +2,6 @@ import { useEffect } from 'react';
 
 import { Logout } from '@mui/icons-material';
 import { CircularProgress, Stack, Typography } from '@mui/material';
-import { useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router';
 
 import { useAuth } from '../auth/context';
 import { Page } from '../page/Page';
@@ -13,17 +11,13 @@ import { PageTitle } from '../page/PageTitle';
 import { PageHeader } from '../page/header/PageHeader';
 
 export const LogoutPage: React.FC = () => {
-  const { clearToken } = useAuth();
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  const { logout } = useAuth();
 
   useEffect(() => {
-    clearToken();
-    queryClient.clear();
-    setTimeout(() => {
-      navigate('/');
-    }, 3000);
-  }, [clearToken, queryClient, navigate]);
+    void logout().finally(() => {
+      window.location.replace('/login');
+    });
+  }, [logout]);
 
   return (
     <Page>

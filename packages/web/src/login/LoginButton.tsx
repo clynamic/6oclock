@@ -5,15 +5,20 @@ import { Button } from '@mui/material';
 
 export interface LoginButtonProps {
   loading: boolean;
+  onClick: () => void;
 }
 
-export const LoginButton: React.FC<LoginButtonProps> = ({ loading }) => {
+export const LoginButton: React.FC<LoginButtonProps> = ({
+  loading,
+  onClick,
+}) => {
   return (
     <Button
       variant="contained"
       endIcon={<ArrowForward />}
-      type="submit"
+      type="button"
       loading={loading}
+      onClick={onClick}
       sx={{
         '& .MuiButton-endIcon': {
           transition: 'transform 0.3s ease-in-out',
@@ -23,7 +28,7 @@ export const LoginButton: React.FC<LoginButtonProps> = ({ loading }) => {
         },
       }}
     >
-      Log In
+      Log in with e621
     </Button>
   );
 };

@@ -1,11 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 
-import { useQueryClient } from '@tanstack/react-query';
-import MD5 from 'crypto-js/md5';
-import { addHours, isBefore } from 'date-fns';
 import { Outlet, matchPath, useLocation, useNavigate } from 'react-router';
 
-import { checkAuthToken } from '../http/credentials';
+import { takePostLoginRedirect } from '../http/credentials';
 import { useAuth } from './context';
 
 export interface AuthGuardProps {
@@ -13,92 +10,43 @@ export interface AuthGuardProps {
 }
 
 export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
-  const { token, clearToken, session, saveSession, clearSession, payload } =
-    useAuth();
-  const queryClient = useQueryClient();
-  const sentinel = useRef(0);
-
+  const { isAuthenticated, isLoading, error, payload } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const path = useRef(location.pathname);
 
   useEffect(() => {
-    path.current = location.pathname;
-  }, [location]);
+    if (isLoading || isAuthenticated) return;
+
+    const params = new URLSearchParams();
+    if (location.pathname !== '/') {
+      params.append('redirect', location.pathname);
+    }
+    const suffix = params.size > 0 ? `?${params.toString()}` : '';
+
+    const status = error?.response?.status;
+    const unreachable = !!error && (status === undefined || status >= 500);
+    navigate(`${unreachable ? '/unreachable' : '/login'}${suffix}`, {
+      replace: true,
+    });
+  }, [isAuthenticated, isLoading, error, location.pathname, navigate]);
 
   useEffect(() => {
-    const runCheck = async () => {
-      const id = ++sentinel.current;
-
-      let loginUrl = '/login';
-      let unreachableUrl = '/unreachable';
-      const params = new URLSearchParams();
-      if (path.current !== '/') {
-        params.append('redirect', path.current);
-      }
-      if (params.size > 0) {
-        loginUrl += `?${params.toString()}`;
-        unreachableUrl += `?${params.toString()}`;
-      }
-
-      if (token && session) {
-        const expired = isBefore(addHours(session.date, 1), new Date());
-        const hash = MD5(token).toString();
-        const valid = hash === session.hash;
-        if (expired || !valid) {
-          clearSession();
-        }
-        return;
-      }
-
-      if (!token) {
-        navigate(loginUrl, { replace: true });
-        return;
-      }
-
-      const checkResult = await checkAuthToken(token);
-
-      if (id !== sentinel.current) return;
-
-      if (checkResult === 'invalid') {
-        clearToken();
-        queryClient.clear();
-        navigate(loginUrl, { replace: true });
-        return;
-      }
-
-      if (checkResult === 'error') {
-        navigate(unreachableUrl, { replace: true });
-        return;
-      }
-
-      saveSession({ date: new Date(), hash: MD5(token).toString() });
-    };
-
-    runCheck();
-  }, [
-    clearSession,
-    clearToken,
-    navigate,
-    queryClient,
-    saveSession,
-    session,
-    token,
-  ]);
+    if (!isAuthenticated) return;
+    const redirect = takePostLoginRedirect();
+    if (redirect && redirect.startsWith('/')) {
+      navigate(redirect, { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
-    if (payload?.userId) {
-      const isUserMePath = matchPath('/users/me/*', location.pathname);
-
-      if (isUserMePath) {
-        const newPath = location.pathname.replace(
-          '/users/me',
-          `/users/${payload.userId}`,
-        );
-        navigate(newPath, { replace: true });
-      }
+    if (payload?.userId && matchPath('/users/me/*', location.pathname)) {
+      navigate(
+        location.pathname.replace('/users/me', `/users/${payload.userId}`),
+        { replace: true },
+      );
     }
   }, [location.pathname, navigate, payload?.userId]);
 
+  if (isLoading || !isAuthenticated) return null;
   return children ? <>{children}</> : <Outlet />;
 };

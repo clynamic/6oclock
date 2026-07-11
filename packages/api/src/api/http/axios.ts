@@ -1,6 +1,6 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { USER_AGENT } from 'src/common/user-agent';
 
-import pack from '../../../package.json';
 import {
   dateDeserializeInterceptor,
   timezoneInjectorInterceptor,
@@ -17,7 +17,7 @@ import { objectUnpackInterceptor } from './unpack';
 export const AXIOS_INSTANCE = Axios.create({
   baseURL: 'https://e621.net',
   headers: {
-    'User-Agent': `${pack.name}/${pack.version} (${pack.author})`,
+    'User-Agent': USER_AGENT,
   },
 });
 

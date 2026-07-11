@@ -15,7 +15,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/auth.guard';
-import { DecodedJwt } from 'src/auth/auth.service';
+import { UserIdentity } from 'src/auth/auth.identity';
 
 import { DashboardConfig, DashboardUpdate } from './dashboard.dto';
 import { DashboardType } from './dashboard.entity';
@@ -45,7 +45,7 @@ export class DashboardController {
   })
   async get(
     @Param('type') type: DashboardType,
-    @Req() req: { user: DecodedJwt },
+    @Req() req: { user: UserIdentity },
   ): Promise<DashboardConfig> {
     const result = await this.dashboardService.get(req.user.userId, type);
     if (!result) {
@@ -66,7 +66,7 @@ export class DashboardController {
   })
   async update(
     @Param('type') type: DashboardType,
-    @Req() req: { user: DecodedJwt },
+    @Req() req: { user: UserIdentity },
     @Body() update: DashboardUpdate,
   ): Promise<void> {
     await this.dashboardService.update(req.user.userId, type, update);
@@ -84,7 +84,7 @@ export class DashboardController {
   })
   async delete(
     @Param('type') type: DashboardType,
-    @Req() req: { user: DecodedJwt },
+    @Req() req: { user: UserIdentity },
   ): Promise<void> {
     await this.dashboardService.delete(req.user.userId, type);
   }

@@ -1,7 +1,7 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { OptionalJwtAuthGuard } from 'src/auth/auth.guard';
-import { DecodedJwt } from 'src/auth/auth.service';
+import { OptionalAuthGuard } from 'src/auth/auth.guard';
+import { UserIdentity } from 'src/auth/auth.identity';
 
 import { Motd, defaultMotd } from './motd.dto';
 import { MotdService } from './motd.service';
@@ -12,7 +12,7 @@ export class MotdController {
   constructor(private readonly motdService: MotdService) {}
 
   @Get('motd')
-  @UseGuards(OptionalJwtAuthGuard)
+  @UseGuards(OptionalAuthGuard)
   @ApiOperation({
     summary: "Get today's message of the day",
     operationId: 'getMotd',
@@ -22,7 +22,7 @@ export class MotdController {
     description: "Today's message of the day",
     type: Motd,
   })
-  async getMotd(@Req() req: { user?: DecodedJwt }): Promise<Motd> {
+  async getMotd(@Req() req: { user?: UserIdentity }): Promise<Motd> {
     if (!req.user) {
       return new Motd({ message: defaultMotd });
     }

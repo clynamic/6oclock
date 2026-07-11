@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import {
   Box,
@@ -9,25 +9,21 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useForm } from 'react-hook-form';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
 
 import { useAuth } from '../auth/context';
-import { getAuthToken } from '../http/credentials';
 import { Page } from '../page/Page';
 import { PageBody } from '../page/PageBody';
 import { PageFooter } from '../page/PageFooter';
 import { PageTitle } from '../page/PageTitle';
 import { PageHeader } from '../page/header/PageHeader';
-import { ApiKeyField } from './ApiKeyField';
-import { ApiKeyHint } from './ApiKeyHint';
 import { LoginButton } from './LoginButton';
-import { UsernameField } from './UsernameField';
-import { LoginFormData } from './type';
 
 export const LoginPage = () => {
-  const navigation = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { login } = useAuth();
+  const [searchParams] = useSearchParams();
+  const [loading, setLoading] = useState(false);
+
   const [redirect] = useState<string | null>(() => {
     const param = searchParams.get('redirect');
     if (!param) return null;
@@ -37,34 +33,9 @@ export const LoginPage = () => {
     return null;
   });
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<LoginFormData>();
-
-  const [loading, setLoading] = useState(false);
-  const { saveToken } = useAuth();
-
-  useEffect(() => {
-    if (searchParams.has('redirect')) {
-      searchParams.delete('redirect');
-      setSearchParams(searchParams);
-    }
-  }, [searchParams, setSearchParams]);
-
-  const onSubmit = async (data: LoginFormData) => {
+  const onLogin = () => {
     setLoading(true);
-    try {
-      const token = await getAuthToken(data);
-      saveToken(token);
-    } catch {
-      control.setError('password', { message: 'Invalid credentials' });
-      setLoading(false);
-      return;
-    }
-    setLoading(false);
-    navigation(redirect || '/');
+    login(redirect);
   };
 
   return (
@@ -81,44 +52,35 @@ export const LoginPage = () => {
             alignItems: 'center',
           }}
         >
-          <Box
-            sx={{ width: '100%' }}
-            component={'form'}
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <Card sx={{ width: '100%' }}>
-              <CardContent
+          <Card sx={{ width: '100%' }}>
+            <CardContent
+              sx={{
+                p: {
+                  xs: 2,
+                  sm: 4,
+                },
+              }}
+            >
+              <Stack spacing={2}>
+                <Typography variant="h4">6 o'clock</Typography>
+                <Typography variant="body1">
+                  Welcome back! Log in to continue.
+                </Typography>
+              </Stack>
+            </CardContent>
+            <CardActions>
+              <Box
                 sx={{
-                  p: {
-                    xs: 2,
-                    sm: 4,
-                  },
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  width: '100%',
+                  p: 1,
                 }}
               >
-                <Stack spacing={2}>
-                  <Typography variant="h4">6 o'clock</Typography>
-                  <Typography variant="body1">
-                    Welcome back! Log in to continue.
-                  </Typography>
-                  <UsernameField control={control} errors={errors} />
-                  <ApiKeyField control={control} errors={errors} />
-                  <ApiKeyHint control={control} />
-                </Stack>
-              </CardContent>
-              <CardActions>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    width: '100%',
-                    p: 1,
-                  }}
-                >
-                  <LoginButton loading={loading} />
-                </Box>
-              </CardActions>
-            </Card>
-          </Box>
+                <LoginButton loading={loading} onClick={onLogin} />
+              </Box>
+            </CardActions>
+          </Card>
         </Container>
       </PageBody>
       <PageFooter />

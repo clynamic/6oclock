@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable, catchError, tap } from 'rxjs';
-import { DecodedJwt } from 'src/auth/auth.service';
+import { UserIdentity } from 'src/auth/auth.identity';
 
 @Injectable()
 export class AppLogger extends ConsoleLogger implements LoggerService {
@@ -58,9 +58,9 @@ export class RequestLogger implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
-    const { method, originalUrl, query, user } = req;
+    const { method, originalUrl, query } = req;
     const url = new URL(`${req.protocol}://${req.get('host')}${originalUrl}`);
-    const jwt = user as DecodedJwt | undefined;
+    const identity = (req as Request & { user?: UserIdentity }).user;
 
     const queryString = new URLSearchParams(
       query as Record<string, string>,
@@ -69,7 +69,7 @@ export class RequestLogger implements NestInterceptor {
 
     const op = method.toUpperCase();
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    const username = jwt ? jwt.username : 'anonymous';
+    const username = identity ? identity.username : 'anonymous';
 
     const startTime = Date.now();
 

@@ -1,43 +1,24 @@
-import { AxiosError } from 'axios';
+import { AXIOS_INSTANCE, baseURL } from './axios';
 
-import { login, validateToken } from '../api';
-import { AXIOS_INSTANCE } from './axios';
+const POST_LOGIN_REDIRECT_KEY = 'post_login_redirect';
 
-export interface Credentials {
-  username: string;
-  password: string;
-}
-
-export const getAuthToken = async (
-  credentials: Credentials,
-): Promise<string> => {
-  return login(credentials);
+export const login = (redirect?: string | null) => {
+  if (redirect) {
+    sessionStorage.setItem(POST_LOGIN_REDIRECT_KEY, redirect);
+  }
+  window.location.href = `${baseURL}/auth/login`;
 };
 
-export type AuthTokenCheckResult = 'valid' | 'invalid' | 'error';
-
-export const checkAuthToken = async (
-  token: string,
-): Promise<AuthTokenCheckResult> => {
+export const logout = async () => {
   try {
-    const result = await validateToken({ token });
-    return result === true || result === 'true' ? 'valid' : 'invalid';
-  } catch (error) {
-    if (
-      error instanceof AxiosError &&
-      error.response &&
-      error.response.status < 500
-    ) {
-      return 'invalid';
-    }
-    return 'error';
+    await AXIOS_INSTANCE.post('/auth/logout');
+  } catch {
+    // The session is dead server-side regardless; the caller navigates away.
   }
 };
 
-export const setAxiosAuth = (token: string) => {
-  AXIOS_INSTANCE.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-};
-
-export const clearAxiosAuth = () => {
-  AXIOS_INSTANCE.defaults.headers.common['Authorization'] = undefined;
+export const takePostLoginRedirect = (): string | null => {
+  const redirect = sessionStorage.getItem(POST_LOGIN_REDIRECT_KEY);
+  if (redirect) sessionStorage.removeItem(POST_LOGIN_REDIRECT_KEY);
+  return redirect;
 };

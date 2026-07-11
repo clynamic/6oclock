@@ -5,195 +5,23 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
-  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
-  UseMutationOptions,
-  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query';
 
 import { makeRequest } from '../http/axios';
 import type { ErrorType } from '../http/axios';
-import type { TokenValidation, UserCredentials } from './model';
+import type { MeResponse } from './model';
 
-/**
- * Login with username and api key
- * @summary Login
- */
-export const login = (
-  userCredentials: UserCredentials,
-  signal?: AbortSignal,
-) => {
-  return makeRequest<string>({
-    url: `/auth/login`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: userCredentials,
-    signal,
-  });
-};
-
-export const getLoginMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof login>>,
-    TError,
-    { data: UserCredentials },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof login>>,
-  TError,
-  { data: UserCredentials },
-  TContext
-> => {
-  const mutationKey = ['login'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof login>>,
-    { data: UserCredentials }
-  > = (props) => {
-    const { data } = props ?? {};
-
-    return login(data);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type LoginMutationResult = NonNullable<
-  Awaited<ReturnType<typeof login>>
->;
-export type LoginMutationBody = UserCredentials;
-export type LoginMutationError = ErrorType<unknown>;
-
-/**
- * @summary Login
- */
-export const useLogin = <TError = ErrorType<unknown>, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof login>>,
-      TError,
-      { data: UserCredentials },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof login>>,
-  TError,
-  { data: UserCredentials },
-  TContext
-> => {
-  const mutationOptions = getLoginMutationOptions(options);
-
-  return useMutation(mutationOptions, queryClient);
-};
-/**
- * Validate JWT token
- * @summary Validate token
- */
-export const validateToken = (
-  tokenValidation: TokenValidation,
-  signal?: AbortSignal,
-) => {
-  return makeRequest<boolean>({
-    url: `/auth/validate`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: tokenValidation,
-    signal,
-  });
-};
-
-export const getValidateTokenMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof validateToken>>,
-    TError,
-    { data: TokenValidation },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof validateToken>>,
-  TError,
-  { data: TokenValidation },
-  TContext
-> => {
-  const mutationKey = ['validateToken'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof validateToken>>,
-    { data: TokenValidation }
-  > = (props) => {
-    const { data } = props ?? {};
-
-    return validateToken(data);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type ValidateTokenMutationResult = NonNullable<
-  Awaited<ReturnType<typeof validateToken>>
->;
-export type ValidateTokenMutationBody = TokenValidation;
-export type ValidateTokenMutationError = ErrorType<unknown>;
-
-/**
- * @summary Validate token
- */
-export const useValidateToken = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof validateToken>>,
-      TError,
-      { data: TokenValidation },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof validateToken>>,
-  TError,
-  { data: TokenValidation },
-  TContext
-> => {
-  const mutationOptions = getValidateTokenMutationOptions(options);
-
-  return useMutation(mutationOptions, queryClient);
-};
 /**
  * Check if the current user is a technician
  * @summary Check if the current user is a technician
@@ -311,6 +139,127 @@ export function useIsTechnician<
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
   const queryOptions = getIsTechnicianQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * Identity of the currently authenticated user
+ * @summary Current user
+ */
+export const me = (signal?: AbortSignal) => {
+  return makeRequest<MeResponse>({ url: `/auth/me`, method: 'GET', signal });
+};
+
+export const getMeQueryKey = () => {
+  return [`/auth/me`] as const;
+};
+
+export const getMeQueryOptions = <
+  TData = Awaited<ReturnType<typeof me>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof me>>, TError, TData>
+  >;
+}) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getMeQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof me>>> = ({ signal }) =>
+    me(signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof me>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type MeQueryResult = NonNullable<Awaited<ReturnType<typeof me>>>;
+export type MeQueryError = ErrorType<unknown>;
+
+export function useMe<
+  TData = Awaited<ReturnType<typeof me>>,
+  TError = ErrorType<unknown>,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof me>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof me>>,
+          TError,
+          Awaited<ReturnType<typeof me>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useMe<
+  TData = Awaited<ReturnType<typeof me>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof me>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof me>>,
+          TError,
+          Awaited<ReturnType<typeof me>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useMe<
+  TData = Awaited<ReturnType<typeof me>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof me>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+/**
+ * @summary Current user
+ */
+
+export function useMe<
+  TData = Awaited<ReturnType<typeof me>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof me>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getMeQueryOptions(options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,

@@ -1,15 +1,9 @@
-import { IsString, Length, Matches } from 'class-validator';
+export class MeResponse {
+  constructor(value: MeResponse) {
+    Object.assign(this, value);
+  }
 
-export class UserCredentials {
-  @IsString()
-  @Length(1)
+  userId: number;
   username: string;
-
-  @IsString()
-  @Matches(/^[a-zA-Z0-9]{24,32}$/)
-  password: string;
-}
-
-export class TokenValidation {
-  token: string;
+  level: string;
 }

@@ -6,6 +6,8 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export interface TokenValidation {
-  token: string;
+export interface MeResponse {
+  userId: number;
+  username: string;
+  level: string;
 }

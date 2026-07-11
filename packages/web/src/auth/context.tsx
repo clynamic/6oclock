@@ -1,16 +1,21 @@
 import {
   PropsWithChildren,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
-  useState,
 } from 'react';
 
-import { jwtDecode } from 'jwt-decode';
+import { useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 
-import { clearAxiosAuth, setAxiosAuth } from '../http/credentials';
-import { useChangeEffect } from '../utils/hooks';
+import { getMeQueryKey, useMe } from '../api';
+import { AUTH_EXPIRED_EVENT } from '../http/axios';
+import {
+  login as beginLogin,
+  logout as endSession,
+} from '../http/credentials';
 
 export interface AuthPayload {
   userId: number;
@@ -19,31 +24,15 @@ export interface AuthPayload {
 }
 
 interface AuthContextType {
-  token: string | null;
-  saveToken: (token: string) => void;
-  clearToken: () => void;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: AxiosError | null;
   payload: AuthPayload | null;
-  session: Session | null;
-  saveSession: (session: Session) => void;
-  clearSession: () => void;
-}
-
-interface Session {
-  date: Date;
-  hash: string;
+  login: (redirect?: string | null) => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const decodeAuthPayload = (token: string | null): AuthPayload | null => {
-  if (!token) return null;
-  const raw = jwtDecode<AuthPayload>(token);
-  return {
-    userId: Number(raw.userId),
-    username: raw.username,
-    level: raw.level,
-  };
-};
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
@@ -54,64 +43,51 @@ export const useAuth = () => {
   return context;
 };
 
-const storageKey = 'auth_token';
-
 export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(() => {
-    const storedToken = localStorage.getItem(storageKey);
-    if (storedToken) {
-      // This is necessary to ensure the first calls are already authenticated
-      setAxiosAuth(storedToken);
-    }
-    return storedToken;
+  const queryClient = useQueryClient();
+  const { data, isLoading, error } = useMe({
+    query: { retry: false, staleTime: Infinity, gcTime: Infinity },
   });
 
-  const saveToken = (token: string) => {
-    setToken(token);
-    localStorage.setItem(storageKey, token);
-    setAxiosAuth(token);
-  };
-
-  const clearToken = () => {
-    setToken(null);
-    localStorage.removeItem(storageKey);
-    clearAxiosAuth();
-  };
-
   useEffect(() => {
-    if (token) {
-      setAxiosAuth(token);
-    } else {
-      clearAxiosAuth();
-    }
-  }, [token]);
+    const onExpired = () => {
+      void queryClient.invalidateQueries({ queryKey: getMeQueryKey() });
+    };
+    window.addEventListener(AUTH_EXPIRED_EVENT, onExpired);
+    return () => window.removeEventListener(AUTH_EXPIRED_EVENT, onExpired);
+  }, [queryClient]);
 
-  const [session, setSession] = useState<Session | null>(null);
-  useChangeEffect(() => setSession(null), [token]);
-
-  const saveSession = (newSession: Session) => {
-    setSession(newSession);
-  };
-
-  const clearSession = () => {
-    setSession(null);
-  };
-
-  const payload = useMemo(() => decodeAuthPayload(token), [token]);
-
-  return (
-    <AuthContext.Provider
-      value={{
-        token,
-        saveToken,
-        clearToken,
-        payload,
-        session,
-        saveSession,
-        clearSession,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const payload = useMemo<AuthPayload | null>(
+    () =>
+      data
+        ? {
+            userId: Number(data.userId),
+            username: data.username,
+            level: data.level,
+          }
+        : null,
+    [data],
   );
+
+  const login = useCallback((redirect?: string | null) => {
+    beginLogin(redirect);
+  }, []);
+
+  const logout = useCallback(async () => {
+    await endSession();
+  }, []);
+
+  const value = useMemo<AuthContextType>(
+    () => ({
+      isAuthenticated: !!payload,
+      isLoading,
+      error: (error as AxiosError) ?? null,
+      payload,
+      login,
+      logout,
+    }),
+    [payload, isLoading, error, login, logout],
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
