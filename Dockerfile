@@ -25,5 +25,6 @@ COPY packages/web/package.json packages/web/
 RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=build-api /app/packages/api/dist packages/api/dist
 COPY --from=build-web /app/packages/web/dist packages/api/dist/public
+RUN mkdir -p /app/data /data
 EXPOSE 34571
 CMD ["node", "packages/api/dist/main.js"]
