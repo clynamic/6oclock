@@ -12,6 +12,7 @@ import {
   logResponseInterceptor,
 } from './logs';
 import { miscFixInterceptors } from './misc';
+import { redactErrorInterceptor } from './redact';
 import { objectUnpackInterceptor } from './unpack';
 
 export const AXIOS_INSTANCE = Axios.create({
@@ -24,6 +25,8 @@ export const AXIOS_INSTANCE = Axios.create({
 AXIOS_INSTANCE.interceptors.request.use(logRequestInterceptor);
 
 AXIOS_INSTANCE.interceptors.request.use(timezoneInjectorInterceptor);
+
+AXIOS_INSTANCE.interceptors.response.use(null, redactErrorInterceptor);
 
 AXIOS_INSTANCE.interceptors.response.use(dateDeserializeInterceptor);
 AXIOS_INSTANCE.interceptors.response.use(objectUnpackInterceptor);
