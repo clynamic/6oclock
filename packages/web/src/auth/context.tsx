@@ -12,10 +12,7 @@ import { AxiosError } from 'axios';
 
 import { getMeQueryKey, useMe } from '../api';
 import { AUTH_EXPIRED_EVENT } from '../http/axios';
-import {
-  login as beginLogin,
-  logout as endSession,
-} from '../http/credentials';
+import { login as beginLogin, logout as endSession } from '../http/credentials';
 
 export interface AuthPayload {
   userId: number;

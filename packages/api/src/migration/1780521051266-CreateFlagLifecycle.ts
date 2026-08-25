@@ -32,6 +32,8 @@ export class CreateFlagLifecycle1780521051266 implements MigrationInterface {
       `DROP INDEX "public"."IDX_08d03c529b91a448e56afc09d0"`,
     );
     await queryRunner.query(`DROP TABLE "flag_lifecycle"`);
-    await queryRunner.query(`DROP TYPE "public"."flag_lifecycle_handling_enum"`);
+    await queryRunner.query(
+      `DROP TYPE "public"."flag_lifecycle_handling_enum"`,
+    );
   }
 }

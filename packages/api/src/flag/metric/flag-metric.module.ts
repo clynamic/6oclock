@@ -7,9 +7,7 @@ import { FlagMetricController } from './flag-metric.controller';
 import { FlagMetricService } from './flag-metric.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([PostEventEntity, FlagLifecycleEntity]),
-  ],
+  imports: [TypeOrmModule.forFeature([PostEventEntity, FlagLifecycleEntity])],
   controllers: [FlagMetricController],
   providers: [FlagMetricService],
   exports: [FlagMetricService],
