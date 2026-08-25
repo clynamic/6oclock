@@ -6,7 +6,7 @@ import { TicketTypeSummary, useTicketTypeSummaryByHandler } from '../../api';
 import { QueryHint } from '../../common/QueryHint';
 import { useChartValue } from '../../utils/charts';
 import { refetchQueryOptions } from '../../utils/query';
-import { TicketTypeColors } from './TicketTypeSummaryChart';
+import { TicketTypeColors } from './tickets';
 
 export const TicketTypeSummaryByHandlerTypeChart: React.FC = () => {
   const { range, userId } = useChartValue();

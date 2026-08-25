@@ -6,7 +6,7 @@ import { useTicketAgeSeries } from '../../api';
 import { QueryHint } from '../../common/QueryHint';
 import { SeriesChartProps, useChartRange } from '../../utils/charts';
 import { formatSeriesDateLabel } from '../../utils/ranges';
-import { TicketAgeColors, TicketAgeLabels } from './TicketAgeSummaryChart';
+import { TicketAgeColors, TicketAgeLabels } from './tickets';
 
 export const TicketAgeSeriesChart: React.FC = () => {
   const range = useChartRange();

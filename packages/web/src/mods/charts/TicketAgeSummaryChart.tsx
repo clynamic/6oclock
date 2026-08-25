@@ -6,24 +6,7 @@ import { TicketAgeSummary, useTicketAgeSummary } from '../../api';
 import { QueryHint } from '../../common/QueryHint';
 import { useChartRange } from '../../utils/charts';
 import { refetchQueryOptions } from '../../utils/query';
-
-export const TicketAgeColors = {
-  oneDay: '#82b74b', // Moss green
-  threeDays: '#ffcc5c', // Soft gold
-  oneWeek: '#ffa07a', // Light coral
-  twoWeeks: '#4682b4', // Steel blue
-  oneMonth: '#6a5acd', // Royal purple
-  aboveOneMonth: '#bf5b17', // Burnt orange
-} as const;
-
-export const TicketAgeLabels = {
-  oneDay: '1 day',
-  threeDays: '3 days',
-  oneWeek: '1 week',
-  twoWeeks: '2 weeks',
-  oneMonth: '1 month',
-  aboveOneMonth: '> 1 month',
-} as const;
+import { TicketAgeColors, TicketAgeLabels } from './tickets';
 
 export const TicketAgeSummaryChart: React.FC = () => {
   const range = useChartRange();

@@ -1,4 +1,4 @@
-import { ReactElement, Suspense, lazy } from 'react';
+import { ReactElement, Suspense } from 'react';
 
 import { Route, useParams } from 'react-router';
 
@@ -11,62 +11,21 @@ import { NavSpacer } from '../page/header/NavSpacer';
 import { NavUser } from '../page/header/NavUser';
 import type { NavNode } from '../page/navigation';
 import { ChartParamsExtraProvider } from '../utils/charts';
-
-const HomePage = lazy(() =>
-  import('../home/HomePage').then((m) => ({ default: m.HomePage })),
-);
-const HealthPage = lazy(() =>
-  import('../health/HealthPage').then((m) => ({ default: m.HealthPage })),
-);
-const JobsPage = lazy(() =>
-  import('../health/jobs/JobsPage').then((m) => ({ default: m.JobsPage })),
-);
-const ManifestHealthPage = lazy(() =>
-  import('../health/manifests/ManifestHealthPage').then((m) => ({
-    default: m.ManifestHealthPage,
-  })),
-);
-const TileHealthPage = lazy(() =>
-  import('../health/tiles/TileHealthPage').then((m) => ({
-    default: m.TileHealthPage,
-  })),
-);
-const JanitorOverviewPage = lazy(() =>
-  import('../janitors/overview/JanitorOverviewPage').then((m) => ({
-    default: m.JanitorOverviewPage,
-  })),
-);
-const PostUploaderPage = lazy(() =>
-  import('../janitors/uploads/PostUploaderPage').then((m) => ({
-    default: m.PostUploaderPage,
-  })),
-);
-const ModOverviewPage = lazy(() =>
-  import('../mods/overview/ModOverviewPage').then((m) => ({
-    default: m.ModOverviewPage,
-  })),
-);
-const TicketReporterPage = lazy(() =>
-  import('../mods/reports/TicketReporterPage').then((m) => ({
-    default: m.TicketReporterPage,
-  })),
-);
-const PerformanceDetailPage = lazy(() =>
-  import('../performance/PerformanceDetailPage').then((m) => ({
-    default: m.PerformanceDetailPage,
-  })),
-);
-const PerformanceTable = lazy(() =>
-  import('../performance/PerformanceTable').then((m) => ({
-    default: m.PerformanceTable,
-  })),
-);
-const ProfilePage = lazy(() =>
-  import('../profile/ProfilePage').then((m) => ({ default: m.ProfilePage })),
-);
-const SettingsPage = lazy(() =>
-  import('../settings/SettingsPage').then((m) => ({ default: m.SettingsPage })),
-);
+import {
+  HealthPage,
+  HomePage,
+  JanitorOverviewPage,
+  JobsPage,
+  ManifestHealthPage,
+  ModOverviewPage,
+  PerformanceDetailPage,
+  PerformanceTable,
+  PostUploaderPage,
+  ProfilePage,
+  SettingsPage,
+  TicketReporterPage,
+  TileHealthPage,
+} from './pages';
 
 export const useResolveUserId = (): Record<string, string> => {
   const { id } = useParams<{ id: string }>();

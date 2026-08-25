@@ -6,19 +6,7 @@ import { TicketTypeSummary, useTicketTypeSummary } from '../../api';
 import { QueryHint } from '../../common/QueryHint';
 import { useChartRange } from '../../utils/charts';
 import { refetchQueryOptions } from '../../utils/query';
-
-export const TicketTypeColors = {
-  user: '#e1675d', // Vibrant coral
-  comment: '#f2b07e', // Rich peach
-  forum: '#d1b3f1', // Deep lavender
-  blip: '#77c1e4', // Sky blue
-  wiki: '#ffe36d', // Bold lemon
-  pool: '#92e4aa', // Mint green
-  set: '#f092b0', // Rose pink
-  post: '#f0c23b', // Golden yellow
-  dmail: '#88cc88', // Fresh green
-  replacement: '#9ca3db', // Periwinkle blue
-} as const;
+import { TicketTypeColors } from './tickets';
 
 export const TicketTypeSummaryChart: React.FC = () => {
   const range = useChartRange();
