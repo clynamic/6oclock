@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Header,
   HttpException,
   HttpStatus,
   Param,
@@ -12,18 +13,20 @@ import { AxiosInstance } from 'axios';
 import { AXIOS_INSTANCE, getContentType } from 'src/api';
 import { Readable } from 'stream';
 
+import { STATIC_HOST } from './proxy.url';
+
 @ApiTags('Proxy')
 @Controller('proxy')
 // TODO: This should have auth, to prevent abuse.
 export class ProxyController {
   private readonly axios: AxiosInstance;
-  private readonly STATIC_HOST = 'https://static1.e621.net';
 
   constructor() {
     this.axios = AXIOS_INSTANCE;
   }
 
   @Get('*path')
+  @Header('Cache-Control', 'public, max-age=31536000, immutable')
   @ApiOperation({
     summary: 'Proxy request to static host',
     description:
@@ -54,7 +57,7 @@ export class ProxyController {
       throw new HttpException('Invalid path', HttpStatus.BAD_REQUEST);
     }
 
-    const fullUrl = `${this.STATIC_HOST}/${proxyPath}`;
+    const fullUrl = `${STATIC_HOST}/${proxyPath}`;
 
     const response = await this.axios.get(fullUrl, {
       params: queryParams,

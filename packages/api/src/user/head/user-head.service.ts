@@ -7,6 +7,7 @@ import { CacheManager, Cacheable } from 'src/app/browser.module';
 import { AuthService } from 'src/auth/auth.service';
 import { convertKeysToCamelCase } from 'src/common';
 import { PostEntity } from 'src/post/post.entity';
+import { proxiedUrl } from 'src/proxy/proxy.url';
 import { In, IsNull, MoreThan, Not, Repository } from 'typeorm';
 
 import { UserEntity, UserLabelEntity } from '../user.entity';
@@ -147,13 +148,15 @@ export class UserHeadService {
       const post = avatars.find((avatar) => avatar.id === user.avatarId);
       const preview = post?.preview ?? undefined;
 
+      const avatar =
+        post && preview && user.hasCroppedAvatar
+          ? (croppedAvatarUrl(preview, user.id, post.id) ?? preview)
+          : preview;
+
       return new UserHead({
         id: user.id,
         name: user.name,
-        avatar:
-          post && preview && user.hasCroppedAvatar
-            ? (croppedAvatarUrl(preview, user.id, post.id) ?? preview)
-            : preview,
+        avatar: avatar ? proxiedUrl(avatar) : undefined,
         level: user.levelString,
       });
     });

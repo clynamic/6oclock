@@ -1,8 +1,6 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 
 import { Box, useTheme } from '@mui/material';
-
-import { AXIOS_INSTANCE } from '../http/axios';
 
 interface ScreenshotPrinterProps {
   children: (printHandler: () => void) => React.ReactNode;
@@ -23,42 +21,6 @@ export const ScreenshotPrinter: React.FC<ScreenshotPrinterProps> = ({
 }) => {
   const theme = useTheme();
   const screenshotRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!screenshotRef.current) return;
-
-    // This cannot be done in the onclone function for inexplicable reasons.
-    const processImages = () => {
-      const images =
-        screenshotRef.current!.querySelectorAll<HTMLImageElement>('img');
-      images.forEach((image) => {
-        if (image.src.includes('https://static1.e621.net')) {
-          const newSrc = image.src.replace(
-            'https://static1.e621.net',
-            `${AXIOS_INSTANCE.defaults.baseURL!}/proxy`,
-          );
-          image.setAttribute('src', newSrc);
-        }
-      });
-    };
-
-    processImages();
-
-    const observer = new MutationObserver(() => {
-      processImages();
-    });
-
-    observer.observe(screenshotRef.current, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['src'],
-    });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
 
   const handlePrint = useCallback(async () => {
     const targetElement = targetId
