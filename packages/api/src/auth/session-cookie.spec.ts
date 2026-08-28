@@ -63,6 +63,18 @@ describe('readCookie', () => {
     ).toBe('abc');
   });
 
+  it('refuses a bare fragment whose name is the cookie name plus a character', () => {
+    expect(
+      readCookie(withCookies('sixoclock_sessionX'), SESSION_COOKIE),
+    ).toBeNull();
+  });
+
+  it('reads a cookie whose name is a single character without skipping it', () => {
+    expect(readCookie(withCookies('a=1; sixoclock_session=abc'), 'a')).toBe(
+      '1',
+    );
+  });
+
   it('returns null when the header is absent', () => {
     expect(readCookie(withCookies(), SESSION_COOKIE)).toBeNull();
   });
