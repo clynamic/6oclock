@@ -6,6 +6,7 @@ export * from './id-range.dto';
 export * from './limit';
 export * from './logs';
 export * from './loop';
+export * from './cursor.dto';
 export * from './pagination.dto';
 export * from './raw';
 export * from './repository';

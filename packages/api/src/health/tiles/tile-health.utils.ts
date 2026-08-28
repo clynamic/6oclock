@@ -1,71 +1,144 @@
+import { addMonths, startOfMonth, subMonths } from 'date-fns';
+import { CursorParams, DateRange, PartialDateRange } from 'src/common';
+
 import { TileSlice } from './tile-health.dto';
 
-export interface TileSliceProps {
-  missingTimes: { time: Date }[];
-  startDate: Date;
-  endDate: Date;
-  intervalHours?: number;
-  maxSlices?: number;
+/** Marks across the reach, enough to see the shape of a run of tiles. */
+const SLICE_COUNT = 60;
+
+const HOUR = 60 * 60 * 1000;
+
+export interface TileCoverage {
+  ranges: { startDate: Date; endDate: Date }[];
+  missing: Date[];
+  interval: number;
+  reach: DateRange;
 }
 
-export const generateTileSlices = ({
-  missingTimes,
-  startDate,
-  endDate,
-  intervalHours = 1,
-  maxSlices = 30,
-}: TileSliceProps): TileSlice[] => {
-  const totalHours = Math.ceil(
-    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60),
+const readBucket = (
+  start: number,
+  end: number,
+  ranges: { startDate: Date; endDate: Date }[],
+  missed: number[],
+  interval: number,
+): TileSlice => {
+  const owed =
+    ranges.reduce(
+      (sum, range) =>
+        sum +
+        Math.max(
+          0,
+          Math.min(end, range.endDate.getTime()) -
+            Math.max(start, range.startDate.getTime()),
+        ),
+      0,
+    ) /
+    (HOUR * interval);
+
+  // A tile can straddle two marks, which share the hole between them.
+  const unavailable =
+    missed.reduce(
+      (sum, time) =>
+        sum +
+        Math.max(
+          0,
+          Math.min(end, time + HOUR * interval) - Math.max(start, time),
+        ),
+      0,
+    ) /
+    (HOUR * interval);
+
+  return new TileSlice({
+    startDate: new Date(start),
+    endDate: new Date(end),
+    available: Math.max(0, owed - unavailable),
+    unavailable,
+    none: Math.max(0, (end - start) / (HOUR * interval) - owed),
+  });
+};
+
+const sortedMissing = (missing: Date[]): number[] =>
+  missing.map((time) => time.getTime()).sort((a, b) => a - b);
+
+/**
+ * Split the reach into marks, each carrying what that stretch owes and holds.
+ */
+export const readTileSlices = ({
+  ranges,
+  missing,
+  interval,
+  reach,
+}: TileCoverage): TileSlice[] => {
+  const reachStart = reach.startDate.getTime();
+  const span = reach.endDate.getTime() - reachStart;
+
+  // A mark narrower than a tile cannot say anything a tile does not.
+  const count = Math.max(
+    1,
+    Math.min(SLICE_COUNT, Math.floor(span / (HOUR * interval))),
   );
-  const totalTiles = Math.ceil(totalHours / intervalHours);
-  const sliceCount = Math.min(maxSlices, totalTiles);
-  const tilesPerSlice = Math.ceil(totalTiles / sliceCount);
 
-  const slices: TileSlice[] = [];
-  let currentTime = new Date(startDate);
-  let timeIndex = 0;
+  const width = span / count;
+  const missed = sortedMissing(missing);
 
-  for (let i = 0; i < sliceCount; i++) {
-    const sliceStart = new Date(currentTime);
-    const sliceEnd = new Date(
-      Math.min(
-        currentTime.getTime() + tilesPerSlice * intervalHours * 60 * 60 * 1000,
-        endDate.getTime(),
+  return Array.from({ length: count }, (_, index) =>
+    readBucket(
+      reachStart + index * width,
+      reachStart + (index + 1) * width,
+      ranges,
+      missed,
+      interval,
+    ),
+  );
+};
+
+/**
+ * The same accounting over calendar months, which is the unit tiles are
+ * deleted in.
+ */
+export const readTileMonths = ({
+  ranges,
+  missing,
+  interval,
+  reach,
+  before,
+  limit = CursorParams.DEFAULT_PAGE_SIZE,
+  range,
+}: TileCoverage & {
+  before?: Date;
+  limit?: number;
+  range?: PartialDateRange;
+}): TileSlice[] => {
+  const missed = sortedMissing(missing);
+  const months: TileSlice[] = [];
+
+  const floor = range?.startDate
+    ? new Date(Math.max(reach.startDate.getTime(), range.startDate.getTime()))
+    : reach.startDate;
+
+  const ceiling = range?.endDate
+    ? new Date(Math.min(reach.endDate.getTime(), range.endDate.getTime()))
+    : reach.endDate;
+
+  const oldest = startOfMonth(floor);
+
+  let cursor = before
+    ? subMonths(startOfMonth(before), 1)
+    : startOfMonth(ceiling);
+
+  while (months.length < limit && cursor >= oldest) {
+    months.push(
+      readBucket(
+        cursor.getTime(),
+        addMonths(cursor, 1).getTime(),
+        ranges,
+        missed,
+        interval,
       ),
     );
 
-    let unavailable = 0;
-
-    while (
-      timeIndex < missingTimes.length &&
-      missingTimes[timeIndex]!.time < sliceEnd
-    ) {
-      if (missingTimes[timeIndex]!.time >= sliceStart) {
-        unavailable++;
-      }
-      timeIndex++;
-    }
-
-    const expectedInSlice = Math.ceil(
-      (sliceEnd.getTime() - sliceStart.getTime()) /
-        (intervalHours * 60 * 60 * 1000),
-    );
-    const available = Math.max(0, expectedInSlice - unavailable);
-    const none = tilesPerSlice - (available + unavailable);
-
-    slices.push(
-      new TileSlice({
-        startDate: sliceStart,
-        endDate: sliceEnd,
-        available,
-        unavailable,
-        none,
-      }),
-    );
-
-    currentTime = sliceEnd;
+    cursor = subMonths(cursor, 1);
   }
 
-  return slices;
+  return months;
 };

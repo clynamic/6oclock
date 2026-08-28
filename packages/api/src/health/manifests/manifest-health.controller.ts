@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -6,7 +6,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { TechnicianGuard } from 'src/auth/auth.guard';
-import { PaginationParams } from 'src/common/pagination.dto';
 
 import { ManifestHealth } from './manifest-health.dto';
 import { ManifestHealthService } from './manifest-health.service';
@@ -19,7 +18,7 @@ export class ManifestHealthController {
   @Get()
   @ApiOperation({
     summary: 'Retrieve manifest health',
-    description: 'Retrieve manifest health',
+    description: 'Coverage and gaps for each item type',
     operationId: 'getManifestHealth',
   })
   @ApiResponse({
@@ -29,9 +28,7 @@ export class ManifestHealthController {
   })
   @UseGuards(TechnicianGuard)
   @ApiBearerAuth()
-  async getManifestHealth(
-    @Query() pages?: PaginationParams,
-  ): Promise<ManifestHealth[]> {
-    return this.manifestHealthService.manifests(pages);
+  async getManifestHealth(): Promise<ManifestHealth[]> {
+    return this.manifestHealthService.manifests();
   }
 }

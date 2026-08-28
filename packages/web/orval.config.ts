@@ -34,6 +34,20 @@ export default defineConfig({
               (_, firstChar, rest) => firstChar.toLowerCase() + rest,
             ),
           };
+          // a cursor endpoint pages by the marker its last row carried
+          if (options.queryParams?.schema.model.includes('before?: string;')) {
+            return {
+              ...options,
+              override: {
+                ...options.override,
+                query: {
+                  ...options.override.query,
+                  useInfinite: true,
+                  useInfiniteQueryParam: 'before',
+                },
+              },
+            };
+          }
           // enable infinite query for endpoints with pages
           if (options.queryParams?.schema.model.includes('page?: number;')) {
             options = {

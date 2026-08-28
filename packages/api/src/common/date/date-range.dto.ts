@@ -249,12 +249,14 @@ export class PartialDateRange {
  * A range of dates, start inclusive and end exclusive.
  */
 export class DateRange extends PartialDateRange {
+  // class-transformer builds a query dto with no arguments before it assigns
+  // the query's own values, so this has to survive being handed nothing.
   constructor(
-    value: PartialBy<Raw<DateRange>, 'timezone' | 'scale' | 'cycle'>,
+    value?: PartialBy<Raw<DateRange>, 'timezone' | 'scale' | 'cycle'>,
   ) {
     super({
       timezone: 'UTC',
-      scale: inferDefaultScale(value),
+      scale: inferDefaultScale(value ?? ({} as Raw<DateRange>)),
       cycle: TimeScale.All,
       ...value,
     });
@@ -324,6 +326,26 @@ export class DateRange extends PartialDateRange {
     }
 
     return DateRange.currentMonth(range);
+  }
+
+  /**
+   * Returns the range covering every given range, if there are any.
+   */
+  static spanning(
+    ranges: { startDate: Date; endDate: Date }[],
+  ): DateRange | undefined {
+    const first = ranges[0];
+    if (!first) return undefined;
+
+    let startDate = first.startDate;
+    let endDate = first.endDate;
+
+    for (const range of ranges) {
+      if (range.startDate < startDate) startDate = range.startDate;
+      if (range.endDate > endDate) endDate = range.endDate;
+    }
+
+    return new DateRange({ startDate, endDate });
   }
 
   /**

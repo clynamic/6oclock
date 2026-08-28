@@ -14,7 +14,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { TechnicianGuard } from 'src/auth/auth.guard';
-import { DateRange, PartialDateRange } from 'src/common';
+import { CursorParams, DateRange, PartialDateRange } from 'src/common';
 
 import {
   Manifest,
@@ -81,9 +81,13 @@ export class ManifestController {
     description: 'List of manifests',
     type: [Manifest],
   })
-  async list(@Query() range?: DateRange, @Query() query?: ManifestQuery) {
+  async list(
+    @Query() range?: DateRange,
+    @Query() query?: ManifestQuery,
+    @Query() cursor?: CursorParams,
+  ) {
     return this.manifestService
-      .list(range, query)
+      .list(range, query, cursor)
       .then((result) => result.map((item) => new Manifest(item)));
   }
 

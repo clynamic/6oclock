@@ -14,8 +14,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { TechnicianGuard } from 'src/auth/auth.guard';
-import { PartialDateRange, TileType } from 'src/common';
-import { PaginationParams } from 'src/common/pagination.dto';
+import { CursorParams, PartialDateRange, TileType } from 'src/common';
 
 import { TileHealth } from './tile-health.dto';
 import { TileHealthService } from './tile-health.service';
@@ -28,7 +27,7 @@ export class TileHealthController {
   @Get()
   @ApiOperation({
     summary: 'Retrieve tile health',
-    description: 'Retrieve tile health and coverage information',
+    description: 'Derived tiles and gaps for each tile type',
     operationId: 'getTileHealth',
   })
   @ApiResponse({
@@ -39,9 +38,10 @@ export class TileHealthController {
   @UseGuards(TechnicianGuard)
   @ApiBearerAuth()
   async getTileHealth(
-    @Query() pages?: PaginationParams,
+    @Query() cursor?: CursorParams,
+    @Query() range?: PartialDateRange,
   ): Promise<TileHealth[]> {
-    return this.tileHealthService.tiles(pages);
+    return this.tileHealthService.tiles(cursor, range);
   }
 
   // This is kind of awkward, being handled in the health controller.

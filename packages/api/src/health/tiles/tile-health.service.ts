@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Cacheable } from 'src/app/browser.module';
 import {
-  PaginationParams,
+  CursorParams,
+  DateRange,
   PartialDateRange,
   TileService,
   TileType,
@@ -13,7 +14,7 @@ import { UploadTilesEntity } from 'src/upload/tiles/upload-tiles.entity';
 import { UploadTilesService } from 'src/upload/tiles/upload-tiles.service';
 
 import { TileHealth } from './tile-health.dto';
-import { generateTileSlices } from './tile-health.utils';
+import { readTileMonths, readTileSlices } from './tile-health.utils';
 
 @Injectable()
 export class TileHealthService {
@@ -29,60 +30,86 @@ export class TileHealthService {
 
   @Cacheable({
     prefix: 'tile-health',
-    ttl: 15 * 60 * 1000,
+    ttl: 60 * 1000,
     dependencies: [ManifestEntity, UploadTilesEntity, PermitTilesEntity],
   })
-  async tiles(pages?: PaginationParams): Promise<TileHealth[]> {
-    const health: TileHealth[] = [];
-    pages = new PaginationParams({
-      limit: 5,
-      ...pages,
-    });
+  async tiles(
+    cursor?: CursorParams,
+    range?: PartialDateRange,
+  ): Promise<TileHealth[]> {
+    const gathered: {
+      type: TileType;
+      interval: number;
+      ranges: number;
+      spans: { startDate: Date; endDate: Date }[];
+      missing: Date[];
+      expected: number;
+    }[] = [];
 
-    const tileTypes = Object.values(TileType).slice(
-      PaginationParams.calculateOffset(pages),
-      PaginationParams.calculateOffset(pages) + (pages.limit || 5),
-    );
-
-    for (const tileType of tileTypes) {
-      const service = this.tileServices[tileType];
+    for (const [type, service] of Object.entries(this.tileServices)) {
       if (!service) continue;
 
       const ranges = await service.getRanges();
       if (ranges.length === 0) continue;
 
+      const missing: Date[] = [];
+      let expected = 0;
+
       for (const range of ranges) {
         const { startDate, endDate } = range.dateRange;
 
-        const totalHours = Math.ceil(
-          (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60),
+        expected += Math.ceil(
+          (endDate.getTime() - startDate.getTime()) /
+            (1000 * 60 * 60 * service.interval),
         );
-        const expected = Math.ceil(totalHours / service.interval);
 
-        const missingTimes = await service.findMissing(range);
-        const actual = expected - missingTimes.length;
-
-        const slices = generateTileSlices({
-          missingTimes: missingTimes.map((time) => ({ time })),
-          startDate,
-          endDate,
-          intervalHours: service.interval,
-        });
-
-        health.push(
-          new TileHealth({
-            type: tileType,
-            startDate,
-            endDate,
-            expected,
-            actual,
-            slices,
-          }),
-        );
+        missing.push(...(await service.findMissing(range)));
       }
+
+      gathered.push({
+        type: type as TileType,
+        interval: service.interval,
+        ranges: ranges.length,
+        spans: ranges.map((range) => range.dateRange),
+        missing,
+        expected,
+      });
     }
 
-    return health;
+    const spans = gathered.flatMap((entry) => entry.spans);
+
+    // Marks line up across types only while every strip covers one window.
+    const reach = DateRange.spanning(spans) ?? DateRange.recentMonths();
+
+    return gathered
+      .map((entry) => {
+        const bounds = DateRange.spanning(entry.spans)!;
+
+        return new TileHealth({
+          type: entry.type,
+          ranges: entry.ranges,
+          startDate: bounds.startDate,
+          endDate: bounds.endDate,
+          expected: entry.expected,
+          actual: entry.expected - entry.missing.length,
+          slices: readTileSlices({
+            ranges: entry.spans,
+            missing: entry.missing,
+            interval: entry.interval,
+            reach,
+          }),
+          months: readTileMonths({
+            ranges: entry.spans,
+            missing: entry.missing,
+            interval: entry.interval,
+            reach,
+            before: cursor?.before ? new Date(cursor.before) : undefined,
+            limit: cursor?.limit,
+            range,
+          }),
+        });
+      })
+      .sort((a, b) => a.actual / a.expected - b.actual / b.expected);
   }
 
   async deleteTilesByType(

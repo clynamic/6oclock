@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { sub } from 'date-fns';
-import { PaginationParams } from 'src/common';
+import { CursorParams, PaginationParams } from 'src/common';
 import { RETENTION_SECONDS } from 'src/job/job.constants';
-import { QueryDeepPartialEntity, Repository } from 'typeorm';
+import { LessThan, QueryDeepPartialEntity, Repository } from 'typeorm';
 
 import { JobLogEntity } from './job-log.entity';
 import { JobLogRecord, closeJobLog, openJobLog } from './job-log.sink';
@@ -67,12 +67,14 @@ export class JobLogService {
     };
   }
 
-  async list(jobId: string, pages?: PaginationParams): Promise<JobLogEntity[]> {
+  async list(jobId: string, cursor?: CursorParams): Promise<JobLogEntity[]> {
     return this.logRepository.find({
-      where: { jobId },
+      where: {
+        jobId,
+        ...(cursor?.before ? { id: LessThan(cursor.before) } : {}),
+      },
       order: { id: 'DESC' },
-      skip: PaginationParams.calculateOffset(pages),
-      take: pages?.limit ?? PaginationParams.DEFAULT_PAGE_SIZE,
+      take: cursor?.limit ?? CursorParams.DEFAULT_PAGE_SIZE,
     });
   }
 

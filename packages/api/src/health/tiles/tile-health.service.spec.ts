@@ -2,8 +2,8 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { Test } from '@nestjs/testing';
 import { CacheManager } from 'src/app/browser.module';
 import {
+  CursorParams,
   DateRange,
-  PaginationParams,
   PartialDateRange,
   TileType,
   TilingRange,
@@ -182,13 +182,16 @@ describe('TileHealthService', () => {
       expect(health!.endDate).toEqual(at('2024-03-01T06:00:00Z'));
     });
 
-    it('reports one entry per range a type covers', async () => {
+    it('gathers every range a type covers into the one entry for it', async () => {
       uploadRanges.mockResolvedValue([
         spanning('2024-03-01T00:00:00Z', '2024-03-01T06:00:00Z'),
         spanning('2024-04-01T00:00:00Z', '2024-04-01T06:00:00Z'),
       ]);
 
-      await expect(service.tiles()).resolves.toHaveLength(2);
+      const health = await service.tiles();
+
+      expect(health).toHaveLength(1);
+      expect(health[0]!.ranges).toBe(2);
     });
 
     it('says nothing about a type that covers no range at all', async () => {
@@ -198,7 +201,43 @@ describe('TileHealthService', () => {
     });
   });
 
-  describe('paging over tile types', () => {
+  describe('paging over the months', () => {
+    beforeEach(() => {
+      uploadRanges.mockResolvedValue([
+        spanning('2024-01-01T00:00:00Z', '2024-06-01T00:00:00Z'),
+      ]);
+    });
+
+    it('reads no more months than the page asks for', async () => {
+      const [health] = await service.tiles(new CursorParams({ limit: 2 }));
+
+      expect(health!.months).toHaveLength(2);
+    });
+
+    it('reads on beneath the marker instead of repeating a page', async () => {
+      const [first] = await service.tiles(new CursorParams({ limit: 2 }));
+      const edge = first!.months[first!.months.length - 1]!;
+
+      const [next] = await service.tiles(
+        new CursorParams({ limit: 2, before: edge.startDate.toISOString() }),
+      );
+
+      expect(next!.months[0]!.startDate.getTime()).toBeLessThan(
+        edge.startDate.getTime(),
+      );
+    });
+
+    it('reads only the months a named range reaches', async () => {
+      const [health] = await service.tiles(
+        undefined,
+        new PartialDateRange({ endDate: at('2024-03-15T00:00:00Z') }),
+      );
+
+      expect(health!.months[0]!.startDate).toEqual(at('2024-03-01T00:00:00Z'));
+    });
+  });
+
+  describe('ordering the types', () => {
     it('starts from the first type when nobody asks otherwise', async () => {
       uploadRanges.mockResolvedValue([
         spanning('2024-03-01T00:00:00Z', '2024-03-01T01:00:00Z'),
@@ -207,22 +246,6 @@ describe('TileHealthService', () => {
       const health = await service.tiles();
 
       expect(health[0]!.type).toBe(TileType.uploadHourly);
-    });
-
-    it('walks past the types an earlier page already covered', async () => {
-      uploadRanges.mockResolvedValue([
-        spanning('2024-03-01T00:00:00Z', '2024-03-01T01:00:00Z'),
-      ]);
-      permitRanges.mockResolvedValue([
-        spanning('2024-03-01T00:00:00Z', '2024-03-01T01:00:00Z'),
-      ]);
-
-      const health = await service.tiles(
-        new PaginationParams({ limit: 1, page: 2 }),
-      );
-
-      expect(health).toHaveLength(1);
-      expect(health[0]!.type).toBe(TileType.permitHourly);
     });
   });
 

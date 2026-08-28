@@ -1,7 +1,8 @@
+import { BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { startOfDay } from 'date-fns';
 import { Cacheable, withInvalidation } from 'src/app/browser.module';
-import { DateRange, TimeScale } from 'src/common';
+import { CursorParams, DateRange, TimeScale } from 'src/common';
 import { ItemType } from 'src/label/label.entity';
 import {
   Between,
@@ -47,7 +48,11 @@ export class ManifestService {
     range?: DateRange,
     options?: FindOptionsWhere<ManifestEntity>,
   ): FindOptionsWhere<ManifestEntity>[] {
-    range = range?.expand(TimeScale.Day);
+    // A query may name a scale without naming dates, which claims no range.
+    range =
+      range?.startDate && range.endDate
+        ? range.expand(TimeScale.Day)
+        : undefined;
 
     return [
       ...(range
@@ -82,12 +87,39 @@ export class ManifestService {
   async list(
     range?: DateRange,
     query?: ManifestQuery,
+    cursor?: CursorParams,
   ): Promise<ManifestEntity[]> {
-    return this.manifestRepository.find({
-      where: query?.id
-        ? { id: query.id }
-        : this.whereInRange(range, query?.type ? { type: In(query.type) } : {}),
-    });
+    const where = query?.id
+      ? { id: query.id }
+      : this.whereInRange(range, query?.type ? { type: In(query.type) } : {});
+
+    // The sync asks what it already holds, so an unasked page would read as
+    // absence and refetch the world.
+    if (!cursor) return this.manifestRepository.find({ where });
+
+    const builder = this.manifestRepository
+      .createQueryBuilder('manifest')
+      .where(where)
+      .orderBy('manifest.start_date', 'DESC')
+      .addOrderBy('manifest.id', 'DESC')
+      .take(cursor.limit ?? CursorParams.DEFAULT_PAGE_SIZE);
+
+    if (cursor.before) {
+      // The marker carries its own date, so it outlives the row it came from.
+      const [date, id] = cursor.before.split('|');
+
+      if (!date || !id) {
+        throw new BadRequestException('Malformed cursor');
+      }
+
+      // The id breaks a tie between manifests claiming one date.
+      builder.andWhere('(manifest.start_date, manifest.id) < (:date, :id)', {
+        date: new Date(date),
+        id: Number(id),
+      });
+    }
+
+    return builder.getMany();
   }
 
   @Cacheable({

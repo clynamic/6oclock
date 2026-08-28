@@ -77,6 +77,9 @@ export class JobLogInfo {
     Object.assign(this, value);
   }
 
+  /** Marks this line's place in the run, so a page can read on from it. */
+  id: string;
+
   at: Date;
   level: string;
   context?: string;

@@ -14,7 +14,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { TechnicianGuard } from 'src/auth/auth.guard';
-import { PaginationParams } from 'src/common';
+import { CursorParams, PaginationParams } from 'src/common';
 
 import {
   JobInfo,
@@ -86,13 +86,14 @@ export class JobController {
   })
   async getJobLogs(
     @Param('id') id: string,
-    @Query() pages?: PaginationParams,
+    @Query() cursor?: CursorParams,
   ): Promise<JobLogInfo[]> {
-    const lines = await this.jobLogService.list(id, pages);
+    const lines = await this.jobLogService.list(id, cursor);
 
     return lines.map(
       (line) =>
         new JobLogInfo({
+          id: line.id,
           at: line.at,
           level: line.level,
           context: line.context ?? undefined,
