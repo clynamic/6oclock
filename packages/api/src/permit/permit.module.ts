@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 
 import { PermitMetricModule } from './metric/permit-metric.module';
-import { PermitSyncModule } from './sync/permit-sync.module';
+import { PermitTilesModule } from './tiles/permit-tiles.module';
 
 @Module({
-  imports: [PermitSyncModule, PermitMetricModule],
+  imports: [PermitTilesModule, PermitMetricModule],
 })
 export class PermitModule {}

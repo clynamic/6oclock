@@ -5,7 +5,6 @@ import { FeedbackEntity } from 'src/feedback/feedback.entity';
 import { FlagEntity } from 'src/flag/flag.entity';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
 import { ModActionEntity } from 'src/mod-action/mod-action.entity';
-import { PermitEntity } from 'src/permit/permit.entity';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
 import { PostReplacementEntity } from 'src/post-replacement/post-replacement.entity';
 import { PostVersionEntity } from 'src/post-version/post-version.entity';
@@ -30,7 +29,6 @@ import { ManifestHealthService } from './manifest-health.service';
       BulkUpdateRequestEntity,
       TagAliasEntity,
       TagImplicationEntity,
-      PermitEntity,
     ]),
   ],
   controllers: [ManifestHealthController],

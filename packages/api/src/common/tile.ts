@@ -5,6 +5,7 @@ import { DateRange, PartialDateRange, TimeScale, startOf } from './date';
 
 export enum TileType {
   uploadHourly = 'upload_hourly',
+  permitHourly = 'permit_hourly',
   postPendingHourly = 'post_pending_hourly',
 }
 

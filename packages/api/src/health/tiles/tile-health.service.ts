@@ -7,6 +7,8 @@ import {
   TileType,
 } from 'src/common';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
+import { PermitTilesEntity } from 'src/permit/tiles/permit-tiles.entity';
+import { PermitTilesService } from 'src/permit/tiles/permit-tiles.service';
 import { UploadTilesEntity } from 'src/upload/tiles/upload-tiles.entity';
 import { UploadTilesService } from 'src/upload/tiles/upload-tiles.service';
 
@@ -15,16 +17,20 @@ import { generateTileSlices } from './tile-health.utils';
 
 @Injectable()
 export class TileHealthService {
-  constructor(private readonly uploadTilesService: UploadTilesService) {}
+  constructor(
+    private readonly uploadTilesService: UploadTilesService,
+    private readonly permitTilesService: PermitTilesService,
+  ) {}
 
   private tileServices: Partial<Record<TileType, TileService>> = {
     [TileType.uploadHourly]: this.uploadTilesService,
+    [TileType.permitHourly]: this.permitTilesService,
   };
 
   @Cacheable({
     prefix: 'tile-health',
     ttl: 15 * 60 * 1000,
-    dependencies: [ManifestEntity, UploadTilesEntity],
+    dependencies: [ManifestEntity, UploadTilesEntity, PermitTilesEntity],
   })
   async tiles(pages?: PaginationParams): Promise<TileHealth[]> {
     const health: TileHealth[] = [];
