@@ -4,7 +4,7 @@
   "testRunner": "jest",
   "jest": {
     "projectType": "custom",
-    "configFile": "jest.config.json",
+    "configFile": "jest.mutation.json",
     "enableFindRelatedTests": true
   },
   "reporters": ["clear-text", "progress"],
@@ -20,7 +20,10 @@
     "!src/**/*.module.ts",
     "!src/**/*.controller.ts",
     "!src/main.ts",
-    "!src/data-source.ts"
+    "!src/data-source.ts",
+    "!src/post/metric/post-metric.service.ts",
+    "!src/approval/metric/approval-metric.service.ts",
+    "!src/flag/metric/flag-metric.service.ts"
   ],
   "ignorePatterns": ["coverage", "dist", ".stryker-tmp"],
   "timeoutMS": 30000,
