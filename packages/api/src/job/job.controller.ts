@@ -8,21 +8,32 @@ import {
 import { TechnicianGuard } from 'src/auth/auth.guard';
 import { PaginationParams } from 'src/common';
 
-import { JobInfo, SchedulerInfo } from './job.dto';
+import {
+  JobInfo,
+  JobLogInfo,
+  JobOverview,
+  JobQuery,
+  SchedulerInfo,
+} from './job.dto';
 import { JobService } from './job.service';
+import { JobLogService } from './log/job-log.service';
 
 @ApiTags('Jobs')
 @Controller('jobs')
 @UseGuards(TechnicianGuard)
 @ApiBearerAuth()
 export class JobController {
-  constructor(private readonly jobService: JobService) {}
+  constructor(
+    private readonly jobService: JobService,
+    private readonly jobLogService: JobLogService,
+  ) {}
 
   @Get()
   @ApiOperation({
     summary: 'Get all jobs',
     description:
-      'Returns a list of all jobs that have been queued or processed.',
+      'Returns a list of all jobs that have been queued or processed, ' +
+      'optionally limited to one scheduler.',
     operationId: 'getJobs',
   })
   @ApiResponse({
@@ -30,8 +41,55 @@ export class JobController {
     description: 'A list of all jobs',
     type: [JobInfo],
   })
-  async getJobs(@Query() pages?: PaginationParams): Promise<JobInfo[]> {
-    return this.jobService.list(pages);
+  async getJobs(
+    @Query() pages?: PaginationParams,
+    @Query() query?: JobQuery,
+  ): Promise<JobInfo[]> {
+    return this.jobService.list(pages, query?.handler);
+  }
+
+  @Get('overview')
+  @ApiOperation({
+    summary: 'Get one row per scheduler with its last run',
+    description:
+      'Returns every registered scheduler beside the outcome of its most recent job.',
+    operationId: 'getJobOverview',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'One row per scheduler',
+    type: [JobOverview],
+  })
+  async getJobOverview(): Promise<JobOverview[]> {
+    return this.jobService.overview();
+  }
+
+  @Get(':id/logs')
+  @ApiOperation({
+    summary: 'Get the log of one run',
+    description: 'Returns the lines a single run wrote while it held a turn.',
+    operationId: 'getJobLogs',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The lines of one run',
+    type: [JobLogInfo],
+  })
+  async getJobLogs(
+    @Param('id') id: string,
+    @Query() pages?: PaginationParams,
+  ): Promise<JobLogInfo[]> {
+    const lines = await this.jobLogService.list(id, pages);
+
+    return lines.map(
+      (line) =>
+        new JobLogInfo({
+          at: line.at,
+          level: line.level,
+          context: line.context ?? undefined,
+          record: line.record,
+        }),
+    );
   }
 
   @Get('schedulers')

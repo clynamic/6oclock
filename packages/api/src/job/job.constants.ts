@@ -33,3 +33,5 @@ export interface Job<T = unknown> {
 }
 
 export const RECENT_RUNS = 12;
+
+export const RETENTION_SECONDS = 7 * 24 * 60 * 60;

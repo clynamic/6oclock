@@ -1,6 +1,7 @@
 import { JOB_TIMED_OUT_PREFIX, Job } from './job.constants';
 import type { JobHandlerEntry } from './job.discovery';
 import { JobProcessor } from './job.processor';
+import { JobLogService } from './log/job-log.service';
 
 const job = { id: 'a-job' } as unknown as Job;
 
@@ -13,6 +14,11 @@ const entryFor = (
     options: { timeout },
   }) as unknown as JobHandlerEntry;
 
+const logService = (
+  close: () => Promise<void> = async () => undefined,
+): JobLogService =>
+  ({ collect: () => ({ close }) }) as unknown as JobLogService;
+
 const after = (ms: number, then: () => void = () => undefined): Promise<void> =>
   new Promise((resolve) => setTimeout(() => resolve(then()), ms));
 
@@ -20,7 +26,7 @@ const rejectingAfter = (ms: number, message: string): Promise<void> =>
   new Promise((_, reject) => setTimeout(() => reject(new Error(message)), ms));
 
 describe('JobProcessor', () => {
-  const processor = new JobProcessor();
+  const processor = new JobProcessor(logService());
 
   describe('a handler that names no timeout', () => {
     it('runs to completion however long it takes', async () => {

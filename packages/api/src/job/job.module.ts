@@ -7,13 +7,18 @@ import { JobController } from './job.controller';
 import { JobDiscoveryService } from './job.discovery';
 import { JobProcessor } from './job.processor';
 import { JobService } from './job.service';
+import { JobLogModule } from './log/job-log.module';
 import { PgBossJobEntity } from './pgboss-job.entity';
 
 @Global()
 @Module({
-  imports: [DiscoveryModule, TypeOrmModule.forFeature([PgBossJobEntity])],
+  imports: [
+    DiscoveryModule,
+    TypeOrmModule.forFeature([PgBossJobEntity]),
+    JobLogModule,
+  ],
   controllers: [JobController],
   providers: [JobBoss, JobService, JobDiscoveryService, JobProcessor],
-  exports: [JobService, JobDiscoveryService],
+  exports: [JobService, JobLogModule, JobDiscoveryService],
 })
 export class JobModule {}

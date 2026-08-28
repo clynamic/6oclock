@@ -3,9 +3,15 @@ import { DiscoveryService, Reflector } from '@nestjs/core';
 import { policies } from 'pg-boss';
 
 import { JobBoss } from './job.boss';
-import { JOB_HANDLER_METADATA, Job, QUEUE_NAMES } from './job.constants';
+import {
+  JOB_HANDLER_METADATA,
+  Job,
+  QUEUE_NAMES,
+  RETENTION_SECONDS,
+} from './job.constants';
 import { JobHandlerOptions } from './job.decorator';
 import { JobProcessor } from './job.processor';
+import { collectJobLogs } from './log/job-log.stream';
 
 export interface JobHandlerEntry {
   options: Required<JobHandlerOptions>;
@@ -13,7 +19,6 @@ export interface JobHandlerEntry {
 }
 
 const EXPIRE_SECONDS = 600;
-const RETENTION_SECONDS = 7 * 24 * 60 * 60;
 
 @Injectable()
 export class JobDiscoveryService implements OnModuleInit {
@@ -43,6 +48,7 @@ export class JobDiscoveryService implements OnModuleInit {
   }
 
   async startWorking(): Promise<void> {
+    collectJobLogs();
     await this.registerWorkers();
     await this.registerSchedulers();
   }
@@ -165,6 +171,21 @@ export class JobDiscoveryService implements OnModuleInit {
       );
 
       this.logger.log(`Registered scheduler: ${entry.options.id}`);
+    }
+
+    await this.unscheduleOrphans();
+  }
+
+  private async unscheduleOrphans(): Promise<void> {
+    const boss = this.jobBoss.instance;
+
+    for (const schedule of await boss.getSchedules()) {
+      const entry = this.handlers.get(schedule.key);
+      if (entry?.options.enabled) continue;
+
+      await boss.unschedule(schedule.name, schedule.key);
+
+      this.logger.log(`Unscheduled orphan: ${schedule.key}`);
     }
   }
 

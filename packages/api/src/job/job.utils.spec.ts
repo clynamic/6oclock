@@ -2,6 +2,7 @@ import { JOB_TIMED_OUT_PREFIX, Job } from './job.constants';
 import type { JobHandlerEntry } from './job.discovery';
 import { JobProcessor } from './job.processor';
 import { JobCancelledError, ensureActive, setActiveCheck } from './job.utils';
+import { JobLogService } from './log/job-log.service';
 
 const job: Job = { id: 'a-job', name: 'sync', data: {} };
 
@@ -10,6 +11,11 @@ const entry = (
   timeout?: number,
 ): JobHandlerEntry =>
   ({ handler, options: { timeout } }) as unknown as JobHandlerEntry;
+
+const logService = (): JobLogService =>
+  ({
+    collect: () => ({ close: async () => undefined }),
+  }) as unknown as JobLogService;
 
 describe('ensureActive', () => {
   afterEach(() => {
@@ -66,7 +72,7 @@ describe('ensureActive', () => {
 });
 
 describe('JobProcessor', () => {
-  const processor = new JobProcessor();
+  const processor = new JobProcessor(logService());
 
   it('runs a handler carrying no timeout to completion', async () => {
     const handler = jest.fn().mockResolvedValue(undefined);

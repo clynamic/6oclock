@@ -70,5 +70,6 @@ export class JobLogInfo {
   at: Date;
   level: string;
   context?: string;
-  message: string;
+
+  record: Record<string, unknown>;
 }
