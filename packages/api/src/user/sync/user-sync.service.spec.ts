@@ -185,6 +185,20 @@ describe('UserSyncService', () => {
       });
     });
 
+    it('narrows to the notable types asked for', async () => {
+      const find = jest.fn().mockResolvedValue([]);
+      const service = serviceOver({}, { find });
+
+      await service.listNotable({ type: ['uploader'] } as never);
+
+      const where = find.mock.calls[0]![0].where as {
+        type: { type: string; value: string[] };
+      };
+
+      expect(where.type.type).toBe('in');
+      expect(where.type.value).toEqual(['uploader']);
+    });
+
     it('asks for notables touched at or after the cutoff', async () => {
       const find = jest.fn().mockResolvedValue([]);
       const service = serviceOver({}, { find });
