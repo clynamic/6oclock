@@ -52,9 +52,9 @@ export class ActivityService {
   ): Promise<DailyActivity> {
     const activity = this.selectDailyActivity(date);
 
-    const now = TZDate.tz(SHIP_TIMEZONE);
-    const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay());
+    const anchor = new TZDate(date, SHIP_TIMEZONE);
+    const startOfWeek = new Date(anchor);
+    startOfWeek.setDate(anchor.getDate() - anchor.getDay());
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 7);
 
