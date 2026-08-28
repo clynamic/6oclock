@@ -10,16 +10,19 @@ import {
   expandInto,
   generateSeriesLastTileCountPoints,
 } from 'src/common';
+import { PermitEntity } from 'src/permit/permit.entity';
 import { Repository } from 'typeorm';
 
-import { PostLifecycleEntity } from '../lifecycle/post-lifecycle.entity';
+import { PostReviewEpisodeEntity } from '../review/post-review.entity';
 import { PostStatusSummary } from './post-metric.dto';
 
 @Injectable()
 export class PostMetricService {
   constructor(
-    @InjectRepository(PostLifecycleEntity)
-    private readonly lifecycleRepository: Repository<PostLifecycleEntity>,
+    @InjectRepository(PostReviewEpisodeEntity)
+    private readonly episodeRepository: Repository<PostReviewEpisodeEntity>,
+    @InjectRepository(PermitEntity)
+    private readonly permitRepository: Repository<PermitEntity>,
   ) {}
 
   /**
@@ -31,14 +34,10 @@ export class PostMetricService {
     return sub(startOfMonth(range.startDate), { months: 2 });
   }
 
-  private inRange(column: string) {
-    return `${column} >= :after AND ${column} < :before`;
-  }
-
   @Cacheable({
     prefix: 'post',
     ttl: 5 * 60 * 1000,
-    dependencies: [PostLifecycleEntity],
+    dependencies: [PostReviewEpisodeEntity, PermitEntity],
   })
   async statusSummary(
     partialRange?: PartialDateRange,
@@ -46,43 +45,40 @@ export class PostMetricService {
     const range = DateRange.fill(partialRange);
     const cutOff = this.pendingCutoffDate(range);
 
-    const result = await this.lifecycleRepository.query(
+    const result = await this.episodeRepository.query(
       `
       SELECT
-        COUNT(*) FILTER (WHERE approved_at >= $1 AND approved_at < $2) as approved,
-        COUNT(*) FILTER (WHERE deleted_at >= $1 AND deleted_at < $2) as deleted,
-        COUNT(*) FILTER (WHERE permitted_at >= $1 AND permitted_at < $2) as permitted,
-        COUNT(*) FILTER (WHERE
-          (approved_at IS NULL OR approved_at >= $2)
-          AND (deleted_at IS NULL OR deleted_at >= $2)
-          AND (permitted_at IS NULL OR permitted_at >= $2)
-        ) as pending
-      FROM post_lifecycle
-      WHERE uploaded_at >= $1
+        COUNT(*) FILTER (WHERE exit = 'approved' AND exited_at >= $1 AND exited_at < $2) as approved,
+        COUNT(*) FILTER (WHERE exit = 'deleted' AND exited_at >= $1 AND exited_at < $2) as deleted,
+        COUNT(*) FILTER (WHERE exited_at IS NULL OR exited_at >= $2) as pending
+      FROM post_review_episodes
+      WHERE entered_at >= $3
+        AND entered_at < $2
         AND (
-          (uploaded_at >= $3 AND uploaded_at < $2)
-          OR (uploaded_at < $2
-              AND (approved_at IS NULL OR approved_at >= $2)
-              AND (deleted_at IS NULL OR deleted_at >= $2)
-              AND (permitted_at IS NULL OR permitted_at >= $2)
-          )
+          entered_at >= $1
+          OR exited_at IS NULL
+          OR exited_at >= $1
         )
       `,
-      [cutOff, range.endDate, range.startDate],
+      [range.startDate, range.endDate, cutOff],
     );
+
+    const permitted = await this.permitRepository.count({
+      where: { createdAt: range.find() },
+    });
 
     return new PostStatusSummary({
       approved: parseInt(result[0]?.approved || '0'),
       deleted: parseInt(result[0]?.deleted || '0'),
-      permitted: parseInt(result[0]?.permitted || '0'),
       pending: parseInt(result[0]?.pending || '0'),
+      permitted,
     });
   }
 
   @Cacheable({
     prefix: 'post',
     ttl: 5 * 60 * 1000,
-    dependencies: [PostLifecycleEntity],
+    dependencies: [PostReviewEpisodeEntity],
   })
   async pendingSeries(
     partialRange?: PartialDateRange,
@@ -91,51 +87,23 @@ export class PostMetricService {
     const cutOff = this.pendingCutoffDate(range);
 
     const query = `
-      WITH initial_count AS (
+      WITH open_before AS (
         SELECT COUNT(*) AS count
-        FROM post_lifecycle
-        WHERE uploaded_at >= $3
-          AND uploaded_at < $1
-          AND permitted_at IS NULL
-          AND (approved_at IS NULL OR approved_at >= $1)
-          AND (deleted_at IS NULL OR deleted_at >= $1)
+        FROM post_review_episodes
+        WHERE entered_at >= $3
+          AND entered_at < $1
+          AND (exited_at IS NULL OR exited_at >= $1)
       ),
-      pending_posts AS (
-        SELECT
-          post_id,
-          date_trunc('hour', uploaded_at) AS upload_hour,
-          date_trunc(
-            'hour',
-            COALESCE(
-              LEAST(
-                COALESCE(approved_at, $2::timestamptz),
-                COALESCE(deleted_at, $2::timestamptz)
-              ),
-              $2::timestamptz
-            )
-          ) AS handled_hour
-        FROM post_lifecycle
-        WHERE uploaded_at >= $3
-          AND uploaded_at < $2
-          AND permitted_at IS NULL
-          AND (approved_at IS NULL OR approved_at > $1)
-          AND (deleted_at IS NULL OR deleted_at > $1)
-      ),
-      events AS (
-        SELECT upload_hour AS hour, 1 AS change
-        FROM pending_posts
-        WHERE upload_hour >= $1
+      deltas AS (
+        SELECT date_trunc('hour', entered_at) AS hour, 1 AS change
+        FROM post_review_episodes
+        WHERE entered_at >= greatest($1, $3) AND entered_at < $2
         UNION ALL
-        SELECT handled_hour AS hour, -1 AS change
-        FROM pending_posts
-        WHERE handled_hour >= $1 AND handled_hour < $2
+        SELECT date_trunc('hour', exited_at) AS hour, -1 AS change
+        FROM post_review_episodes
+        WHERE entered_at >= $3 AND exited_at >= $1 AND exited_at < $2
       ),
-      event_aggregates AS (
-        SELECT hour, SUM(change) AS change
-        FROM events
-        GROUP BY hour
-      ),
-      hour_series AS (
+      hours AS (
         SELECT generate_series(
           $1::timestamptz,
           $2::timestamptz - interval '1 hour',
@@ -143,17 +111,16 @@ export class PostMetricService {
         ) AS hour
       )
       SELECT
-        hour_series.hour AS time,
-        (SELECT count FROM initial_count) + COALESCE(
-          SUM(event_aggregates.change) OVER (ORDER BY hour_series.hour ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
-          0
-        ) AS count
-      FROM hour_series
-      LEFT JOIN event_aggregates ON hour_series.hour = event_aggregates.hour
-      ORDER BY hour_series.hour
+        hours.hour AS time,
+        (SELECT count FROM open_before)
+          + SUM(COALESCE(SUM(deltas.change), 0)) OVER (ORDER BY hours.hour) AS count
+      FROM hours
+      LEFT JOIN deltas ON deltas.hour = hours.hour
+      GROUP BY hours.hour
+      ORDER BY hours.hour
     `;
 
-    const result = (await this.lifecycleRepository.query(query, [
+    const result = (await this.episodeRepository.query(query, [
       range.startDate,
       range.endDate,
       cutOff,
