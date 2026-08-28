@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "packageManager": "npm",
+  "testRunner": "jest",
+  "jest": {
+    "projectType": "custom",
+    "configFile": "jest.config.json",
+    "enableFindRelatedTests": true
+  },
+  "reporters": ["clear-text", "progress"],
+  "clearTextReporter": {
+    "maxTestsToLog": 0
+  },
+  "coverageAnalysis": "perTest",
+  "mutate": [
+    "src/**/*.ts",
+    "!src/**/*.spec.ts",
+    "!src/api/e621/**",
+    "!src/migration/**",
+    "!src/**/*.module.ts",
+    "!src/**/*.controller.ts",
+    "!src/main.ts",
+    "!src/data-source.ts"
+  ],
+  "ignorePatterns": ["coverage", "dist", ".stryker-tmp"],
+  "timeoutMS": 30000,
+  "concurrency": 4
+}

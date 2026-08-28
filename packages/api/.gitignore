@@ -1,3 +1,7 @@
 /coverage
 /data
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# mutation testing
+.stryker-tmp
+reports
