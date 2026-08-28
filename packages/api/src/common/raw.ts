@@ -41,7 +41,9 @@ export const toRawUrl = (...args: any[]): string => {
       return;
     }
 
-    if (typeof arg !== 'object' || Array.isArray(arg)) {
+    if (Array.isArray(arg)) {
+      pathSegments.push(encodeURIComponent(`[${arg.join(',')}]`));
+    } else if (typeof arg !== 'object') {
       pathSegments.push(encodeURIComponent(String(arg)));
     } else {
       Object.assign(queryParams, arg);

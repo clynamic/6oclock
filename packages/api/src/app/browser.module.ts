@@ -129,12 +129,14 @@ export function Cacheable<TArgs extends any[], TReturn>(
         ? `${keyPrefix}${options.keyEncoder(...args)}`
         : `${keyPrefix}${toRawUrl(...args)}`;
 
-      if (options?.dependencies) {
-        options.dependencies.forEach((dep) => {
+      const registerDependencies = () => {
+        options?.dependencies?.forEach((dep) => {
           const resourceKey = typeof dep === 'string' ? dep : dep.name;
           cacheManager.dep(resourceKey, cacheKey);
         });
-      }
+      };
+
+      registerDependencies();
 
       if (options?.disable) {
         return originalMethod.apply(this, args);
@@ -142,7 +144,13 @@ export function Cacheable<TArgs extends any[], TReturn>(
 
       return cacheManager.wrap(
         cacheKey,
-        () => originalMethod.apply(this, args),
+        async () => {
+          const value = await originalMethod.apply(this, args);
+          // A method that invalidates its own dependency clears the registration
+          // above while it runs, which would leave this entry unevictable.
+          registerDependencies();
+          return value;
+        },
         options?.ttl,
       );
     };
