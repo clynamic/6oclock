@@ -5,6 +5,7 @@ import type { Request } from 'express';
 
 import {
   AuthGuard,
+  AuthLevel,
   OptionalAuthGuard,
   RolesGuard,
   TechnicianGuard,
@@ -111,19 +112,27 @@ describe('RolesGuard', () => {
 
   const handlerRequiring = (level: UserLevel): (() => void) => {
     const handler = (): void => undefined;
-    Reflect.defineMetadata('level', level, handler);
+    (AuthLevel(level) as (target: object) => void)(handler);
     return handler;
   };
 
   const classRequiring = (level: UserLevel): object => {
     class Probe {}
-    Reflect.defineMetadata('level', level, Probe);
+    (AuthLevel(level) as (target: object) => void)(Probe);
     return Probe;
   };
 
   it('admits anyone through a route that names no level', async () => {
     await expect(
       guardFor('Member').canActivate(
+        contextFor(requestWith('sixoclock_session=live')),
+      ),
+    ).resolves.toBe(true);
+  });
+
+  it('admits an unreadable level through a route that names no level', async () => {
+    await expect(
+      guardFor('Wizard').canActivate(
         contextFor(requestWith('sixoclock_session=live')),
       ),
     ).resolves.toBe(true);
