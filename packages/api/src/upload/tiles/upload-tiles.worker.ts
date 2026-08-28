@@ -33,9 +33,11 @@ export class UploadTilesWorker {
 
       if (targets.length === 0) continue;
 
-      this.logger.log(
-        `Generating ${targets.length} tiles for ${dateRange.toE621RangeString()}`,
-      );
+      this.logger.log({
+        msg: 'Generating {count} tiles for {range}',
+        count: targets.length,
+        range: { start: dateRange.startDate, end: dateRange.endDate },
+      });
 
       await ensureActive(job);
 

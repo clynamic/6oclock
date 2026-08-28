@@ -13,7 +13,13 @@ export const logRequestInterceptor = (
     url.search = searchParams.toString();
   }
 
-  logger.log(`[${config.method?.toUpperCase() ?? '???'}] -> ${url.href}`);
+  const method = config.method?.toUpperCase() ?? '???';
+
+  logger.debug({
+    msg: '[{method}] -> {url}',
+    method,
+    url: url.href,
+  });
   return config;
 };
 
@@ -28,9 +34,14 @@ export const logResponseInterceptor = (
     url.search = searchParams.toString();
   }
 
-  logger.log(
-    `[${config.method?.toUpperCase() ?? '???'}] <- ${url.href} : ${status}`,
-  );
+  const method = config.method?.toUpperCase() ?? '???';
+
+  logger.debug({
+    msg: '[{method}] <- {url} : {status}',
+    method,
+    url: url.href,
+    status,
+  });
   return response;
 };
 
@@ -44,9 +55,14 @@ export const logErrorInterceptor = (error: AxiosError) => {
       url.search = searchParams.toString();
     }
 
-    logger.log(
-      `[${config.method?.toUpperCase() ?? '???'}] <- ${url.href} : ${status}`,
-    );
+    const method = config.method?.toUpperCase() ?? '???';
+
+    logger.warn({
+      msg: '[{method}] <- {url} : {status}',
+      method,
+      url: url.href,
+      status,
+    });
   } else if (error instanceof AxiosError && error.config) {
     const { config } = error;
     const url = new URL(config.url ?? '', config.baseURL);
@@ -56,12 +72,24 @@ export const logErrorInterceptor = (error: AxiosError) => {
       url.search = searchParams.toString();
     }
 
-    const status = error.code || 'UNKNOWN';
-    logger.error(
-      `[${config.method?.toUpperCase() ?? '???'}] x- ${url.href} : ${status}`,
-    );
+    const method = config.method?.toUpperCase() ?? '???';
+
+    logger.error({
+      msg: '[{method}] x- {url} : {code}',
+      method,
+      url: url.href,
+      code: error.code,
+      err: error,
+    });
   } else {
-    logger.error(`Request failed: ${error.message}`);
+    logger.error({
+      msg: 'Request failed: {error}',
+      error: error.message,
+      code: error.code,
+      method: error.config?.method?.toUpperCase(),
+      url: error.config?.url,
+      err: error,
+    });
   }
   return Promise.reject(error);
 };

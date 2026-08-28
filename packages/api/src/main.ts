@@ -3,12 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import { Logger as PinoLogger } from 'nestjs-pino';
 import 'reflect-metadata';
 
 import { AppModule } from './app/app.module';
 import { CorsConfigModule } from './app/cors.module';
 import { DocsModule } from './app/docs.module';
-import { AppLogger, RequestLogger } from './app/logger.service';
 
 async function bootstrap() {
   process.env['TZ'] = 'UTC';
@@ -24,8 +24,9 @@ async function bootstrap() {
   });
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: new AppLogger(),
+    bufferLogs: true,
   });
+  app.useLogger(app.get(PinoLogger));
   const corsConfig = app.get(CorsConfigModule);
   const configService = app.get(ConfigService);
 
@@ -39,8 +40,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.useGlobalInterceptors(new RequestLogger());
-
   DocsModule.setupSwagger(app);
 
   app.enableCors(corsConfig.createCorsOptions());

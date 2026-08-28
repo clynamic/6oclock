@@ -97,9 +97,11 @@ export class TicketLifecycleWorker {
 
         const lives = reconstructTicketLives(tickets, events);
 
-        this.logger.log(
-          `Syncing ${lives.length} ticket lives for ${chunk.toE621RangeString()}`,
-        );
+        this.logger.log({
+          msg: 'Syncing {count} ticket lives for {range}',
+          count: lives.length,
+          range: { start: chunk.startDate, end: chunk.endDate },
+        });
 
         await this.lifecycleService.upsertLives(lives);
       }

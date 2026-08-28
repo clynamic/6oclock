@@ -94,9 +94,11 @@ export class FlagLifecycleWorker {
 
         const episodes = this.reconstructEpisodes(events);
 
-        this.logger.log(
-          `Syncing ${episodes.length} flag episodes for ${chunk.toE621RangeString()}`,
-        );
+        this.logger.log({
+          msg: 'Syncing {count} flag episodes for {range}',
+          count: episodes.length,
+          range: { start: chunk.startDate, end: chunk.endDate },
+        });
 
         await this.lifecycleService.upsertEpisodes(episodes);
       }

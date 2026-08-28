@@ -95,9 +95,11 @@ export class PostReviewWorker {
           await this.permittedOf(postIds),
         );
 
-        this.logger.log(
-          `Syncing ${episodes.length} review episodes for ${chunk.toE621RangeString()}`,
-        );
+        this.logger.log({
+          msg: 'Syncing {count} review episodes for {range}',
+          count: episodes.length,
+          range: { start: chunk.startDate, end: chunk.endDate },
+        });
 
         await this.reviewService.upsertEpisodes(episodes);
       }

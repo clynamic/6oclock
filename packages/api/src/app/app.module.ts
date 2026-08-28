@@ -30,10 +30,12 @@ import { BrowserModule } from './browser.module';
 import { AppConfigModule } from './config.module';
 import { CorsConfigModule } from './cors.module';
 import { DatabaseModule } from './database.module';
+import { AppLoggerModule } from './logger/logger.module';
 import { StaticModule } from './static.module';
 
 @Module({
   imports: [
+    AppLoggerModule,
     AppConfigModule,
     ...(process.env['NODE_ENV'] === 'production' ? [StaticModule] : []),
     BrowserModule,

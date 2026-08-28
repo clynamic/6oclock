@@ -11,9 +11,12 @@ import { WithId, findContiguityGaps, findIdBounds } from './id-range.dto';
 export const logOrderFetch = (logger: Logger, type: ItemType, order: Order) => {
   const { dateRange, idRange } = order;
 
-  logger.log(
-    `Fetching ${type} for ${dateRange.toE621RangeString()} with ids ${idRange.toE621RangeString()}`,
-  );
+  logger.log({
+    msg: 'Fetching {type} for {range} with ids {ids}',
+    type,
+    range: { start: dateRange.startDate, end: dateRange.endDate },
+    ids: { start: idRange.startId, end: idRange.endId },
+  });
 };
 
 /**
@@ -26,11 +29,13 @@ export const logOrderResult = (
 ) => {
   const idRange = findIdBounds(items);
   const dateRange = findDateBounds(items);
-  logger.log(
-    `Found ${items.length} ${type} with ids ${
-      idRange.toE621RangeString() || 'none'
-    } and dates ${dateRange.toE621RangeString() || 'none'}`,
-  );
+  logger.log({
+    msg: 'Found {count} {type} with ids {ids} and dates {range}',
+    type,
+    count: items.length,
+    ids: { start: idRange.startId, end: idRange.endId },
+    range: { start: dateRange.startDate, end: dateRange.endDate },
+  });
 };
 
 /**
@@ -43,8 +48,11 @@ export const logContiguityGaps = (
 ) => {
   const gaps = findContiguityGaps(items);
   if (gaps.length > 0) {
-    logger.warn(
-      `Found ${gaps.length} gaps in ${type} ID contiguity: ${JSON.stringify(gaps)},`,
-    );
+    logger.warn({
+      msg: 'Found {count} gaps in {type} id contiguity',
+      type,
+      count: gaps.length,
+      gaps,
+    });
   }
 };
