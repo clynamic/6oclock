@@ -32,6 +32,8 @@ export class ModActionSyncWorker {
 
   @JobHandler({
     id: 'modActions/orders',
+    description:
+      'Fetches mod actions for the date ranges no manifest covers yet.',
     queue: 'default',
     pattern: '*/5 * * * *',
     timeout: 1000 * 60 * 5,

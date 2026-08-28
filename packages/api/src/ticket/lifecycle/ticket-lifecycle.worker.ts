@@ -32,6 +32,8 @@ export class TicketLifecycleWorker {
 
   @JobHandler({
     id: 'ticketLifecycle/tickets',
+    description:
+      'Rebuilds ticket lifecycles from tickets and the mod actions that handled them.',
     queue: 'tiling',
     pattern: '*/3 * * * *',
     timeout: 1000 * 60 * 5,

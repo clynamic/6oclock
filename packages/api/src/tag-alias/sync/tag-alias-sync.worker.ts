@@ -36,6 +36,8 @@ export class TagAliasSyncWorker {
   // @Cron(CronExpression.EVERY_5_MINUTES)
   @JobHandler({
     id: 'tagAliases/orders',
+    description:
+      'Fetches tag aliases for the date ranges no manifest covers yet.',
     queue: 'default',
     pattern: '*/5 * * * *',
     timeout: 1000 * 60 * 5,
@@ -102,6 +104,8 @@ export class TagAliasSyncWorker {
   // @Cron(CronExpression.EVERY_5_MINUTES)
   @JobHandler({
     id: 'tagAliases/refresh',
+    description:
+      'Re-fetches tag aliases that changed since each manifest was last refreshed.',
     queue: 'default',
     pattern: '*/5 * * * *',
     enabled: false,

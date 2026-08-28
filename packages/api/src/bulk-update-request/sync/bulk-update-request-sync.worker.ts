@@ -43,6 +43,8 @@ export class BulkUpdateRequestSyncWorker {
   // @Cron(CronExpression.EVERY_5_MINUTES)
   @JobHandler({
     id: 'bulkUpdateRequests/orders',
+    description:
+      'Fetches bulk update requests for the date ranges no manifest covers yet.',
     queue: 'default',
     pattern: '*/5 * * * *',
     timeout: 1000 * 60 * 5,
@@ -120,6 +122,8 @@ export class BulkUpdateRequestSyncWorker {
   // @Cron(CronExpression.EVERY_5_MINUTES)
   @JobHandler({
     id: 'bulkUpdateRequests/refresh',
+    description:
+      'Re-fetches bulk update requests that changed since each manifest was last refreshed.',
     queue: 'default',
     pattern: '*/5 * * * *',
     enabled: false,

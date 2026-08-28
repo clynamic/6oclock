@@ -40,6 +40,7 @@ export class AppealSyncWorker {
 
   @JobHandler({
     id: 'appeals/orders',
+    description: 'Fetches appeals for the date ranges no manifest covers yet.',
     queue: 'default',
     pattern: '*/5 * * * *',
     timeout: 1000 * 60 * 5,
@@ -115,6 +116,8 @@ export class AppealSyncWorker {
 
   @JobHandler({
     id: 'appeals/refresh',
+    description:
+      'Re-fetches appeals that changed since each manifest was last refreshed.',
     queue: 'default',
     pattern: '*/5 * * * *',
   })
@@ -198,6 +201,7 @@ export class AppealSyncWorker {
 
   @JobHandler({
     id: 'appeals/notable',
+    description: 'Marks the users who filed an appeal as notable.',
     queue: 'default',
     pattern: '*/10 * * * *',
   })

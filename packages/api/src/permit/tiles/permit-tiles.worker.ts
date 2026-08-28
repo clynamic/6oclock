@@ -29,6 +29,8 @@ export class PermitTilesWorker {
 
   @JobHandler({
     id: 'permits/tiles',
+    description:
+      'Derives permits for hours past the review period and counts them into hourly tiles.',
     queue: 'tiling',
     pattern: '*/3 * * * *',
     timeout: 1000 * 60 * 5,
@@ -59,6 +61,8 @@ export class PermitTilesWorker {
 
   @JobHandler({
     id: 'permits/review',
+    description:
+      'Captures the pending queue and decides the permits inside the review period.',
     queue: 'default',
     pattern: '*/5 * * * *',
     timeout: 1000 * 60 * 5,

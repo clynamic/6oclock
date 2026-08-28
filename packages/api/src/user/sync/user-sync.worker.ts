@@ -22,7 +22,12 @@ export class UserSyncWorker {
 
   private readonly logger = new Logger(UserSyncWorker.name);
 
-  @JobHandler({ id: 'users/staff', queue: 'default', pattern: '0 * * * *' })
+  @JobHandler({
+    id: 'users/staff',
+    description: 'Refreshes every staff account from the user list.',
+    queue: 'default',
+    pattern: '0 * * * *',
+  })
   async refreshStaff(job: Job): Promise<void> {
     const axiosConfig = this.authService.getServerAxiosConfig();
 
@@ -73,6 +78,8 @@ export class UserSyncWorker {
 
   @JobHandler({
     id: 'users/notable',
+    description:
+      'Refreshes the notable accounts whose stored copy has gone stale.',
     queue: 'default',
     pattern: '*/10 * * * *',
     timeout: 1000 * 60 * 5,

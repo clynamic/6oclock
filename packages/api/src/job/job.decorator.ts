@@ -4,6 +4,7 @@ import { JOB_HANDLER_METADATA, JobQueue } from './job.constants';
 
 export interface JobHandlerOptions {
   id: string;
+  description: string;
   queue: JobQueue;
   pattern: string;
   timeout?: number;

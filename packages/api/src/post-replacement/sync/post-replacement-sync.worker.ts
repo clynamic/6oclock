@@ -37,6 +37,8 @@ export class PostReplacementSyncWorker {
 
   @JobHandler({
     id: 'postReplacements/orders',
+    description:
+      'Fetches post replacements for the date ranges no manifest covers yet.',
     queue: 'default',
     pattern: '*/5 * * * *',
     timeout: 1000 * 60 * 5,
@@ -115,6 +117,8 @@ export class PostReplacementSyncWorker {
 
   @JobHandler({
     id: 'postReplacements/refresh',
+    description:
+      'Re-fetches post replacements that changed since each manifest was last refreshed.',
     queue: 'default',
     pattern: '*/5 * * * *',
   })

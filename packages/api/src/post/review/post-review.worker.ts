@@ -44,6 +44,8 @@ export class PostReviewWorker {
 
   @JobHandler({
     id: 'postReview/episodes',
+    description:
+      'Rebuilds post review episodes from uploads, post events and permits.',
     queue: 'tiling',
     pattern: '*/3 * * * *',
     timeout: 1000 * 60 * 5,

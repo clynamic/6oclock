@@ -40,6 +40,7 @@ export class TicketSyncWorker {
 
   @JobHandler({
     id: 'tickets/orders',
+    description: 'Fetches tickets for the date ranges no manifest covers yet.',
     queue: 'default',
     pattern: '*/5 * * * *',
     timeout: 1000 * 60 * 5,
@@ -118,6 +119,8 @@ export class TicketSyncWorker {
 
   @JobHandler({
     id: 'tickets/refresh',
+    description:
+      'Re-fetches tickets that changed since each manifest was last refreshed.',
     queue: 'default',
     pattern: '*/5 * * * *',
   })
@@ -207,6 +210,7 @@ export class TicketSyncWorker {
 
   @JobHandler({
     id: 'tickets/notable',
+    description: 'Marks the users who reported a ticket as notable.',
     queue: 'default',
     pattern: '*/10 * * * *',
   })

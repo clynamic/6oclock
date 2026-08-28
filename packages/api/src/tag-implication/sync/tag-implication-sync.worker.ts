@@ -40,6 +40,8 @@ export class TagImplicationSyncWorker {
   // @Cron(CronExpression.EVERY_5_MINUTES)
   @JobHandler({
     id: 'tagImplications/orders',
+    description:
+      'Fetches tag implications for the date ranges no manifest covers yet.',
     queue: 'default',
     pattern: '*/5 * * * *',
     timeout: 1000 * 60 * 5,
@@ -108,6 +110,8 @@ export class TagImplicationSyncWorker {
   // @Cron(CronExpression.EVERY_5_MINUTES)
   @JobHandler({
     id: 'tagImplications/refresh',
+    description:
+      'Re-fetches tag implications that changed since each manifest was last refreshed.',
     queue: 'default',
     pattern: '*/5 * * * *',
     enabled: false,

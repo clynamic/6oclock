@@ -32,6 +32,8 @@ export class PostEventSyncWorker {
 
   @JobHandler({
     id: 'postEvents/orders',
+    description:
+      'Fetches post events for the date ranges no manifest covers yet.',
     queue: 'default',
     pattern: '*/5 * * * *',
     timeout: 1000 * 60 * 5,

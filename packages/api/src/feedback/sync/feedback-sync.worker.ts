@@ -36,6 +36,8 @@ export class FeedbackSyncWorker {
 
   @JobHandler({
     id: 'feedbacks/sync',
+    description:
+      'Fetches user record feedbacks for the date ranges no manifest covers yet.',
     queue: 'default',
     pattern: '*/5 * * * *',
     timeout: 1000 * 60 * 5,

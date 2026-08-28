@@ -22,6 +22,8 @@ export class AvatarSyncWorker {
 
   @JobHandler({
     id: 'avatars',
+    description:
+      'Fetches the avatar posts of notable users we hold no image for.',
     queue: 'default',
     pattern: '*/10 * * * *',
     timeout: 1000 * 60 * 5,

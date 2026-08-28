@@ -34,6 +34,8 @@ export class FlagSyncWorker {
 
   @JobHandler({
     id: 'flags/orders',
+    description:
+      'Fetches post flags for the date ranges no manifest covers yet.',
     queue: 'default',
     pattern: '*/5 * * * *',
     timeout: 1000 * 60 * 5,
@@ -100,7 +102,13 @@ export class FlagSyncWorker {
     await this.manifestService.mergeInRange(ItemType.flags, recentlyRange);
   }
 
-  @JobHandler({ id: 'flags/refresh', queue: 'default', pattern: '*/5 * * * *' })
+  @JobHandler({
+    id: 'flags/refresh',
+    description:
+      'Re-fetches post flags that changed since each manifest was last refreshed.',
+    queue: 'default',
+    pattern: '*/5 * * * *',
+  })
   async runRefresh(job: Job): Promise<void> {
     const axiosConfig = this.authService.getServerAxiosConfig();
 

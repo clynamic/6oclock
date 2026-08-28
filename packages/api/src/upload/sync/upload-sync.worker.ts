@@ -44,6 +44,8 @@ export class UploadSyncWorker {
 
   @JobHandler({
     id: 'uploads/orders',
+    description:
+      'Fetches post versions for the date ranges no manifest covers yet.',
     queue: 'default',
     pattern: '*/5 * * * *',
     timeout: 1000 * 60 * 5,
@@ -124,6 +126,7 @@ export class UploadSyncWorker {
 
   @JobHandler({
     id: 'uploads/notable',
+    description: 'Marks the users who uploaded a post as notable.',
     queue: 'default',
     pattern: '*/10 * * * *',
   })

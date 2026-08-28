@@ -60,6 +60,7 @@ export class JobService {
       (entry) =>
         new SchedulerInfo({
           id: entry.options.id,
+          description: entry.options.description,
           queue: entry.options.queue,
           pattern: entry.options.pattern,
           enabled: entry.options.enabled,

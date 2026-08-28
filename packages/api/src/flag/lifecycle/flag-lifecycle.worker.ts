@@ -39,6 +39,7 @@ export class FlagLifecycleWorker {
 
   @JobHandler({
     id: 'flagLifecycle/postEvents',
+    description: 'Rebuilds flag lifecycles from post events.',
     queue: 'tiling',
     pattern: '*/3 * * * *',
     timeout: 1000 * 60 * 5,

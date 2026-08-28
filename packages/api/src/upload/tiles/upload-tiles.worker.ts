@@ -14,6 +14,8 @@ export class UploadTilesWorker {
 
   @JobHandler({
     id: 'uploads/tiles',
+    description:
+      'Counts uploads into hourly tiles wherever a tile is missing or out of date.',
     queue: 'tiling',
     pattern: '*/3 * * * *',
     timeout: 1000 * 60 * 5,

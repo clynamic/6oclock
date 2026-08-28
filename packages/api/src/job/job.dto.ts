@@ -19,6 +19,9 @@ export class SchedulerInfo {
   }
 
   id: string;
+
+  description: string;
+
   queue: string;
   pattern: string;
   enabled: boolean;
