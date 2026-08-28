@@ -167,7 +167,9 @@ export class JobDiscoveryService implements OnModuleInit {
         entry.options.queue,
         entry.options.pattern,
         { handlerId: entry.options.id },
-        { key: entry.options.id },
+        // stately keys on the queue, so without this one handler holds the
+        // only queued slot and starves the rest.
+        { key: entry.options.id, singletonKey: entry.options.id },
       );
 
       this.logger.log(`Registered scheduler: ${entry.options.id}`);
