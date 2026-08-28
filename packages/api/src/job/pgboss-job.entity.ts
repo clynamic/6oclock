@@ -1,5 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
+import { JobOutput } from './job.constants';
+
 @Entity({ schema: 'pgboss', name: 'job', synchronize: false })
 export class PgBossJobEntity {
   @PrimaryColumn('text')
@@ -24,5 +26,5 @@ export class PgBossJobEntity {
   completedOn: Date | null;
 
   @Column('jsonb', { nullable: true })
-  output: { message?: string } | null;
+  output: JobOutput | null;
 }

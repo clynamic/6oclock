@@ -3,9 +3,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationParams } from 'src/common';
 import { In, Repository } from 'typeorm';
 
-import { JOB_TIMED_OUT_PREFIX, JobState, QUEUE_NAMES } from './job.constants';
+import {
+  JOB_EXPIRED_MESSAGE,
+  JOB_TIMED_OUT_PREFIX,
+  JobOutput,
+  JobState,
+  QUEUE_NAMES,
+  RECENT_RUNS,
+  getJobFailure,
+} from './job.constants';
 import { JobDiscoveryService } from './job.discovery';
-import { JobInfo, SchedulerInfo } from './job.dto';
+import { JobInfo, JobOverview, SchedulerInfo } from './job.dto';
 import { PgBossJobEntity } from './pgboss-job.entity';
 
 @Injectable()
@@ -16,12 +24,81 @@ export class JobService {
     private readonly jobRepository: Repository<PgBossJobEntity>,
   ) {}
 
-  async list(pages?: PaginationParams): Promise<JobInfo[]> {
+  async overview(): Promise<JobOverview[]> {
+    const rows: {
+      handler_id: string;
+      state: string;
+      started_on: Date | null;
+      completed_on: Date | null;
+      output: JobOutput | null;
+    }[] = await this.jobRepository.query(
+      `
+      SELECT handler_id, state, started_on, completed_on, output
+      FROM (
+        SELECT
+          j.data->>'handlerId' AS handler_id,
+          j.state,
+          j.started_on,
+          j.completed_on,
+          j.output,
+          row_number() OVER (
+            PARTITION BY j.data->>'handlerId'
+            ORDER BY coalesce(j.completed_on, j.started_on) DESC
+          ) AS recency
+        FROM pgboss.job j
+        WHERE j.data->>'handlerId' IS NOT NULL AND j.started_on IS NOT NULL
+      ) ranked
+      WHERE recency <= $1
+      ORDER BY handler_id, recency
+      `,
+      [RECENT_RUNS],
+    );
+
+    const history = new Map<string, typeof rows>();
+    for (const row of rows) {
+      const list = history.get(row.handler_id);
+      if (list) list.push(row);
+      else history.set(row.handler_id, [row]);
+    }
+
+    return this.listSchedulers().map((scheduler) => {
+      const runs = history.get(scheduler.id) ?? [];
+      const recent = runs.map((run) =>
+        this.mapState(run.state, getJobFailure(run.output)),
+      );
+
+      const last = runs[0];
+      const succeeded = runs[recent.indexOf('completed')];
+      const errors = recent.findIndex((state) => state !== 'failed');
+
+      return new JobOverview({
+        id: scheduler.id,
+        description: scheduler.description,
+        queue: scheduler.queue,
+        pattern: scheduler.pattern,
+        enabled: scheduler.enabled,
+        outcome: recent[0],
+        ranAt: last?.started_on ?? undefined,
+        ranFor:
+          last?.completed_on && last.started_on
+            ? last.completed_on.getTime() - last.started_on.getTime()
+            : undefined,
+        failedReason: getJobFailure(last?.output),
+        succeededAt: succeeded?.completed_on ?? undefined,
+        recent,
+        errors: errors < 0 ? recent.length : errors,
+      });
+    });
+  }
+
+  async list(pages?: PaginationParams, handler?: string): Promise<JobInfo[]> {
     const rows = await this.jobRepository.find({
       where: { name: In(QUEUE_NAMES) },
     });
 
-    const allJobs = rows.map((row) => this.toJobInfo(row));
+    const allJobs = rows
+      .map((row) => this.toJobInfo(row))
+      .filter((job) => !handler || job.name === handler);
 
     const offset = PaginationParams.calculateOffset(pages);
     const limit = pages?.limit ?? PaginationParams.DEFAULT_PAGE_SIZE;
@@ -77,11 +154,9 @@ export class JobService {
   }
 
   private toJobInfo(row: PgBossJobEntity): JobInfo {
-    const failedReason = row.output?.message
-      ? row.output.message
-      : row.output
-        ? JSON.stringify(row.output)
-        : undefined;
+    const failedReason =
+      getJobFailure(row.output) ??
+      (row.output ? JSON.stringify(row.output) : undefined);
 
     return new JobInfo({
       id: row.id,
@@ -106,7 +181,8 @@ export class JobService {
       case 'completed':
         return 'completed';
       case 'failed':
-        return failedReason?.startsWith(JOB_TIMED_OUT_PREFIX)
+        return failedReason?.startsWith(JOB_TIMED_OUT_PREFIX) ||
+          failedReason === JOB_EXPIRED_MESSAGE
           ? 'timedOut'
           : 'failed';
       default:
