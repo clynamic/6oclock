@@ -131,7 +131,39 @@ describe('getTilingRanges', () => {
     expect(ranges[0]!.updatedAt).toEqual(at('2024-06-01T00:00:00Z'));
   });
 
+  it('holds one range open across a manifest that starts and ends inside another', () => {
+    const ranges = getTilingRanges(
+      [
+        manifest('2024-01-01T00:00:00Z', '2024-01-01T06:00:00Z', 'posts'),
+        manifest('2024-01-01T02:00:00Z', '2024-01-01T04:00:00Z', 'posts'),
+      ],
+      ['posts'],
+    );
+
+    expect(spans(ranges)).toEqual([
+      ['2024-01-01T00:00:00.000Z', '2024-01-01T06:00:00.000Z'],
+    ]);
+  });
+
   describe('characterised, not specified', () => {
+    it('splits where two manifests meet exactly, whichever order they arrive in', () => {
+      const later = manifest(
+        '2024-01-01T02:00:00Z',
+        '2024-01-01T04:00:00Z',
+        'posts',
+      );
+      const earlier = manifest(
+        '2024-01-01T00:00:00Z',
+        '2024-01-01T02:00:00Z',
+        'posts',
+      );
+
+      expect(spans(getTilingRanges([later, earlier], ['posts']))).toEqual([
+        ['2024-01-01T00:00:00.000Z', '2024-01-01T02:00:00.000Z'],
+        ['2024-01-01T02:00:00.000Z', '2024-01-01T04:00:00.000Z'],
+      ]);
+    });
+
     it('splits rather than joins where two manifests of a type meet exactly', () => {
       const ranges = getTilingRanges(
         [
