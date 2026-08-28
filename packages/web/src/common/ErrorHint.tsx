@@ -37,6 +37,7 @@ export const ErrorHint: React.FC<ErrorHintProps> = ({ error }) => {
         alignItems: 'center',
         justifyContent: 'center',
         height: '100%',
+        py: 4,
       }}
     >
       <WarningAmberOutlined sx={{ fontSize: 48 }} />

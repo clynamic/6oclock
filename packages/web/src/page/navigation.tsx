@@ -17,6 +17,7 @@ export type SubNavNode = NavSubLink | NavAction;
 export interface NavSubLink {
   label: React.ReactNode;
   href: string;
+  children?: SubNavNode[];
   hidden?: boolean | (() => boolean);
   component?: React.ReactNode;
   resolve?: (href: string) => Record<string, string>;

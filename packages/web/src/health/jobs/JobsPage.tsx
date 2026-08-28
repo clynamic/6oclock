@@ -1,49 +1,71 @@
-import { useMemo } from 'react';
+import { Box, Stack, Typography } from '@mui/material';
 
-import { Box } from '@mui/material';
-
-import { useJobsInfinite } from '../../api';
+import { useJobOverview } from '../../api';
 import { QueryHint } from '../../common/QueryHint';
-import { VirtualizedList } from '../../common/VirtualizedList';
 import { Page } from '../../page/Page';
 import { PageBody } from '../../page/PageBody';
 import { PageFooter } from '../../page/PageFooter';
 import { PageTitle } from '../../page/PageTitle';
 import { PageHeader } from '../../page/header/PageHeader';
-import { JobsFrame } from './JobsFrame';
+import { JobsOverviewFrame } from './JobsOverviewFrame';
+import { sortJobs, summarizeJobs } from './JobsOverviewUtils';
 
 export const JobsPage: React.FC = () => {
-  const { data, ...query } = useJobsInfinite(undefined, {
-    query: {
-      refetchInterval: 10000,
-      initialPageParam: 1,
-      getNextPageParam: (lastPage, _, i) => {
-        if (lastPage.length === 0) {
-          return undefined;
-        }
-        return (i ?? 1) + 1;
-      },
-    },
+  const { data, isLoading, error } = useJobOverview({
+    query: { refetchInterval: 10000 },
   });
 
-  const items = useMemo(() => data?.pages.flat() ?? [], [data?.pages]);
+  const running = sortJobs(data?.filter((job) => job.enabled));
+  const disabled = data?.filter((job) => !job.enabled) ?? [];
 
   return (
     <Page>
       <PageTitle subtitle="Jobs" />
       <PageHeader />
       <PageBody>
-        <Box sx={{ width: '100%', maxWidth: 600, margin: 'auto', p: 2 }}>
+        <Box
+          sx={{
+            width: '100%',
+            maxWidth: 1200,
+            marginInline: 'auto',
+            p: 2,
+            alignSelf: 'flex-start',
+          }}
+        >
           <QueryHint
-            data={data?.pages}
-            isLoading={query.isLoading}
-            error={query.error}
+            data={data}
+            isLoading={isLoading}
+            isEmpty={!data?.length}
+            error={error}
+            skeleton={
+              <Stack sx={{ gap: 1 }}>
+                {Array.from({ length: 8 }).map((_, index) => (
+                  <JobsOverviewFrame key={index} />
+                ))}
+              </Stack>
+            }
           >
-            <VirtualizedList
-              items={items}
-              renderItem={(_, item) => <JobsFrame job={item} />}
-              query={query}
-            />
+            <Stack sx={{ gap: 2 }}>
+              <Stack sx={{ gap: 1 }}>
+                <Typography variant="body2" color="text.secondary">
+                  {summarizeJobs(data)}
+                </Typography>
+                {running.map((job) => (
+                  <JobsOverviewFrame key={job.id} job={job} />
+                ))}
+              </Stack>
+
+              {disabled.length ? (
+                <Stack sx={{ gap: 1 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Disabled
+                  </Typography>
+                  {disabled.map((job) => (
+                    <JobsOverviewFrame key={job.id} job={job} />
+                  ))}
+                </Stack>
+              ) : null}
+            </Stack>
           </QueryHint>
         </Box>
       </PageBody>

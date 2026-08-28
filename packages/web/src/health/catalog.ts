@@ -1,5 +1,5 @@
 import { DashboardCatalog, createLayout } from '../dashboard/DashboardItem';
-import { JobsDisplay } from './jobs/JobsBoard';
+import { JobsOverviewDisplay } from './jobs/JobsOverviewBoard';
 import { ManifestHealthDisplay } from './manifests/ManifestHealthBoard';
 import { TileHealthDisplay } from './tiles/TileHealthBoard';
 
@@ -44,7 +44,7 @@ export const healthCatalog: DashboardCatalog = {
       title: 'Jobs',
       variant: 'outlined',
     },
-    component: JobsDisplay,
+    component: JobsOverviewDisplay,
   },
   'health-tiles': {
     name: 'Tiles',

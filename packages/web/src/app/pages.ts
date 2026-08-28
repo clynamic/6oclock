@@ -9,9 +9,24 @@ export const HealthPage = lazy(() =>
 export const JobsPage = lazy(() =>
   import('../health/jobs/JobsPage').then((m) => ({ default: m.JobsPage })),
 );
+export const JobDetailPage = lazy(() =>
+  import('../health/jobs/JobDetailPage').then((m) => ({
+    default: m.JobDetailPage,
+  })),
+);
+export const ManifestDetailPage = lazy(() =>
+  import('../health/manifests/ManifestDetailPage').then((m) => ({
+    default: m.ManifestDetailPage,
+  })),
+);
 export const ManifestHealthPage = lazy(() =>
   import('../health/manifests/ManifestHealthPage').then((m) => ({
     default: m.ManifestHealthPage,
+  })),
+);
+export const TileDetailPage = lazy(() =>
+  import('../health/tiles/TileDetailPage').then((m) => ({
+    default: m.TileDetailPage,
   })),
 );
 export const TileHealthPage = lazy(() =>

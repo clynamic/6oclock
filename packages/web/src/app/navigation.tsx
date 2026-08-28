@@ -15,7 +15,9 @@ import {
   HealthPage,
   HomePage,
   JanitorOverviewPage,
+  JobDetailPage,
   JobsPage,
+  ManifestDetailPage,
   ManifestHealthPage,
   ModOverviewPage,
   PerformanceDetailPage,
@@ -24,6 +26,7 @@ import {
   ProfilePage,
   SettingsPage,
   TicketReporterPage,
+  TileDetailPage,
   TileHealthPage,
 } from './pages';
 
@@ -146,16 +149,40 @@ export const appNavNodes: NavNode[] = [
         label: 'Jobs',
         href: '/health/jobs',
         component: <JobsPage />,
+        children: [
+          {
+            label: 'Job',
+            href: '/health/jobs/*',
+            component: <JobDetailPage />,
+            hidden: true,
+          },
+        ],
       },
       {
         label: 'Manifests',
         href: '/health/manifests',
         component: <ManifestHealthPage />,
+        children: [
+          {
+            label: 'Manifest',
+            href: '/health/manifests/:type',
+            component: <ManifestDetailPage />,
+            hidden: true,
+          },
+        ],
       },
       {
         label: 'Tiles',
         href: '/health/tiles',
         component: <TileHealthPage />,
+        children: [
+          {
+            label: 'Tile',
+            href: '/health/tiles/:type',
+            component: <TileDetailPage />,
+            hidden: true,
+          },
+        ],
       },
     ],
   },

@@ -25,7 +25,7 @@ export const LoadMoreHint: React.FC<LoadMoreHintProps> = ({
   return (
     <>
       <div ref={ref} style={{ height: 1 }} />
-      <Fade in={isFetchingNextPage} timeout={300}>
+      <Fade in={isFetchingNextPage} timeout={300} unmountOnExit>
         <Box
           sx={{
             display: 'flex',

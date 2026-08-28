@@ -9,6 +9,7 @@ export const NoDataHint: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         height: '100%',
+        py: 4,
       }}
     >
       <SearchOff sx={{ fontSize: 48 }} />

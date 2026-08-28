@@ -4,6 +4,7 @@ import {
   Event,
   HourglassTop,
   Schedule,
+  TimerOff,
 } from '@mui/icons-material';
 import { Card, Chip, Stack, Typography } from '@mui/material';
 import { formatDistanceToNow } from 'date-fns';
@@ -17,6 +18,7 @@ export interface JobsFrameProps {
 const stateIcon: Record<string, React.ReactElement> = {
   completed: <Check />,
   failed: <ErrorOutlined />,
+  timedOut: <TimerOff />,
   active: <HourglassTop />,
   waiting: <Schedule />,
   delayed: <Schedule />,
@@ -25,6 +27,7 @@ const stateIcon: Record<string, React.ReactElement> = {
 const stateLabel: Record<string, string> = {
   completed: 'Completed',
   failed: 'Failed',
+  timedOut: 'Timed Out',
   active: 'Running',
   waiting: 'Waiting',
   delayed: 'Scheduled',
@@ -33,6 +36,7 @@ const stateLabel: Record<string, string> = {
 const stateColor: Record<string, 'success' | 'error' | 'warning' | 'info'> = {
   completed: 'success',
   failed: 'error',
+  timedOut: 'error',
   active: 'warning',
   waiting: 'info',
   delayed: 'info',
@@ -82,6 +86,11 @@ export const JobsFrame: React.FC<JobsFrameProps> = ({ job }) => {
             color={stateColor[job.state] ?? 'default'}
           />
         </Stack>
+        {job.failedReason && (
+          <Typography variant="caption" color="text.secondary">
+            {job.failedReason}
+          </Typography>
+        )}
       </Stack>
     </Card>
   );

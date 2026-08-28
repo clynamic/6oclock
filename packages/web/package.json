@@ -29,6 +29,7 @@
     "@tanstack/react-query": "^5.90.2",
     "@wtto00/html2canvas": "^1.4.1",
     "axios": "^1.12.2",
+    "cronstrue": "^3.24.0",
     "date-fns": "^4.1.0",
     "lodash": "^4.17.21",
     "material-ui-popup-state": "^5.3.6",
