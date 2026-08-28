@@ -16,8 +16,17 @@ import {
 } from 'src/common';
 import { SystemUserService } from 'src/user/system/system-user.service';
 import { UserEntity } from 'src/user/user.entity';
-import { FindOptionsWhere, LessThan, MoreThan, Not, Repository } from 'typeorm';
+import {
+  FindOptionsWhere,
+  In,
+  IsNull,
+  LessThan,
+  MoreThan,
+  Not,
+  Repository,
+} from 'typeorm';
 
+import { TicketLifecycleEntity } from '../lifecycle/ticket-lifecycle.entity';
 import { TicketEntity } from '../ticket.entity';
 import {
   TicketAgeSeriesPoint,
@@ -37,6 +46,8 @@ export class TicketMetricService {
   constructor(
     @InjectRepository(TicketEntity)
     private readonly ticketRepository: Repository<TicketEntity>,
+    @InjectRepository(TicketLifecycleEntity)
+    private readonly lifecycleRepository: Repository<TicketLifecycleEntity>,
     private readonly systemUser: SystemUserService,
   ) {}
 
@@ -195,15 +206,16 @@ export class TicketMetricService {
     query?: TicketClosedSeriesQuery,
   ): Promise<SeriesCountPoint[]> {
     range = DateRange.fill(range);
-    const tickets = await this.ticketRepository.find({
-      where: this.whereCreatedOrUpdated(range, query?.where()),
+    const lives = await this.lifecycleRepository.find({
+      where: {
+        resolvedAt: range.find(),
+        ...(query?.handlerId !== undefined && { handlerId: query.handlerId }),
+      },
+      select: ['resolvedAt'],
     });
 
-    const endDate = range.endDate!;
     return generateSeriesCountPoints(
-      tickets.map((item) =>
-        item.updatedAt <= endDate ? item.updatedAt : undefined,
-      ),
+      lives.map((life) => life.resolvedAt!),
       range,
     );
   }
@@ -289,7 +301,7 @@ export class TicketMetricService {
   @Cacheable({
     prefix: 'ticket',
     ttl: 15 * 60 * 1000,
-    dependencies: [TicketEntity],
+    dependencies: [TicketEntity, TicketLifecycleEntity],
   })
   async ageSummary(
     range?: PartialDateRange,
@@ -299,6 +311,15 @@ export class TicketMetricService {
     const tickets = await this.ticketRepository.find({
       where: { ...range.where(), ...query?.where() },
     });
+
+    const lives = await this.lifecycleRepository.find({
+      where: { ticketId: In(tickets.map((ticket) => ticket.id)) },
+      select: ['ticketId', 'resolvedAt'],
+    });
+
+    const resolved = new Map(
+      lives.map((life) => [life.ticketId, life.resolvedAt]),
+    );
 
     const ageGroups = new TicketAgeSummary({
       oneDay: 0,
@@ -310,10 +331,7 @@ export class TicketMetricService {
     });
 
     for (const ticket of tickets) {
-      const endDate =
-        ticket.status === TicketStatus.approved
-          ? ticket.updatedAt
-          : range.endDate!;
+      const endDate = resolved.get(ticket.id) ?? new Date();
       const ageInDays = differenceInHours(endDate, ticket.createdAt) / 24;
 
       let ageGroup: keyof TicketAgeSummary;
@@ -347,20 +365,23 @@ export class TicketMetricService {
     range?: PartialDateRange,
     pages?: PaginationParams,
   ): Promise<TicketHandlerSummary[]> {
-    const results = await this.ticketRepository
-      .createQueryBuilder('ticket')
+    const results = await this.lifecycleRepository
+      .createQueryBuilder('life')
       .where({
-        createdAt: DateRange.fill(range).find(),
-        handlerId: Not(0),
+        resolvedAt: DateRange.fill(range).find(),
+        handlerId: Not(IsNull()),
       })
-      .andWhere('ticket.handler_id != :systemUserId', {
+      .andWhere('life.handler_id != :systemUserId', {
         systemUserId: this.systemUser.id,
       })
-      .select('ticket.handler_id', 'user_id')
-      .addSelect('COUNT(ticket.id)', 'total')
-      .addSelect('COUNT(DISTINCT DATE(ticket.updated_at))', 'days')
-      .addSelect(`RANK() OVER (ORDER BY COUNT(ticket.id) DESC)`, 'position')
-      .groupBy('ticket.handler_id')
+      .select('life.handler_id', 'user_id')
+      .addSelect('COUNT(life.ticket_id)', 'total')
+      .addSelect('COUNT(DISTINCT DATE(life.resolved_at))', 'days')
+      .addSelect(
+        `RANK() OVER (ORDER BY COUNT(life.ticket_id) DESC)`,
+        'position',
+      )
+      .groupBy('life.handler_id')
       .orderBy('total', 'DESC')
       .take(pages?.limit || PaginationParams.DEFAULT_PAGE_SIZE)
       .skip(PaginationParams.calculateOffset(pages))

@@ -69,11 +69,8 @@ export class ActivityService {
 
     switch (activity) {
       case Activity.TicketHandle: {
-        const ticketStatus = await this.ticketMetricService.status(weekRange);
-        value = ticketStatus.reduce(
-          (sum, point) => sum + point.approved + point.partial,
-          0,
-        );
+        const closed = await this.ticketMetricService.closedSeries(weekRange);
+        value = closed.reduce((sum, point) => sum + point.value, 0);
         break;
       }
 
