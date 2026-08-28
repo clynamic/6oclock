@@ -20,7 +20,7 @@ import { ApprovalMetricService } from './approval-metric.service';
 const TEST_DATABASE = 'six_oclock_test_approval';
 const SYSTEM_USER_ID = 360277;
 
-const POSTGRES_IMAGE = 'postgres:latest';
+const POSTGRES_IMAGE = 'postgres:17';
 
 let postgres: StartedPostgreSqlContainer;
 

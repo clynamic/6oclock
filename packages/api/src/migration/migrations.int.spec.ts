@@ -12,7 +12,7 @@ const TEST_DATABASE = 'six_oclock_test_migrations';
 const SYNC_ENUM_VALUES = 1780522564528;
 const BEFORE_SYNC_ENUM_VALUES = 1780521051266;
 
-const POSTGRES_IMAGE = 'postgres:latest';
+const POSTGRES_IMAGE = 'postgres:17';
 
 let postgres: StartedPostgreSqlContainer;
 

@@ -18,7 +18,7 @@ import {
 } from '../review/post-review.entity';
 import { PostMetricService } from './post-metric.service';
 
-const POSTGRES_IMAGE = 'postgres:latest';
+const POSTGRES_IMAGE = 'postgres:17';
 
 let postgres: StartedPostgreSqlContainer;
 

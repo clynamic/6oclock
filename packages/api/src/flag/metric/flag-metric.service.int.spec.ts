@@ -16,7 +16,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { FlagLifecycleEntity } from '../lifecycle/flag-lifecycle.entity';
 import { FlagMetricService } from './flag-metric.service';
 
-const POSTGRES_IMAGE = 'postgres:latest';
+const POSTGRES_IMAGE = 'postgres:17';
 
 let postgres: StartedPostgreSqlContainer;
 
