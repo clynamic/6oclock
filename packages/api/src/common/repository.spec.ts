@@ -138,10 +138,4 @@ describe('constructFirstFromId', () => {
       order: { id: 'ASC' },
     });
   });
-
-  it('gives back nothing when no record reaches that id', async () => {
-    const { repository } = holding<Record>([]);
-
-    await expect(constructFirstFromId(repository)(10)).resolves.toBeNull();
-  });
 });

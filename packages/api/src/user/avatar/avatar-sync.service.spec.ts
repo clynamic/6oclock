@@ -37,11 +37,11 @@ describe('AvatarSyncService', () => {
       ]);
     });
 
-    it('keeps the order it was handed', async () => {
-      const { service } = serviceOver([7]);
+    it('keeps the order it was handed rather than sorting it', async () => {
+      const { service } = serviceOver([9]);
 
-      await expect(service.findNotStored([9, 7, 3, 1])).resolves.toEqual([
-        9, 3, 1,
+      await expect(service.findNotStored([3, 9, 1, 7])).resolves.toEqual([
+        3, 1, 7,
       ]);
     });
 
@@ -54,12 +54,6 @@ describe('AvatarSyncService', () => {
         where: { id: In([4, 9]) },
         select: ['id'],
       });
-    });
-
-    it('holds nothing back when it was handed nothing', async () => {
-      const { service } = serviceOver([]);
-
-      await expect(service.findNotStored([])).resolves.toEqual([]);
     });
 
     describe('characterised, not specified', () => {

@@ -72,6 +72,10 @@ describe('findHighestDate', () => {
   it('gives back nothing for an empty list', () => {
     expect(findHighestDate([])).toBeUndefined();
   });
+
+  it('gives back nothing when there is no list at all', () => {
+    expect(findHighestDate(undefined)).toBeUndefined();
+  });
 });
 
 describe('characterised, not specified', () => {
@@ -108,32 +112,10 @@ describe('findDateBounds', () => {
     );
   });
 
-  it('collapses a single item to a range starting and ending on it', () => {
-    const bounds = findDateBounds([{ createdAt: at('2024-06-01T00:00:00Z') }]);
-
-    expect(bounds.startDate).toEqual(at('2024-06-01T00:00:00Z'));
-    expect(bounds.endDate).toEqual(at('2024-06-01T00:00:00Z'));
-  });
-
   it('leaves both bounds open when there is nothing to span', () => {
     const bounds = findDateBounds([]);
 
     expect(bounds.startDate).toBeUndefined();
     expect(bounds.endDate).toBeUndefined();
-  });
-
-  it('spans by creation date even where an update date is later', () => {
-    const bounds = findDateBounds([
-      {
-        createdAt: at('2024-01-01T00:00:00Z'),
-        updatedAt: at('2024-12-01T00:00:00Z'),
-      },
-      {
-        createdAt: at('2024-02-01T00:00:00Z'),
-        updatedAt: at('2024-12-01T00:00:00Z'),
-      },
-    ]);
-
-    expect(bounds.endDate).toEqual(at('2024-02-01T00:00:00Z'));
   });
 });

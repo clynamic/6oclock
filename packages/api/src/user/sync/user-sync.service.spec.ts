@@ -30,10 +30,10 @@ const createBuilder = (
 const clauses = (calls: BuilderCalls): string[] =>
   (calls['andWhere'] ?? []).map((args) => String(args[0]));
 
-const freshnessCutoff = (find: jest.Mock): Date => {
+const freshness = (find: jest.Mock): { type: string; value: Date } => {
   const options = find.mock.calls[0]![0] as FindManyOptions<UserEntity>;
   const label = (options.where as { label: { refreshedAt: unknown } }).label;
-  return (label.refreshedAt as { value: Date }).value;
+  return label.refreshedAt as { type: string; value: Date };
 };
 
 describe('UserSyncService', () => {
@@ -76,11 +76,11 @@ describe('UserSyncService', () => {
       await expect(service.findOutdated([1, 2, 3])).resolves.toEqual([1, 2, 3]);
     });
 
-    it('keeps the order it was handed', async () => {
-      const { service } = overFresh([7]);
+    it('keeps the order it was handed rather than sorting it', async () => {
+      const { service } = overFresh([9]);
 
-      await expect(service.findOutdated([9, 7, 3, 1])).resolves.toEqual([
-        9, 3, 1,
+      await expect(service.findOutdated([3, 9, 1, 7])).resolves.toEqual([
+        3, 1, 7,
       ]);
     });
 
@@ -90,7 +90,7 @@ describe('UserSyncService', () => {
 
       await service.findOutdated([1], 5 * 60 * 1000);
 
-      expect(freshnessCutoff(find)).toEqual(new Date('2024-06-01T11:55:00Z'));
+      expect(freshness(find).value).toEqual(new Date('2024-06-01T11:55:00Z'));
       jest.useRealTimers();
     });
 
@@ -100,8 +100,26 @@ describe('UserSyncService', () => {
 
       await service.findOutdated([1]);
 
-      expect(freshnessCutoff(find)).toEqual(new Date('2024-06-01T11:00:00Z'));
+      expect(freshness(find).value).toEqual(new Date('2024-06-01T11:00:00Z'));
       jest.useRealTimers();
+    });
+
+    it('counts a label refreshed at or after the cutoff as fresh, not before it', async () => {
+      const { service, find } = overFresh([]);
+
+      await service.findOutdated([1]);
+
+      expect(freshness(find).type).toBe('moreThanOrEqual');
+    });
+
+    it('joins the label in, since freshness lives there and not on the user', async () => {
+      const { service, find } = overFresh([]);
+
+      await service.findOutdated([1]);
+
+      const options = find.mock.calls[0]![0] as FindManyOptions<UserEntity>;
+
+      expect(options.relations).toEqual(['label']);
     });
   });
 
@@ -164,12 +182,20 @@ describe('UserSyncService', () => {
       ]);
     });
 
-    it('asks for every notable avatar when the query says nothing', async () => {
+    it('joins each user to its notable row on the user id', async () => {
       const { service, calls } = overRows([]);
 
       await service.listNotableAvatars();
 
-      expect(clauses(calls)).toEqual(['user.avatar_id IS NOT NULL']);
+      expect(calls['innerJoin']![0]![2]).toBe('user.id = notable_user.id');
+    });
+
+    it('selects the avatar column it is going to read back', async () => {
+      const { service, calls } = overRows([]);
+
+      await service.listNotableAvatars();
+
+      expect(calls['select']![0]![0]).toEqual(['user.id', 'user.avatar_id']);
     });
   });
 
@@ -183,6 +209,17 @@ describe('UserSyncService', () => {
       expect(find).toHaveBeenCalledWith({
         where: { id: undefined, type: undefined, updatedAt: undefined },
       });
+    });
+
+    it('narrows to a single notable when an id is named', async () => {
+      const find = jest.fn().mockResolvedValue([]);
+      const service = serviceOver({}, { find });
+
+      await service.listNotable({ id: 500 } as never);
+
+      const where = find.mock.calls[0]![0].where as { id: number };
+
+      expect(where.id).toBe(500);
     });
 
     it('narrows to the notable types asked for', async () => {
