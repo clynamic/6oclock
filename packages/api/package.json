@@ -12,6 +12,7 @@
     "lint": "eslint src --fix",
     "format": "prettier --write src",
     "test": "jest",
+    "test:unit": "jest --testPathIgnorePatterns \"\\.int\\.spec\\.ts$\"",
     "typeorm": "typeorm-ts-node-commonjs",
     "migrate": "typeorm-ts-node-commonjs migration:generate -d src/data-source.ts",
     "generate": "orval",
