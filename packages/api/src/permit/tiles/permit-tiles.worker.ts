@@ -2,12 +2,21 @@ import { Injectable, Logger } from '@nestjs/common';
 import { posts } from 'src/api';
 import { MAX_API_LIMIT } from 'src/api/http/params';
 import { AuthService } from 'src/auth/auth.service';
-import { LoopGuard, TimeScale, rateLimit, startOf } from 'src/common';
+import {
+  LoopGuard,
+  TimeScale,
+  chunkDateRange,
+  groupTimesIntoRanges,
+  rateLimit,
+  startOf,
+} from 'src/common';
 import { Job } from 'src/job/job.constants';
 import { JobHandler } from 'src/job/job.decorator';
 import { ensureActive } from 'src/job/job.utils';
 
 import { PermitTilesService } from './permit-tiles.service';
+
+const CHUNK_HOURS = 30;
 
 @Injectable()
 export class PermitTilesWorker {
@@ -21,7 +30,7 @@ export class PermitTilesWorker {
   @JobHandler({
     id: 'permits/tiles',
     queue: 'tiling',
-    pattern: '*/5 * * * *',
+    pattern: '*/3 * * * *',
     timeout: 1000 * 60 * 5,
   })
   async runTiling(job: Job) {
@@ -37,11 +46,14 @@ export class PermitTilesWorker {
 
       if (targets.length === 0) continue;
 
-      const written = await this.permitTilesService.derive(targets, []);
+      const written = await this.permitTilesService.derive(targets);
 
-      this.logger.log(
-        `Derived ${written} permits across ${targets.length} hours in ${dateRange.toE621RangeString()}`,
-      );
+      this.logger.log({
+        msg: 'Derived {count} permits across {hours} hours in {range}',
+        count: written,
+        hours: targets.length,
+        range: { start: dateRange.startDate, end: dateRange.endDate },
+      });
     }
   }
 
@@ -52,22 +64,47 @@ export class PermitTilesWorker {
     timeout: 1000 * 60 * 5,
   })
   async runReviewPeriod(job: Job) {
+    const capturedAt = new Date();
     const pending = await this.fetchPendingPosts(job);
+    const settled = this.reviewPeriodStart();
 
-    const times: Date[] = [];
-    for (
-      let time = this.reviewPeriodStart();
-      time < new Date();
-      time = new Date(time.getTime() + 60 * 60 * 1000)
-    ) {
-      times.push(time);
+    for (const {
+      dateRange,
+      updatedAt,
+    } of await this.permitTilesService.getRanges()) {
+      await ensureActive(job);
+
+      const targets = (
+        await this.permitTilesService.findMissing({ dateRange, updatedAt })
+      ).filter((time) => time >= settled);
+
+      if (targets.length === 0) continue;
+
+      for (const range of groupTimesIntoRanges(targets)) {
+        for (const chunk of chunkDateRange(range, CHUNK_HOURS)) {
+          await ensureActive(job);
+
+          const written = await this.permitTilesService.decide(
+            chunk,
+            pending,
+            capturedAt,
+          );
+
+          await this.permitTilesService.tile(
+            targets.filter(
+              (time) => time >= chunk.startDate && time < chunk.endDate,
+            ),
+          );
+
+          this.logger.log({
+            msg: 'Decided {count} permits against {pending} pending posts in {range}',
+            count: written,
+            pending: pending.length,
+            range: { start: chunk.startDate, end: chunk.endDate },
+          });
+        }
+      }
     }
-
-    const written = await this.permitTilesService.derive(times, pending);
-
-    this.logger.log(
-      `Derived ${written} permits across ${pending.length} pending posts`,
-    );
   }
 
   private reviewPeriodStart(): Date {

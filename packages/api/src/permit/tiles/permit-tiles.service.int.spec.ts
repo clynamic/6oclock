@@ -179,7 +179,7 @@ describe('PermitTilesService against Postgres', () => {
       const when = hoursAgo(2);
       await upload(11, when, 2);
 
-      await service.derive([when], []);
+      await service.derive([when]);
 
       await expect(permittedIds()).resolves.toEqual([]);
     });
@@ -189,7 +189,7 @@ describe('PermitTilesService against Postgres', () => {
       await upload(12, when);
       await event(12, PostEventAction.approved, hoursAgo(1));
 
-      await service.derive([when], []);
+      await service.derive([when]);
 
       await expect(permittedIds()).resolves.toEqual([]);
     });
@@ -199,7 +199,7 @@ describe('PermitTilesService against Postgres', () => {
       await upload(13, when);
       await event(13, PostEventAction.unapproved, hoursAgo(1));
 
-      await service.derive([when], []);
+      await service.derive([when]);
 
       await expect(permittedIds()).resolves.toEqual([]);
     });
@@ -213,16 +213,16 @@ describe('PermitTilesService against Postgres', () => {
         daysAgo(30 - (REVIEW_PERIOD_DAYS - 1)),
       );
 
-      await service.derive([when], []);
+      await service.derive([when]);
 
       await expect(permittedIds()).resolves.toEqual([]);
     });
 
-    it('refuses a young upload e621 still lists as pending', async () => {
+    it('refuses an upload still inside its review period', async () => {
       const when = hoursAgo(2);
       await upload(16, when);
 
-      await service.derive([when], [16]);
+      await service.derive([when]);
 
       await expect(permittedIds()).resolves.toEqual([]);
     });
@@ -233,29 +233,27 @@ describe('PermitTilesService against Postgres', () => {
       const when = hoursAgo(2);
       await upload(23, when);
 
-      await expect(service.derive([], [])).resolves.toBe(0);
+      await expect(service.derive([])).resolves.toBe(0);
       await expect(permittedIds()).resolves.toEqual([]);
     });
 
     it('writes a zero tile for an hour nothing merged into', async () => {
       const when = hoursAgo(2);
 
-      await service.derive([when], []);
+      await service.derive([when]);
 
       const tile = await tiles.findOneBy({ time: when });
       expect(tile?.count).toBe(0);
     });
   });
 
-  describe('characterised, not specified', () => {
-    it('cannot write a permit at all, since nothing creates its label row', async () => {
-      const when = hoursAgo(2);
+  describe('an upload nothing objected to', () => {
+    it('becomes a permit once its review period has passed', async () => {
+      const when = daysAgo(REVIEW_PERIOD_DAYS + 1);
       await upload(10, when);
 
-      await expect(service.derive([when], [])).rejects.toThrow(
-        /violates foreign key constraint/,
-      );
-      await expect(permittedIds()).resolves.toEqual([]);
+      await expect(service.derive([when])).resolves.toBe(1);
+      await expect(permittedIds()).resolves.toEqual([10]);
     });
   });
 });

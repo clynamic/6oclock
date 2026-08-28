@@ -17,7 +17,7 @@ import { ItemType } from 'src/label/label.entity';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
 import { Repository } from 'typeorm';
 
-import { PermitEntity } from '../permit.entity';
+import { PermitEntity, PermitLabelEntity } from '../permit.entity';
 import { PermitTilesEntity } from './permit-tiles.entity';
 
 // The pruner runs daily, so a post outlives the window.
@@ -59,29 +59,111 @@ export class PermitTilesService implements TileService {
   }
 
   async findMissing(range: TilingRange): Promise<Date[]> {
-    return findMissingOrStaleTiles(this.tileRepository, range);
+    const stale: { time: Date }[] = await this.tileRepository.query(
+      `
+      SELECT date_trunc('hour', permit.created_at) AS time
+      FROM permits permit
+      LEFT JOIN ${this.tileRepository.metadata.tableName} tile
+        ON tile.time = date_trunc('hour', permit.created_at)
+      WHERE permit.created_at >= $1 AND permit.created_at < $2
+      GROUP BY 1, tile.updated_at
+      HAVING tile.updated_at IS NULL OR max(permit.updated_at) > tile.updated_at
+      `,
+      [range.dateRange.startDate, range.dateRange.endDate],
+    );
+
+    const times = new Map<number, Date>();
+    for (const time of await findMissingOrStaleTiles(
+      this.tileRepository,
+      range,
+    )) {
+      times.set(time.getTime(), time);
+    }
+    for (const row of stale) {
+      times.set(new Date(row.time).getTime(), new Date(row.time));
+    }
+
+    return [...times.values()].sort((a, b) => a.getTime() - b.getTime());
   }
 
-  /**
-   * Rewrite every permit whose upload falls in the range, and tile the hours.
-   *
-   * An upload is permitted when nothing approved or unapproved it, nothing
-   * deleted it inside the review period, and either it has outlived the review period
-   * or e621 does not currently list it as pending. The first two are decided
-   * from our own tables at any age. The third is the only question the queue
-   * answers, and only for uploads too young to have settled.
-   *
-   * The range is deleted before it is written, so a rerun of the same range
-   * produces the same rows whatever it held before.
-   */
+  private readonly undecidedFrom = `
+    FROM post_versions pv
+    WHERE pv.version = 1
+      AND pv.updated_at >= $1::timestamptz - $2::interval
+      AND pv.updated_at <= $1
+      AND NOT EXISTS (
+        SELECT 1 FROM permits p WHERE p.id = pv.post_id
+      )
+      AND NOT EXISTS (
+        SELECT 1 FROM post_events e
+        WHERE e.post_id = pv.post_id AND e.action IN ($3, $4)
+      )
+      AND NOT EXISTS (
+        SELECT 1 FROM post_events e
+        WHERE e.post_id = pv.post_id
+          AND e.action = $5
+          AND e.created_at < pv.updated_at + $2::interval
+      )
+      AND pv.post_id <> ALL($6::int[])
+  `;
+
+  private undecidedParams(pending: number[], capturedAt: Date): unknown[] {
+    return [
+      capturedAt,
+      this.reviewPeriod,
+      PostEventAction.approved,
+      PostEventAction.unapproved,
+      PostEventAction.deleted,
+      pending,
+    ];
+  }
+
   @Invalidates([PermitEntity, PermitTilesEntity])
-  async derive(times: Date[], pending: number[]): Promise<number> {
+  async decide(
+    range: DateRange,
+    pending: number[],
+    capturedAt: Date,
+  ): Promise<number> {
+    const candidates: { id: number; uploader_id: number; created_at: Date }[] =
+      await this.permitRepository.query(
+        `
+        SELECT pv.post_id AS id, pv.updater_id AS uploader_id, pv.updated_at AS created_at
+        ${this.undecidedFrom}
+          AND pv.updated_at >= $7
+          AND pv.updated_at < $8
+        `,
+        [
+          ...this.undecidedParams(pending, capturedAt),
+          range.startDate,
+          range.endDate,
+        ],
+      );
+
+    if (candidates.length === 0) return 0;
+
+    await this.permitRepository.save(
+      candidates.map(
+        (candidate) =>
+          new PermitEntity({
+            id: candidate.id,
+            uploaderId: candidate.uploader_id,
+            createdAt: candidate.created_at,
+            label: new PermitLabelEntity(candidate.id),
+          }),
+      ),
+    );
+
+    return candidates.length;
+  }
+
+  @Invalidates([PermitEntity, PermitTilesEntity])
+  async derive(times: Date[]): Promise<number> {
     if (times.length === 0) return 0;
 
     let written = 0;
 
     for (const range of groupTimesIntoRanges(times)) {
-      written += await this.deriveRange(range, pending);
+      written += await this.deriveRange(range);
     }
 
     await this.tile(times);
@@ -89,20 +171,11 @@ export class PermitTilesService implements TileService {
     return written;
   }
 
-  private async deriveRange(
-    range: DateRange,
-    pending: number[],
-  ): Promise<number> {
-    return this.permitRepository.manager.transaction(async (manager) => {
-      await manager.query(
-        `DELETE FROM permits WHERE created_at >= $1 AND created_at < $2`,
-        [range.startDate, range.endDate],
-      );
-
-      const rows: unknown[] = await manager.query(
+  private async deriveRange(range: DateRange): Promise<number> {
+    const candidates: { id: number; uploader_id: number; created_at: Date }[] =
+      await this.permitRepository.query(
         `
-        INSERT INTO permits (id, uploader_id, created_at, label_id)
-        SELECT pv.post_id, pv.updater_id, pv.updated_at, '/permits/' || pv.post_id
+        SELECT pv.post_id AS id, pv.updater_id AS uploader_id, pv.updated_at AS created_at
         FROM post_versions pv
         WHERE pv.version = 1
           AND pv.updated_at >= $1
@@ -117,11 +190,7 @@ export class PermitTilesService implements TileService {
               AND e.action = $5
               AND e.created_at < pv.updated_at + $6::interval
           )
-          AND (
-            pv.updated_at < now() - $6::interval
-            OR pv.post_id <> ALL($7::int[])
-          )
-        RETURNING id
+          AND pv.updated_at < now() - $6::interval
         `,
         [
           range.startDate,
@@ -130,15 +199,28 @@ export class PermitTilesService implements TileService {
           PostEventAction.unapproved,
           PostEventAction.deleted,
           this.reviewPeriod,
-          pending,
         ],
       );
 
-      return rows.length;
-    });
+    await this.permitRepository.delete({ createdAt: range.find() });
+
+    await this.permitRepository.save(
+      candidates.map(
+        (candidate) =>
+          new PermitEntity({
+            id: candidate.id,
+            uploaderId: candidate.uploader_id,
+            createdAt: candidate.created_at,
+            label: new PermitLabelEntity(candidate.id),
+          }),
+      ),
+    );
+
+    return candidates.length;
   }
 
-  private async tile(times: Date[]): Promise<void> {
+  @Invalidates(PermitTilesEntity)
+  async tile(times: Date[]): Promise<void> {
     const counts = new Map<string, number>();
 
     for (const range of groupTimesIntoRanges(times)) {

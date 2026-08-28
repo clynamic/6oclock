@@ -1,5 +1,11 @@
 import { ItemType, LabelEntity, LabelLink } from 'src/label/label.entity';
-import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 /**
  * A Permit represents a Post that does not require approval,
@@ -33,6 +39,9 @@ export class PermitEntity extends LabelLink {
   @Column({ type: 'timestamptz' })
   @Index()
   createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt: Date;
 }
 
 export class PermitLabelEntity extends LabelEntity {
