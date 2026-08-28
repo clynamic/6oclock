@@ -9,6 +9,7 @@ import 'reflect-metadata';
 import { AppModule } from './app/app.module';
 import { CorsConfigModule } from './app/cors.module';
 import { DocsModule } from './app/docs.module';
+import { ErrorFilter } from './app/error.filter';
 
 async function bootstrap() {
   process.env['TZ'] = 'UTC';
@@ -40,6 +41,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  app.useGlobalFilters(new ErrorFilter());
+
   DocsModule.setupSwagger(app);
 
   app.enableCors(corsConfig.createCorsOptions());
