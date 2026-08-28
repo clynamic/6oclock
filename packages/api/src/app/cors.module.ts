@@ -1,4 +1,4 @@
-import { Global, MethodNotAllowedException, Module } from '@nestjs/common';
+import { ForbiddenException, Global, Module } from '@nestjs/common';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { ConfigService } from '@nestjs/config';
 
@@ -15,7 +15,7 @@ export class CorsConfigModule {
     );
 
     const regexes = [
-      /^(https?:\/\/)?(localhost)(:\d+)?(\/.*)?$/,
+      /^(https?:\/\/)?([\w-]+\.)*localhost(:\d+)?(\/.*)?$/,
       /^(https?:\/\/)?(127\.\d+\.\d+\.\d+)(:\d+)?(\/.*)?$/,
       /^(https?:\/\/)?(0:0:0:0:0:0:0:1)(:\d+)?(\/.*)?$/,
     ];
@@ -34,7 +34,7 @@ export class CorsConfigModule {
         ) {
           callback(null, true);
         } else {
-          callback(new MethodNotAllowedException('Origin not allowed'), false);
+          callback(new ForbiddenException('Origin not allowed'), false);
         }
       },
       credentials: true,
