@@ -34,11 +34,23 @@ export const logSinkStream = (): Writable =>
     },
   });
 
-export const LOG_LEVELS: Record<number, string> = {
-  10: 'trace',
-  20: 'debug',
-  30: 'log',
-  40: 'warn',
-  50: 'error',
-  60: 'fatal',
+export enum LogLevel {
+  /** Diagnostics. Unbounded rate, development only. */
+  debug = 'debug',
+
+  /** Session timeline. */
+  info = 'info',
+
+  /** Abnormal but handled. The world misbehaved, not us. */
+  warn = 'warn',
+
+  /** Our code is wrong. */
+  error = 'error',
+}
+
+export const LOG_LEVELS: Record<number, LogLevel> = {
+  20: LogLevel.debug,
+  30: LogLevel.info,
+  40: LogLevel.warn,
+  50: LogLevel.error,
 };

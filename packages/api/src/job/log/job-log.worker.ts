@@ -15,7 +15,7 @@ export class JobLogWorker {
 
   @JobHandler({
     id: 'jobs/logs',
-    description: 'Clears the log lines of runs pg-boss has already forgotten.',
+    description: 'Clears the log lines of runs past the retention window.',
     queue: 'tiling',
     pattern: '0 * * * *',
     timeout: 1000 * 60 * 5,

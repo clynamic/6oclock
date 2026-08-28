@@ -1,4 +1,9 @@
-import { LOG_LEVELS, LogRecord, addLogSink } from 'src/app/logger/log.sink';
+import {
+  LOG_LEVELS,
+  LogLevel,
+  LogRecord,
+  addLogSink,
+} from 'src/app/logger/log.sink';
 
 import { writeJobLog } from './job-log.sink';
 
@@ -12,7 +17,7 @@ export const collectJobLogs = (): void => {
 
     writeJobLog(job.id, {
       at: time ? new Date(time) : new Date(),
-      level: LOG_LEVELS[level ?? 30] ?? 'log',
+      level: LOG_LEVELS[level ?? 30] ?? LogLevel.info,
       context,
       record,
     });
