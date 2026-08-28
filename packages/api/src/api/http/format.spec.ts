@@ -31,6 +31,20 @@ describe('postFormatInterceptor', () => {
     expect(apply(url)).toBeUndefined();
   });
 
+  it.each([
+    '/posts.json?tags=canine',
+    '/posts/123.json?expand=1',
+    '/post_events.json?page=2',
+  ])('pins the format on %s, whose path carries a query', (url) => {
+    expect(apply(url)).toMatchObject({ v2: 'true', mode: POST_FORMAT.mode });
+  });
+
+  it('reads the path out of an absolute url', () => {
+    expect(apply('https://e621.net/posts.json?tags=canine')).toMatchObject({
+      v2: 'true',
+    });
+  });
+
   it('keeps the caller’s own parameters', () => {
     expect(apply('/posts.json', { tags: 'canine', limit: 10 })).toMatchObject({
       tags: 'canine',
