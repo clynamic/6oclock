@@ -33,12 +33,18 @@ export class JobDiscoveryService implements OnModuleInit {
       await this.jobBoss.start();
       this.discover();
       await this.createQueues();
-      await this.registerWorkers();
-      await this.registerSchedulers();
       this.ready = true;
     } catch (error) {
-      this.logger.error('Failed to initialize job discovery', error);
+      this.logger.error({
+        msg: 'Failed to initialize job discovery',
+        err: error,
+      });
     }
+  }
+
+  async startWorking(): Promise<void> {
+    await this.registerWorkers();
+    await this.registerSchedulers();
   }
 
   isReady(): boolean {
@@ -92,19 +98,28 @@ export class JobDiscoveryService implements OnModuleInit {
   private async createQueues(): Promise<void> {
     const boss = this.jobBoss.instance;
 
-    await boss.createQueue('default', {
-      policy: policies.singleton,
+    const policy = policies.stately;
+    const settings = {
       retryLimit: 0,
       expireInSeconds: EXPIRE_SECONDS,
       deleteAfterSeconds: RETENTION_SECONDS,
-    });
+    };
 
-    await boss.createQueue('tiling', {
-      policy: policies.standard,
-      retryLimit: 0,
-      expireInSeconds: EXPIRE_SECONDS,
-      deleteAfterSeconds: RETENTION_SECONDS,
-    });
+    for (const queue of QUEUE_NAMES) {
+      await boss.createQueue(queue, { policy, ...settings });
+      await boss.updateQueue(queue, settings);
+
+      const stored = await boss.getQueue(queue);
+
+      if (stored && stored.policy !== policy) {
+        this.logger.warn({
+          msg: `Queue ${queue} is ${stored.policy} where the code says ${policy}`,
+          queue,
+          stored: stored.policy,
+          expected: policy,
+        });
+      }
+    }
   }
 
   private async registerWorkers(): Promise<void> {

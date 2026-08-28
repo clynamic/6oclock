@@ -3,6 +3,10 @@ services:
     profiles:
       - app
 
+  six-oclock-worker:
+    profiles:
+      - app
+
   six-oclock-postgres:
     ports:
       - "127.0.0.1:34572:5432"

@@ -23,6 +23,28 @@ services:
     networks:
       - default
 
+  six-oclock-worker:
+    build: .
+    container_name: six-oclock-worker
+    restart: unless-stopped
+    command: ["node", "packages/api/dist/worker.js"]
+    env_file:
+      - .env
+    environment:
+      DB_HOST: six-oclock-postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: six_oclock
+      DATA_DIR: /data
+      NODE_ENV: production
+    volumes:
+      - ./data:/data
+    depends_on:
+      - six-oclock-postgres
+    networks:
+      - default
+
   six-oclock-postgres:
     image: postgres:latest
     container_name: six-oclock-postgres

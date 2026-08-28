@@ -17,7 +17,9 @@
     "typeorm": "typeorm-ts-node-commonjs",
     "migrate": "typeorm-ts-node-commonjs migration:generate -d src/data-source.ts",
     "generate": "orval",
-    "db:reset": "npm run typeorm schema:drop -- -d src/data-source.ts && npm run typeorm schema:sync -- -d src/data-source.ts"
+    "db:reset": "npm run typeorm schema:drop -- -d src/data-source.ts && npm run typeorm schema:sync -- -d src/data-source.ts",
+    "dev:worker": "nest start --watch --entryFile worker",
+    "start:worker": "node worker.js"
   },
   "dependencies": {
     "@date-fns/tz": "^1.2.0",
