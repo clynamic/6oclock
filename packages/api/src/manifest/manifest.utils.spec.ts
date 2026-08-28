@@ -1199,6 +1199,32 @@ describe('ManifestUtils', () => {
       }
     });
 
+    describe('the ids a manifest claims', () => {
+      it('sets no ids on a manifest for a month that held nothing, since there are none to claim', () => {
+        const order = new Order({
+          lower: new Date('2023-01-15'),
+          upper: new Date('2023-04-20'),
+        });
+
+        const instruction = ManifestUtils.computeSaveResults(
+          {
+            type: ItemType.posts,
+            order,
+            items: [],
+            bottom: true,
+            top: false,
+          },
+          farFuture,
+        );
+
+        expect(instruction.save).not.toHaveLength(0);
+        for (const manifest of instruction.save) {
+          expect(manifest.lowerId).toBeUndefined();
+          expect(manifest.upperId).toBeUndefined();
+        }
+      });
+    });
+
     it('should split into monthly manifests when exhausted with no items across month boundaries', () => {
       const order = new Order({
         lower: new Date('2023-01-15'),
