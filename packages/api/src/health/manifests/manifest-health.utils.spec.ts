@@ -106,6 +106,31 @@ describe('generateManifestSlices', () => {
     expect(slices.reduce((sum, slice) => sum + slice.available, 0)).toBe(5);
   });
 
+  describe('a manifest that claims no ids', () => {
+    it('draws no slices when both bounds are absent', () => {
+      const slices = generateManifestSlices({
+        allIds: [],
+        lowerId: undefined as unknown as number,
+        upperId: undefined as unknown as number,
+      });
+
+      expect(slices).toEqual([]);
+    });
+
+    it('invents a full run of missing ids when the bounds arrive as null', () => {
+      const slices = generateManifestSlices({
+        allIds: [],
+        lowerId: null as unknown as number,
+        upperId: null as unknown as number,
+      });
+
+      expect(slices).toHaveLength(30);
+      expect(
+        slices.reduce((sum, slice) => sum + slice.unavailable, 0),
+      ).toBeGreaterThan(0);
+    });
+  });
+
   describe('characterised, not specified', () => {
     it('reports padding past the upper id as none on the final slice', () => {
       const slices = generateManifestSlices({
