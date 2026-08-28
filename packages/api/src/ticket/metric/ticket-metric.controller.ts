@@ -33,7 +33,7 @@ import { TicketMetricService } from './ticket-metric.service';
 @ApiTags('Tickets')
 @Controller('metrics/tickets')
 @UseGuards(RolesGuard)
-@AuthLevel(UserLevel.Janitor)
+@AuthLevel(UserLevel.Staff)
 @ApiBearerAuth()
 export class TicketMetricController {
   constructor(

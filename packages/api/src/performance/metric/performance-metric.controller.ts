@@ -26,7 +26,7 @@ import { PerformanceMetricService } from './performance-metric.service';
 @ApiTags('Performance')
 @Controller('metrics/performance')
 @UseGuards(RolesGuard)
-@AuthLevel(UserLevel.Janitor)
+@AuthLevel(UserLevel.Staff)
 @ApiBearerAuth()
 export class PerformanceMetricController {
   constructor(

@@ -26,7 +26,7 @@ import { ApprovalMetricService } from './approval-metric.service';
 
 @ApiTags('Approvals')
 @UseGuards(RolesGuard)
-@AuthLevel(UserLevel.Janitor)
+@AuthLevel(UserLevel.Staff)
 @ApiBearerAuth()
 @Controller('metrics/approvals')
 export class ApprovalMetricController {

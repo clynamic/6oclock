@@ -18,7 +18,7 @@ import { DeletionMetricService } from './deletion-metric.service';
 @ApiTags('Deletions')
 @Controller('metrics/deletions')
 @UseGuards(RolesGuard)
-@AuthLevel(UserLevel.Janitor)
+@AuthLevel(UserLevel.Staff)
 @ApiBearerAuth()
 export class DeletionMetricController {
   constructor(private readonly deletionMetricService: DeletionMetricService) {}

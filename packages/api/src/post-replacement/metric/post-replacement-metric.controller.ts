@@ -19,7 +19,7 @@ import { PostReplacementMetricService } from './post-replacement-metric.service'
 @ApiTags('Replacements')
 @Controller('metrics/post-replacements')
 @UseGuards(RolesGuard)
-@AuthLevel(UserLevel.Janitor)
+@AuthLevel(UserLevel.Staff)
 @ApiBearerAuth()
 export class PostReplacementMetricController {
   constructor(

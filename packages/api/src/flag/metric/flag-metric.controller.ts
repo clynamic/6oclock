@@ -19,7 +19,7 @@ import { FlagMetricService } from './flag-metric.service';
 @ApiTags('Flags')
 @Controller('metrics/flags')
 @UseGuards(RolesGuard)
-@AuthLevel(UserLevel.Janitor)
+@AuthLevel(UserLevel.Staff)
 @ApiBearerAuth()
 export class FlagMetricController {
   constructor(private readonly flagMetricService: FlagMetricService) {}

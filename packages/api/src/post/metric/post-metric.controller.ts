@@ -15,7 +15,7 @@ import { PostMetricService } from './post-metric.service';
 @ApiTags('Posts')
 @Controller('metrics/posts')
 @UseGuards(RolesGuard)
-@AuthLevel(UserLevel.Janitor)
+@AuthLevel(UserLevel.Staff)
 @ApiBearerAuth()
 export class PostMetricController {
   constructor(private readonly postMetricService: PostMetricService) {}

@@ -1,16 +1,21 @@
+// Values match e621ng UserLevel::MAPPING, one of which user sync sends upstream as search[min_level].
 export enum UserLevel {
   Anonymous = 0,
   Blocked = 10,
   Member = 20,
   Privileged = 30,
-  FormerStaff = 34,
-  Janitor = 35,
-  Moderator = 40,
-  Admin = 50,
+  FormerStaff = 40,
+  Staff = 50,
+  Janitor = 60,
+  Moderator = 70,
+  Admin = 80,
 }
 
 export function getUserLevelFromString(level?: string): UserLevel | undefined {
   if (!level) return undefined;
-  const normalizedLevel = level.charAt(0).toUpperCase() + level.slice(1);
+  const normalizedLevel = level
+    .split(/[\s_]+/)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join('');
   return UserLevel[normalizedLevel as keyof typeof UserLevel];
 }

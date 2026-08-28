@@ -26,7 +26,7 @@ import { UploadMetricService } from './upload-metric.service';
 @ApiTags('Uploads')
 @Controller('metrics/uploads')
 @UseGuards(RolesGuard)
-@AuthLevel(UserLevel.Janitor)
+@AuthLevel(UserLevel.Staff)
 @ApiBearerAuth()
 export class UploadMetricController {
   constructor(

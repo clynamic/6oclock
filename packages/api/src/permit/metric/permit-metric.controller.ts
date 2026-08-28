@@ -13,7 +13,7 @@ import { PermitMetricService } from './permit-metric.service';
 
 @ApiTags('Permits')
 @UseGuards(RolesGuard)
-@AuthLevel(UserLevel.Janitor)
+@AuthLevel(UserLevel.Staff)
 @ApiBearerAuth()
 @Controller('metrics/permits')
 export class PermitMetricController {

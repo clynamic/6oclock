@@ -17,7 +17,7 @@ import { FeedbackMetricService } from './feedback-metric.service';
 
 @ApiTags('Feedbacks')
 @UseGuards(RolesGuard)
-@AuthLevel(UserLevel.Janitor)
+@AuthLevel(UserLevel.Staff)
 @ApiBearerAuth()
 @Controller('metrics/feedbacks')
 export class FeedbackMetricController {
