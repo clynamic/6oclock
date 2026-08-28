@@ -209,7 +209,100 @@ describe('ManifestEntity.extendWith', () => {
     expect(target.endDate).toEqual(at('2024-02-28T00:00:00Z'));
   });
 
+  it('reaches backwards for an earlier manifest even when it also ends later', () => {
+    const target = manifest({
+      startDate: at('2024-02-01T00:00:00Z'),
+      endDate: at('2024-02-10T00:00:00Z'),
+      lowerId: 500,
+      upperId: 600,
+    });
+
+    target.extendWith(
+      manifest({
+        id: 2,
+        startDate: at('2024-01-01T00:00:00Z'),
+        endDate: at('2024-03-01T00:00:00Z'),
+        lowerId: 100,
+        upperId: 900,
+      }),
+    );
+
+    expect(target.startDate).toEqual(at('2024-01-01T00:00:00Z'));
+    expect(target.endDate).toEqual(at('2024-02-10T00:00:00Z'));
+  });
+
+  it('reaches nowhere for a manifest ending exactly where this one does', () => {
+    const target = manifest({
+      startDate: at('2024-02-01T00:00:00Z'),
+      endDate: at('2024-02-28T00:00:00Z'),
+      lowerId: 500,
+      upperId: 600,
+    });
+
+    target.extendWith(
+      manifest({
+        id: 2,
+        startDate: at('2024-02-10T00:00:00Z'),
+        endDate: at('2024-02-28T00:00:00Z'),
+        lowerId: 700,
+        upperId: 800,
+      }),
+    );
+
+    expect(target.startDate).toEqual(at('2024-02-01T00:00:00Z'));
+    expect(target.endDate).toEqual(at('2024-02-28T00:00:00Z'));
+    expect(target.upperId).toBe(800);
+  });
+
   describe('characterised, not specified', () => {
+    it('never takes the id tie-break, since two equal dates are not the same object', () => {
+      const shared = at('2024-02-01T00:00:00Z');
+      const target = manifest({
+        id: 9,
+        startDate: new Date(shared),
+        endDate: at('2024-02-28T00:00:00Z'),
+        lowerId: 500,
+        upperId: 600,
+      });
+
+      target.extendWith(
+        manifest({
+          id: 2,
+          startDate: new Date(shared),
+          endDate: at('2024-02-28T00:00:00Z'),
+          lowerId: 100,
+          upperId: 200,
+        }),
+      );
+
+      expect(target.lowerId).toBe(500);
+      expect(target.upperId).toBe(200);
+    });
+
+    it('takes the id tie-break only when both carry the very same date object', () => {
+      const shared = at('2024-02-01T00:00:00Z');
+      const target = manifest({
+        id: 9,
+        startDate: shared,
+        endDate: at('2024-02-28T00:00:00Z'),
+        lowerId: 500,
+        upperId: 600,
+      });
+
+      target.extendWith(
+        manifest({
+          id: 2,
+          startDate: shared,
+          endDate: at('2024-02-28T00:00:00Z'),
+          lowerId: 100,
+          upperId: 200,
+        }),
+      );
+
+      expect(target.lowerId).toBe(100);
+      expect(target.upperId).toBe(600);
+    });
+
     it('reaches forwards for a manifest wholly inside this one', () => {
       const target = manifest({
         startDate: at('2024-01-01T00:00:00Z'),
