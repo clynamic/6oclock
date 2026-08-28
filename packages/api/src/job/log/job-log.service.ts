@@ -70,7 +70,7 @@ export class JobLogService {
   async list(jobId: string, pages?: PaginationParams): Promise<JobLogEntity[]> {
     return this.logRepository.find({
       where: { jobId },
-      order: { id: 'ASC' },
+      order: { id: 'DESC' },
       skip: PaginationParams.calculateOffset(pages),
       take: pages?.limit ?? PaginationParams.DEFAULT_PAGE_SIZE,
     });
