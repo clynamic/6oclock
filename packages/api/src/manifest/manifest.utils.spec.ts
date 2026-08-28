@@ -835,6 +835,7 @@ describe('ManifestUtils', () => {
         (m) => m.startDate.getMonth() === 2,
       );
       expect(marchManifest).toBeDefined();
+      expect(marchManifest!.id).toBe(1);
       expect(marchManifest!.startDate).toEqual(new Date('2023-03-01'));
       expect(marchManifest!.endDate).toEqual(new Date('2023-04-01'));
       expect(marchManifest!.lowerId).toBe(300);
@@ -1157,6 +1158,37 @@ describe('ManifestUtils', () => {
       // Lower boundary is Date (promotion principle)
       expect(instruction.order.lower).toBeInstanceOf(Date);
       expect(instruction.order.lower).toEqual(new Date('2023-01-01'));
+    });
+
+    it('clamps the newest manifest to now when the order reaches into the future and the page was the top', () => {
+      const currentTime = new Date('2026-05-28T09:00:00Z');
+
+      const order = new Order({
+        lower: new ManifestEntity({
+          id: 470,
+          type: ItemType.flags,
+          startDate: new Date('2026-04-01T00:00:00Z'),
+          endDate: new Date('2026-05-08T22:57:30Z'),
+          lowerId: 920000,
+          upperId: 931652,
+        }),
+        upper: new Date('2026-06-02T00:00:00Z'),
+      });
+
+      const instruction = ManifestUtils.computeSaveResults(
+        {
+          type: ItemType.flags,
+          order,
+          items: [{ id: 931700, updatedAt: new Date('2026-05-20T00:00:00Z') }],
+          bottom: true,
+          top: true,
+        },
+        currentTime,
+      );
+
+      const newest = instruction.order.upper as ManifestEntity;
+
+      expect(newest.endDate).toEqual(currentTime);
     });
 
     it('should clamp manifest endDate to currentTime when exhausted with no items and upper is in the future', () => {
