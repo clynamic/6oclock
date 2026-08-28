@@ -165,6 +165,50 @@ describe('ManifestEntity.extendWith', () => {
     expect(target.startDate).toEqual(at('2024-02-01T00:00:00Z'));
   });
 
+  it('keeps its own ids when it reaches for a neighbour that claims none', () => {
+    const target = manifest({
+      startDate: at('2024-02-01T00:00:00Z'),
+      endDate: at('2024-02-28T00:00:00Z'),
+      lowerId: 500,
+      upperId: 600,
+    });
+
+    target.extendWith(
+      new ManifestEntity({
+        id: 2,
+        type: ItemType.posts,
+        startDate: at('2024-01-01T00:00:00Z'),
+        endDate: at('2024-01-31T00:00:00Z'),
+      }),
+    );
+
+    expect(target.lowerId).toBe(500);
+    expect(target.upperId).toBe(600);
+    expect(target.startDate).toEqual(at('2024-01-01T00:00:00Z'));
+  });
+
+  it('keeps its own ids when it reaches upward into an id-less neighbour', () => {
+    const target = manifest({
+      startDate: at('2024-01-01T00:00:00Z'),
+      endDate: at('2024-01-31T00:00:00Z'),
+      lowerId: 100,
+      upperId: 200,
+    });
+
+    target.extendWith(
+      new ManifestEntity({
+        id: 2,
+        type: ItemType.posts,
+        startDate: at('2024-02-01T00:00:00Z'),
+        endDate: at('2024-02-28T00:00:00Z'),
+      }),
+    );
+
+    expect(target.lowerId).toBe(100);
+    expect(target.upperId).toBe(200);
+    expect(target.endDate).toEqual(at('2024-02-28T00:00:00Z'));
+  });
+
   describe('characterised, not specified', () => {
     it('reaches forwards for a manifest wholly inside this one', () => {
       const target = manifest({
