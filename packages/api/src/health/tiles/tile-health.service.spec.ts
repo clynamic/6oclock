@@ -117,6 +117,60 @@ describe('TileHealthService', () => {
       expect(health!.actual).toBe(0);
     });
 
+    it('expects fewer tiles from a service that covers more hours each', async () => {
+      const coarse = await Test.createTestingModule({
+        imports: [CacheModule.register()],
+        providers: [
+          CacheManager,
+          TileHealthService,
+          {
+            provide: UploadTilesService,
+            useValue: {
+              interval: 6,
+              getRanges: jest
+                .fn()
+                .mockResolvedValue([
+                  spanning('2024-03-01T00:00:00Z', '2024-03-02T00:00:00Z'),
+                ]),
+              findMissing: jest.fn().mockResolvedValue([]),
+              wipe: jest.fn(),
+            },
+          },
+          {
+            provide: PermitTilesService,
+            useValue: {
+              interval: 6,
+              getRanges: jest.fn().mockResolvedValue([]),
+              findMissing: jest.fn().mockResolvedValue([]),
+              wipe: jest.fn(),
+            },
+          },
+        ],
+      }).compile();
+
+      coarse.get(CacheManager);
+      const [health] = await coarse.get(TileHealthService).tiles();
+
+      expect(health!.expected).toBe(4);
+    });
+
+    it('slices the span so a reader can see where the holes fall', async () => {
+      uploadRanges.mockResolvedValue([
+        spanning('2024-03-01T00:00:00Z', '2024-03-01T06:00:00Z'),
+      ]);
+      uploadMissing.mockResolvedValue([at('2024-03-01T02:00:00Z')]);
+
+      const [health] = await service.tiles();
+
+      expect(health!.slices.length).toBeGreaterThan(0);
+      expect(
+        health!.slices.reduce((sum, slice) => sum + slice.unavailable, 0),
+      ).toBe(1);
+      expect(
+        health!.slices.reduce((sum, slice) => sum + slice.available, 0),
+      ).toBe(5);
+    });
+
     it('carries the span it measured through to the report', async () => {
       uploadRanges.mockResolvedValue([
         spanning('2024-03-01T00:00:00Z', '2024-03-01T06:00:00Z'),
