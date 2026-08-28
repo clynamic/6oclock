@@ -102,6 +102,23 @@ describe('inferDefaultScale', () => {
   ])('buckets a span of %s ms by %s', (milliseconds, scale) => {
     expect(inferDefaultScale(spanning(milliseconds))).toBe(scale);
   });
+
+  it.each([
+    ['two hours exactly', days(2) / 24, TimeScale.Minute],
+    ['a minute past two hours', days(2) / 24 + 60000, TimeScale.Hour],
+    ['two days exactly', days(2), TimeScale.Hour],
+    ['an hour past two days', days(2) + days(1) / 24, TimeScale.Day],
+    ['thirty three days exactly', days(33), TimeScale.Day],
+    ['a day past thirty three', days(34), TimeScale.Week],
+    ['sixty days exactly', days(60), TimeScale.Week],
+    ['a day past sixty', days(61), TimeScale.Month],
+    ['two years exactly', days(730), TimeScale.Month],
+    ['a day past two years', days(731), TimeScale.Year],
+    ['ten years exactly', days(3650), TimeScale.Year],
+    ['a day past ten years', days(3651), TimeScale.Decade],
+  ])('buckets %s by %s', (_name, milliseconds, scale) => {
+    expect(inferDefaultScale(spanning(milliseconds))).toBe(scale);
+  });
 });
 
 describe('PartialDateRange', () => {
@@ -141,6 +158,18 @@ describe('PartialDateRange', () => {
 
     it('constrains nothing when neither end is given', () => {
       expect(new PartialDateRange({}).find()).toBeUndefined();
+    });
+  });
+
+  describe('in', () => {
+    it('carries the timezone it was given as a date-fns context', () => {
+      const context = new PartialDateRange({ timezone: 'MST' }).in();
+
+      expect(context.in).toBeDefined();
+    });
+
+    it('carries no context at all when no timezone was given', () => {
+      expect(new PartialDateRange({}).in()).toEqual({ in: undefined });
     });
   });
 
