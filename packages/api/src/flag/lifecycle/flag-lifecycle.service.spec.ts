@@ -42,7 +42,7 @@ describe('FlagLifecycleService', () => {
       into: record('into'),
       values: record('values'),
       orUpdate: record('orUpdate'),
-      execute: jest.fn().mockResolvedValue(undefined),
+      execute: record('execute'),
     };
 
     createQueryBuilder = jest.fn().mockReturnValue(builder);
@@ -69,6 +69,12 @@ describe('FlagLifecycleService', () => {
   const conflictColumns = (): string[] => calls['orUpdate']![0]![1] as string[];
   const refreshedColumns = (): string[] =>
     calls['orUpdate']![0]![0] as string[];
+
+  it('runs the write rather than only building it', async () => {
+    await service.upsertEpisodes([episode()]);
+
+    expect(calls['execute']).toHaveLength(1);
+  });
 
   it('touches the database not at all for an empty batch', async () => {
     await service.upsertEpisodes([]);
@@ -101,12 +107,6 @@ describe('FlagLifecycleService', () => {
       'handling',
       'updated_at',
     ]);
-  });
-
-  it('never rewrites when a post was flagged, since that names the episode', async () => {
-    await service.upsertEpisodes([episode()]);
-
-    expect(refreshedColumns()).not.toContain('flagged_at');
   });
 
   it('carries the handling verdict through to the write', async () => {

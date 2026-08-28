@@ -45,7 +45,7 @@ describe('TicketLifecycleService', () => {
       into: record('into'),
       values: record('values'),
       orUpdate: record('orUpdate'),
-      execute: jest.fn().mockResolvedValue(undefined),
+      execute: record('execute'),
     };
 
     createQueryBuilder = jest.fn().mockReturnValue(builder);
@@ -71,6 +71,12 @@ describe('TicketLifecycleService', () => {
   const refreshedColumns = (): string[] =>
     calls['orUpdate']![0]![0] as string[];
 
+  it('runs the write rather than only building it', async () => {
+    await service.upsertLives([life()]);
+
+    expect(calls['execute']).toHaveLength(1);
+  });
+
   it('touches the database not at all for an empty batch', async () => {
     await service.upsertLives([]);
 
@@ -82,7 +88,7 @@ describe('TicketLifecycleService', () => {
 
     await service.upsertLives(batch);
 
-    expect(calls['values']![0]![0]).toBe(batch);
+    expect(calls['values']![0]![0]).toEqual(batch);
   });
 
   it('treats one ticket as one life, so a resync overwrites rather than duplicates', async () => {

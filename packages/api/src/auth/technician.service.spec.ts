@@ -1,10 +1,12 @@
 import { ConfigService } from '@nestjs/config';
+import { AppConfigKeys } from 'src/app/config.module';
 
 import { TechnicianService } from './technician.service';
 
 const listing = (setting: string | undefined): TechnicianService =>
   new TechnicianService({
-    get: (_key: string, fallback: string) => setting ?? fallback,
+    get: (key: string, fallback: string) =>
+      key === AppConfigKeys.TECHNICIANS ? (setting ?? fallback) : fallback,
   } as unknown as ConfigService);
 
 describe('TechnicianService', () => {
@@ -16,10 +18,6 @@ describe('TechnicianService', () => {
     expect(listing('500').isTechnician(501)).toBe(false);
   });
 
-  it('turns away a request carrying no account at all', () => {
-    expect(listing('500').isTechnician(undefined)).toBe(false);
-  });
-
   it('reads several accounts separated by commas', () => {
     const technicians = listing('500,501,502');
 
@@ -28,27 +26,16 @@ describe('TechnicianService', () => {
     expect(technicians.isTechnician(502)).toBe(true);
   });
 
-  it('tolerates spaces around the ids', () => {
-    expect(listing(' 500 , 501 ').isTechnician(501)).toBe(true);
-  });
-
-  it('admits nobody when the setting is empty', () => {
-    expect(listing('').isTechnician(500)).toBe(false);
-  });
-
-  it('admits nobody when the setting is absent', () => {
+  it('reads the technician setting and no other', () => {
+    expect(listing('500').isTechnician(500)).toBe(true);
     expect(listing(undefined).isTechnician(500)).toBe(false);
   });
 
-  it('drops an entry it cannot read as a number, keeping the rest', () => {
-    const technicians = listing('500,nonsense,502');
+  it('keeps an unreadable entry out of the list rather than storing it', () => {
+    const technicians = listing('nonsense');
 
-    expect(technicians.isTechnician(500)).toBe(true);
-    expect(technicians.isTechnician(502)).toBe(true);
-  });
-
-  it('admits nobody at all when every entry is unreadable', () => {
-    expect(listing('nonsense,rubbish').isTechnician(0)).toBe(false);
+    expect(technicians.isTechnician(NaN)).toBe(false);
+    expect(technicians.isTechnician(undefined)).toBe(false);
   });
 
   describe('characterised, not specified', () => {

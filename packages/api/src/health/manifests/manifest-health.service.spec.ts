@@ -142,6 +142,40 @@ describe('ManifestHealthService', () => {
       expect(where.id.value).toEqual([10, 20]);
     });
 
+    it('reads ids alone and in order, since a full row scan is what the page size guards', async () => {
+      manifestFind.mockResolvedValue([manifestOf(ItemType.tickets, 10, 20)]);
+
+      await service.manifests();
+
+      const options = ticketFind.mock.calls[0]![0] as {
+        select: string[];
+        order: Record<string, string>;
+      };
+
+      expect(options.select).toEqual(['id']);
+      expect(options.order).toEqual({ id: 'ASC' });
+    });
+
+    it('slices the range so a reader can see where the gaps fall', async () => {
+      manifestFind.mockResolvedValue([manifestOf(ItemType.tickets, 1, 30)]);
+      ticketFind.mockResolvedValue([{ id: 1 }, { id: 2 }]);
+
+      const [health] = await service.manifests();
+
+      expect(health!.slices.length).toBeGreaterThan(0);
+      expect(
+        health!.slices.reduce((sum, slice) => sum + slice.available, 0),
+      ).toBe(2);
+    });
+
+    it('reports the manifest by its own id', async () => {
+      manifestFind.mockResolvedValue([manifestOf(ItemType.tickets)]);
+
+      const [health] = await service.manifests();
+
+      expect(health!.id).toBe(1);
+    });
+
     it('carries the manifest bounds through as the reported span', async () => {
       manifestFind.mockResolvedValue([manifestOf(ItemType.tickets, 10, 20)]);
 

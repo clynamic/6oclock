@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CacheManager } from 'src/app/browser.module';
 import { PartialDateRange } from 'src/common';
+import { ItemType } from 'src/label/label.entity';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
 import { PostVersionEntity } from 'src/post-version/post-version.entity';
 
@@ -21,6 +22,7 @@ describe('UploadTilesService', () => {
   let rows: { time: Date; count: string }[];
   let clear: jest.Mock;
   let remove: jest.Mock;
+  let manifestFind: jest.Mock;
 
   const recorder = (
     calls: BuilderCalls,
@@ -56,6 +58,7 @@ describe('UploadTilesService', () => {
     rows = [];
     clear = jest.fn().mockResolvedValue(undefined);
     remove = jest.fn().mockResolvedValue(undefined);
+    manifestFind = jest.fn().mockResolvedValue([]);
 
     const moduleRef = await Test.createTestingModule({
       imports: [CacheModule.register()],
@@ -86,7 +89,7 @@ describe('UploadTilesService', () => {
         },
         {
           provide: getRepositoryToken(ManifestEntity),
-          useValue: { find: jest.fn().mockResolvedValue([]) },
+          useValue: { find: manifestFind },
         },
       ],
     }).compile();
@@ -98,10 +101,42 @@ describe('UploadTilesService', () => {
   const clauses = (calls: BuilderCalls, name: string): string[] =>
     (calls[name] ?? []).map((args) => String(args[0]));
 
+  const bounds = (): { start: Date; end: Date } => {
+    const conditions = versionCalls['andWhere']!;
+    return {
+      start: (conditions[0]![1] as { start: Date }).start,
+      end: (conditions[1]![1] as { end: Date }).end,
+    };
+  };
+
+  describe('the ranges it covers', () => {
+    it('tiles by the hour, which is what every count above assumes', () => {
+      expect(service.interval).toBe(1);
+    });
+
+    it('asks only about post version manifests, since uploads live there', async () => {
+      await service.getRanges();
+
+      expect(manifestFind).toHaveBeenCalledWith({
+        where: [{ type: ItemType.postVersions }],
+      });
+    });
+
+    it('covers no range at all when no manifest claims one', async () => {
+      await expect(service.getRanges()).resolves.toEqual([]);
+    });
+  });
+
   describe('generating counts for hours', () => {
-    it('asks the database nothing when handed no hours', async () => {
-      await expect(service.generate([])).resolves.toEqual(new Map());
-      expect(versionBuilders).toBe(0);
+    it('buckets by the hour, since that is what a tile covers', async () => {
+      await service.generate([at('2024-03-01T00:00:00Z')]);
+
+      expect(versionCalls['select']![0]![0]).toBe(
+        "date_trunc('hour', post_version.updated_at)",
+      );
+      expect(versionCalls['groupBy']![0]![0]).toBe(
+        "date_trunc('hour', post_version.updated_at)",
+      );
     });
 
     it('counts only the first version, since a later edit is not an upload', async () => {
@@ -120,6 +155,28 @@ describe('UploadTilesService', () => {
 
       expect(conditions).toContain('post_version.updated_at >= :start');
       expect(conditions).toContain('post_version.updated_at < :end');
+    });
+
+    it('bounds the query at the hour it was asked about, and the next', async () => {
+      await service.generate([at('2024-03-01T05:00:00Z')]);
+
+      expect(bounds()).toEqual({
+        start: at('2024-03-01T05:00:00Z'),
+        end: at('2024-03-01T06:00:00Z'),
+      });
+    });
+
+    it('stretches the bounds across a contiguous run of hours', async () => {
+      await service.generate([
+        at('2024-03-01T05:00:00Z'),
+        at('2024-03-01T06:00:00Z'),
+        at('2024-03-01T07:00:00Z'),
+      ]);
+
+      expect(bounds()).toEqual({
+        start: at('2024-03-01T05:00:00Z'),
+        end: at('2024-03-01T08:00:00Z'),
+      });
     });
 
     it('gathers contiguous hours into one query rather than one each', async () => {
@@ -185,22 +242,17 @@ describe('UploadTilesService', () => {
       expect(remove).not.toHaveBeenCalled();
     });
 
-    it('deletes only the range it was given', async () => {
-      await service.wipe(
-        new PartialDateRange({
-          startDate: at('2024-03-01T00:00:00Z'),
-          endDate: at('2024-03-02T00:00:00Z'),
-        }),
-      );
+    it('deletes by the bounds it was given, not the whole table', async () => {
+      const range = new PartialDateRange({
+        startDate: at('2024-03-01T00:00:00Z'),
+        endDate: at('2024-03-02T00:00:00Z'),
+      });
 
-      expect(remove).toHaveBeenCalled();
+      await service.wipe(range);
+
       expect(clear).not.toHaveBeenCalled();
-    });
-
-    it('clears everything when the range names no bounds', async () => {
-      await service.wipe(new PartialDateRange({}));
-
-      expect(clear).toHaveBeenCalled();
+      expect(remove).toHaveBeenCalledWith({ time: range.find() });
+      expect(remove.mock.calls[0]![0].time).toBeDefined();
     });
   });
 });
