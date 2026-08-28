@@ -27,7 +27,7 @@ export class TicketSyncService {
         .where(DateRange.fill(range).where())
         .groupBy('ticket.creator_id')
         .orderBy('reported', 'DESC')
-        .take(MAX_API_LIMIT)
+        .limit(MAX_API_LIMIT)
         .getRawMany<{
           user_id: string;
           reported: string;

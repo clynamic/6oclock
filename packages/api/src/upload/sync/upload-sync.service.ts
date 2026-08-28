@@ -28,7 +28,7 @@ export class UploadSyncService {
         .andWhere('post_version.version = 1')
         .groupBy('post_version.updater_id')
         .orderBy('uploaded', 'DESC')
-        .take(MAX_API_LIMIT)
+        .limit(MAX_API_LIMIT)
         .getRawMany<{
           user_id: string;
           uploaded: string;

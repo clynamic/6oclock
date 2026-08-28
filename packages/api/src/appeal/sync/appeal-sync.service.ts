@@ -27,7 +27,7 @@ export class AppealSyncService {
         .where(DateRange.fill(range).where())
         .groupBy('appeal.creator_id')
         .orderBy('appealed', 'DESC')
-        .take(MAX_API_LIMIT)
+        .limit(MAX_API_LIMIT)
         .getRawMany<{
           user_id: string;
           appealed: string;

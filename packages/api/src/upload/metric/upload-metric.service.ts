@@ -104,8 +104,8 @@ export class UploadMetricService {
       )
       .groupBy('post_version.updater_id')
       .orderBy('total', 'DESC')
-      .take(pages?.limit || PaginationParams.DEFAULT_PAGE_SIZE)
-      .skip(PaginationParams.calculateOffset(pages))
+      .limit(pages?.limit || PaginationParams.DEFAULT_PAGE_SIZE)
+      .offset(PaginationParams.calculateOffset(pages))
       .getRawMany<{
         user_id: number;
         total: number;

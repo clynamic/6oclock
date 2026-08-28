@@ -383,8 +383,8 @@ export class TicketMetricService {
       )
       .groupBy('life.handler_id')
       .orderBy('total', 'DESC')
-      .take(pages?.limit || PaginationParams.DEFAULT_PAGE_SIZE)
-      .skip(PaginationParams.calculateOffset(pages))
+      .limit(pages?.limit || PaginationParams.DEFAULT_PAGE_SIZE)
+      .offset(PaginationParams.calculateOffset(pages))
       .getRawMany<{
         user_id: number;
         total: number;
@@ -417,8 +417,8 @@ export class TicketMetricService {
       .where(DateRange.fill(range).where())
       .groupBy('ticket.creator_id')
       .orderBy('total', 'DESC')
-      .take(pages?.limit || PaginationParams.DEFAULT_PAGE_SIZE)
-      .skip(PaginationParams.calculateOffset(pages))
+      .limit(pages?.limit || PaginationParams.DEFAULT_PAGE_SIZE)
+      .offset(PaginationParams.calculateOffset(pages))
       .getRawMany<{
         user_id: number;
         total: number;
