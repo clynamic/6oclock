@@ -1200,6 +1200,38 @@ describe('ManifestUtils', () => {
     });
 
     describe('the ids a manifest claims', () => {
+      it('collapses both ids onto the one item a manifest holds', () => {
+        const order = new Order({
+          lower: new Date('2023-01-01'),
+          upper: new Date('2023-01-31'),
+        });
+
+        const instruction = ManifestUtils.computeSaveResults(
+          {
+            type: ItemType.posts,
+            order,
+            items: [{ id: 470, updatedAt: new Date('2023-01-15') }],
+            bottom: true,
+            top: false,
+          },
+          farFuture,
+        );
+
+        const manifests = [
+          ...instruction.save,
+          ...(instruction.order.upper instanceof ManifestEntity
+            ? [instruction.order.upper]
+            : []),
+        ];
+        const holding = manifests.filter(
+          (manifest) => manifest.lowerId !== undefined,
+        );
+
+        expect(holding).toHaveLength(1);
+        expect(holding[0]!.lowerId).toBe(470);
+        expect(holding[0]!.upperId).toBe(470);
+      });
+
       it('sets no ids on a manifest for a month that held nothing, since there are none to claim', () => {
         const order = new Order({
           lower: new Date('2023-01-15'),
