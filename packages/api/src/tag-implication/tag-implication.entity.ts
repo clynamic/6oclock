@@ -1,4 +1,9 @@
-import { TagImplication, TagImplicationStatus } from 'src/api';
+import { TagImplication } from 'src/api';
+import {
+  TagRelationshipStatus,
+  convertKeysToCamelCase,
+  parseTagRelationshipStatus,
+} from 'src/common';
 import { ItemType, LabelEntity, LabelLink } from 'src/label/label.entity';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
@@ -7,6 +12,16 @@ export class TagImplicationEntity extends LabelLink {
   constructor(partial?: Partial<TagImplicationEntity>) {
     super();
     Object.assign(this, partial);
+  }
+
+  static fromTagImplication(value: TagImplication): TagImplicationEntity {
+    const { status, errorMessage } = parseTagRelationshipStatus(value.status);
+    return new TagImplicationEntity({
+      ...convertKeysToCamelCase(value),
+      status,
+      errorMessage,
+      label: new TagImplicationLabelEntity(value),
+    });
   }
 
   @PrimaryColumn({ type: 'int' })
@@ -42,8 +57,11 @@ export class TagImplicationEntity extends LabelLink {
   @Column({ type: 'text', nullable: true })
   reason: string | null;
 
-  @Column({ type: 'simple-enum', enum: TagImplicationStatus })
-  status: TagImplicationStatus;
+  @Column({ type: 'simple-enum', enum: TagRelationshipStatus })
+  status: TagRelationshipStatus;
+
+  @Column({ type: 'text', nullable: true })
+  errorMessage: string | null;
 }
 
 export class TagImplicationLabelEntity extends LabelEntity {

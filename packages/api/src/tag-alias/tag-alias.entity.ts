@@ -1,4 +1,9 @@
-import { TagAlias, TagAliasStatus } from 'src/api';
+import { TagAlias } from 'src/api';
+import {
+  TagRelationshipStatus,
+  convertKeysToCamelCase,
+  parseTagRelationshipStatus,
+} from 'src/common';
 import { ItemType, LabelEntity, LabelLink } from 'src/label/label.entity';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
@@ -7,6 +12,16 @@ export class TagAliasEntity extends LabelLink {
   constructor(partial?: Partial<TagAliasEntity>) {
     super();
     Object.assign(this, partial);
+  }
+
+  static fromTagAlias(value: TagAlias): TagAliasEntity {
+    const { status, errorMessage } = parseTagRelationshipStatus(value.status);
+    return new TagAliasEntity({
+      ...convertKeysToCamelCase(value),
+      status,
+      errorMessage,
+      label: new TagAliasLabelEntity(value),
+    });
   }
 
   @PrimaryColumn({ type: 'int' })
@@ -42,8 +57,11 @@ export class TagAliasEntity extends LabelLink {
   @Column({ type: 'text', nullable: true })
   reason: string | null;
 
-  @Column({ type: 'simple-enum', enum: TagAliasStatus })
-  status: TagAliasStatus;
+  @Column({ type: 'simple-enum', enum: TagRelationshipStatus })
+  status: TagRelationshipStatus;
+
+  @Column({ type: 'text', nullable: true })
+  errorMessage: string | null;
 }
 
 export class TagAliasLabelEntity extends LabelEntity {

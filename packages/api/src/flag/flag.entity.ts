@@ -1,4 +1,5 @@
 import { PostFlag, PostFlagType } from 'src/api';
+import { convertKeysToCamelCase } from 'src/common';
 import { ItemType, LabelEntity, LabelLink } from 'src/label/label.entity';
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
@@ -7,6 +8,18 @@ export class FlagEntity extends LabelLink {
   constructor(partial?: Partial<FlagEntity>) {
     super();
     Object.assign(this, partial);
+  }
+
+  static fromFlag(value: PostFlag): FlagEntity {
+    // flaggers are hidden from members, but not staff.
+    if (value.creator_id === undefined) {
+      throw new Error(`Flag ${value.id} has no visible creator`);
+    }
+    return new FlagEntity({
+      ...convertKeysToCamelCase(value),
+      creatorId: value.creator_id,
+      label: new FlagLabelEntity(value),
+    });
   }
 
   @PrimaryColumn({ type: 'int' })
@@ -19,6 +32,9 @@ export class FlagEntity extends LabelLink {
   @Index()
   postId: number;
 
+  /**
+   * Don't trust this shitty-ass field. It means _nothing_. Ignore it.
+   */
   @Column({ type: 'boolean' })
   isResolved: boolean;
 

@@ -19,7 +19,7 @@ import { ensureActive } from 'src/job/job.utils';
 import { ItemType } from 'src/label/label.entity';
 import { ManifestService } from 'src/manifest/manifest.service';
 
-import { FlagEntity, FlagLabelEntity } from '../flag.entity';
+import { FlagEntity } from '../flag.entity';
 import { FlagSyncService } from './flag-sync.service';
 
 @Injectable()
@@ -75,13 +75,7 @@ export class FlagSyncWorker {
         results.push(...result);
 
         const stored = await this.flagSyncService.save(
-          result.map(
-            (flag) =>
-              new FlagEntity({
-                ...convertKeysToCamelCase(flag),
-                label: new FlagLabelEntity(flag),
-              }),
-          ),
+          result.map((flag) => FlagEntity.fromFlag(flag)),
         );
 
         logOrderResult(this.logger, ItemType.flags, stored);
@@ -159,13 +153,7 @@ export class FlagSyncWorker {
         );
 
         await this.flagSyncService.save(
-          result.map(
-            (flag) =>
-              new FlagEntity({
-                ...convertKeysToCamelCase(flag),
-                label: new FlagLabelEntity(flag),
-              }),
-          ),
+          result.map((flag) => FlagEntity.fromFlag(flag)),
         );
 
         this.logger.log(`Found ${updated} updated flags`);

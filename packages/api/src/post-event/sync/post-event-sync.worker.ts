@@ -73,13 +73,18 @@ export class PostEventSyncWorker {
         results.push(...result);
 
         const stored = await this.postEventSyncService.save(
-          result.map(
-            (postEvent) =>
-              new PostEventEntity({
-                ...convertKeysToCamelCase(postEvent),
-                label: new PostEventLabelEntity(postEvent),
-              }),
-          ),
+          result.map((postEvent) => {
+            if (postEvent.creator_id === null) {
+              throw new Error(
+                `Post event ${postEvent.id} has no visible creator`,
+              );
+            }
+            return new PostEventEntity({
+              ...convertKeysToCamelCase(postEvent),
+              creatorId: postEvent.creator_id,
+              label: new PostEventLabelEntity(postEvent),
+            });
+          }),
         );
 
         logOrderResult(this.logger, ItemType.postEvents, stored);

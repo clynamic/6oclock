@@ -19,7 +19,7 @@ import { ensureActive } from 'src/job/job.utils';
 import { ItemType } from 'src/label/label.entity';
 import { ManifestService } from 'src/manifest/manifest.service';
 
-import { TagAliasEntity, TagAliasLabelEntity } from '../tag-alias.entity';
+import { TagAliasEntity } from '../tag-alias.entity';
 import { TagAliasSyncService } from './tag-alias-sync.service';
 
 @Injectable()
@@ -76,13 +76,7 @@ export class TagAliasSyncWorker {
         results.push(...result);
 
         const stored = await this.tagAliasSyncService.save(
-          result.map(
-            (alias) =>
-              new TagAliasEntity({
-                ...convertKeysToCamelCase(alias),
-                label: new TagAliasLabelEntity(alias),
-              }),
-          ),
+          result.map((alias) => TagAliasEntity.fromTagAlias(alias)),
         );
 
         logOrderResult(this.logger, this.type, stored);
@@ -161,13 +155,7 @@ export class TagAliasSyncWorker {
         );
 
         await this.tagAliasSyncService.save(
-          result.map(
-            (alias) =>
-              new TagAliasEntity({
-                ...convertKeysToCamelCase(alias),
-                label: new TagAliasLabelEntity(alias),
-              }),
-          ),
+          result.map((alias) => TagAliasEntity.fromTagAlias(alias)),
         );
 
         this.logger.log(`Found ${updated} updated tag aliases`);

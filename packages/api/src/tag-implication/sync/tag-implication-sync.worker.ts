@@ -23,10 +23,7 @@ import { ensureActive } from 'src/job/job.utils';
 import { ItemType } from 'src/label/label.entity';
 import { ManifestService } from 'src/manifest/manifest.service';
 
-import {
-  TagImplicationEntity,
-  TagImplicationLabelEntity,
-} from '../tag-implication.entity';
+import { TagImplicationEntity } from '../tag-implication.entity';
 import { TagImplicationSyncService } from './tag-implication-sync.service';
 
 @Injectable()
@@ -83,12 +80,8 @@ export class TagImplicationSyncWorker {
         results.push(...result);
 
         const stored = await this.tagImplicationSyncService.save(
-          result.map(
-            (implication) =>
-              new TagImplicationEntity({
-                ...convertKeysToCamelCase(implication),
-                label: new TagImplicationLabelEntity(implication),
-              }),
+          result.map((implication) =>
+            TagImplicationEntity.fromTagImplication(implication),
           ),
         );
 
@@ -169,12 +162,8 @@ export class TagImplicationSyncWorker {
         );
 
         await this.tagImplicationSyncService.save(
-          result.map(
-            (implication) =>
-              new TagImplicationEntity({
-                ...convertKeysToCamelCase(implication),
-                label: new TagImplicationLabelEntity(implication),
-              }),
+          result.map((implication) =>
+            TagImplicationEntity.fromTagImplication(implication),
           ),
         );
 

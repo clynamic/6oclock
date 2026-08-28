@@ -6,14 +6,13 @@ import {
   timezoneInjectorInterceptor,
 } from './date';
 import { emptyResultsErrorInterceptor } from './empty';
+import { postFormatInterceptor } from './format';
 import {
   logErrorInterceptor,
   logRequestInterceptor,
   logResponseInterceptor,
 } from './logs';
-import { miscFixInterceptors } from './misc';
 import { redactErrorInterceptor } from './redact';
-import { objectUnpackInterceptor } from './unpack';
 
 export const AXIOS_INSTANCE = Axios.create({
   baseURL: 'https://e621.net',
@@ -26,11 +25,11 @@ AXIOS_INSTANCE.interceptors.request.use(logRequestInterceptor);
 
 AXIOS_INSTANCE.interceptors.request.use(timezoneInjectorInterceptor);
 
+AXIOS_INSTANCE.interceptors.request.use(postFormatInterceptor);
+
 AXIOS_INSTANCE.interceptors.response.use(null, redactErrorInterceptor);
 
 AXIOS_INSTANCE.interceptors.response.use(dateDeserializeInterceptor);
-AXIOS_INSTANCE.interceptors.response.use(objectUnpackInterceptor);
-AXIOS_INSTANCE.interceptors.response.use(miscFixInterceptors);
 AXIOS_INSTANCE.interceptors.response.use(null, emptyResultsErrorInterceptor);
 
 AXIOS_INSTANCE.interceptors.response.use(

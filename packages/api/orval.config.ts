@@ -1,46 +1,30 @@
 import { InputTransformerFn, defineConfig } from 'orval';
 
+import { POST_FORMAT } from './src/api/http/format';
+
 interface Node {
   $ref?: string;
   items?: Node;
   oneOf?: unknown[];
   parameters?: unknown[];
-  description?: string;
   type?: string;
   properties?: Record<string, Node>;
-  components?: { schemas?: Record<string, unknown> };
+  components?: {
+    schemas?: Record<string, unknown>;
+    parameters?: Record<string, unknown>;
+  };
   [key: string]: unknown;
 }
 
 const isObject = (value: unknown): value is Node =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
-const refContainsV2 = (value: unknown): boolean =>
-  typeof value === 'string' && value.includes('PostV2');
+const refName = (value: unknown): string | undefined =>
+  typeof value === 'string' ? value.split('/').pop() : undefined;
 
-const isV2Variant = (item: unknown): boolean => {
-  if (!isObject(item)) return false;
-  if (refContainsV2(item.$ref)) return true;
-  if (isObject(item.items) && refContainsV2(item.items.$ref)) return true;
-  if (
-    typeof item.description === 'string' &&
-    /^(v2 |Unwrapped)/i.test(item.description)
-  )
-    return true;
-  return false;
-};
-
-// Unwrap a single-array-property wrapper object to match the runtime behavior
-// of objectUnpackInterceptor (`{ posts: [...] }` is returned as `[...]`).
-const unwrapSingleArrayProp = (item: unknown): unknown => {
-  if (!isObject(item) || item.type !== 'object' || !isObject(item.properties))
-    return item;
-  const keys = Object.keys(item.properties);
-  if (keys.length !== 1) return item;
-  const prop = item.properties[keys[0]!];
-  if (isObject(prop) && prop.type === 'array') return prop;
-  return item;
-};
+// Query parameters the request interceptor owns. They must not reach callers,
+// or a caller could ask for a format the response type does not describe.
+const PINNED_PARAMS = ['PostV2Flag', 'PostV2Mode'];
 
 // Promote an inline `array of $ref Foo` schema to a named component `FooList`.
 // Orval emits `unknown` for inline array schemas at response level;
@@ -56,52 +40,104 @@ const registerArrayComponent = (
     typeof item.items.$ref !== 'string'
   )
     return item;
-  const refName = item.items.$ref.split('/').pop();
-  if (!refName) return item;
-  const name = `${refName}List`;
+  const name = `${refName(item.items.$ref)}List`;
   schemas[name] ??= { type: 'array', items: { $ref: item.items.$ref } };
   return { $ref: `#/components/schemas/${name}` };
 };
 
-const ignoreV2: InputTransformerFn = (spec) => {
+// The spec documents every response format the API can return, keyed by the
+// `x-format` and `x-mode` markers on each oneOf branch. This client speaks one
+// of them, pinned by POST_FORMAT and enforced at runtime by postFormatInterceptor.
+const selectFormat: InputTransformerFn = (spec) => {
   const root = spec as unknown as Node;
   const components = (root.components ??= {});
   const schemas = (components.schemas ??= {});
 
-  const stripV2 = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(stripV2);
+  let selected = 0;
+
+  const pick = (branches: unknown[]): unknown => {
+    const marked = branches.filter(
+      (b) => isObject(b) && typeof b['x-format'] === 'string',
+    );
+    if (!marked.length) return undefined;
+    const ofFormat = marked.filter(
+      (b) => isObject(b) && b['x-format'] === POST_FORMAT.format,
+    );
+    const exact = ofFormat.find(
+      (b) => isObject(b) && b['x-mode'] === POST_FORMAT.mode,
+    );
+    const modeless = ofFormat.find((b) => isObject(b) && !('x-mode' in b));
+    return exact ?? modeless;
+  };
+
+  const walk = (node: unknown): unknown => {
+    if (Array.isArray(node)) return node.map(walk);
     if (!isObject(node)) return node;
-    if (Array.isArray(node.oneOf) && node.oneOf.some(isV2Variant)) {
-      const kept = node.oneOf
-        .filter((item) => !isV2Variant(item))
-        .map(unwrapSingleArrayProp)
-        .map(stripV2)
-        .map((item) => registerArrayComponent(schemas, item));
-      if (kept.length === 1) return kept[0];
-      node.oneOf = kept;
-      return node;
+
+    if (Array.isArray(node.oneOf)) {
+      const chosen = pick(node.oneOf);
+      if (chosen && isObject(chosen)) {
+        selected++;
+        const {
+          'x-format': _f,
+          'x-mode': _m,
+          'x-wrapper': _w,
+          ...rest
+        } = chosen;
+        return registerArrayComponent(schemas, walk(rest));
+      }
     }
+
     if (Array.isArray(node.parameters)) {
       node.parameters = node.parameters.filter(
-        (param) => !(isObject(param) && refContainsV2(param.$ref)),
+        (p) => !(isObject(p) && PINNED_PARAMS.includes(refName(p.$ref) ?? '')),
       );
     }
-    for (const key of Object.keys(node)) {
-      node[key] = stripV2(node[key]);
-    }
+
+    for (const key of Object.keys(node)) node[key] = walk(node[key]);
     return node;
   };
 
-  stripV2(root);
+  walk(root);
 
-  // Drop now-unreferenced v2 components. Orval does not auto-prune.
-  const componentsRecord = components as Record<string, unknown>;
-  for (const collectionKey of ['schemas', 'parameters']) {
-    const collection = componentsRecord[collectionKey];
-    if (!isObject(collection)) continue;
-    for (const name of Object.keys(collection)) {
-      if (name.startsWith('PostV2')) delete collection[name];
+  // Reachability decides, so a shape a non-v2 endpoint still uses survives.
+  const schemasRecord = schemas as Record<string, unknown>;
+  const reachable = new Set<string>();
+  const visit = (node: unknown): void => {
+    if (Array.isArray(node)) {
+      node.forEach(visit);
+      return;
     }
+    if (!isObject(node)) return;
+    if (typeof node.$ref === 'string') {
+      const name = refName(node.$ref);
+      if (name && !reachable.has(name)) {
+        reachable.add(name);
+        visit(schemasRecord[name]);
+      }
+    }
+    for (const [key, value] of Object.entries(node)) {
+      if (key !== '$ref') visit(value);
+    }
+  };
+  visit(root['paths']);
+
+  for (const name of Object.keys(schemasRecord)) {
+    if (!reachable.has(name)) delete schemasRecord[name];
+  }
+
+  const parameters = components.parameters;
+  if (isObject(parameters)) {
+    for (const name of Object.keys(parameters)) {
+      if (!reachable.has(name))
+        delete (parameters as Record<string, unknown>)[name];
+    }
+  }
+
+  if (selected === 0) {
+    throw new Error(
+      'no response format was selected; are the x-format markers present?',
+    );
   }
 
   return spec;
@@ -130,7 +166,7 @@ export default defineConfig({
         ],
       },
       override: {
-        transformer: ignoreV2,
+        transformer: selectFormat,
       },
     },
     output: {
@@ -143,6 +179,13 @@ export default defineConfig({
       urlEncodeParameters: true,
       prettier: true,
       override: {
+        // The default header injects info.description into all 361 files, raw
+        // and unprefixed, which is malformed inside a JSDoc block.
+        header: (info) => [
+          'Generated by orval. Do not edit manually.',
+          info.title,
+          `e621ng ${info.version}`,
+        ],
         useDates: true,
         useNativeEnums: true,
         mutator: {
