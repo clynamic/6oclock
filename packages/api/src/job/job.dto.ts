@@ -36,6 +36,16 @@ export class SchedulerInfo {
   enabled: boolean;
 }
 
+export class SchedulerState {
+  constructor(value: SchedulerState) {
+    Object.assign(this, value);
+  }
+
+  id: string;
+
+  enabled: boolean;
+}
+
 export class JobOverview {
   constructor(value: JobOverview) {
     Object.assign(this, value);

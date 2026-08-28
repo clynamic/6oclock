@@ -1,4 +1,12 @@
-import { Controller, Get, Param, Put, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -14,6 +22,7 @@ import {
   JobOverview,
   JobQuery,
   SchedulerInfo,
+  SchedulerState,
 } from './job.dto';
 import { JobService } from './job.service';
 import { JobLogService } from './log/job-log.service';
@@ -107,23 +116,19 @@ export class JobController {
     return this.jobService.listSchedulers();
   }
 
-  @Put('schedulers/:id/enable')
+  @Put('schedulers')
   @ApiOperation({
-    summary: 'Enable a job scheduler',
-    description: 'Enables a previously disabled job scheduler.',
-    operationId: 'enableJobScheduler',
+    summary: 'Enable or disable a job scheduler',
+    description:
+      'Schedules a handler on its queue, or unschedules it so it creates no ' +
+      'further jobs. Handler ids carry a slash, so the id travels in the body.',
+    operationId: 'setJobScheduler',
   })
-  async enableScheduler(@Param('id') id: string): Promise<void> {
-    await this.jobService.enableScheduler(id);
-  }
-
-  @Put('schedulers/:id/disable')
-  @ApiOperation({
-    summary: 'Disable a job scheduler',
-    description: 'Disables a job scheduler, preventing it from creating jobs.',
-    operationId: 'disableJobScheduler',
-  })
-  async disableScheduler(@Param('id') id: string): Promise<void> {
-    await this.jobService.disableScheduler(id);
+  async setScheduler(@Body() body: SchedulerState): Promise<void> {
+    if (body.enabled) {
+      await this.jobService.enableScheduler(body.id);
+    } else {
+      await this.jobService.disableScheduler(body.id);
+    }
   }
 }
