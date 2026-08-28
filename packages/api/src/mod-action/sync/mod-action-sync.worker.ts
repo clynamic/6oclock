@@ -98,8 +98,7 @@ export class ModActionSyncWorker {
         });
 
         if (exhausted) {
-          // Despite not finding any indication of this in the source code,
-          // _some_ mod actions are deleted. It is unclear why. Gaps might not indicate an error.
+          // A failed AIBUR burns a mod action id.
           logContiguityGaps(this.logger, ItemType.modActions, results);
           break;
         }
