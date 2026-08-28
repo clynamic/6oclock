@@ -26,31 +26,57 @@ const summary = (partial?: Partial<PerformanceSummary>): PerformanceSummary =>
   }) as PerformanceSummary;
 
 let written: string;
+let blobType: string;
 let downloadName: string;
+let link: { href: string; download: string; clicked: number };
+let createdUrls: string[];
+let revokedUrls: string[];
 
 beforeEach(() => {
   written = '';
+  blobType = '';
   downloadName = '';
+  createdUrls = [];
+  revokedUrls = [];
+  link = { href: '', download: '', clicked: 0 };
 
   vi.stubGlobal(
     'Blob',
     class {
-      constructor(parts: string[]) {
+      constructor(parts: string[], options?: { type?: string }) {
         written = parts.join('');
+        blobType = options?.type ?? '';
       }
     },
   );
   vi.stubGlobal('URL', {
-    createObjectURL: () => 'blob:stub',
-    revokeObjectURL: () => undefined,
+    createObjectURL: () => {
+      const url = `blob:stub-${createdUrls.length}`;
+      createdUrls.push(url);
+      return url;
+    },
+    revokeObjectURL: (url: string) => {
+      revokedUrls.push(url);
+    },
   });
   vi.stubGlobal('document', {
     createElement: () => ({
+      get href() {
+        return link.href;
+      },
+      set href(value: string) {
+        link.href = value;
+      },
+      get download() {
+        return link.download;
+      },
       set download(value: string) {
+        link.download = value;
         downloadName = value;
       },
-      href: '',
-      click: () => undefined,
+      click: () => {
+        link.clicked++;
+      },
     }),
   });
 });
@@ -92,7 +118,8 @@ describe('exportPerformanceToCSV', () => {
       range,
     );
 
-    expect(headers()).not.toContain('postDelete');
+    expect(headers()).toContain('Tickets');
+    expect(headers()).not.toContain('Deletions');
   });
 
   it('keeps an activity somebody did, even if others did none', () => {
@@ -105,7 +132,26 @@ describe('exportPerformanceToCSV', () => {
       range,
     );
 
-    expect(rowsOf()[2]).toContain('0');
+    const column = headers().indexOf('Tickets');
+
+    expect(rowsOf()[1][column]).toBe('5');
+    expect(rowsOf()[2][column]).toBe('0');
+  });
+
+  it('sorts the activity columns, so two exports line up', () => {
+    exportPerformanceToCSV(
+      [
+        summary({
+          activity: { ticketHandle: 5, postApprove: 3, postDelete: 1 },
+        } as never),
+      ],
+      'janitor',
+      range,
+    );
+
+    const columns = headers().slice(1, 4);
+
+    expect(columns).toEqual(['Approvals', 'Deletions', 'Tickets']);
   });
 
   it('names the three months before the range, in order', () => {
@@ -164,7 +210,10 @@ describe('exportPerformanceToCSV', () => {
       range,
     );
 
-    expect(rowsOf()[1].filter((cell) => cell === '').length).toBeGreaterThan(2);
+    const january = headers().indexOf('January');
+    const row = rowsOf()[1];
+
+    expect(row.slice(january, january + 3)).toEqual(['', '', '30']);
   });
 
   it('closes the row with the score, grade, symbol and number', () => {
@@ -199,6 +248,33 @@ describe('exportPerformanceToCSV', () => {
     );
 
     expect(written.split('\n')).toHaveLength(3);
+  });
+
+  describe('handing the file to the browser', () => {
+    it('actually clicks the link, since nothing downloads otherwise', () => {
+      exportPerformanceToCSV([summary()], 'janitor', range);
+
+      expect(link.clicked).toBe(1);
+    });
+
+    it('points the link at the file it just built', () => {
+      exportPerformanceToCSV([summary()], 'janitor', range);
+
+      expect(link.href).toBe(createdUrls[0]);
+      expect(createdUrls).toHaveLength(1);
+    });
+
+    it('offers it as a csv, so a spreadsheet opens it', () => {
+      exportPerformanceToCSV([summary()], 'janitor', range);
+
+      expect(blobType).toContain('text/csv');
+    });
+
+    it('releases the url afterwards rather than leaking it', () => {
+      exportPerformanceToCSV([summary()], 'janitor', range);
+
+      expect(revokedUrls).toEqual(createdUrls);
+    });
   });
 
   describe('characterised, not specified', () => {

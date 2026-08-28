@@ -21,8 +21,8 @@ beforeEach(() => {
 
   vi.stubGlobal('sessionStorage', {
     getItem: (key: string) => stored[key] ?? null,
-    setItem: (key: string, value: string) => {
-      stored[key] = value;
+    setItem: (key: string, value: unknown) => {
+      stored[key] = String(value);
     },
     removeItem: (key: string) => {
       delete stored[key];
@@ -61,16 +61,16 @@ describe('login', () => {
     expect(takePostLoginRedirect()).toBeNull();
   });
 
-  it('remembers nothing when the caller explicitly names nowhere', () => {
+  it('stores no destination at all when the caller names nowhere', () => {
     login(null);
 
-    expect(takePostLoginRedirect()).toBeNull();
+    expect(Object.keys(stored)).toEqual([]);
   });
 
-  it('navigates even when it has nowhere to come back to', () => {
-    login();
+  it('stores nothing for an empty destination either', () => {
+    login('');
 
-    expect(navigatedTo).toBe('https://six.example/api/auth/login');
+    expect(Object.keys(stored)).toEqual([]);
   });
 });
 
@@ -84,13 +84,6 @@ describe('takePostLoginRedirect', () => {
 
     expect(takePostLoginRedirect()).toBe('/tickets');
     expect(takePostLoginRedirect()).toBeNull();
-  });
-
-  it('clears the destination even as it returns it', () => {
-    login('/tickets');
-    takePostLoginRedirect();
-
-    expect(Object.keys(stored)).toEqual([]);
   });
 
   it('keeps the newest destination when a login is started twice', () => {

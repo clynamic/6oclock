@@ -26,6 +26,18 @@ describe('reading dates out of a response', () => {
     });
   });
 
+  it('turns a timestamp carrying milliseconds into a date', () => {
+    expect(deserialized({ at: '2024-03-01T12:30:00.123Z' })).toEqual({
+      at: new Date('2024-03-01T12:30:00.123Z'),
+    });
+  });
+
+  it('turns a timestamp with no zone marker into a date', () => {
+    expect(deserialized({ at: '2024-03-01T12:30:00' })).toEqual({
+      at: new Date('2024-03-01T12:30:00'),
+    });
+  });
+
   it('reaches into nested objects', () => {
     expect(deserialized({ outer: { inner: '2024-03-01' } })).toEqual({
       outer: { inner: new Date('2024-03-01') },

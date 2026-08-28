@@ -47,10 +47,13 @@ describe('createLayout', () => {
 });
 
 describe('createSimpleLayout', () => {
-  it('repeats one layout across every breakpoint', () => {
-    const layout = createSimpleLayout({ x: 0, y: 0, w: 4, h: 12 });
+  it('repeats the layout it was given across every breakpoint', () => {
+    const base = { x: 0, y: 0, w: 4, h: 12 };
+    const layout = createSimpleLayout(base);
 
-    expect(layout.xs).toEqual(layout.xl);
+    for (const breakpoint of breakpoints) {
+      expect(layout[breakpoint]).toEqual(base);
+    }
   });
 
   it('lets a single breakpoint differ from the rest', () => {
@@ -66,15 +69,6 @@ describe('createSimpleLayout', () => {
 
 describe('buildCatalogLayout', () => {
   it('stamps the catalog key on each item, so a saved position finds it again', () => {
-    const layout = buildCatalogLayout(
-      catalogOf({ 'health-jobs': { md: { x: 1, y: 2, w: 3, h: 4 } } }),
-      'md',
-    );
-
-    expect(layout[0].i).toBe('health-jobs');
-  });
-
-  it('carries the position through beside the key', () => {
     const layout = buildCatalogLayout(
       catalogOf({ 'health-jobs': { md: { x: 1, y: 2, w: 3, h: 4 } } }),
       'md',

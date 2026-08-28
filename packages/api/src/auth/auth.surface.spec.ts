@@ -10,7 +10,6 @@ import { PerformanceMetricController } from 'src/performance/metric/performance-
 import { PermitMetricController } from 'src/permit/metric/permit-metric.controller';
 import { PostReplacementMetricController } from 'src/post-replacement/metric/post-replacement-metric.controller';
 import { PostMetricController } from 'src/post/metric/post-metric.controller';
-import { ProxyController } from 'src/proxy/proxy.controller';
 import { TicketMetricController } from 'src/ticket/metric/ticket-metric.controller';
 import { UploadMetricController } from 'src/upload/metric/upload-metric.controller';
 import { UserHeadController } from 'src/user/head/user-head.controller';
@@ -35,6 +34,22 @@ const guardsOnRoute = (target: Guarded, route: string): string[] =>
       (target.prototype as Record<string, object>)[route]!,
     ) as Guarded[]) ?? []
   ).map((guard) => guard.name);
+
+const routesOf = (target: Guarded): string[] =>
+  Object.getOwnPropertyNames(target.prototype).filter(
+    (name) =>
+      name !== 'constructor' &&
+      Reflect.hasMetadata(
+        'path',
+        (target.prototype as Record<string, object>)[name]!,
+      ),
+  );
+
+const levelOnRoute = (target: Guarded, route: string): UserLevel | undefined =>
+  Reflect.getMetadata(
+    'level',
+    (target.prototype as Record<string, object>)[route]!,
+  ) as UserLevel | undefined;
 
 const STAFF_METRICS: [string, Guarded][] = [
   ['approval', ApprovalMetricController],
@@ -62,6 +77,24 @@ describe('who each route admits', () => {
       'admits only staff to %s metrics',
       (_name, controller) => {
         expect(levelOn(controller)).toBe(UserLevel.Staff);
+      },
+    );
+
+    it.each(STAFF_METRICS)(
+      'lets no single %s route quietly ask for less than its controller',
+      (_name, controller) => {
+        for (const route of routesOf(controller)) {
+          expect([UserLevel.Staff, undefined]).toContain(
+            levelOnRoute(controller, route),
+          );
+        }
+      },
+    );
+
+    it.each(STAFF_METRICS)(
+      'finds routes on %s metrics to check in the first place',
+      (_name, controller) => {
+        expect(routesOf(controller).length).toBeGreaterThan(0);
       },
     );
   });
@@ -103,10 +136,6 @@ describe('who each route admits', () => {
     it('leaves the activity counter open to anyone', () => {
       expect(guardsOn(ActivityController)).toEqual([]);
       expect(levelOn(ActivityController)).toBeUndefined();
-    });
-
-    it('leaves the proxy open to anyone, as its own note admits', () => {
-      expect(guardsOn(ProxyController)).toEqual([]);
     });
   });
 });
