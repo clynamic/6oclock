@@ -120,6 +120,43 @@ describe('DashboardService', () => {
     });
   });
 
+  describe('keeping a cached dashboard honest', () => {
+    it('serves a repeat read from cache rather than asking again', async () => {
+      findOne.mockResolvedValue({ userId: 500, version: 1 });
+
+      await service.get(500, DashboardType.janitor);
+      await service.get(500, DashboardType.janitor);
+
+      expect(findOne).toHaveBeenCalledTimes(1);
+    });
+
+    it('drops the cached copy when the dashboard is saved', async () => {
+      findOne.mockResolvedValue({ userId: 500, version: 1 });
+      await service.get(500, DashboardType.janitor);
+
+      await service.update(
+        500,
+        DashboardType.janitor,
+        new DashboardUpdate({ version: 2 }),
+      );
+      findOne.mockResolvedValue({ userId: 500, version: 2 });
+      const after = await service.get(500, DashboardType.janitor);
+
+      expect(after!.version).toBe(2);
+    });
+
+    it('drops the cached copy when the dashboard is deleted', async () => {
+      findOne.mockResolvedValue({ userId: 500, version: 1 });
+      await service.get(500, DashboardType.janitor);
+
+      await service.delete(500, DashboardType.janitor);
+      findOne.mockClear().mockResolvedValue(null);
+      await service.get(500, DashboardType.janitor);
+
+      expect(findOne).toHaveBeenCalled();
+    });
+  });
+
   describe('deleting a dashboard', () => {
     it('removes the one it found', async () => {
       const stored = { userId: 500, type: DashboardType.janitor };

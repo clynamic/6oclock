@@ -132,4 +132,13 @@ describe('FlagLifecycleService', () => {
 
     expect(clear).toHaveBeenCalled();
   });
+
+  it('evicts what it wrote from the cache, so a reader sees the new episodes', async () => {
+    const inv = jest.spyOn(CacheManager.prototype, 'inv');
+
+    await service.upsertEpisodes([episode()]);
+
+    expect(inv).toHaveBeenCalledWith(FlagLifecycleEntity);
+    inv.mockRestore();
+  });
 });

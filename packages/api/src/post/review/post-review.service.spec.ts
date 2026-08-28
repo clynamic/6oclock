@@ -114,4 +114,13 @@ describe('PostReviewService', () => {
 
     expect(clear).toHaveBeenCalled();
   });
+
+  it('evicts what it wrote from the cache, so a reader sees the new spells', async () => {
+    const inv = jest.spyOn(CacheManager.prototype, 'inv');
+
+    await service.upsertEpisodes([spell()]);
+
+    expect(inv).toHaveBeenCalledWith(PostReviewEpisodeEntity);
+    inv.mockRestore();
+  });
 });

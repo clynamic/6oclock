@@ -130,4 +130,22 @@ describe('TicketLifecycleService', () => {
 
     expect(clear).toHaveBeenCalled();
   });
+
+  it('evicts what it wrote from the cache, so a reader sees the new lives', async () => {
+    const inv = jest.spyOn(CacheManager.prototype, 'inv');
+
+    await service.upsertLives([life()]);
+
+    expect(inv).toHaveBeenCalledWith(TicketLifecycleEntity);
+    inv.mockRestore();
+  });
+
+  it('evicts on a wipe too, since an empty table is also a change', async () => {
+    const inv = jest.spyOn(CacheManager.prototype, 'inv');
+
+    await service.wipe();
+
+    expect(inv).toHaveBeenCalledWith(TicketLifecycleEntity);
+    inv.mockRestore();
+  });
 });

@@ -232,6 +232,17 @@ describe('UploadTilesService', () => {
         ['time'],
       ]);
     });
+
+    it('evicts the cached tiles it just rewrote', async () => {
+      const inv = jest.spyOn(CacheManager.prototype, 'inv');
+
+      await service.upsert([
+        new UploadTilesEntity({ time: at('2024-03-01T00:00:00Z'), count: 1 }),
+      ]);
+
+      expect(inv).toHaveBeenCalledWith(UploadTilesEntity);
+      inv.mockRestore();
+    });
   });
 
   describe('wiping tiles', () => {
