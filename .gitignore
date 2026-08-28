@@ -54,3 +54,5 @@ compose.override.yml
 
 # data
 /data
+.stryker-tmp
+reports
