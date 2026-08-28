@@ -17,6 +17,7 @@ import { PostEventEntity } from 'src/post-event/post-event.entity';
 import { PostReplacementEntity } from 'src/post-replacement/post-replacement.entity';
 import { PostVersionEntity } from 'src/post-version/post-version.entity';
 import { TicketEntity } from 'src/ticket/ticket.entity';
+import { SystemUserService } from 'src/user/system/system-user.service';
 import { UserEntity } from 'src/user/user.entity';
 import { IsNull, Not, Repository } from 'typeorm';
 
@@ -50,6 +51,7 @@ export class PerformanceMetricService {
     private readonly postEventRepository: Repository<PostEventEntity>,
     @InjectRepository(FlagLifecycleEntity)
     private readonly flagLifecycleRepository: Repository<FlagLifecycleEntity>,
+    private readonly systemUser: SystemUserService,
   ) {}
 
   private async findActivities(
@@ -59,16 +61,18 @@ export class PerformanceMetricService {
   ): Promise<Record<number, Partial<Record<Activity, Date[]>>>> {
     const items: Record<number, Partial<Record<Activity, Date[]>>> = {};
 
-    const storeItem = (key: Activity, userId: number, date: Date) => {
-      if (!items[userId]) {
-        items[userId] = {};
+    const storeItem = (key: Activity, actorId: number, date: Date) => {
+      if (userId === undefined && this.systemUser.isSystem(actorId)) return;
+
+      if (!items[actorId]) {
+        items[actorId] = {};
       }
 
-      if (!items[userId]![key]) {
-        items[userId]![key] = [];
+      if (!items[actorId]![key]) {
+        items[actorId]![key] = [];
       }
 
-      items[userId]![key].push(date);
+      items[actorId]![key].push(date);
     };
 
     const tasks: Promise<void>[] = [];
@@ -397,19 +401,6 @@ export class PerformanceMetricService {
         ).size,
       ]),
     );
-
-    const automod = await this.userRepository
-      .findOne({
-        where: {
-          name: 'auto_moderator',
-        },
-        select: ['id'],
-      })
-      .then((user) => user?.id);
-
-    if (automod) {
-      scores.forEach((score) => delete score[automod!]);
-    }
 
     const averageScores = scores.map((score) => {
       const values = Object.values(score);

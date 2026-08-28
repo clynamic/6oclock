@@ -6,6 +6,7 @@ import { PostReplacementEntity } from 'src/post-replacement/post-replacement.ent
 import { PostVersionEntity } from 'src/post-version/post-version.entity';
 import { TicketEntity } from 'src/ticket/ticket.entity';
 import { UserHeadModule } from 'src/user/head/user-head.module';
+import { SystemUserModule } from 'src/user/system/system-user.module';
 import { UserEntity } from 'src/user/user.entity';
 
 import { PerformanceMetricController } from './performance-metric.controller';
@@ -22,6 +23,7 @@ import { PerformanceMetricService } from './performance-metric.service';
       FlagLifecycleEntity,
     ]),
     UserHeadModule,
+    SystemUserModule,
   ],
   controllers: [PerformanceMetricController],
   providers: [PerformanceMetricService],

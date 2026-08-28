@@ -11,6 +11,7 @@ import {
   generateSeriesCountPoints,
 } from 'src/common';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
+import { SystemUserService } from 'src/user/system/system-user.service';
 import { In, Repository } from 'typeorm';
 
 import {
@@ -24,6 +25,7 @@ export class ApprovalMetricService {
   constructor(
     @InjectRepository(PostEventEntity)
     private readonly postEventRepository: Repository<PostEventEntity>,
+    private readonly systemUser: SystemUserService,
   ) {}
 
   @Cacheable({
@@ -152,6 +154,9 @@ export class ApprovalMetricService {
       )
       .where('latest_event.action = :approvedAction', {
         approvedAction: PostEventAction.approved,
+      })
+      .andWhere('latest_event.creator_id != :systemUserId', {
+        systemUserId: this.systemUser.id,
       })
       .groupBy('latest_event.creator_id')
       .orderBy('total', 'DESC')

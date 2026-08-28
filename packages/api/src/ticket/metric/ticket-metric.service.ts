@@ -14,6 +14,7 @@ import {
   generateSeriesCountPoints,
   generateSeriesRecordPoints,
 } from 'src/common';
+import { SystemUserService } from 'src/user/system/system-user.service';
 import { UserEntity } from 'src/user/user.entity';
 import { FindOptionsWhere, LessThan, MoreThan, Not, Repository } from 'typeorm';
 
@@ -36,6 +37,7 @@ export class TicketMetricService {
   constructor(
     @InjectRepository(TicketEntity)
     private readonly ticketRepository: Repository<TicketEntity>,
+    private readonly systemUser: SystemUserService,
   ) {}
 
   private whereCreatedOrUpdated(
@@ -350,6 +352,9 @@ export class TicketMetricService {
       .where({
         createdAt: DateRange.fill(range).find(),
         handlerId: Not(0),
+      })
+      .andWhere('ticket.handler_id != :systemUserId', {
+        systemUserId: this.systemUser.id,
       })
       .select('ticket.handler_id', 'user_id')
       .addSelect('COUNT(ticket.id)', 'total')
