@@ -7,11 +7,13 @@ import { JobHandler } from 'src/job/job.decorator';
 import { ensureActive } from 'src/job/job.utils';
 import { ItemType } from 'src/label/label.entity';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
+import { ManifestStampService } from 'src/manifest/stamps/manifest-stamp.service';
 import { PermitEntity } from 'src/permit/permit.entity';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
 import { PostVersionEntity } from 'src/post-version/post-version.entity';
 import { In, Repository } from 'typeorm';
 
+import { PostReviewEpisodeEntity } from './post-review.entity';
 import { PostReviewService } from './post-review.service';
 import {
   PostReviewEvent,
@@ -28,6 +30,7 @@ const REVIEW_ACTIONS = [
 export class PostReviewWorker {
   constructor(
     private readonly reviewService: PostReviewService,
+    private readonly stampService: ManifestStampService,
     @InjectRepository(ManifestEntity)
     private readonly manifestRepository: Repository<ManifestEntity>,
     @InjectRepository(PostEventEntity)
@@ -39,8 +42,6 @@ export class PostReviewWorker {
   ) {}
 
   private readonly logger = new Logger(PostReviewWorker.name);
-  // TODO: Persist this across restarts
-  private lastProcessedTime: Date | null = null;
 
   @JobHandler({
     id: 'postReview/episodes',
@@ -57,6 +58,13 @@ export class PostReviewWorker {
       where: types.map((type) => ({ type })),
     });
 
+    const pending = await this.stampService.pending(
+      PostReviewEpisodeEntity,
+      manifests,
+    );
+
+    if (pending.length === 0) return;
+
     const ranges = getTilingRanges(
       manifests.map((manifest) => ({
         dateRange: new DateRange({
@@ -67,11 +75,12 @@ export class PostReviewWorker {
         type: manifest.type,
       })),
       types,
-    ).filter(
-      (range) =>
-        !this.lastProcessedTime ||
-        !range.updatedAt ||
-        range.updatedAt > this.lastProcessedTime,
+    ).filter((range) =>
+      pending.some(
+        (manifest) =>
+          manifest.startDate < range.dateRange.endDate &&
+          manifest.endDate > range.dateRange.startDate,
+      ),
     );
 
     if (ranges.length === 0) return;
@@ -107,7 +116,10 @@ export class PostReviewWorker {
       }
     }
 
-    this.lastProcessedTime = new Date();
+    await this.stampService.stamp(
+      PostReviewEpisodeEntity,
+      pending.map((manifest) => manifest.id),
+    );
   }
 
   private async uploadedPostIds(range: DateRange): Promise<number[]> {

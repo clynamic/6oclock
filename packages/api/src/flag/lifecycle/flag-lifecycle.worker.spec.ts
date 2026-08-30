@@ -3,6 +3,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { PostEventAction } from 'src/api';
 import { Job } from 'src/job/job.constants';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
+import { ManifestStampService } from 'src/manifest/stamps/manifest-stamp.service';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
 
 import { FlagHandling } from './flag-lifecycle.entity';
@@ -50,10 +51,20 @@ describe('FlagLifecycleWorker', () => {
         FlagLifecycleWorker,
         { provide: FlagLifecycleService, useValue: { upsertEpisodes } },
         {
+          provide: ManifestStampService,
+          useValue: {
+            pending: jest
+              .fn()
+              .mockImplementation((_target, manifests) => manifests),
+            stamp: jest.fn().mockResolvedValue(undefined),
+          },
+        },
+        {
           provide: getRepositoryToken(ManifestEntity),
           useValue: {
             find: jest.fn().mockResolvedValue([
               {
+                id: 1,
                 startDate: at('2024-01-01T00:00:00Z'),
                 endDate: at('2024-01-02T00:00:00Z'),
               },

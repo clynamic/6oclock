@@ -12,6 +12,7 @@ import { HealthModule } from 'src/health/health.module';
 import { JobModule } from 'src/job/job.module';
 import { LabelModule } from 'src/label/label.module';
 import { ManifestModule } from 'src/manifest/manifest.module';
+import { ManifestStampModule } from 'src/manifest/stamps/manifest-stamp.module';
 import { ModActionModule } from 'src/mod-action/mod-action.module';
 import { PerformanceModule } from 'src/performance/performance.module';
 import { PermitModule } from 'src/permit/permit.module';
@@ -48,6 +49,7 @@ import { StaticModule } from './static.module';
     DashboardModule,
     LabelModule,
     ManifestModule,
+    ManifestStampModule,
     GadgetModule,
     PerformanceModule,
     ApprovalModule,

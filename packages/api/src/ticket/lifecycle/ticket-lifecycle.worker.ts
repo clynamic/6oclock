@@ -7,10 +7,12 @@ import { JobHandler } from 'src/job/job.decorator';
 import { ensureActive } from 'src/job/job.utils';
 import { ItemType } from 'src/label/label.entity';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
+import { ManifestStampService } from 'src/manifest/stamps/manifest-stamp.service';
 import { ModActionEntity } from 'src/mod-action/mod-action.entity';
-import { MoreThan, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { TicketEntity } from '../ticket.entity';
+import { TicketLifecycleEntity } from './ticket-lifecycle.entity';
 import { TicketLifecycleService } from './ticket-lifecycle.service';
 import { TicketEvent, reconstructTicketLives } from './ticket-lifecycle.utils';
 
@@ -18,6 +20,7 @@ import { TicketEvent, reconstructTicketLives } from './ticket-lifecycle.utils';
 export class TicketLifecycleWorker {
   constructor(
     private readonly lifecycleService: TicketLifecycleService,
+    private readonly stampService: ManifestStampService,
     @InjectRepository(ManifestEntity)
     private readonly manifestRepository: Repository<ManifestEntity>,
     @InjectRepository(ModActionEntity)
@@ -27,8 +30,6 @@ export class TicketLifecycleWorker {
   ) {}
 
   private readonly logger = new Logger(TicketLifecycleWorker.name);
-  // TODO: Persist this across restarts
-  private lastProcessedTime: Date | null = null;
 
   @JobHandler({
     id: 'ticketLifecycle/tickets',
@@ -39,14 +40,12 @@ export class TicketLifecycleWorker {
     timeout: 1000 * 60 * 5,
   })
   async runSync(job: Job) {
-    const manifests = await this.manifestRepository.find({
-      where: {
-        type: ItemType.tickets,
-        ...(this.lastProcessedTime && {
-          updatedAt: MoreThan(this.lastProcessedTime),
-        }),
-      },
-    });
+    const manifests = await this.stampService.pending(
+      TicketLifecycleEntity,
+      await this.manifestRepository.find({
+        where: { type: ItemType.tickets },
+      }),
+    );
 
     if (manifests.length === 0) return;
 
@@ -107,8 +106,8 @@ export class TicketLifecycleWorker {
 
         await this.lifecycleService.upsertLives(lives);
       }
-    }
 
-    this.lastProcessedTime = new Date();
+      await this.stampService.stamp(TicketLifecycleEntity, [manifest.id]);
+    }
   }
 }

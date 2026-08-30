@@ -7,10 +7,11 @@ import { JobHandler } from 'src/job/job.decorator';
 import { ensureActive } from 'src/job/job.utils';
 import { ItemType } from 'src/label/label.entity';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
+import { ManifestStampService } from 'src/manifest/stamps/manifest-stamp.service';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
-import { MoreThan, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
-import { FlagHandling } from './flag-lifecycle.entity';
+import { FlagHandling, FlagLifecycleEntity } from './flag-lifecycle.entity';
 import {
   FlagEpisodeData,
   FlagLifecycleService,
@@ -27,6 +28,7 @@ interface FlagEvent {
 export class FlagLifecycleWorker {
   constructor(
     private readonly lifecycleService: FlagLifecycleService,
+    private readonly stampService: ManifestStampService,
     @InjectRepository(ManifestEntity)
     private readonly manifestRepository: Repository<ManifestEntity>,
     @InjectRepository(PostEventEntity)
@@ -34,8 +36,6 @@ export class FlagLifecycleWorker {
   ) {}
 
   private readonly logger = new Logger(FlagLifecycleWorker.name);
-  // TODO: Persist this across restarts
-  private lastProcessedTime: Date | null = null;
 
   @JobHandler({
     id: 'flagLifecycle/postEvents',
@@ -45,14 +45,12 @@ export class FlagLifecycleWorker {
     timeout: 1000 * 60 * 5,
   })
   async runSync(job: Job) {
-    const manifests = await this.manifestRepository.find({
-      where: {
-        type: ItemType.postEvents,
-        ...(this.lastProcessedTime && {
-          updatedAt: MoreThan(this.lastProcessedTime),
-        }),
-      },
-    });
+    const manifests = await this.stampService.pending(
+      FlagLifecycleEntity,
+      await this.manifestRepository.find({
+        where: { type: ItemType.postEvents },
+      }),
+    );
 
     if (manifests.length === 0) return;
 
@@ -103,9 +101,9 @@ export class FlagLifecycleWorker {
 
         await this.lifecycleService.upsertEpisodes(episodes);
       }
-    }
 
-    this.lastProcessedTime = new Date();
+      await this.stampService.stamp(FlagLifecycleEntity, [manifest.id]);
+    }
   }
 
   /**
