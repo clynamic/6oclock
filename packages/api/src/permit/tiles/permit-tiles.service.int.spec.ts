@@ -12,6 +12,7 @@ import { PostEventAction } from 'src/api';
 import { PostRating } from 'src/api/e621';
 import { CacheManager } from 'src/app/browser.module';
 import { AppConfigKeys } from 'src/app/config.module';
+import { DateRange, TimeScale } from 'src/common';
 import { ItemType, LabelEntity } from 'src/label/label.entity';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
@@ -196,10 +197,21 @@ describe('PermitTilesService against Postgres', () => {
       await expect(permittedIds()).resolves.toEqual([]);
     });
 
-    it('refuses an upload somebody unapproved', async () => {
-      const when = hoursAgo(2);
+    it('takes an upload somebody unapproved, since surviving the window means it left the queue again', async () => {
+      const when = daysAgo(REVIEW_PERIOD_DAYS + 1);
       await upload(13, when);
-      await event(13, PostEventAction.unapproved, hoursAgo(1));
+      await event(13, PostEventAction.unapproved, daysAgo(REVIEW_PERIOD_DAYS));
+
+      await service.derive([when]);
+
+      await expect(permittedIds()).resolves.toEqual([13]);
+    });
+
+    it('refuses an upload somebody approved after unapproving it', async () => {
+      const when = daysAgo(REVIEW_PERIOD_DAYS + 1);
+      await upload(15, when);
+      await event(15, PostEventAction.unapproved, daysAgo(REVIEW_PERIOD_DAYS));
+      await event(15, PostEventAction.approved, daysAgo(1));
 
       await service.derive([when]);
 
@@ -227,6 +239,19 @@ describe('PermitTilesService against Postgres', () => {
       await service.derive([when]);
 
       await expect(permittedIds()).resolves.toEqual([]);
+    });
+  });
+
+  describe('the two exits a permit cannot tell apart', () => {
+    it('takes the upload that never needed approving and the one approved without a trace alike', async () => {
+      const when = daysAgo(REVIEW_PERIOD_DAYS + 1);
+      await upload(31, when);
+      await upload(32, when);
+      await event(32, PostEventAction.unapproved, daysAgo(REVIEW_PERIOD_DAYS));
+
+      await service.derive([when]);
+
+      await expect(permittedIds()).resolves.toEqual([31, 32]);
     });
   });
 
@@ -300,6 +325,66 @@ describe('PermitTilesService against Postgres', () => {
       const updated = await service.updatedAt([manifest]);
 
       expect(updated.size).toBe(0);
+    });
+  });
+
+  describe('an hour that matured after its tile was written', () => {
+    const tile = (time: Date, updatedAt: Date): Promise<unknown> =>
+      source.query(
+        'INSERT INTO permit_hourly_tiles (time, updated_at, count) VALUES ($1, $2, 0)',
+        [time, updatedAt],
+      );
+
+    const oneHourFrom = (time: Date): DateRange =>
+      new DateRange({
+        startDate: time,
+        endDate: new Date(time.getTime() + 60 * 60 * 1000),
+        scale: TimeScale.Hour,
+      });
+
+    it('comes back once, since it was counted before its posts were decidable', async () => {
+      const time = daysAgo(REVIEW_PERIOD_DAYS + 1);
+      await tile(time, time);
+
+      const missing = await service.findMissing({
+        dateRange: oneHourFrom(time),
+      });
+
+      expect(missing).toEqual([time]);
+    });
+
+    it('stays away once its tile was written after it matured', async () => {
+      const time = daysAgo(REVIEW_PERIOD_DAYS + 1);
+      await tile(time, hoursAgo(1));
+
+      const missing = await service.findMissing({
+        dateRange: oneHourFrom(time),
+      });
+
+      expect(missing).toEqual([]);
+    });
+
+    it('waits while it is still too young to decide', async () => {
+      const time = hoursAgo(2);
+      await tile(time, time);
+
+      const missing = await service.findMissing({
+        dateRange: oneHourFrom(time),
+      });
+
+      expect(missing).toEqual([]);
+    });
+
+    it('comes back only once, since the pass that answers it moves the tile past maturity', async () => {
+      const time = daysAgo(REVIEW_PERIOD_DAYS + 1);
+      await tile(time, time);
+
+      await service.derive([time]);
+      const missing = await service.findMissing({
+        dateRange: oneHourFrom(time),
+      });
+
+      expect(missing).toEqual([]);
     });
   });
 });

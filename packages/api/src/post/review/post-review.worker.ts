@@ -111,7 +111,7 @@ export class PostReviewWorker {
           range: { start: chunk.startDate, end: chunk.endDate },
         });
 
-        await this.reviewService.upsertEpisodes(episodes);
+        await this.reviewService.syncEpisodes(postIds, episodes);
       }
     }
 

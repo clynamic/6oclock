@@ -49,7 +49,7 @@ describe('PostReviewWorker', () => {
         PostReviewWorker,
         {
           provide: PostReviewService,
-          useValue: { upsertEpisodes: jest.fn().mockResolvedValue(undefined) },
+          useValue: { syncEpisodes: jest.fn().mockResolvedValue(undefined) },
         },
         {
           provide: ManifestStampService,

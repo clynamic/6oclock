@@ -59,11 +59,13 @@ export class PermitTilesService implements TileService {
   }
 
   async findMissing(range: TilingRange): Promise<Date[]> {
+    const tableName = this.tileRepository.metadata.tableName;
+
     const stale: { time: Date }[] = await this.tileRepository.query(
       `
       SELECT date_trunc('hour', permit.created_at) AS time
       FROM permits permit
-      LEFT JOIN ${this.tileRepository.metadata.tableName} tile
+      LEFT JOIN ${tableName} tile
         ON tile.time = date_trunc('hour', permit.created_at)
       WHERE permit.created_at >= $1 AND permit.created_at < $2
       GROUP BY 1, tile.updated_at
@@ -72,15 +74,30 @@ export class PermitTilesService implements TileService {
       [range.dateRange.startDate, range.dateRange.endDate],
     );
 
+    const immature: { time: Date }[] = await this.tileRepository.query(
+      `
+      SELECT tile.time AS time
+      FROM ${tableName} tile
+      WHERE tile.time >= $1 AND tile.time < $2
+        AND tile.updated_at < tile.time + $3::interval
+        AND now() >= tile.time + $3::interval
+      `,
+      [range.dateRange.startDate, range.dateRange.endDate, this.reviewPeriod],
+    );
+
     const times = new Map<number, Date>();
+    const add = (time: Date): void => {
+      times.set(time.getTime(), time);
+    };
+
     for (const time of await findMissingOrStaleTiles(
       this.tileRepository,
       range,
     )) {
-      times.set(time.getTime(), time);
+      add(time);
     }
-    for (const row of stale) {
-      times.set(new Date(row.time).getTime(), new Date(row.time));
+    for (const row of [...stale, ...immature]) {
+      add(new Date(row.time));
     }
 
     return [...times.values()].sort((a, b) => a.getTime() - b.getTime());
@@ -117,15 +134,15 @@ export class PermitTilesService implements TileService {
       )
       AND NOT EXISTS (
         SELECT 1 FROM post_events e
-        WHERE e.post_id = pv.post_id AND e.action IN ($3, $4)
+        WHERE e.post_id = pv.post_id AND e.action = $3
       )
       AND NOT EXISTS (
         SELECT 1 FROM post_events e
         WHERE e.post_id = pv.post_id
-          AND e.action = $5
+          AND e.action = $4
           AND e.created_at < pv.updated_at + $2::interval
       )
-      AND pv.post_id <> ALL($6::int[])
+      AND pv.post_id <> ALL($5::int[])
   `;
 
   private undecidedParams(pending: number[], capturedAt: Date): unknown[] {
@@ -133,7 +150,6 @@ export class PermitTilesService implements TileService {
       capturedAt,
       this.reviewPeriod,
       PostEventAction.approved,
-      PostEventAction.unapproved,
       PostEventAction.deleted,
       pending,
     ];
@@ -150,8 +166,8 @@ export class PermitTilesService implements TileService {
         `
         SELECT pv.post_id AS id, pv.updater_id AS uploader_id, pv.updated_at AS created_at
         ${this.undecidedFrom}
-          AND pv.updated_at >= $7
-          AND pv.updated_at < $8
+          AND pv.updated_at >= $6
+          AND pv.updated_at < $7
         `,
         [
           ...this.undecidedParams(pending, capturedAt),
@@ -203,21 +219,20 @@ export class PermitTilesService implements TileService {
           AND pv.updated_at < $2
           AND NOT EXISTS (
             SELECT 1 FROM post_events e
-            WHERE e.post_id = pv.post_id AND e.action IN ($3, $4)
+            WHERE e.post_id = pv.post_id AND e.action = $3
           )
           AND NOT EXISTS (
             SELECT 1 FROM post_events e
             WHERE e.post_id = pv.post_id
-              AND e.action = $5
-              AND e.created_at < pv.updated_at + $6::interval
+              AND e.action = $4
+              AND e.created_at < pv.updated_at + $5::interval
           )
-          AND pv.updated_at < now() - $6::interval
+          AND pv.updated_at < now() - $5::interval
         `,
         [
           range.startDate,
           range.endDate,
           PostEventAction.approved,
-          PostEventAction.unapproved,
           PostEventAction.deleted,
           this.reviewPeriod,
         ],
