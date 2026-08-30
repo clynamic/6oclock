@@ -10,11 +10,11 @@ export class JobLogEntity {
   id: string;
 
   @Column({ type: 'uuid' })
-  @Index()
+  @Index('IDX_job_logs_job_id')
   jobId: string;
 
   @Column({ type: 'timestamptz' })
-  @Index()
+  @Index('IDX_job_logs_at')
   at: Date;
 
   @Column({ type: 'text' })
