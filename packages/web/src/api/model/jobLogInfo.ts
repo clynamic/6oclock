@@ -5,11 +5,12 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
+import type { JobLogInfoRecord } from './jobLogInfoRecord';
 
-export interface SchedulerInfo {
+export interface JobLogInfo {
   id: string;
-  description: string;
-  queue: string;
-  pattern: string;
-  enabled: boolean;
+  at: Date;
+  level: string;
+  context?: string;
+  record: JobLogInfoRecord;
 }

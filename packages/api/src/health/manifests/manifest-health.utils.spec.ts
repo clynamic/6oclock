@@ -1,151 +1,120 @@
-import { generateManifestSlices } from './manifest-health.utils';
+import { DateRange } from 'src/common';
+import { ManifestEntity } from 'src/manifest/manifest.entity';
 
-const ids = (...values: number[]): { id: number }[] =>
-  values.map((id) => ({ id }));
+import { readManifestCoverage } from './manifest-health.utils';
 
-const shape = (
-  slices: ReturnType<typeof generateManifestSlices>,
-): { available: number; unavailable: number; none: number }[] =>
-  slices.map(({ available, unavailable, none }) => ({
-    available,
-    unavailable,
-    none,
-  }));
+const at = (value: string): Date => new Date(value);
 
-describe('generateManifestSlices', () => {
-  it('always draws a multiple of the base count', () => {
-    expect(
-      generateManifestSlices({ allIds: [], lowerId: 1, upperId: 30 }),
-    ).toHaveLength(30);
+const claiming = (startDate: string, endDate: string): ManifestEntity =>
+  ({ startDate: at(startDate), endDate: at(endDate) }) as ManifestEntity;
+
+const reaching = (startDate: string, endDate: string): DateRange =>
+  new DateRange({ startDate: at(startDate), endDate: at(endDate) });
+
+describe('reading what a type covers', () => {
+  it('counts every manifest as a part, even where two claim one stretch', () => {
+    const coverage = readManifestCoverage(
+      [
+        claiming('2024-03-01T00:00:00Z', '2024-03-10T00:00:00Z'),
+        claiming('2024-03-05T00:00:00Z', '2024-03-15T00:00:00Z'),
+      ],
+      reaching('2024-03-01T00:00:00Z', '2024-03-15T00:00:00Z'),
+    );
+
+    expect(coverage.parts).toBe(2);
   });
 
-  it('grows the slice count in whole base counts as the range grows', () => {
-    expect(
-      generateManifestSlices({
-        allIds: [],
-        lowerId: 1,
-        upperId: 400000,
-        maxSize: 10000,
-      }),
-    ).toHaveLength(60);
+  it('joins overlapping claims, so the stretch between them is not a hole', () => {
+    const coverage = readManifestCoverage(
+      [
+        claiming('2024-03-01T00:00:00Z', '2024-03-10T00:00:00Z'),
+        claiming('2024-03-05T00:00:00Z', '2024-03-15T00:00:00Z'),
+      ],
+      reaching('2024-03-01T00:00:00Z', '2024-03-15T00:00:00Z'),
+    );
+
+    expect(coverage.covered).toBe(14);
   });
 
-  it('reports every id as available when none is missing', () => {
-    const slices = generateManifestSlices({
-      allIds: ids(1, 2, 3, 4, 5, 6),
-      lowerId: 1,
-      upperId: 6,
-      baseCount: 3,
-      maxSize: 10000,
-    });
+  it('leaves an unclaimed stretch out of the days covered', () => {
+    const coverage = readManifestCoverage(
+      [
+        claiming('2024-03-01T00:00:00Z', '2024-03-05T00:00:00Z'),
+        claiming('2024-03-10T00:00:00Z', '2024-03-15T00:00:00Z'),
+      ],
+      reaching('2024-03-01T00:00:00Z', '2024-03-15T00:00:00Z'),
+    );
 
-    expect(shape(slices)).toEqual([
-      { available: 2, unavailable: 0, none: 0 },
-      { available: 2, unavailable: 0, none: 0 },
-      { available: 2, unavailable: 0, none: 0 },
-    ]);
+    expect(coverage.covered).toBe(9);
   });
 
-  it('reports a gap inside the covered span as unavailable', () => {
-    const slices = generateManifestSlices({
-      allIds: ids(1, 2, 5, 6),
-      lowerId: 1,
-      upperId: 6,
-      baseCount: 3,
-      maxSize: 10000,
-    });
+  it('reports the outer edges of what the claims reach', () => {
+    const coverage = readManifestCoverage(
+      [
+        claiming('2024-03-10T00:00:00Z', '2024-03-15T00:00:00Z'),
+        claiming('2024-03-01T00:00:00Z', '2024-03-05T00:00:00Z'),
+      ],
+      reaching('2024-03-01T00:00:00Z', '2024-03-15T00:00:00Z'),
+    );
 
-    expect(shape(slices)).toEqual([
-      { available: 2, unavailable: 0, none: 0 },
-      { available: 0, unavailable: 2, none: 0 },
-      { available: 2, unavailable: 0, none: 0 },
-    ]);
+    expect(coverage.startDate).toEqual(at('2024-03-01T00:00:00Z'));
+    expect(coverage.endDate).toEqual(at('2024-03-15T00:00:00Z'));
   });
 
-  it('reports an entirely empty range as unavailable throughout', () => {
-    const slices = generateManifestSlices({
-      allIds: [],
-      lowerId: 1,
-      upperId: 6,
-      baseCount: 3,
-      maxSize: 10000,
-    });
+  it('owes nothing anywhere when one claim covers the whole reach', () => {
+    const coverage = readManifestCoverage(
+      [claiming('2024-03-01T00:00:00Z', '2024-03-15T00:00:00Z')],
+      reaching('2024-03-01T00:00:00Z', '2024-03-15T00:00:00Z'),
+    );
 
-    expect(shape(slices)).toEqual([
-      { available: 0, unavailable: 2, none: 0 },
-      { available: 0, unavailable: 2, none: 0 },
-      { available: 0, unavailable: 2, none: 0 },
-    ]);
+    expect(coverage.slices.every((slice) => slice.unavailable === 0)).toBe(
+      true,
+    );
   });
 
-  it('runs the slices end to end from the lower id to the upper one', () => {
-    const slices = generateManifestSlices({
-      allIds: [],
-      lowerId: 100,
-      upperId: 129,
-      baseCount: 3,
-      maxSize: 10000,
-    });
+  it('still owes nothing when the reach divides into uneven marks', () => {
+    const coverage = readManifestCoverage(
+      [claiming('2024-03-01T00:00:07Z', '2024-04-11T13:41:23Z')],
+      reaching('2024-03-01T00:00:07Z', '2024-04-11T13:41:23Z'),
+    );
 
-    expect(slices[0]!.startId).toBe(100);
-    expect(slices[slices.length - 1]!.endId).toBe(129);
-    slices.slice(1).forEach((slice, index) => {
-      expect(slice.startId).toBe(slices[index]!.endId + 1);
-    });
+    expect(coverage.slices.every((slice) => slice.unavailable === 0)).toBe(
+      true,
+    );
   });
 
-  it('counts each id once across the whole range', () => {
-    const slices = generateManifestSlices({
-      allIds: ids(1, 3, 5, 7, 9),
-      lowerId: 1,
-      upperId: 9,
-      baseCount: 3,
-      maxSize: 10000,
-    });
+  it('owes the whole of a mark that no claim reaches', () => {
+    const coverage = readManifestCoverage(
+      [claiming('2024-03-01T00:00:00Z', '2024-03-08T00:00:00Z')],
+      reaching('2024-03-01T00:00:00Z', '2024-03-15T00:00:00Z'),
+    );
 
-    expect(slices.reduce((sum, slice) => sum + slice.available, 0)).toBe(5);
+    const last = coverage.slices[coverage.slices.length - 1]!;
+
+    expect(last.available).toBe(0);
+    expect(last.unavailable).toBeGreaterThan(0);
   });
 
-  describe('a manifest that claims no ids', () => {
-    it('draws no slices when both bounds are absent', () => {
-      const slices = generateManifestSlices({
-        allIds: [],
-        lowerId: undefined as unknown as number,
-        upperId: undefined as unknown as number,
-      });
+  it('lays the gap counts onto the marks they belong to', () => {
+    const counts = new Array<number>(60).fill(0);
+    counts[3] = 7;
 
-      expect(slices).toEqual([]);
-    });
+    const coverage = readManifestCoverage(
+      [claiming('2024-03-01T00:00:00Z', '2024-03-15T00:00:00Z')],
+      reaching('2024-03-01T00:00:00Z', '2024-03-15T00:00:00Z'),
+      counts,
+    );
 
-    it('invents a full run of missing ids when the bounds arrive as null', () => {
-      const slices = generateManifestSlices({
-        allIds: [],
-        lowerId: null as unknown as number,
-        upperId: null as unknown as number,
-      });
-
-      expect(slices).toHaveLength(30);
-      expect(
-        slices.reduce((sum, slice) => sum + slice.unavailable, 0),
-      ).toBeGreaterThan(0);
-    });
+    expect(coverage.slices[3]!.gaps).toBe(7);
+    expect(coverage.slices[4]!.gaps).toBe(0);
   });
 
-  describe('characterised, not specified', () => {
-    it('reports padding past the upper id as none on the final slice', () => {
-      const slices = generateManifestSlices({
-        allIds: ids(1, 2, 3, 4, 5, 6, 7),
-        lowerId: 1,
-        upperId: 7,
-        baseCount: 3,
-        maxSize: 10000,
-      });
+  it('reports no gaps on any mark when none were found', () => {
+    const coverage = readManifestCoverage(
+      [claiming('2024-03-01T00:00:00Z', '2024-03-15T00:00:00Z')],
+      reaching('2024-03-01T00:00:00Z', '2024-03-15T00:00:00Z'),
+    );
 
-      expect(shape(slices)[2]).toEqual({
-        available: 1,
-        unavailable: 0,
-        none: 2,
-      });
-    });
+    expect(coverage.slices.every((slice) => slice.gaps === 0)).toBe(true);
   });
 });

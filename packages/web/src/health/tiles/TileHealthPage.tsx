@@ -1,10 +1,7 @@
-import { useMemo } from 'react';
+import { Box, Stack } from '@mui/material';
 
-import { Box } from '@mui/material';
-
-import { useTileHealthInfinite } from '../../api';
+import { useTileHealth } from '../../api';
 import { QueryHint } from '../../common/QueryHint';
-import { VirtualizedList } from '../../common/VirtualizedList';
 import { Page } from '../../page/Page';
 import { PageBody } from '../../page/PageBody';
 import { PageFooter } from '../../page/PageFooter';
@@ -13,38 +10,44 @@ import { PageHeader } from '../../page/header/PageHeader';
 import { TileHealthFrame } from './TileHealthFrame';
 
 export const TileHealthPage: React.FC = () => {
-  const { data, ...query } = useTileHealthInfinite(
-    {},
-    {
-      query: {
-        getNextPageParam: (lastPage, pages) =>
-          lastPage.length > 0 ? pages.length + 1 : undefined,
-        initialPageParam: 1,
-      },
-    },
+  const { data, isLoading, error } = useTileHealth(
+    // The board reads only the strip, so one page of months is plenty.
+    { limit: 1 },
+    { query: { refetchInterval: 10000 } },
   );
-
-  const items = useMemo(() => data?.pages.flat() ?? [], [data?.pages]);
 
   return (
     <Page>
-      <PageTitle subtitle="Tile Health" />
+      <PageTitle subtitle="Tiles" />
       <PageHeader />
       <PageBody>
-        <Box sx={{ width: '100%', maxWidth: 600, margin: 'auto', p: 2 }}>
+        <Box
+          sx={{
+            width: '100%',
+            maxWidth: 1200,
+            marginInline: 'auto',
+            p: 2,
+            alignSelf: 'flex-start',
+          }}
+        >
           <QueryHint
-            data={data?.pages}
-            isLoading={query.isLoading}
-            isEmpty={!items.length}
-            error={query.error}
+            data={data}
+            isLoading={isLoading}
+            isEmpty={!data?.length}
+            error={error}
+            skeleton={
+              <Stack sx={{ gap: 1 }}>
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <TileHealthFrame key={index} extended />
+                ))}
+              </Stack>
+            }
           >
-            <VirtualizedList
-              items={items}
-              renderItem={(_, tile) => (
-                <TileHealthFrame tile={tile} extended={true} />
-              )}
-              query={query}
-            />
+            <Stack sx={{ gap: 1 }}>
+              {data?.map((tile) => (
+                <TileHealthFrame key={tile.type} tile={tile} extended />
+              ))}
+            </Stack>
           </QueryHint>
         </Box>
       </PageBody>

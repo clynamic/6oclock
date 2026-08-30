@@ -10,12 +10,13 @@ import type { ManifestSlice } from './manifestSlice';
 
 export interface ManifestHealth {
   type: ItemType;
-  id: number;
   porous: boolean;
+  parts: number;
   startDate: Date;
   endDate: Date;
-  startId: number;
-  endId: number;
-  count: number;
+  covered: number;
+  reach: number;
+  gaps: number;
+  updatedAt: Date;
   slices: ManifestSlice[];
 }

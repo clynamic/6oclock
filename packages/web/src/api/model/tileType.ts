@@ -11,5 +11,6 @@ export type TileType = (typeof TileType)[keyof typeof TileType];
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileType = {
   upload_hourly: 'upload_hourly',
+  permit_hourly: 'permit_hourly',
   post_pending_hourly: 'post_pending_hourly',
 } as const;

@@ -1,10 +1,7 @@
-import { useMemo } from 'react';
+import { Box, Stack } from '@mui/material';
 
-import { Box } from '@mui/material';
-
-import { useManifestHealthInfinite } from '../../api';
+import { useManifestHealth } from '../../api';
 import { QueryHint } from '../../common/QueryHint';
-import { VirtualizedList } from '../../common/VirtualizedList';
 import { Page } from '../../page/Page';
 import { PageBody } from '../../page/PageBody';
 import { PageFooter } from '../../page/PageFooter';
@@ -13,39 +10,46 @@ import { PageHeader } from '../../page/header/PageHeader';
 import { ManifestHealthFrame } from './ManifestHealthFrame';
 
 export const ManifestHealthPage: React.FC = () => {
-  const { data, ...query } = useManifestHealthInfinite(undefined, {
-    query: {
-      refetchInterval: 10000,
-      initialPageParam: 1,
-      getNextPageParam: (lastPage, _, i) => {
-        if (lastPage.length === 0) {
-          return undefined;
-        }
-        return (i ?? 1) + 1;
-      },
-    },
+  const { data, isLoading, error } = useManifestHealth({
+    query: { refetchInterval: 10000 },
   });
-
-  const items = useMemo(() => data?.pages.flat() ?? [], [data?.pages]);
 
   return (
     <Page>
-      <PageTitle subtitle="Manifest Health" />
+      <PageTitle subtitle="Manifests" />
       <PageHeader />
       <PageBody>
-        <Box sx={{ width: '100%', maxWidth: 600, margin: 'auto', p: 2 }}>
+        <Box
+          sx={{
+            width: '100%',
+            maxWidth: 1200,
+            marginInline: 'auto',
+            p: 2,
+            alignSelf: 'flex-start',
+          }}
+        >
           <QueryHint
-            data={data?.pages}
-            isLoading={query.isLoading}
-            error={query.error}
+            data={data}
+            isLoading={isLoading}
+            isEmpty={!data?.length}
+            error={error}
+            skeleton={
+              <Stack sx={{ gap: 1 }}>
+                {Array.from({ length: 8 }).map((_, index) => (
+                  <ManifestHealthFrame key={index} extended />
+                ))}
+              </Stack>
+            }
           >
-            <VirtualizedList
-              items={items}
-              renderItem={(_, item) => (
-                <ManifestHealthFrame manifest={item} extended={true} />
-              )}
-              query={query}
-            />
+            <Stack sx={{ gap: 1 }}>
+              {data?.map((manifest) => (
+                <ManifestHealthFrame
+                  key={manifest.type}
+                  manifest={manifest}
+                  extended
+                />
+              ))}
+            </Stack>
           </QueryHint>
         </Box>
       </PageBody>

@@ -1,34 +1,16 @@
 import {
-  CalendarMonth,
-  DataUsage,
-  Delete,
-  MoreVert,
-  Storage,
-} from '@mui/icons-material';
-import {
-  Box,
   Card,
-  Chip,
-  IconButton,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
+  CardActionArea,
   Skeleton,
   Stack,
   Typography,
-  useTheme,
 } from '@mui/material';
-import { BarChart } from '@mui/x-charts';
-import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
+import { Link } from 'react-router';
 
-import {
-  TileHealth,
-  getTileHealthQueryKey,
-  useDeleteTilesByType,
-} from '../../api';
+import { TileHealth } from '../../api';
+import { FactList } from '../../common/FactList';
+import { SliceStrip } from '../SliceStrip';
 
 export interface TileHealthFrameProps {
   tile?: TileHealth;
@@ -39,234 +21,65 @@ export const TileHealthFrame: React.FC<TileHealthFrameProps> = ({
   tile,
   extended = false,
 }) => {
-  const theme = useTheme();
-  const queryClient = useQueryClient();
-  const { mutateAsync: deleteTiles } = useDeleteTilesByType();
-
-  const handleDelete = async () => {
-    if (!tile) return;
-    await deleteTiles({
-      type: tile.type,
-      params: {
-        startDate: tile.startDate,
-        endDate: tile.endDate,
-      },
-    });
-    queryClient.invalidateQueries({
-      queryKey: getTileHealthQueryKey(),
-    });
-  };
+  const missing = tile ? tile.expected - tile.actual : 0;
 
   return (
-    <PopupState
-      variant="popover"
-      popupId={tile?.type ? `popup-${tile.type}` : undefined}
-    >
-      {function (popupState) {
-        return (
-          <Card sx={{ width: '100%' }}>
-            <Stack
-              spacing={1}
-              sx={{
-                p: 2,
-                width: '100%',
-              }}
+    <Card sx={{ width: '100%' }}>
+      <CardActionArea
+        component={Link}
+        to={`/health/tiles/${tile?.type ?? ''}`}
+        disabled={!tile}
+        sx={{ p: 2 }}
+      >
+        <Stack spacing={1} sx={{ width: '100%' }}>
+          <Stack
+            direction="row"
+            sx={{ justifyContent: 'space-between', alignItems: 'baseline' }}
+          >
+            <Typography variant="body1">
+              {tile?.type ?? <Skeleton width={140} />}
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{ color: missing ? 'warning.main' : 'text.secondary' }}
             >
-              <Stack
-                direction="row"
-                sx={{
-                  justifyContent: 'space-between',
-                  width: '100%',
-                }}
-              >
-                <Typography variant="h6">
-                  {tile ? tile.type : <Skeleton width={200} />}
-                </Typography>
-                {tile && (
-                  <>
-                    <IconButton
-                      {...bindTrigger(popupState)}
-                      size="small"
-                      color="secondary"
-                    >
-                      <MoreVert />
-                    </IconButton>
-                    <Menu {...bindMenu(popupState)}>
-                      <MenuItem
-                        onClick={async () => {
-                          await handleDelete();
-                          popupState.close();
-                        }}
-                      >
-                        <ListItemIcon>
-                          <Delete />
-                        </ListItemIcon>
-                        <ListItemText>Delete</ListItemText>
-                      </MenuItem>
-                    </Menu>
-                  </>
-                )}
-              </Stack>
-              <Stack
-                direction="row"
-                sx={{
-                  gap: 1,
-                  flexWrap: 'wrap',
-                }}
-              >
-                {tile ? (
-                  <>
-                    <Chip
-                      icon={<CalendarMonth />}
-                      label={`${format(tile.startDate, 'PP')} - ${format(tile.endDate, 'PP')}`}
-                    />
-                    <Chip
-                      icon={<DataUsage />}
-                      label={`${Math.round((tile.actual / tile.expected) * 100)}%`}
-                    />
-                    <Chip
-                      icon={<Storage />}
-                      label={`${tile.actual} / ${tile.expected} tiles`}
-                    />
-                  </>
-                ) : (
-                  [...Array(2)].map((_, index) => (
-                    <Chip
-                      key={index}
-                      icon={
-                        <Skeleton variant="circular" width={24} height={24} />
-                      }
-                      label={<Skeleton width={100} />}
-                    />
-                  ))
-                )}
-              </Stack>
-              <Box sx={{ height: 4 }} />
-              <Box sx={{ width: '100%' }}>
-                {tile ? (
-                  Array(extended ? Math.ceil(tile.slices.length / 30) : 1)
-                    .fill(0)
-                    .map((_, groupIndex) => {
-                      const dataset = tile.slices.slice(
-                        groupIndex * 30,
-                        extended ? (groupIndex + 1) * 30 : 30,
-                      );
+              {tile ? (
+                `${tile.actual.toLocaleString()} of ${tile.expected.toLocaleString()} tiles`
+              ) : (
+                <Skeleton width={90} />
+              )}
+            </Typography>
+          </Stack>
 
-                      const chartCount = tile.slices.length / 30;
-                      const height = extended
-                        ? chartCount >= 8
-                          ? 15
-                          : chartCount >= 4
-                            ? 30
-                            : 60
-                        : 60;
+          <SliceStrip
+            slices={tile?.slices}
+            height={extended ? 24 : 12}
+            label={(slice) =>
+              `${format(slice.startDate, 'PP')} to ${format(
+                slice.endDate,
+                'PP',
+              )}: ${Math.round(slice.available)} of ${Math.round(
+                slice.available + slice.unavailable,
+              )} tiles`
+            }
+          />
 
-                      return (
-                        <Box
-                          key={groupIndex}
-                          sx={{
-                            width: '100%',
-                            height: height,
-                            marginBottom: 2,
-                          }}
-                        >
-                          <BarChart
-                            dataset={dataset.map((d) => ({ ...d }))}
-                            xAxis={[
-                              {
-                                scaleType: 'band',
-                                dataKey: 'startDate',
-                                valueFormatter: (v: Date) => format(v, 'MMM d'),
-                                position: 'none',
-                                colorMap: {
-                                  type: 'piecewise',
-                                  thresholds: dataset
-                                    .slice(1)
-                                    .map((d) => d.startDate),
-                                  colors: dataset.map((d) => {
-                                    if (
-                                      d.available === 0 &&
-                                      d.unavailable === 0
-                                    ) {
-                                      return theme.palette.grey[400];
-                                    } else if (d.unavailable === 0) {
-                                      return theme.palette.success.main;
-                                    } else if (d.available === 0) {
-                                      return theme.palette.error.main;
-                                    } else {
-                                      const total =
-                                        d.available +
-                                        d.unavailable +
-                                        (d.none || 0);
-                                      const ratio = d.unavailable / total;
-                                      return ratio > 0.1
-                                        ? theme.palette.error.main
-                                        : theme.palette.warning.main;
-                                    }
-                                  }),
-                                },
-                              },
-                            ]}
-                            yAxis={[
-                              {
-                                domainLimit: 'strict',
-                                position: 'none',
-                              },
-                            ]}
-                            margin={{
-                              top: 0,
-                              right: 0,
-                              bottom: 0,
-                              left: 0,
-                            }}
-                            series={[
-                              {
-                                dataKey: 'available',
-                                stack: 'span',
-                                color: theme.palette.success.main,
-                                label: 'Available',
-                              },
-                              {
-                                dataKey: 'unavailable',
-                                stack: 'span',
-                                color: theme.palette.error.main,
-                                label: 'Missing',
-                              },
-                              {
-                                dataKey: 'none',
-                                stack: 'span',
-                                color: theme.palette.grey[400],
-                                label: 'None',
-                              },
-                            ]}
-                            hideLegend={true}
-                            localeText={{ noData: 'No data available' }}
-                          />
-                        </Box>
-                      );
-                    })
-                ) : (
-                  <Stack
-                    direction="row"
-                    sx={{
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    {[...Array(30)].map((_, index) => (
-                      <Skeleton
-                        variant="rectangular"
-                        key={index}
-                        height={60}
-                        width={10}
-                      />
-                    ))}
-                  </Stack>
-                )}
-              </Box>
-            </Stack>
-          </Card>
-        );
-      }}
-    </PopupState>
+          {extended ? (
+            <FactList
+              facts={[
+                {
+                  label: 'Covers',
+                  value: tile
+                    ? `${format(tile.startDate, 'PP')} to ${format(tile.endDate, 'PP')}`
+                    : undefined,
+                },
+                { label: 'Ranges', value: tile?.ranges.toString() },
+                { label: 'Missing', value: missing.toLocaleString() },
+              ]}
+            />
+          ) : null}
+        </Stack>
+      </CardActionArea>
+    </Card>
   );
 };

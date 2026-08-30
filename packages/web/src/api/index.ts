@@ -1,3 +1,4 @@
+export * from './auth';
 export * from './proxy';
 export * from './jobs';
 export * from './health';
@@ -15,5 +16,4 @@ export * from './flags';
 export * from './feedbacks';
 export * from './uploads';
 export * from './permits';
-export * from './auth';
 export * from './model';

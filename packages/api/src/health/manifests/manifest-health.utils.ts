@@ -1,62 +1,77 @@
+import { DateRange } from 'src/common';
+import { ManifestEntity } from 'src/manifest/manifest.entity';
+
 import { ManifestSlice } from './manifest-health.dto';
 
-export interface ManifestSliceProps {
-  allIds: { id: number }[];
-  lowerId: number;
-  upperId: number;
-  maxSize?: number;
-  baseCount?: number;
+export const SLICE_COUNT = 60;
+
+const DAY = 24 * 60 * 60 * 1000;
+
+export interface ManifestCoverage {
+  parts: number;
+  startDate: Date;
+  endDate: Date;
+  covered: number;
+  reach: number;
+  slices: ManifestSlice[];
 }
 
-export const generateManifestSlices = ({
-  allIds,
-  lowerId,
-  upperId,
-  maxSize = 10000,
-  baseCount = 30,
-}: ManifestSliceProps): ManifestSlice[] => {
-  const rangeSize = upperId - lowerId + 1;
-  const sliceCount =
-    Math.ceil(Math.ceil(rangeSize / maxSize) / baseCount) * baseCount;
-  const sliceSize = Math.ceil(rangeSize / sliceCount);
+export const readManifestCoverage = (
+  manifests: ManifestEntity[],
+  reach: DateRange,
+  gaps: number[] = [],
+): ManifestCoverage => {
+  const ranges = manifests
+    .map((manifest) => ({
+      start: manifest.startDate.getTime(),
+      end: manifest.endDate.getTime(),
+    }))
+    .sort((a, b) => a.start - b.start);
 
-  const slices: ManifestSlice[] = [];
-  let currentId = lowerId;
-  let idIndex = 0;
+  const merged: { start: number; end: number }[] = [];
 
-  for (let i = 0; i < sliceCount; i++) {
-    const sliceStart = currentId;
-    const sliceEnd = Math.min(currentId + sliceSize - 1, upperId);
+  for (const range of ranges) {
+    const last = merged[merged.length - 1];
 
-    let available = 0;
-    let unavailable = 0;
-
-    while (idIndex < allIds.length && allIds[idIndex]!.id <= sliceEnd) {
-      while (currentId < allIds[idIndex]!.id) {
-        unavailable++;
-        currentId++;
-      }
-
-      available++;
-      currentId++;
-      idIndex++;
+    if (last && range.start <= last.end) {
+      last.end = Math.max(last.end, range.end);
+    } else {
+      merged.push({ ...range });
     }
-
-    unavailable += Math.max(0, sliceEnd - currentId + 1);
-    const none = sliceSize - (available + unavailable);
-
-    slices.push(
-      new ManifestSlice({
-        startId: sliceStart,
-        endId: sliceEnd,
-        available,
-        unavailable,
-        none,
-      }),
-    );
-
-    currentId = sliceEnd + 1;
   }
 
-  return slices;
+  const reachStart = reach.startDate.getTime();
+  const reachEnd = reach.endDate.getTime();
+  const width = (reachEnd - reachStart) / SLICE_COUNT;
+
+  const slices = Array.from({ length: SLICE_COUNT }, (_, index) => {
+    const start = reachStart + index * width;
+    const end = start + width;
+
+    const available = merged.reduce(
+      (sum, range) =>
+        sum +
+        Math.max(0, Math.min(end, range.end) - Math.max(start, range.start)),
+      0,
+    );
+
+    return new ManifestSlice({
+      startDate: new Date(start),
+      endDate: new Date(end),
+      available: Math.round(available),
+      unavailable: Math.max(0, Math.round(width - available)),
+      none: 0,
+      gaps: gaps[index] ?? 0,
+    });
+  });
+
+  return {
+    parts: manifests.length,
+    startDate: new Date(merged[0]?.start ?? reachStart),
+    endDate: new Date(merged[merged.length - 1]?.end ?? reachStart),
+    covered:
+      merged.reduce((sum, range) => sum + (range.end - range.start), 0) / DAY,
+    reach: (reachEnd - reachStart) / DAY,
+    slices,
+  };
 };

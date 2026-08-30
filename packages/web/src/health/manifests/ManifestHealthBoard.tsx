@@ -8,16 +8,9 @@ import { QueryHint } from '../../common/QueryHint';
 import { ManifestHealthFrame } from './ManifestHealthFrame';
 
 export const ManifestHealthDisplay = () => {
-  const { data, isLoading, error } = useManifestHealth(
-    {
-      limit: 5,
-    },
-    {
-      query: {
-        refetchInterval: 10000,
-      },
-    },
-  );
+  const { data, isLoading, error } = useManifestHealth({
+    query: { refetchInterval: 10000 },
+  });
 
   return (
     <QueryHint
@@ -27,20 +20,15 @@ export const ManifestHealthDisplay = () => {
       error={error}
       skeleton={
         <LimitedList>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <ManifestHealthFrame key={index} extended={false} />
+          {Array.from({ length: 4 }).map((_, index) => (
+            <ManifestHealthFrame key={index} />
           ))}
         </LimitedList>
       }
     >
       <LimitedList
         indicator={() => (
-          <Stack
-            direction="row"
-            sx={{
-              justifyContent: 'flex-end',
-            }}
-          >
+          <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
             <Button
               size="small"
               endIcon={<ArrowForward />}
@@ -53,7 +41,7 @@ export const ManifestHealthDisplay = () => {
         )}
       >
         {data?.map((manifest) => (
-          <ManifestHealthFrame key={manifest.id} manifest={manifest} />
+          <ManifestHealthFrame key={manifest.type} manifest={manifest} />
         ))}
       </LimitedList>
     </QueryHint>

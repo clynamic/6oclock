@@ -16,4 +16,14 @@ export type ListManifestsParams = {
   timezone?: string;
   type?: ItemType[];
   id?: number;
+  /**
+   * Marker the last row of the page above carried
+   */
+  before?: string;
+  /**
+   * Page size
+   * @minimum 1
+   * @maximum 320
+   */
+  limit?: number;
 };

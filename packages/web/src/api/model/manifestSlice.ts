@@ -7,9 +7,10 @@
  */
 
 export interface ManifestSlice {
-  startId: number;
-  endId: number;
+  startDate: Date;
+  endDate: Date;
   available: number;
   unavailable: number;
   none: number;
+  gaps: number;
 }

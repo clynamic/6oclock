@@ -5,16 +5,20 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
+  DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
+  InfiniteData,
   MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseInfiniteQueryOptions,
+  UseInfiniteQueryResult,
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
@@ -429,9 +433,192 @@ export const listManifests = (
   });
 };
 
+export const getListManifestsInfiniteQueryKey = (
+  params?: ListManifestsParams,
+) => {
+  return ['infinite', `/manifests`, ...(params ? [params] : [])] as const;
+};
+
 export const getListManifestsQueryKey = (params?: ListManifestsParams) => {
   return [`/manifests`, ...(params ? [params] : [])] as const;
 };
+
+export const getListManifestsInfiniteQueryOptions = <
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof listManifests>>,
+    ListManifestsParams['before']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params: ListManifestsParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof listManifests>>,
+        TError,
+        TData,
+        QueryKey,
+        ListManifestsParams['before']
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListManifestsInfiniteQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listManifests>>,
+    QueryKey,
+    ListManifestsParams['before']
+  > = ({ signal, pageParam }) =>
+    listManifests(
+      { ...params, before: pageParam || params?.['before'] },
+      signal,
+    );
+
+  return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
+    Awaited<ReturnType<typeof listManifests>>,
+    TError,
+    TData,
+    QueryKey,
+    ListManifestsParams['before']
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ListManifestsInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listManifests>>
+>;
+export type ListManifestsInfiniteQueryError = ErrorType<unknown>;
+
+export function useListManifestsInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof listManifests>>,
+    ListManifestsParams['before']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params: ListManifestsParams,
+  options: {
+    query: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof listManifests>>,
+        TError,
+        TData,
+        QueryKey,
+        ListManifestsParams['before']
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listManifests>>,
+          TError,
+          Awaited<ReturnType<typeof listManifests>>,
+          QueryKey
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useListManifestsInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof listManifests>>,
+    ListManifestsParams['before']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params: ListManifestsParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof listManifests>>,
+        TError,
+        TData,
+        QueryKey,
+        ListManifestsParams['before']
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listManifests>>,
+          TError,
+          Awaited<ReturnType<typeof listManifests>>,
+          QueryKey
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useListManifestsInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof listManifests>>,
+    ListManifestsParams['before']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params: ListManifestsParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof listManifests>>,
+        TError,
+        TData,
+        QueryKey,
+        ListManifestsParams['before']
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+/**
+ * @summary List manifests
+ */
+
+export function useListManifestsInfinite<
+  TData = InfiniteData<
+    Awaited<ReturnType<typeof listManifests>>,
+    ListManifestsParams['before']
+  >,
+  TError = ErrorType<unknown>,
+>(
+  params: ListManifestsParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof listManifests>>,
+        TError,
+        TData,
+        QueryKey,
+        ListManifestsParams['before']
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getListManifestsInfiniteQueryOptions(params, options);
+
+  const query = useInfiniteQuery(
+    queryOptions,
+    queryClient,
+  ) as UseInfiniteQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
 
 export const getListManifestsQueryOptions = <
   TData = Awaited<ReturnType<typeof listManifests>>,

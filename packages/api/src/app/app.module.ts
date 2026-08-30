@@ -11,6 +11,7 @@ import { GadgetModule } from 'src/gadget/gadget.module';
 import { HealthModule } from 'src/health/health.module';
 import { JobModule } from 'src/job/job.module';
 import { LabelModule } from 'src/label/label.module';
+import { ContiguityGapModule } from 'src/manifest/gaps/contiguity-gap.module';
 import { ManifestModule } from 'src/manifest/manifest.module';
 import { ManifestStampModule } from 'src/manifest/stamps/manifest-stamp.module';
 import { ModActionModule } from 'src/mod-action/mod-action.module';
@@ -50,6 +51,7 @@ import { StaticModule } from './static.module';
     LabelModule,
     ManifestModule,
     ManifestStampModule,
+    ContiguityGapModule,
     GadgetModule,
     PerformanceModule,
     ApprovalModule,

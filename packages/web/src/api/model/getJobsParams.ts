@@ -18,4 +18,5 @@ export type GetJobsParams = {
    * @maximum 320
    */
   limit?: number;
+  handler?: string;
 };

@@ -6,10 +6,4 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export interface SchedulerInfo {
-  id: string;
-  description: string;
-  queue: string;
-  pattern: string;
-  enabled: boolean;
-}
+export type JobLogInfoRecord = { [key: string]: unknown };

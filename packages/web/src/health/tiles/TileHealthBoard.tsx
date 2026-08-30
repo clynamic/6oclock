@@ -9,14 +9,9 @@ import { TileHealthFrame } from './TileHealthFrame';
 
 export const TileHealthDisplay = () => {
   const { data, isLoading, error } = useTileHealth(
-    {
-      limit: 5,
-    },
-    {
-      query: {
-        refetchInterval: 10000,
-      },
-    },
+    // The board reads only the strip, so one page of months is plenty.
+    { limit: 1 },
+    { query: { refetchInterval: 10000 } },
   );
 
   return (

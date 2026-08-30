@@ -5,17 +5,22 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
+import type { TimeScale } from './timeScale';
 
 export type GetTileHealthParams = {
   /**
-   * Page number
-   * @minimum 1
+   * Marker the last row of the page above carried
    */
-  page?: number;
+  before?: string;
   /**
    * Page size
    * @minimum 1
    * @maximum 320
    */
   limit?: number;
+  scale?: TimeScale;
+  cycle?: TimeScale;
+  startDate?: Date;
+  endDate?: Date;
+  timezone?: string;
 };

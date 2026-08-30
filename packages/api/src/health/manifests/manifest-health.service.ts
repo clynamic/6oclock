@@ -1,132 +1,105 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cacheable } from 'src/app/browser.module';
-import { BulkUpdateRequestEntity } from 'src/bulk-update-request/bulk-update-request.entity';
-import { PaginationParams, WithId } from 'src/common';
-import { FeedbackEntity } from 'src/feedback/feedback.entity';
-import { FlagEntity } from 'src/flag/flag.entity';
+import { DateRange } from 'src/common';
 import { ItemType, POROUS_ITEM_TYPES } from 'src/label/label.entity';
+import { ContiguityGapEntity } from 'src/manifest/gaps/contiguity-gap.entity';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
-import { ModActionEntity } from 'src/mod-action/mod-action.entity';
-import { PostEventEntity } from 'src/post-event/post-event.entity';
-import { PostReplacementEntity } from 'src/post-replacement/post-replacement.entity';
-import { PostVersionEntity } from 'src/post-version/post-version.entity';
-import { TagAliasEntity } from 'src/tag-alias/tag-alias.entity';
-import { TagImplicationEntity } from 'src/tag-implication/tag-implication.entity';
-import { TicketEntity } from 'src/ticket/ticket.entity';
-import { Between, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { ManifestHealth } from './manifest-health.dto';
-import { generateManifestSlices } from './manifest-health.utils';
+import { SLICE_COUNT, readManifestCoverage } from './manifest-health.utils';
 
 @Injectable()
 export class ManifestHealthService {
   constructor(
     @InjectRepository(ManifestEntity)
     private readonly manifestRepository: Repository<ManifestEntity>,
-    @InjectRepository(PostEventEntity)
-    private readonly postEventRepository: Repository<PostEventEntity>,
-    @InjectRepository(TicketEntity)
-    private readonly ticketRepository: Repository<TicketEntity>,
-    @InjectRepository(FlagEntity)
-    private readonly flagRepository: Repository<FlagEntity>,
-    @InjectRepository(FeedbackEntity)
-    private readonly feedbackRepository: Repository<FeedbackEntity>,
-    @InjectRepository(PostVersionEntity)
-    private readonly postVersionRepository: Repository<PostVersionEntity>,
-    @InjectRepository(PostReplacementEntity)
-    private readonly postReplacementRepository: Repository<PostReplacementEntity>,
-    @InjectRepository(ModActionEntity)
-    private readonly modActionRepository: Repository<ModActionEntity>,
-    @InjectRepository(BulkUpdateRequestEntity)
-    private readonly bulkUpdateRequestRepository: Repository<BulkUpdateRequestEntity>,
-    @InjectRepository(TagAliasEntity)
-    private readonly tagAliasRepository: Repository<TagAliasEntity>,
-    @InjectRepository(TagImplicationEntity)
-    private readonly tagImplicationRepository: Repository<TagImplicationEntity>,
+    @InjectRepository(ContiguityGapEntity)
+    private readonly gapRepository: Repository<ContiguityGapEntity>,
   ) {}
 
-  private itemRepositories: Partial<Record<ItemType, Repository<WithId>>> = {
-    [ItemType.postEvents]: this.postEventRepository,
-    [ItemType.tickets]: this.ticketRepository,
-    [ItemType.flags]: this.flagRepository,
-    [ItemType.feedbacks]: this.feedbackRepository,
-    [ItemType.postVersions]: this.postVersionRepository,
-    [ItemType.postReplacements]: this.postReplacementRepository,
-    [ItemType.modActions]: this.modActionRepository,
-    [ItemType.bulkUpdateRequests]: this.bulkUpdateRequestRepository,
-    [ItemType.tagAliases]: this.tagAliasRepository,
-    [ItemType.tagImplications]: this.tagImplicationRepository,
-  };
+  private async readGaps(): Promise<Map<ItemType, number>> {
+    const rows: { type: ItemType; gaps: string }[] =
+      await this.gapRepository.query(
+        `
+        SELECT type, SUM(upper_id - lower_id + 1) AS gaps
+        FROM ${this.gapRepository.metadata.tableName}
+        GROUP BY type
+        `,
+      );
+
+    return new Map(rows.map((row) => [row.type, Number(row.gaps)]));
+  }
+
+  private async readGapMarks(
+    reach: DateRange,
+  ): Promise<Map<ItemType, number[]>> {
+    const rows: { type: ItemType; mark: string; gaps: string }[] =
+      await this.gapRepository.query(
+        `
+        SELECT type,
+               least(
+                 $3::int - 1,
+                 greatest(0, floor(
+                   extract(epoch FROM start_date - $1::timestamptz)
+                   / (extract(epoch FROM $2::timestamptz - $1::timestamptz) / $3)
+                 ))
+               ) AS mark,
+               SUM(upper_id - lower_id + 1) AS gaps
+        FROM ${this.gapRepository.metadata.tableName}
+        GROUP BY 1, 2
+        `,
+        [reach.startDate, reach.endDate, SLICE_COUNT],
+      );
+
+    const marks = new Map<ItemType, number[]>();
+
+    for (const row of rows) {
+      const counts =
+        marks.get(row.type) ?? new Array<number>(SLICE_COUNT).fill(0);
+      counts[Number(row.mark)] = Number(row.gaps);
+      marks.set(row.type, counts);
+    }
+
+    return marks;
+  }
 
   @Cacheable({
     prefix: 'manifest-health',
-    ttl: 15 * 60 * 1000,
-    dependencies: [
-      ManifestEntity,
-      PostEventEntity,
-      TicketEntity,
-      FlagEntity,
-      FeedbackEntity,
-      PostVersionEntity,
-      PostReplacementEntity,
-      ModActionEntity,
-      BulkUpdateRequestEntity,
-      TagAliasEntity,
-      TagImplicationEntity,
-    ],
+    ttl: 60 * 1000,
+    dependencies: [ManifestEntity, ContiguityGapEntity],
   })
-  async manifests(pages?: PaginationParams): Promise<ManifestHealth[]> {
-    const health: ManifestHealth[] = [];
-    pages = new PaginationParams({
-      limit: 5, // Ignore global default page size, as these items are very expensive to fetch
-      ...pages,
-    });
+  async manifests(): Promise<ManifestHealth[]> {
+    const manifests = await this.manifestRepository.find();
+    const gaps = await this.readGaps();
 
-    const manifests = await this.manifestRepository.find({
-      order: {
-        endDate: 'DESC',
-        id: 'DESC',
-      },
-      take: pages.limit,
-      skip: PaginationParams.calculateOffset(pages),
-    });
+    const reach = DateRange.spanning(manifests) ?? DateRange.recentMonths();
+    const marks = await this.readGapMarks(reach);
 
+    const byType = new Map<ItemType, ManifestEntity[]>();
     for (const manifest of manifests) {
-      const repository = this.itemRepositories[manifest.type];
-      if (!repository) continue;
-
-      const allIds = await repository.find({
-        select: ['id'],
-        where: {
-          id: Between(manifest.lowerId, manifest.upperId),
-        },
-        order: {
-          id: 'ASC',
-        },
-      });
-
-      const slices = generateManifestSlices({
-        allIds,
-        lowerId: manifest.lowerId,
-        upperId: manifest.upperId,
-      });
-
-      health.push(
-        new ManifestHealth({
-          id: manifest.id,
-          type: manifest.type,
-          porous: POROUS_ITEM_TYPES.includes(manifest.type),
-          startDate: manifest.startDate,
-          endDate: manifest.endDate,
-          startId: manifest.lowerId,
-          endId: manifest.upperId,
-          count: allIds.length,
-          slices: slices,
-        }),
-      );
+      const list = byType.get(manifest.type);
+      if (list) list.push(manifest);
+      else byType.set(manifest.type, [manifest]);
     }
 
-    return health;
+    return [...byType.entries()]
+      .map(([type, entries]) => {
+        const coverage = readManifestCoverage(entries, reach, marks.get(type));
+
+        return new ManifestHealth({
+          type,
+          porous: POROUS_ITEM_TYPES.includes(type),
+          gaps: gaps.get(type) ?? 0,
+          updatedAt: entries.reduce(
+            (latest, entry) =>
+              entry.updatedAt > latest ? entry.updatedAt : latest,
+            entries[0]!.updatedAt,
+          ),
+          ...coverage,
+        });
+      })
+      .sort((a, b) => a.covered - b.covered);
   }
 }

@@ -7,12 +7,13 @@ export class ManifestSlice {
     Object.assign(this, value);
   }
 
-  startId: number;
-  endId: number;
+  startDate: Date;
+  endDate: Date;
 
   available: number;
   unavailable: number;
   none: number;
+  gaps: number;
 }
 
 export class ManifestHealth {
@@ -20,14 +21,15 @@ export class ManifestHealth {
     Object.assign(this, value);
   }
 
-  id: number;
   @ApiProperty({ enum: ItemType, enumName: 'ItemType' })
   type: ItemType;
   porous: boolean;
+  parts: number;
   startDate: Date;
   endDate: Date;
-  startId: number;
-  endId: number;
-  count: number;
+  covered: number;
+  reach: number;
+  gaps: number;
+  updatedAt: Date;
   slices: ManifestSlice[];
 }

@@ -10,9 +10,11 @@ import type { TileType } from './tileType';
 
 export interface TileHealth {
   type: TileType;
+  ranges: number;
   startDate: Date;
   endDate: Date;
   expected: number;
   actual: number;
   slices: TileSlice[];
+  months: TileSlice[];
 }

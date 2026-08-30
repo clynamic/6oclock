@@ -1,4 +1,5 @@
-import { generateManifestSlices } from 'src/health/manifests/manifest-health.utils';
+import { DateRange } from 'src/common';
+import { readManifestCoverage } from 'src/health/manifests/manifest-health.utils';
 import { ItemType } from 'src/label/label.entity';
 import { Repository } from 'typeorm';
 
@@ -94,18 +95,20 @@ describe('what a manifest claiming no ids does to each reader', () => {
     });
   });
 
-  describe('characterised, not specified', () => {
-    it('invents a run of missing ids in the health report', () => {
-      const slices = generateManifestSlices({
-        allIds: [],
-        lowerId: null as unknown as number,
-        upperId: null as unknown as number,
-      });
+  describe('the coverage the health report measures', () => {
+    it('reads the range it claims, inventing nothing from the absent ids', () => {
+      const coverage = readManifestCoverage(
+        [empty()],
+        new DateRange({
+          startDate: at('2024-02-01T00:00:00Z'),
+          endDate: at('2024-03-01T00:00:00Z'),
+        }),
+      );
 
-      expect(slices).toHaveLength(30);
-      expect(
-        slices.reduce((sum, slice) => sum + slice.unavailable, 0),
-      ).toBeGreaterThan(0);
+      expect(coverage.parts).toBe(1);
+      expect(coverage.slices.every((slice) => slice.unavailable === 0)).toBe(
+        true,
+      );
     });
   });
 });

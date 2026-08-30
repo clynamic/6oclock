@@ -6,12 +6,11 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetManifestHealthParams = {
+export type GetJobLogsParams = {
   /**
-   * Page number
-   * @minimum 1
+   * Marker the last row of the page above carried
    */
-  page?: number;
+  before?: string;
   /**
    * Page size
    * @minimum 1
