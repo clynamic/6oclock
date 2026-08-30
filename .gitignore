@@ -56,3 +56,4 @@ compose.override.yml
 /data
 .stryker-tmp
 reports
+*.tsbuildinfo

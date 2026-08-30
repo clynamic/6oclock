@@ -13,6 +13,7 @@
     "web": "npm run dev -w @6oclock/web",
     "build:api": "npm run build -w @6oclock/api",
     "build:web": "npm run build -w @6oclock/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "format": "npm run format --workspaces --if-present",
     "worker": "npm run dev:worker -w @6oclock/api"

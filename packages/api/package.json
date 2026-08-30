@@ -9,6 +9,7 @@
     "dev": "nest start --watch",
     "build": "nest build",
     "start": "node main.js",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint src --fix",
     "format": "prettier --write src",
     "test": "jest",
