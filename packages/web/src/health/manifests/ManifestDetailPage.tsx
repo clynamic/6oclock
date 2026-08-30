@@ -319,7 +319,11 @@ export const ManifestDetailPage: React.FC = () => {
                       />
                       <FactCell
                         label="Ids"
-                        value={`${part.lowerId} to ${part.upperId}`}
+                        value={
+                          part.lowerId === null || part.upperId === null
+                            ? 'none'
+                            : `${part.lowerId} to ${part.upperId}`
+                        }
                       />
                       <Checkbox
                         checked={selected.includes(part.id)}

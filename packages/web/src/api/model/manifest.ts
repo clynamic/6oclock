@@ -12,6 +12,8 @@ export interface Manifest {
   id: number;
   startDate: Date;
   endDate: Date;
-  lowerId: number;
-  upperId: number;
+  /** @nullable */
+  lowerId: number | null;
+  /** @nullable */
+  upperId: number | null;
 }

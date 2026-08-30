@@ -1,10 +1,4 @@
-import {
-  DateRange,
-  IdRange,
-  PartialIdRange,
-  WithDate,
-  WithId,
-} from 'src/common';
+import { DateRange, PartialIdRange, WithDate, WithId } from 'src/common';
 import { ItemType } from 'src/label/label.entity';
 import {
   Column,
@@ -44,16 +38,16 @@ export class ManifestEntity {
   @Column({ type: 'timestamptz', nullable: true })
   refreshedAt?: Date;
 
-  @Column({ type: 'int' })
-  lowerId: number;
+  @Column({ type: 'int', nullable: true })
+  lowerId: number | null;
 
-  @Column({ type: 'int' })
-  upperId: number;
+  @Column({ type: 'int', nullable: true })
+  upperId: number | null;
 
-  get idRange(): IdRange {
-    return new IdRange({
-      startId: this.lowerId,
-      endId: this.upperId,
+  get idRange(): PartialIdRange {
+    return new PartialIdRange({
+      startId: this.lowerId ?? undefined,
+      endId: this.upperId ?? undefined,
     });
   }
 
@@ -93,9 +87,9 @@ export class ManifestEntity {
     }
 
     if (side === 'start') {
-      return this.extend('start', other.startDate, other.lowerId);
+      return this.extend('start', other.startDate, other.lowerId ?? undefined);
     } else {
-      return this.extend('end', other.endDate, other.upperId);
+      return this.extend('end', other.endDate, other.upperId ?? undefined);
     }
   }
 }
@@ -146,13 +140,13 @@ export class Order {
 
   get lowerId(): number | undefined {
     return this.lower instanceof ManifestEntity
-      ? this.lower.upperId
+      ? (this.lower.upperId ?? undefined)
       : undefined;
   }
 
   get upperId(): number | undefined {
     return this.upper instanceof ManifestEntity
-      ? this.upper.lowerId
+      ? (this.upper.lowerId ?? undefined)
       : undefined;
   }
 

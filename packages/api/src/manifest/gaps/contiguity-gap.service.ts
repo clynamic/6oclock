@@ -80,16 +80,22 @@ export class ContiguityGapService {
     scanning: ManifestEntity[],
   ): GapRange[] {
     const wanted = new Set(scanning.map((manifest) => manifest.id));
-    const ordered = [...manifests].sort((a, b) =>
-      a.type === b.type ? a.lowerId - b.lowerId : a.type.localeCompare(b.type),
-    );
+    const ordered = manifests
+      .filter(
+        (manifest) => manifest.lowerId !== null && manifest.upperId !== null,
+      )
+      .sort((a, b) =>
+        a.type === b.type
+          ? a.lowerId! - b.lowerId!
+          : a.type.localeCompare(b.type),
+      );
 
     const ranges: GapRange[] = [];
     let previous: ManifestEntity | undefined;
 
     for (const manifest of ordered) {
       const contiguous = previous?.type === manifest.type;
-      const lowerId = contiguous ? previous!.upperId : manifest.lowerId;
+      const lowerId = contiguous ? previous!.upperId! : manifest.lowerId!;
       previous = manifest;
 
       if (!wanted.has(manifest.id)) continue;
@@ -99,7 +105,7 @@ export class ContiguityGapService {
         type: manifest.type,
         manifestId: manifest.id,
         lowerId,
-        upperId: manifest.upperId,
+        upperId: manifest.upperId!,
       });
     }
 

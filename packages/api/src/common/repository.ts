@@ -12,7 +12,7 @@ import { WithId } from './id-range.dto';
 export function constructFirstFromId<T extends WithId>(
   repository: Repository<T>,
 ) {
-  return function (id: number): Promise<T | null> {
+  return function (id: number | null): Promise<T | null> {
     return repository.findOne({
       where: { id: MoreThanOrEqual(id) },
       order: { id: 'ASC' },

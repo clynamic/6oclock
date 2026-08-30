@@ -13,8 +13,8 @@ export class Manifest {
   endDate: Date;
   @ApiProperty({ enum: ItemType, enumName: 'ItemType' })
   type: ItemType;
-  lowerId: number;
-  upperId: number;
+  lowerId: number | null;
+  upperId: number | null;
 }
 
 export class ManifestQuery {
