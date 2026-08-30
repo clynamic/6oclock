@@ -8,6 +8,7 @@ export interface Slice {
 }
 
 export const sliceState = (slice: Slice): string => {
+  if (slice.available === 0 && slice.unavailable === 0) return 'no data';
   if (slice.unavailable > 0) return 'unclaimed';
   if (!slice.gaps) return 'complete';
 

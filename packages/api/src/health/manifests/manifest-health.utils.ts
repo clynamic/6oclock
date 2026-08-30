@@ -44,6 +44,12 @@ export const readManifestCoverage = (
   const reachEnd = reach.endDate.getTime();
   const width = (reachEnd - reachStart) / SLICE_COUNT;
 
+  // The reach spans every type, so a mark can fall outside the span this type
+  // has ever held. That time is owed to nobody, which `none` carries and
+  // `unavailable` would report as a hole.
+  const spanStart = merged[0]?.start ?? reachStart;
+  const spanEnd = merged[merged.length - 1]?.end ?? reachStart;
+
   const slices = Array.from({ length: SLICE_COUNT }, (_, index) => {
     const start = reachStart + index * width;
     const end = start + width;
@@ -55,12 +61,17 @@ export const readManifestCoverage = (
       0,
     );
 
+    const owed = Math.max(
+      0,
+      Math.min(end, spanEnd) - Math.max(start, spanStart),
+    );
+
     return new ManifestSlice({
       startDate: new Date(start),
       endDate: new Date(end),
       available: Math.round(available),
-      unavailable: Math.max(0, Math.round(width - available)),
-      none: 0,
+      unavailable: Math.max(0, Math.round(owed - available)),
+      none: Math.max(0, Math.round(width - owed)),
       gaps: gaps[index] ?? 0,
     });
   });

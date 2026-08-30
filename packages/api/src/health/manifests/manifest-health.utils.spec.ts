@@ -83,7 +83,7 @@ describe('reading what a type covers', () => {
     );
   });
 
-  it('owes the whole of a mark that no claim reaches', () => {
+  it('owes nothing for a mark past everything the type ever held', () => {
     const coverage = readManifestCoverage(
       [claiming('2024-03-01T00:00:00Z', '2024-03-08T00:00:00Z')],
       reaching('2024-03-01T00:00:00Z', '2024-03-15T00:00:00Z'),
@@ -92,7 +92,24 @@ describe('reading what a type covers', () => {
     const last = coverage.slices[coverage.slices.length - 1]!;
 
     expect(last.available).toBe(0);
-    expect(last.unavailable).toBeGreaterThan(0);
+    expect(last.unavailable).toBe(0);
+    expect(last.none).toBeGreaterThan(0);
+  });
+
+  it('owes a mark that falls between two claims', () => {
+    const coverage = readManifestCoverage(
+      [
+        claiming('2024-03-01T00:00:00Z', '2024-03-02T00:00:00Z'),
+        claiming('2024-03-14T00:00:00Z', '2024-03-15T00:00:00Z'),
+      ],
+      reaching('2024-03-01T00:00:00Z', '2024-03-15T00:00:00Z'),
+    );
+
+    const middle = coverage.slices[30]!;
+
+    expect(middle.available).toBe(0);
+    expect(middle.unavailable).toBeGreaterThan(0);
+    expect(middle.none).toBe(0);
   });
 
   it('lays the gap counts onto the marks they belong to', () => {
