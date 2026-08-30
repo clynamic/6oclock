@@ -14,6 +14,7 @@
     "test": "jest",
     "test:unit": "jest --testPathIgnorePatterns \"\\.int\\.spec\\.ts$\"",
     "mutate": "stryker run",
+    "generate:spec": "nest build && node dist/generate-openapi.js",
     "typeorm": "typeorm-ts-node-commonjs",
     "migrate": "typeorm-ts-node-commonjs migration:generate -d src/data-source.ts",
     "generate": "orval",

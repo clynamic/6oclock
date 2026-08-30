@@ -5,7 +5,7 @@ import { description, name, version } from '../../package.json';
 
 @Module({})
 export class DocsModule {
-  static setupSwagger(app: INestApplication) {
+  static createDocument(app: INestApplication) {
     const swaggerConfig = new DocumentBuilder()
       .setTitle(name)
       .setDescription(description)
@@ -14,10 +14,13 @@ export class DocsModule {
       .addBearerAuth()
       .build();
 
-    const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig, {
+    return SwaggerModule.createDocument(app, swaggerConfig, {
       ignoreGlobalPrefix: true,
     });
-    SwaggerModule.setup('api', app, swaggerDocument, {
+  }
+
+  static setupSwagger(app: INestApplication) {
+    SwaggerModule.setup('api', app, DocsModule.createDocument(app), {
       jsonDocumentUrl: '/api/swagger.json',
     });
   }
