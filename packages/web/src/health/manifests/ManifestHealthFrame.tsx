@@ -10,7 +10,8 @@ import { Link } from 'react-router';
 
 import { ManifestHealth } from '../../api';
 import { FactList } from '../../common/FactList';
-import { SliceStrip, sliceState } from '../SliceStrip';
+import { SliceStrip } from '../SliceStrip';
+import { sliceState } from '../slice';
 
 export interface ManifestHealthFrameProps {
   manifest?: ManifestHealth;

@@ -37,7 +37,8 @@ import { PageBody } from '../../page/PageBody';
 import { PageFooter } from '../../page/PageFooter';
 import { PageTitle } from '../../page/PageTitle';
 import { PageHeader } from '../../page/header/PageHeader';
-import { SliceStrip, sliceColor } from '../SliceStrip';
+import { SliceStrip } from '../SliceStrip';
+import { sliceColor } from '../slice';
 
 const PAGE_SIZE = 12;
 

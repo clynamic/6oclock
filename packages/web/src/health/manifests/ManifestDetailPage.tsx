@@ -40,7 +40,8 @@ import { PageBody } from '../../page/PageBody';
 import { PageFooter } from '../../page/PageFooter';
 import { PageTitle } from '../../page/PageTitle';
 import { PageHeader } from '../../page/header/PageHeader';
-import { SliceStrip, sliceState } from '../SliceStrip';
+import { SliceStrip } from '../SliceStrip';
+import { sliceState } from '../slice';
 
 const PAGE_SIZE = 50;
 

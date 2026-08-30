@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { sub } from 'date-fns';
-import { CursorParams, PaginationParams } from 'src/common';
+import { CursorParams } from 'src/common';
 import { RETENTION_SECONDS } from 'src/job/job.constants';
 import { LessThan, QueryDeepPartialEntity, Repository } from 'typeorm';
 
