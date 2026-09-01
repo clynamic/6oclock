@@ -2,12 +2,6 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
-import {
-  PostgreSqlContainer,
-  StartedPostgreSqlContainer,
-} from '@testcontainers/postgresql';
-import fs from 'fs';
-import path from 'path';
 import { PostEventAction } from 'src/api';
 import { PostRating } from 'src/api/e621';
 import { CacheManager } from 'src/app/browser.module';
@@ -17,6 +11,7 @@ import { ItemType, LabelEntity } from 'src/label/label.entity';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
 import { PostVersionEntity } from 'src/post-version/post-version.entity';
+import { createTestDatabase, runMigrations } from 'src/testing/postgres';
 import { DataSource, Repository } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
@@ -24,19 +19,8 @@ import { PermitEntity } from '../permit.entity';
 import { PermitTilesEntity } from './permit-tiles.entity';
 import { PermitTilesService } from './permit-tiles.service';
 
-const POSTGRES_IMAGE = 'postgres:17';
-
 const DELETION_WINDOW_DAYS = 5;
 const REVIEW_PERIOD_DAYS = DELETION_WINDOW_DAYS + 2;
-
-let postgres: StartedPostgreSqlContainer;
-
-const migrationFiles = (): string[] =>
-  fs
-    .readdirSync(path.join(__dirname, '..', '..', 'migration'))
-    .filter((name) => /^\d+-.*\.ts$/.test(name))
-    .sort()
-    .map((name) => path.join(__dirname, '..', '..', 'migration', name));
 
 const hoursAgo = (hours: number): Date => {
   const when = new Date(Date.now() - hours * 60 * 60 * 1000);
@@ -94,34 +78,14 @@ describe('PermitTilesService against Postgres', () => {
       .then((rows) => rows.map((r) => r.id));
 
   beforeAll(async () => {
-    postgres = await new PostgreSqlContainer(POSTGRES_IMAGE).start();
-
-    const migrator = new DataSource({
-      type: 'postgres',
-      host: postgres.getHost(),
-      port: postgres.getPort(),
-      username: postgres.getUsername(),
-      password: postgres.getPassword(),
-      database: postgres.getDatabase(),
-      migrations: migrationFiles(),
-      namingStrategy: new SnakeNamingStrategy(),
-      synchronize: false,
-    });
-
-    await migrator.initialize();
-    await migrator.runMigrations();
-    await migrator.destroy();
+    const database = await createTestDatabase('six_oclock_test_permit_tiles');
+    await runMigrations(database);
 
     moduleRef = await Test.createTestingModule({
       imports: [
         CacheModule.register(),
         TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: postgres.getHost(),
-          port: postgres.getPort(),
-          username: postgres.getUsername(),
-          password: postgres.getPassword(),
-          database: postgres.getDatabase(),
+          ...database,
           entities: [
             PermitEntity,
             PermitTilesEntity,
@@ -167,7 +131,6 @@ describe('PermitTilesService against Postgres', () => {
 
   afterAll(async () => {
     await moduleRef?.close();
-    await postgres?.stop();
   });
 
   beforeEach(async () => {

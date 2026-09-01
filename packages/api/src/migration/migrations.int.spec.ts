@@ -1,9 +1,6 @@
-import {
-  PostgreSqlContainer,
-  StartedPostgreSqlContainer,
-} from '@testcontainers/postgresql';
 import fs from 'fs';
 import path from 'path';
+import { TestDatabaseOptions, postgresOptions } from 'src/testing/postgres';
 import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
@@ -12,9 +9,7 @@ const TEST_DATABASE = 'six_oclock_test_migrations';
 const SYNC_ENUM_VALUES = 1780522564528;
 const BEFORE_SYNC_ENUM_VALUES = 1780521051266;
 
-const POSTGRES_IMAGE = 'postgres:17';
-
-let postgres: StartedPostgreSqlContainer;
+let options: TestDatabaseOptions;
 
 const migrationFiles = (upTo?: number): string[] =>
   fs
@@ -26,23 +21,11 @@ const migrationFiles = (upTo?: number): string[] =>
     .sort()
     .map((name) => path.join(__dirname, name));
 
-const rootSource = (): DataSource =>
-  new DataSource({
-    type: 'postgres',
-    host: postgres.getHost(),
-    port: postgres.getPort(),
-    username: postgres.getUsername(),
-    password: postgres.getPassword(),
-    database: postgres.getDatabase(),
-  });
+const rootSource = (): DataSource => new DataSource(options);
 
 const migrationSource = (upTo?: number): DataSource =>
   new DataSource({
-    type: 'postgres',
-    host: postgres.getHost(),
-    port: postgres.getPort(),
-    username: postgres.getUsername(),
-    password: postgres.getPassword(),
+    ...options,
     database: TEST_DATABASE,
     migrations: migrationFiles(upTo),
     namingStrategy: new SnakeNamingStrategy(),
@@ -90,12 +73,8 @@ describe('migrations against Postgres', () => {
   let source: DataSource;
 
   beforeAll(async () => {
-    postgres = await new PostgreSqlContainer(POSTGRES_IMAGE).start();
+    options = await postgresOptions();
   }, 180000);
-
-  afterAll(async () => {
-    await postgres?.stop();
-  });
 
   beforeEach(async () => {
     await withRoot(`DROP DATABASE IF EXISTS ${TEST_DATABASE} WITH (FORCE)`);

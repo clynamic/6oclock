@@ -1,14 +1,11 @@
 import { CacheModule } from '@nestjs/cache-manager';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
-import {
-  PostgreSqlContainer,
-  StartedPostgreSqlContainer,
-} from '@testcontainers/postgresql';
 import { CacheManager } from 'src/app/browser.module';
 import { PartialDateRange, TimeScale } from 'src/common';
 import { LabelEntity } from 'src/label/label.entity';
 import { PermitEntity } from 'src/permit/permit.entity';
+import { createTestDatabase } from 'src/testing/postgres';
 import { Repository } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
@@ -17,10 +14,6 @@ import {
   PostReviewExit,
 } from '../review/post-review.entity';
 import { PostMetricService } from './post-metric.service';
-
-const POSTGRES_IMAGE = 'postgres:17';
-
-let postgres: StartedPostgreSqlContainer;
 
 const at = (iso: string): Date => new Date(iso);
 
@@ -65,18 +58,13 @@ describe('PostMetricService against Postgres', () => {
     });
 
   beforeAll(async () => {
-    postgres = await new PostgreSqlContainer(POSTGRES_IMAGE).start();
+    const database = await createTestDatabase('six_oclock_test_post_metric');
 
     moduleRef = await Test.createTestingModule({
       imports: [
         CacheModule.register(),
         TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: postgres.getHost(),
-          port: postgres.getPort(),
-          username: postgres.getUsername(),
-          password: postgres.getPassword(),
-          database: postgres.getDatabase(),
+          ...database,
           entities: [PostReviewEpisodeEntity, PermitEntity, LabelEntity],
           namingStrategy: new SnakeNamingStrategy(),
           synchronize: true,
@@ -95,7 +83,6 @@ describe('PostMetricService against Postgres', () => {
 
   afterAll(async () => {
     await moduleRef?.close();
-    await postgres?.stop();
   }, 60000);
 
   beforeEach(async () => {
