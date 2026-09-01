@@ -12,7 +12,7 @@ import { PostEventAction } from 'src/api';
 import { PostRating } from 'src/api/e621';
 import { CacheManager } from 'src/app/browser.module';
 import { AppConfigKeys } from 'src/app/config.module';
-import { LabelEntity } from 'src/label/label.entity';
+import { ItemType, LabelEntity } from 'src/label/label.entity';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
 import { PostVersionEntity } from 'src/post-version/post-version.entity';
@@ -52,6 +52,7 @@ describe('PermitTilesService against Postgres', () => {
   let events: Repository<PostEventEntity>;
   let permits: Repository<PermitEntity>;
   let tiles: Repository<PermitTilesEntity>;
+  let manifests: Repository<ManifestEntity>;
   let source: DataSource;
   let nextId = 1;
 
@@ -158,6 +159,7 @@ describe('PermitTilesService against Postgres', () => {
     permits = moduleRef.get(getRepositoryToken(PermitEntity));
     tiles = moduleRef.get(getRepositoryToken(PermitTilesEntity));
     source = moduleRef.get(DataSource);
+    manifests = source.getRepository(ManifestEntity);
     versions = source.getRepository(PostVersionEntity);
     events = source.getRepository(PostEventEntity);
   }, 180000);
@@ -169,7 +171,7 @@ describe('PermitTilesService against Postgres', () => {
 
   beforeEach(async () => {
     await source.query(
-      'TRUNCATE permits, permit_hourly_tiles, post_versions, post_events, labels CASCADE',
+      'TRUNCATE permits, permit_hourly_tiles, post_versions, post_events, labels, manifests CASCADE',
     );
     nextId = 1;
   });
@@ -254,6 +256,50 @@ describe('PermitTilesService against Postgres', () => {
 
       await expect(service.derive([when])).resolves.toBe(1);
       await expect(permittedIds()).resolves.toEqual([10]);
+    });
+  });
+
+  describe('when permit tiles inside a manifest updated', () => {
+    const claim = (startDate: Date, endDate: Date): Promise<ManifestEntity> =>
+      manifests.save(
+        new ManifestEntity({
+          type: ItemType.postVersions,
+          startDate,
+          endDate,
+        }),
+      );
+
+    const tile = (time: Date, updatedAt: Date): Promise<unknown> =>
+      source.query(
+        'INSERT INTO permit_hourly_tiles (time, updated_at, count) VALUES ($1, $2, 1)',
+        [time, updatedAt],
+      );
+
+    it('reports the newest tile it covers', async () => {
+      const manifest = await claim(daysAgo(3), daysAgo(1));
+      await tile(daysAgo(2), daysAgo(2));
+      await tile(hoursAgo(60), hoursAgo(1));
+
+      const updated = await service.updatedAt([manifest]);
+
+      expect(updated.get(manifest.id)).toEqual(hoursAgo(1));
+    });
+
+    it('ignores a tile outside the dates it claims', async () => {
+      const manifest = await claim(daysAgo(3), daysAgo(2));
+      await tile(daysAgo(1), hoursAgo(1));
+
+      const updated = await service.updatedAt([manifest]);
+
+      expect(updated.has(manifest.id)).toBe(false);
+    });
+
+    it('reports nothing for a manifest no tile falls into', async () => {
+      const manifest = await claim(daysAgo(3), daysAgo(1));
+
+      const updated = await service.updatedAt([manifest]);
+
+      expect(updated.size).toBe(0);
     });
   });
 });

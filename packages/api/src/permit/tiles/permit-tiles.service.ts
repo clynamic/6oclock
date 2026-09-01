@@ -86,6 +86,27 @@ export class PermitTilesService implements TileService {
     return [...times.values()].sort((a, b) => a.getTime() - b.getTime());
   }
 
+  async updatedAt(manifests: ManifestEntity[]): Promise<Map<number, Date>> {
+    if (manifests.length === 0) return new Map();
+
+    const rows = await this.manifestRepository
+      .createQueryBuilder('manifest')
+      .select('manifest.id', 'id')
+      .addSelect('max(tile.updatedAt)', 'updated')
+      .innerJoin(
+        PermitTilesEntity,
+        'tile',
+        'tile.time >= manifest.startDate AND tile.time < manifest.endDate',
+      )
+      .where('manifest.id IN (:...ids)', {
+        ids: manifests.map((manifest) => manifest.id),
+      })
+      .groupBy('manifest.id')
+      .getRawMany<{ id: number; updated: Date }>();
+
+    return new Map(rows.map((row) => [row.id, new Date(row.updated)]));
+  }
+
   private readonly undecidedFrom = `
     FROM post_versions pv
     WHERE pv.version = 1

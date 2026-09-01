@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JobModule } from 'src/job/job.module';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
 import { PermitEntity } from 'src/permit/permit.entity';
+import { PermitTilesModule } from 'src/permit/tiles/permit-tiles.module';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
 import { PostVersionEntity } from 'src/post-version/post-version.entity';
 
@@ -20,6 +21,7 @@ import { PostReviewWorker } from './post-review.worker';
       ManifestEntity,
     ]),
     JobModule,
+    PermitTilesModule,
   ],
   providers: [PostReviewService, PostReviewWorker],
   exports: [PostReviewService],

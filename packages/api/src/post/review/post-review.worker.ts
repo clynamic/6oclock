@@ -9,6 +9,7 @@ import { ItemType } from 'src/label/label.entity';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
 import { ManifestStampService } from 'src/manifest/stamps/manifest-stamp.service';
 import { PermitEntity } from 'src/permit/permit.entity';
+import { PermitTilesService } from 'src/permit/tiles/permit-tiles.service';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
 import { PostVersionEntity } from 'src/post-version/post-version.entity';
 import { In, Repository } from 'typeorm';
@@ -31,6 +32,7 @@ export class PostReviewWorker {
   constructor(
     private readonly reviewService: PostReviewService,
     private readonly stampService: ManifestStampService,
+    private readonly permitTilesService: PermitTilesService,
     @InjectRepository(ManifestEntity)
     private readonly manifestRepository: Repository<ManifestEntity>,
     @InjectRepository(PostEventEntity)
@@ -58,10 +60,7 @@ export class PostReviewWorker {
       where: types.map((type) => ({ type })),
     });
 
-    const pending = await this.stampService.pending(
-      PostReviewEpisodeEntity,
-      manifests,
-    );
+    const pending = await this.pendingManifests(manifests);
 
     if (pending.length === 0) return;
 
@@ -120,6 +119,24 @@ export class PostReviewWorker {
       PostReviewEpisodeEntity,
       pending.map((manifest) => manifest.id),
     );
+  }
+
+  private async pendingManifests(
+    manifests: ManifestEntity[],
+  ): Promise<ManifestEntity[]> {
+    if (manifests.length === 0) return [];
+
+    const stamped = await this.stampService.stampedAt(PostReviewEpisodeEntity);
+    const permits = await this.permitTilesService.updatedAt(manifests);
+
+    return manifests.filter((manifest) => {
+      const at = stamped.get(manifest.id);
+      if (!at) return true;
+
+      const permit = permits.get(manifest.id);
+
+      return manifest.updatedAt > at || (!!permit && permit > at);
+    });
   }
 
   private async uploadedPostIds(range: DateRange): Promise<number[]> {

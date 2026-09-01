@@ -17,22 +17,27 @@ export class ManifestStampService {
       .tableName;
   }
 
+  async stampedAt(
+    target: EntityTarget<ObjectLiteral>,
+  ): Promise<Map<number, Date>> {
+    const stamps = await this.stampRepository.find({
+      where: { target: this.nameOf(target) },
+    });
+
+    return new Map(stamps.map((stamp) => [stamp.manifestId, stamp.updatedAt]));
+  }
+
   async pending(
     target: EntityTarget<ObjectLiteral>,
     manifests: ManifestEntity[],
   ): Promise<ManifestEntity[]> {
     if (manifests.length === 0) return [];
 
-    const stamps = await this.stampRepository.find({
-      where: { target: this.nameOf(target) },
-    });
-
-    const built = new Map(
-      stamps.map((stamp) => [stamp.manifestId, stamp.updatedAt]),
-    );
+    const stamped = await this.stampedAt(target);
 
     return manifests.filter((manifest) => {
-      const at = built.get(manifest.id);
+      const at = stamped.get(manifest.id);
+
       return !at || manifest.updatedAt > at;
     });
   }
