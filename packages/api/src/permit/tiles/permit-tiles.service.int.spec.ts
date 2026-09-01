@@ -195,6 +195,20 @@ describe('PermitTilesService against Postgres', () => {
       await expect(permittedIds()).resolves.toEqual([]);
     });
 
+    it('takes an upload deleted after the review period, since it outlived it', async () => {
+      const when = daysAgo(30);
+      await upload(17, when);
+      await event(
+        17,
+        PostEventAction.deleted,
+        daysAgo(30 - (REVIEW_PERIOD_DAYS + 1)),
+      );
+
+      await service.derive([when]);
+
+      await expect(permittedIds()).resolves.toEqual([17]);
+    });
+
     it('refuses an upload still inside its review period', async () => {
       const when = hoursAgo(2);
       await upload(16, when);

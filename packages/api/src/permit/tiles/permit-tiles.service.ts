@@ -15,6 +15,8 @@ import {
 } from 'src/common';
 import { ItemType } from 'src/label/label.entity';
 import { ManifestEntity } from 'src/manifest/manifest.entity';
+import { PostEventEntity } from 'src/post-event/post-event.entity';
+import { PostVersionEntity } from 'src/post-version/post-version.entity';
 import { Repository } from 'typeorm';
 
 import { PermitEntity, PermitLabelEntity } from '../permit.entity';
@@ -219,35 +221,45 @@ export class PermitTilesService implements TileService {
   }
 
   private async deriveRange(range: DateRange): Promise<number> {
-    const candidates: { id: number; uploader_id: number; created_at: Date }[] =
-      // eslint-disable-next-line no-restricted-syntax -- its spec mocks this query
-      await this.permitRepository.query(
-        `
-        SELECT pv.post_id AS id, pv.updater_id AS uploader_id, pv.updated_at AS created_at
-        FROM post_versions pv
-        WHERE pv.version = 1
-          AND pv.updated_at >= $1
-          AND pv.updated_at < $2
-          AND NOT EXISTS (
-            SELECT 1 FROM post_events e
-            WHERE e.post_id = pv.post_id AND e.action = $3
-          )
-          AND NOT EXISTS (
-            SELECT 1 FROM post_events e
-            WHERE e.post_id = pv.post_id
-              AND e.action = $4
-              AND e.created_at < pv.updated_at + $5::interval
-          )
-          AND pv.updated_at < now() - $5::interval
-        `,
-        [
-          range.startDate,
-          range.endDate,
-          PostEventAction.approved,
-          PostEventAction.deleted,
-          this.reviewPeriod,
-        ],
-      );
+    const candidates = await this.permitRepository.manager
+      .createQueryBuilder(PostVersionEntity, 'pv')
+      .select('pv.postId', 'id')
+      .addSelect('pv.updaterId', 'uploader_id')
+      .addSelect('pv.updatedAt', 'created_at')
+      .where('pv.version = 1')
+      .andWhere('pv.updatedAt >= :start', { start: range.startDate })
+      .andWhere('pv.updatedAt < :end', { end: range.endDate })
+      .andWhere('pv.updatedAt < now() - :period::interval', {
+        period: this.reviewPeriod,
+      })
+      .andWhere((qb) => {
+        const approved = qb
+          .subQuery()
+          .select('1')
+          .from(PostEventEntity, 'approval')
+          .where('approval.postId = pv.postId')
+          .andWhere('approval.action = :approved')
+          .getQuery();
+
+        return `NOT EXISTS ${approved}`;
+      })
+      .andWhere((qb) => {
+        const deleted = qb
+          .subQuery()
+          .select('1')
+          .from(PostEventEntity, 'deletion')
+          .where('deletion.postId = pv.postId')
+          .andWhere('deletion.action = :deleted')
+          .andWhere('deletion.createdAt < pv.updated_at + :period::interval')
+          .getQuery();
+
+        return `NOT EXISTS ${deleted}`;
+      })
+      .setParameters({
+        approved: PostEventAction.approved,
+        deleted: PostEventAction.deleted,
+      })
+      .getRawMany<{ id: number; uploader_id: number; created_at: Date }>();
 
     await this.permitRepository.delete({ createdAt: range.find() });
 
