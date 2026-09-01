@@ -1,56 +1,20 @@
 import { CacheModule } from '@nestjs/cache-manager';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
-import {
-  PostgreSqlContainer,
-  StartedPostgreSqlContainer,
-} from '@testcontainers/postgresql';
 import { PostEventAction } from 'src/api';
 import { CacheManager } from 'src/app/browser.module';
 import { PaginationParams, PartialDateRange, TimeScale } from 'src/common';
 import { LabelEntity } from 'src/label/label.entity';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
+import { createTestDatabase } from 'src/testing/postgres';
 import { SystemUserService } from 'src/user/system/system-user.service';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 import { ApprovalCountSeriesQuery } from './approval-metric.dto';
 import { ApprovalMetricService } from './approval-metric.service';
 
-const TEST_DATABASE = 'six_oclock_test_approval';
 const SYSTEM_USER_ID = 360277;
-
-const POSTGRES_IMAGE = 'postgres:17';
-
-let postgres: StartedPostgreSqlContainer;
-
-const adminDataSource = (): DataSource =>
-  new DataSource({
-    type: 'postgres',
-    host: postgres.getHost(),
-    port: postgres.getPort(),
-    username: postgres.getUsername(),
-    password: postgres.getPassword(),
-    database: postgres.getDatabase(),
-  });
-
-const createTestDatabase = async (): Promise<void> => {
-  const admin = adminDataSource();
-
-  await admin.initialize();
-
-  await admin.query(`DROP DATABASE IF EXISTS ${TEST_DATABASE} WITH (FORCE)`);
-  await admin.query(`CREATE DATABASE ${TEST_DATABASE}`);
-  await admin.query(`ALTER DATABASE ${TEST_DATABASE} SET timezone TO 'UTC'`);
-  await admin.destroy();
-};
-
-const dropTestDatabase = async (): Promise<void> => {
-  const admin = adminDataSource();
-  await admin.initialize();
-  await admin.query(`DROP DATABASE IF EXISTS ${TEST_DATABASE} WITH (FORCE)`);
-  await admin.destroy();
-};
 
 const at = (iso: string): Date => new Date(iso);
 
@@ -83,19 +47,13 @@ describe('ApprovalMetricService against Postgres', () => {
     });
 
   beforeAll(async () => {
-    postgres = await new PostgreSqlContainer(POSTGRES_IMAGE).start();
-    await createTestDatabase();
+    const database = await createTestDatabase('six_oclock_test_approval');
 
     moduleRef = await Test.createTestingModule({
       imports: [
         CacheModule.register(),
         TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: postgres.getHost(),
-          port: postgres.getPort(),
-          username: postgres.getUsername(),
-          password: postgres.getPassword(),
-          database: TEST_DATABASE,
+          ...database,
           entities: [PostEventEntity, LabelEntity],
           namingStrategy: new SnakeNamingStrategy(),
           synchronize: true,
@@ -123,8 +81,6 @@ describe('ApprovalMetricService against Postgres', () => {
 
   afterAll(async () => {
     await moduleRef?.close();
-    await dropTestDatabase();
-    await postgres?.stop();
   }, 60000);
 
   beforeEach(async () => {

@@ -1,31 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
-import {
-  PostgreSqlContainer,
-  StartedPostgreSqlContainer,
-} from '@testcontainers/postgresql';
-import fs from 'fs';
-import path from 'path';
 import { RETENTION_SECONDS } from 'src/job/job.constants';
+import { createTestDatabase, runMigrations } from 'src/testing/postgres';
 import { DataSource, Repository } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 import { JobLogEntity } from './job-log.entity';
 import { JobLogService } from './job-log.service';
 
-const POSTGRES_IMAGE = 'postgres:17';
-
 const RUN = '11111111-1111-4111-8111-111111111111';
 const OTHER_RUN = '22222222-2222-4222-8222-222222222222';
-
-let postgres: StartedPostgreSqlContainer;
-
-const migrationFiles = (): string[] =>
-  fs
-    .readdirSync(path.join(__dirname, '..', '..', 'migration'))
-    .filter((name) => /^\d+-.*\.ts$/.test(name))
-    .sort()
-    .map((name) => path.join(__dirname, '..', '..', 'migration', name));
 
 const daysAgo = (days: number): Date =>
   new Date(Date.now() - days * 24 * 60 * 60 * 1000);
@@ -42,33 +26,13 @@ describe('JobLogService against Postgres', () => {
   const remaining = async (): Promise<number> => logs.count();
 
   beforeAll(async () => {
-    postgres = await new PostgreSqlContainer(POSTGRES_IMAGE).start();
-
-    const migrator = new DataSource({
-      type: 'postgres',
-      host: postgres.getHost(),
-      port: postgres.getPort(),
-      username: postgres.getUsername(),
-      password: postgres.getPassword(),
-      database: postgres.getDatabase(),
-      migrations: migrationFiles(),
-      namingStrategy: new SnakeNamingStrategy(),
-      synchronize: false,
-    });
-
-    await migrator.initialize();
-    await migrator.runMigrations();
-    await migrator.destroy();
+    const database = await createTestDatabase('six_oclock_test_job_log');
+    await runMigrations(database);
 
     moduleRef = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: postgres.getHost(),
-          port: postgres.getPort(),
-          username: postgres.getUsername(),
-          password: postgres.getPassword(),
-          database: postgres.getDatabase(),
+          ...database,
           entities: [JobLogEntity],
           namingStrategy: new SnakeNamingStrategy(),
           synchronize: false,
@@ -86,7 +50,6 @@ describe('JobLogService against Postgres', () => {
 
   afterAll(async () => {
     await moduleRef?.close();
-    await postgres?.stop();
   });
 
   beforeEach(async () => {

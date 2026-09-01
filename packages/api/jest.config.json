@@ -11,5 +11,6 @@
   "globalSetup": "<rootDir>/../jest.global-setup.js",
   "moduleNameMapper": {
     "^src/(.*)$": "<rootDir>/$1"
-  }
+  },
+  "globalTeardown": "<rootDir>/../jest.global-teardown.js"
 }

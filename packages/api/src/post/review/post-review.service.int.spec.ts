@@ -1,30 +1,14 @@
 import { CacheModule } from '@nestjs/cache-manager';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import {
-  PostgreSqlContainer,
-  StartedPostgreSqlContainer,
-} from '@testcontainers/postgresql';
-import fs from 'fs';
-import path from 'path';
 import { CacheManager } from 'src/app/browser.module';
+import { createTestDatabase, runMigrations } from 'src/testing/postgres';
 import { DataSource, Repository } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 import { PostReviewEpisodeEntity, PostReviewExit } from './post-review.entity';
 import { PostReviewService } from './post-review.service';
 import { PostReviewEpisodeData } from './post-review.utils';
-
-const POSTGRES_IMAGE = 'postgres:17';
-
-let postgres: StartedPostgreSqlContainer;
-
-const migrationFiles = (): string[] =>
-  fs
-    .readdirSync(path.join(__dirname, '..', '..', 'migration'))
-    .filter((name) => /^\d+-.*\.ts$/.test(name))
-    .sort()
-    .map((name) => path.join(__dirname, '..', '..', 'migration', name));
 
 const at = (iso: string): Date => new Date(iso);
 
@@ -53,34 +37,14 @@ describe('PostReviewService against Postgres', () => {
       );
 
   beforeAll(async () => {
-    postgres = await new PostgreSqlContainer(POSTGRES_IMAGE).start();
-
-    const migrator = new DataSource({
-      type: 'postgres',
-      host: postgres.getHost(),
-      port: postgres.getPort(),
-      username: postgres.getUsername(),
-      password: postgres.getPassword(),
-      database: postgres.getDatabase(),
-      migrations: migrationFiles(),
-      namingStrategy: new SnakeNamingStrategy(),
-      synchronize: false,
-    });
-
-    await migrator.initialize();
-    await migrator.runMigrations();
-    await migrator.destroy();
+    const database = await createTestDatabase('six_oclock_test_post_review');
+    await runMigrations(database);
 
     moduleRef = await Test.createTestingModule({
       imports: [
         CacheModule.register(),
         TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: postgres.getHost(),
-          port: postgres.getPort(),
-          username: postgres.getUsername(),
-          password: postgres.getPassword(),
-          database: postgres.getDatabase(),
+          ...database,
           entities: [PostReviewEpisodeEntity],
           namingStrategy: new SnakeNamingStrategy(),
           synchronize: false,
@@ -99,7 +63,6 @@ describe('PostReviewService against Postgres', () => {
 
   afterAll(async () => {
     await moduleRef?.close();
-    await postgres?.stop();
   });
 
   beforeEach(async () => {
