@@ -20,15 +20,12 @@ export class ManifestHealthService {
   ) {}
 
   private async readGaps(): Promise<Map<ItemType, number>> {
-    const rows: { type: ItemType; gaps: string }[] =
-      // eslint-disable-next-line no-restricted-syntax -- its spec mocks this query
-      await this.gapRepository.query(
-        `
-        SELECT type, SUM(upper_id - lower_id + 1) AS gaps
-        FROM ${this.gapRepository.metadata.tableName}
-        GROUP BY type
-        `,
-      );
+    const rows = await this.gapRepository
+      .createQueryBuilder('gap')
+      .select('gap.type', 'type')
+      .addSelect('SUM(gap.upperId - gap.lowerId + 1)', 'gaps')
+      .groupBy('gap.type')
+      .getRawMany<{ type: ItemType; gaps: string }>();
 
     return new Map(rows.map((row) => [row.type, Number(row.gaps)]));
   }
@@ -36,24 +33,27 @@ export class ManifestHealthService {
   private async readGapMarks(
     reach: DateRange,
   ): Promise<Map<ItemType, number[]>> {
-    const rows: { type: ItemType; mark: string; gaps: string }[] =
-      // eslint-disable-next-line no-restricted-syntax -- bucket arithmetic in the GROUP BY
-      await this.gapRepository.query(
-        `
-        SELECT type,
-               least(
-                 $3::int - 1,
-                 greatest(0, floor(
-                   extract(epoch FROM start_date - $1::timestamptz)
-                   / (extract(epoch FROM $2::timestamptz - $1::timestamptz) / $3)
-                 ))
-               ) AS mark,
-               SUM(upper_id - lower_id + 1) AS gaps
-        FROM ${this.gapRepository.metadata.tableName}
-        GROUP BY 1, 2
-        `,
-        [reach.startDate, reach.endDate, SLICE_COUNT],
-      );
+    const mark = `least(
+      :slices::int - 1,
+      greatest(0, floor(
+        extract(epoch FROM gap.startDate - :reachStart::timestamptz)
+        / (extract(epoch FROM :reachEnd::timestamptz - :reachStart::timestamptz) / :slices)
+      ))
+    )`;
+
+    const rows = await this.gapRepository
+      .createQueryBuilder('gap')
+      .select('gap.type', 'type')
+      .addSelect(mark, 'mark')
+      .addSelect('SUM(gap.upperId - gap.lowerId + 1)', 'gaps')
+      .groupBy('gap.type')
+      .addGroupBy(mark)
+      .setParameters({
+        reachStart: reach.startDate,
+        reachEnd: reach.endDate,
+        slices: SLICE_COUNT,
+      })
+      .getRawMany<{ type: ItemType; mark: string; gaps: string }>();
 
     const marks = new Map<ItemType, number[]>();
 

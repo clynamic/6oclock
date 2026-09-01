@@ -24,6 +24,12 @@ interface FlagEvent {
   creator_id: number;
 }
 
+const FLAG_ACTIONS = [
+  PostEventAction.flag_created,
+  PostEventAction.flag_removed,
+  PostEventAction.deleted,
+];
+
 @Injectable()
 export class FlagLifecycleWorker {
   constructor(
@@ -68,27 +74,34 @@ export class FlagLifecycleWorker {
         await ensureActive(job);
 
         // Episodes open and close outside the chunk.
-        // eslint-disable-next-line no-restricted-syntax -- its spec asserts this SQL text
-        const events: FlagEvent[] = await this.postEventRepository.query(
-          `
-          SELECT pe.post_id, pe.created_at, pe.action, pe.creator_id
-          FROM post_events pe
-          WHERE pe.action IN ($1, $2, $3)
-            AND pe.post_id IN (
-              SELECT DISTINCT post_id FROM post_events
-              WHERE action IN ($1, $2, $3)
-                AND created_at >= $4 AND created_at < $5
-            )
-          ORDER BY pe.post_id, pe.created_at, pe.id
-          `,
-          [
-            PostEventAction.flag_created,
-            PostEventAction.flag_removed,
-            PostEventAction.deleted,
-            chunk.startDate,
-            chunk.endDate,
-          ],
-        );
+        const events = await this.postEventRepository
+          .createQueryBuilder('event')
+          .select('event.postId', 'post_id')
+          .addSelect('event.createdAt', 'created_at')
+          .addSelect('event.action', 'action')
+          .addSelect('event.creatorId', 'creator_id')
+          .where('event.action IN (:...actions)')
+          .andWhere((qb) => {
+            const touched = qb
+              .subQuery()
+              .select('DISTINCT touch.postId')
+              .from(PostEventEntity, 'touch')
+              .where('touch.action IN (:...actions)')
+              .andWhere('touch.createdAt >= :start')
+              .andWhere('touch.createdAt < :end')
+              .getQuery();
+
+            return `event.post_id IN ${touched}`;
+          })
+          .setParameters({
+            actions: FLAG_ACTIONS,
+            start: chunk.startDate,
+            end: chunk.endDate,
+          })
+          .orderBy('event.postId')
+          .addOrderBy('event.createdAt')
+          .addOrderBy('event.id')
+          .getRawMany<FlagEvent>();
 
         if (events.length === 0) continue;
 
