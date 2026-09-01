@@ -59,31 +59,40 @@ export class PermitTilesService implements TileService {
   }
 
   async findMissing(range: TilingRange): Promise<Date[]> {
-    const tableName = this.tileRepository.metadata.tableName;
+    const window = {
+      start: range.dateRange.startDate,
+      end: range.dateRange.endDate,
+    };
 
-    const stale: { time: Date }[] = await this.tileRepository.query(
-      `
-      SELECT date_trunc('hour', permit.created_at) AS time
-      FROM permits permit
-      LEFT JOIN ${tableName} tile
-        ON tile.time = date_trunc('hour', permit.created_at)
-      WHERE permit.created_at >= $1 AND permit.created_at < $2
-      GROUP BY 1, tile.updated_at
-      HAVING tile.updated_at IS NULL OR max(permit.updated_at) > tile.updated_at
-      `,
-      [range.dateRange.startDate, range.dateRange.endDate],
-    );
+    const stale = await this.permitRepository
+      .createQueryBuilder('permit')
+      .select("date_trunc('hour', permit.createdAt)", 'time')
+      .leftJoin(
+        PermitTilesEntity,
+        'tile',
+        "tile.time = date_trunc('hour', permit.createdAt)",
+      )
+      .where('permit.createdAt >= :start', window)
+      .andWhere('permit.createdAt < :end', window)
+      .groupBy("date_trunc('hour', permit.createdAt)")
+      .addGroupBy('tile.updatedAt')
+      .having(
+        'tile.updated_at IS NULL OR max(permit.updated_at) > tile.updated_at',
+      )
+      .getRawMany<{ time: Date }>();
 
-    const immature: { time: Date }[] = await this.tileRepository.query(
-      `
-      SELECT tile.time AS time
-      FROM ${tableName} tile
-      WHERE tile.time >= $1 AND tile.time < $2
-        AND tile.updated_at < tile.time + $3::interval
-        AND now() >= tile.time + $3::interval
-      `,
-      [range.dateRange.startDate, range.dateRange.endDate, this.reviewPeriod],
-    );
+    const immature = await this.tileRepository
+      .createQueryBuilder('tile')
+      .select('tile.time', 'time')
+      .where('tile.time >= :start', window)
+      .andWhere('tile.time < :end', window)
+      .andWhere('tile.updated_at < tile.time + :period::interval', {
+        period: this.reviewPeriod,
+      })
+      .andWhere('now() >= tile.time + :period::interval', {
+        period: this.reviewPeriod,
+      })
+      .getRawMany<{ time: Date }>();
 
     const times = new Map<number, Date>();
     const add = (time: Date): void => {
@@ -162,6 +171,7 @@ export class PermitTilesService implements TileService {
     capturedAt: Date,
   ): Promise<number> {
     const candidates: { id: number; uploader_id: number; created_at: Date }[] =
+      // eslint-disable-next-line no-restricted-syntax -- shares one SQL fragment across two statements
       await this.permitRepository.query(
         `
         SELECT pv.post_id AS id, pv.updater_id AS uploader_id, pv.updated_at AS created_at
@@ -210,6 +220,7 @@ export class PermitTilesService implements TileService {
 
   private async deriveRange(range: DateRange): Promise<number> {
     const candidates: { id: number; uploader_id: number; created_at: Date }[] =
+      // eslint-disable-next-line no-restricted-syntax -- its spec mocks this query
       await this.permitRepository.query(
         `
         SELECT pv.post_id AS id, pv.updater_id AS uploader_id, pv.updated_at AS created_at

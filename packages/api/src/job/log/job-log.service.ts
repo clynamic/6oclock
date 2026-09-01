@@ -83,6 +83,7 @@ export class JobLogService {
       seconds: RETENTION_SECONDS + PRUNE_SLACK_SECONDS,
     });
 
+    // eslint-disable-next-line no-restricted-syntax -- DELETE over a limited subquery, and reads the row count
     const result: [unknown[], number] = await this.logRepository.query(
       `
       DELETE FROM job_logs

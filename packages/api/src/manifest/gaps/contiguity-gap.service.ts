@@ -132,6 +132,7 @@ export class ContiguityGapService {
       upper: number;
       after: Date;
       before: Date;
+      // eslint-disable-next-line no-restricted-syntax -- window function
     }[] = await repository.query(
       `
       SELECT id + 1 AS lower, next_id - 1 AS upper, dated AS after, next_dated AS before

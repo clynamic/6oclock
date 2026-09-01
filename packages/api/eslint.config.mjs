@@ -42,4 +42,18 @@ export default tseslint.config(
       'prettier/prettier': 'warn',
     },
   },
+  {
+    files: ['**/*.ts'],
+    ignores: ['src/migration/**', 'src/testing/**', '**/*.spec.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'warn',
+        {
+          selector: "CallExpression[callee.property.name='query']",
+          message:
+            'Use the typeorm query builder. If the SQL cannot be expressed there, disable this lint with a reason.',
+        },
+      ],
+    },
+  },
 );

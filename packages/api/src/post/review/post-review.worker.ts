@@ -170,15 +170,17 @@ export class PostReviewWorker {
   }
 
   private async eventsOf(postIds: number[]): Promise<PostReviewEvent[]> {
-    return this.postEventRepository.query(
-      `
-      SELECT pe.post_id, pe.created_at, pe.action
-      FROM post_events pe
-      WHERE pe.action = ANY($1) AND pe.post_id = ANY($2)
-      ORDER BY pe.post_id, pe.created_at, pe.id
-      `,
-      [REVIEW_ACTIONS, postIds],
-    );
+    return this.postEventRepository
+      .createQueryBuilder('event')
+      .select('event.postId', 'post_id')
+      .addSelect('event.createdAt', 'created_at')
+      .addSelect('event.action', 'action')
+      .where('event.action = ANY(:actions)', { actions: REVIEW_ACTIONS })
+      .andWhere('event.postId = ANY(:postIds)', { postIds })
+      .orderBy('event.postId')
+      .addOrderBy('event.createdAt')
+      .addOrderBy('event.id')
+      .getRawMany<PostReviewEvent>();
   }
 
   private async permittedOf(postIds: number[]): Promise<Set<number>> {

@@ -204,6 +204,7 @@ export async function findMissingOrStaleTiles<T extends WithTileTime>(
   `;
 
   const params = [startTime, endTime, range.updatedAt || null];
+  // eslint-disable-next-line no-restricted-syntax -- generate_series as the FROM source
   const result = await repository.query(query, params);
 
   return result.map((row: { time: Date }) => row.time);

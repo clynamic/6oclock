@@ -48,6 +48,7 @@ export class JobBoss implements OnModuleDestroy {
   }
 
   private async verifySchema(): Promise<void> {
+    // eslint-disable-next-line no-restricted-syntax -- information_schema introspection
     const rows: { column_name: string }[] = await this.dataSource.query(
       `SELECT column_name FROM information_schema.columns
        WHERE table_schema = 'pgboss' AND table_name = 'job'`,

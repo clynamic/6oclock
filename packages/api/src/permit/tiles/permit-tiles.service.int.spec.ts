@@ -349,5 +349,21 @@ describe('PermitTilesService against Postgres', () => {
 
       expect(missing).toEqual([]);
     });
+
+    it('comes back when a permit landed after its tile was counted', async () => {
+      const time = daysAgo(REVIEW_PERIOD_DAYS + 1);
+      await upload(60, time);
+      await service.derive([time]);
+      await source.query(
+        'UPDATE permit_hourly_tiles SET updated_at = $1 WHERE time = $2',
+        [hoursAgo(1), time],
+      );
+
+      const missing = await service.findMissing({
+        dateRange: oneHourFrom(time),
+      });
+
+      expect(missing).toEqual([time]);
+    });
   });
 });
