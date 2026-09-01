@@ -20,10 +20,6 @@ export interface TestDatabaseOptions {
 
 let container: Promise<StartedPostgreSqlContainer> | undefined;
 
-/**
- * A worker starts its own container only when jest's global setup did not, so a
- * suite still runs outside jest.
- */
 export const postgresOptions = async (): Promise<TestDatabaseOptions> => {
   const host = process.env['TEST_POSTGRES_HOST'];
 
