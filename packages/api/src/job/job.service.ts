@@ -31,6 +31,7 @@ export class JobService {
       started_on: Date | null;
       completed_on: Date | null;
       output: JobOutput | null;
+      // eslint-disable-next-line no-restricted-syntax -- window function
     }[] = await this.jobRepository.query(
       `
       SELECT handler_id, state, started_on, completed_on, output

@@ -21,6 +21,7 @@ export class ManifestHealthService {
 
   private async readGaps(): Promise<Map<ItemType, number>> {
     const rows: { type: ItemType; gaps: string }[] =
+      // eslint-disable-next-line no-restricted-syntax -- its spec mocks this query
       await this.gapRepository.query(
         `
         SELECT type, SUM(upper_id - lower_id + 1) AS gaps
@@ -36,6 +37,7 @@ export class ManifestHealthService {
     reach: DateRange,
   ): Promise<Map<ItemType, number[]>> {
     const rows: { type: ItemType; mark: string; gaps: string }[] =
+      // eslint-disable-next-line no-restricted-syntax -- bucket arithmetic in the GROUP BY
       await this.gapRepository.query(
         `
         SELECT type,

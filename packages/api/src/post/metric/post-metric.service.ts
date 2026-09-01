@@ -45,6 +45,7 @@ export class PostMetricService {
     const range = DateRange.fill(partialRange);
     const cutOff = this.pendingCutoffDate(range);
 
+    // eslint-disable-next-line no-restricted-syntax -- CTE chain over generate_series
     const result = await this.episodeRepository.query(
       `
       SELECT
@@ -120,6 +121,7 @@ export class PostMetricService {
       ORDER BY hours.hour
     `;
 
+    // eslint-disable-next-line no-restricted-syntax -- CTE chain over generate_series
     const result = (await this.episodeRepository.query(query, [
       range.startDate,
       range.endDate,

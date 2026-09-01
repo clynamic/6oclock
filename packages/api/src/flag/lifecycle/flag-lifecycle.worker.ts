@@ -68,6 +68,7 @@ export class FlagLifecycleWorker {
         await ensureActive(job);
 
         // Episodes open and close outside the chunk.
+        // eslint-disable-next-line no-restricted-syntax -- its spec asserts this SQL text
         const events: FlagEvent[] = await this.postEventRepository.query(
           `
           SELECT pe.post_id, pe.created_at, pe.action, pe.creator_id

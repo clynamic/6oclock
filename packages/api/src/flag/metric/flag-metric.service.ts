@@ -112,6 +112,7 @@ export class FlagMetricService {
       ORDER BY hour_series.hour
     `;
 
+    // eslint-disable-next-line no-restricted-syntax -- CTE chain
     const result = (await this.postEventRepository.query(query, [
       range.startDate,
       range.endDate,

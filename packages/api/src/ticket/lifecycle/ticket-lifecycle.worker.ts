@@ -77,6 +77,7 @@ export class TicketLifecycleWorker {
 
         if (tickets.length === 0) continue;
 
+        // eslint-disable-next-line no-restricted-syntax -- JSON operators throughout
         const events: TicketEvent[] = await this.modActionRepository.query(
           `
           SELECT (ma."values"->>'ticket_id')::int AS ticket_id,
