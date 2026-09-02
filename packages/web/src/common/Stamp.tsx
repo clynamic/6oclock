@@ -10,26 +10,32 @@ interface StampProps {
   size?: number;
 }
 
+const REFERENCE_SIZE = 90;
+
 export const Stamp: React.FC<StampProps> = ({ children, color, size }) => {
   const stampSize = size ?? 180;
+  const scale = stampSize / REFERENCE_SIZE;
+  const bleed = 16 * scale;
 
   const svgContent = useMemo(() => {
     return generateRosetteSVG({
-      size: stampSize + 32,
-      outerR: stampSize / 2 + 8,
-      innerR: stampSize / 2 - 8,
-      biteR: 11,
-      depth: 10,
+      id: `stamp-${stampSize}-${(color ?? 'current').replace(/[^a-z0-9]/gi, '')}`,
+      size: stampSize + bleed * 2,
+      outerR: stampSize / 2 + 8 * scale,
+      innerR: stampSize / 2 - 8 * scale,
+      biteR: 11 * scale,
+      depth: 10 * scale,
       count: 16,
       bg: 'none',
       ringColor: color || 'currentColor',
     });
-  }, [stampSize, color]);
+  }, [stampSize, scale, bleed, color]);
 
   return (
     <Box
       sx={{
         position: 'relative',
+        flexShrink: 0,
 
         width: stampSize,
         aspectRatio: 1,
@@ -42,10 +48,10 @@ export const Stamp: React.FC<StampProps> = ({ children, color, size }) => {
       <Box
         sx={{
           position: 'absolute',
-          top: -16,
-          left: -16,
-          right: -16,
-          bottom: -16,
+          top: -bleed,
+          left: -bleed,
+          right: -bleed,
+          bottom: -bleed,
           aspectRatio: '1',
           display: 'flex',
           justifyContent: 'center',

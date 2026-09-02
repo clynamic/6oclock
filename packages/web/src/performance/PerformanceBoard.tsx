@@ -8,6 +8,7 @@ import { QueryHint } from '../common/QueryHint';
 import { useChartValue } from '../utils/charts';
 import { refetchQueryOptions } from '../utils/query';
 import { PerformanceFrame } from './PerformanceFrame';
+import { filterCompeting } from './competing';
 
 export const PerformanceLeaderboard: React.FC = () => {
   const { range, area } = useChartValue();
@@ -21,9 +22,11 @@ export const PerformanceLeaderboard: React.FC = () => {
     refetchQueryOptions(),
   );
 
+  const competing = filterCompeting(data);
+
   return (
     <QueryHint
-      data={data}
+      data={competing}
       isLoading={isLoading}
       error={error}
       skeleton={
@@ -63,7 +66,7 @@ export const PerformanceLeaderboard: React.FC = () => {
           </Stack>
         )}
       >
-        {data?.map((user) => (
+        {competing?.map((user) => (
           <PerformanceFrame key={user.userId} summary={user} />
         ))}
       </LimitedList>

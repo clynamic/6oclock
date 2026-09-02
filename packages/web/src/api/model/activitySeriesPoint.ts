@@ -7,6 +7,7 @@
  */
 
 export interface ActivitySeriesPoint {
+  date: Date;
   postCreate: number;
   postDelete: number;
   postApprove: number;
@@ -17,5 +18,4 @@ export interface ActivitySeriesPoint {
   flagHandle: number;
   ticketCreate: number;
   ticketHandle: number;
-  date: Date;
 }

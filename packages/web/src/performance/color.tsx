@@ -2,40 +2,26 @@ import { Theme, useTheme } from '@mui/material';
 
 import { PerformanceGrade, TrendGrade } from '../api';
 
+const SCORE_GRADE_COLORS: Record<PerformanceGrade, string> = {
+  [PerformanceGrade.F]: '#78828f',
+  [PerformanceGrade.E]: '#c9803a',
+  [PerformanceGrade.D]: '#a8adb5',
+  [PerformanceGrade.C]: '#c9a22c',
+  [PerformanceGrade.B]: '#3fb8b0',
+  [PerformanceGrade.A]: '#5aa6e6',
+  [PerformanceGrade.S]: '#9e66bb',
+  [PerformanceGrade.S2]: '#9e66bb',
+  [PerformanceGrade.S3]: '#cf3d49',
+  [PerformanceGrade.S4]: '#cf3d49',
+  [PerformanceGrade.S5]: '#cf3d49',
+  [PerformanceGrade.S6]: '#cf3d49',
+};
+
 export const getScoreGradeColor = (
-  theme: Theme,
   grade?: PerformanceGrade,
 ): string | undefined => {
   if (!grade) return undefined;
-  if (
-    [PerformanceGrade.S4, PerformanceGrade.S5, PerformanceGrade.S6].some(
-      (g) => g === grade,
-    )
-  ) {
-    // return 'info.main';
-    return '#9e66bb';
-  } else if (
-    [PerformanceGrade.S, PerformanceGrade.S2, PerformanceGrade.S3].some(
-      (g) => g === grade,
-    )
-  ) {
-    // We do not show a lighter color, because all S ranks are considered over the top already
-    // return '#af81c6';
-    return '#9e66bb';
-    // return 'info.main';
-  } else if (grade == PerformanceGrade.A) {
-    return theme.palette.success.main;
-  } else if (grade == PerformanceGrade.B) {
-    return theme.palette.success.light;
-  } else if (grade == PerformanceGrade.C) {
-    return theme.palette.warning.main;
-  } else if (grade == PerformanceGrade.D) {
-    return theme.palette.warning.light;
-  } else if (grade == PerformanceGrade.E) {
-    return theme.palette.error.light;
-  } else if (grade == PerformanceGrade.F) {
-    return theme.palette.error.main;
-  }
+  return SCORE_GRADE_COLORS[grade];
 };
 
 export const getTrendGradeColor = (
@@ -64,8 +50,7 @@ export const useGradeColors = () => {
   const theme = useTheme();
 
   return {
-    getScoreGradeColor: (grade?: PerformanceGrade) =>
-      getScoreGradeColor(theme, grade),
+    getScoreGradeColor,
     getTrendGradeColor: (grade?: TrendGrade) =>
       getTrendGradeColor(theme, grade),
   };

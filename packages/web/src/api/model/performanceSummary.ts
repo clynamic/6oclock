@@ -5,21 +5,21 @@
  * backend data aggregate for 6 o'clock
  * OpenAPI spec version: 1.0.0
  */
-import type { ActivitySummary } from './activitySummary';
 import type { PerformanceGrade } from './performanceGrade';
 import type { PerformanceRecord } from './performanceRecord';
+import type { PerformanceSummaryActivity } from './performanceSummaryActivity';
 import type { TrendGrade } from './trendGrade';
 import type { UserHead } from './userHead';
 
 export interface PerformanceSummary {
   scoreGrade: PerformanceGrade;
   trendGrade: TrendGrade;
+  activity: PerformanceSummaryActivity;
   userId: number;
   head?: UserHead;
   position: number;
   score: number;
   trend: number;
   history: PerformanceRecord[];
-  activity: ActivitySummary;
-  days: number;
+  attendance: Date[];
 }
