@@ -50,6 +50,16 @@ export const ScreenshotPrinter: React.FC<ScreenshotPrinterProps> = ({
               }
             });
 
+          const clonedTarget = targetId
+            ? clonedDocument.getElementById(targetId)
+            : clonedDocument.body;
+
+          clonedTarget?.querySelectorAll<HTMLElement>('*').forEach((el) => {
+            if (window.getComputedStyle(el).boxShadow.includes('inset')) {
+              el.style.boxShadow = 'none';
+            }
+          });
+
           clonedDocument
             .querySelectorAll<HTMLElement>('.MuiCard-root')
             .forEach((card) => {
@@ -59,10 +69,6 @@ export const ScreenshotPrinter: React.FC<ScreenshotPrinterProps> = ({
                 boxShadow: 'none',
               });
             });
-
-          const clonedTarget = targetId
-            ? clonedDocument.getElementById(targetId)
-            : clonedDocument.body;
 
           if (clonedTarget) {
             Object.assign(clonedTarget.style, {

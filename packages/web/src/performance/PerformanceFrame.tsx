@@ -1,11 +1,11 @@
-import { CalendarMonth, Whatshot } from '@mui/icons-material';
+import { Whatshot } from '@mui/icons-material';
 import {
   Box,
   Card,
   CardActionArea,
-  Chip,
   Skeleton,
   Stack,
+  Typography,
 } from '@mui/material';
 import { Link } from 'react-router';
 
@@ -13,12 +13,8 @@ import { PerformanceSummary } from '../api';
 import { RankingText } from '../common/RankingText';
 import { UserAvatar } from '../common/UserAvatar';
 import { UsernameText } from '../common/UsernameText';
-import {
-  getActivityFromKey,
-  getActivityIcon,
-  getActivityNoun,
-} from '../utils/activity';
 import { formatNumber } from '../utils/numbers';
+import { notableActivities } from './activities';
 import { useGradeColors } from './color';
 
 export interface PerformanceLeaderboardFrameProps {
@@ -78,31 +74,30 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
                   }}
                 >
                   {summary ? (
-                    <>
-                      {Object.entries(summary.activity)
-                        .map(([key, count]) => ({
-                          key,
-                          activity: getActivityFromKey(key),
-                          count: count as number,
-                        }))
-                        .sort((a, b) => b.count - a.count)
-                        .slice(0, 2)
-                        .map(({ key, activity, count }) => (
-                          <Chip
-                            key={key}
-                            size="small"
-                            avatar={getActivityIcon(activity)}
-                            label={`${formatNumber(count)} ${getActivityNoun(activity)}`}
-                          />
-                        ))}
-                      {summary.days > 1 && (
-                        <Chip
-                          size="small"
-                          avatar={<CalendarMonth />}
-                          label={`${summary.days} Days`}
-                        />
-                      )}
-                    </>
+                    notableActivities(summary)
+                      .slice(0, 3)
+                      .map(({ key, label, count }) => (
+                        <Stack
+                          key={key}
+                          direction="row"
+                          spacing={0.5}
+                          sx={{
+                            alignItems: 'center',
+                            color: 'text.secondary',
+                            whiteSpace: 'nowrap',
+                            '& svg': { fontSize: 18 },
+                          }}
+                        >
+                          {label.icon}
+                          <Typography
+                            variant="body2"
+                            sx={{ color: 'text.primary' }}
+                          >
+                            {formatNumber(count)}
+                          </Typography>
+                          <Typography variant="body2">{label.noun}</Typography>
+                        </Stack>
+                      ))
                   ) : (
                     <Skeleton width={100} />
                   )}
@@ -121,14 +116,19 @@ export const PerformanceFrame: React.FC<PerformanceLeaderboardFrameProps> = ({
                       #{summary.position}
                     </RankingText>
                   </Box>
-                  <Chip
-                    size="small"
-                    avatar={<Whatshot />}
-                    label={`${summary.score}`}
-                    sx={{
-                      color: getScoreGradeColor(summary.scoreGrade),
-                    }}
-                  />
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{ alignItems: 'center' }}
+                  >
+                    <Whatshot fontSize="small" />
+                    <Typography
+                      variant="subtitle1"
+                      sx={{ color: getScoreGradeColor(summary.scoreGrade) }}
+                    >
+                      {formatNumber(summary.score)}
+                    </Typography>
+                  </Stack>
                 </Stack>
               )}
             </Stack>

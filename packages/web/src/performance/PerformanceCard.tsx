@@ -3,13 +3,12 @@ import { Box, Button, Skeleton, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router';
 
 import { usePerformance } from '../api';
-import { LimitedList } from '../common/LimitedList';
 import { QueryHint } from '../common/QueryHint';
 import { RankingText } from '../common/RankingText';
-import { getActivityFromKey, getActivityName } from '../utils/activity';
 import { useChartValue } from '../utils/charts';
 import { formatNumber } from '../utils/numbers';
 import { refetchQueryOptions } from '../utils/query';
+import { notableActivities } from './activities';
 import { useGradeColors } from './color';
 
 export const PerformanceCard: React.FC = () => {
@@ -55,7 +54,7 @@ export const PerformanceCard: React.FC = () => {
           >
             <Stack
               direction="row"
-              spacing={1}
+              spacing={1.5}
               sx={{
                 alignItems: 'center',
               }}
@@ -63,11 +62,13 @@ export const PerformanceCard: React.FC = () => {
               <Whatshot />
               <Typography
                 variant="h6"
-                sx={{
-                  color: getScoreGradeColor(data?.scoreGrade),
-                }}
+                sx={{ color: getScoreGradeColor(data?.scoreGrade) }}
               >
-                {data ? data.score : <Skeleton variant="text" width={60} />}
+                {data ? (
+                  formatNumber(data.score)
+                ) : (
+                  <Skeleton variant="text" width={60} />
+                )}
               </Typography>
             </Stack>
             {data ? (
@@ -81,48 +82,39 @@ export const PerformanceCard: React.FC = () => {
             )}
           </Stack>
           <Stack
-            direction="column"
-            spacing={1}
+            direction="row"
             sx={{
               flex: 1,
+              gap: 2,
+              rowGap: 1,
+              flexWrap: 'wrap',
+              alignContent: 'flex-start',
               overflow: 'hidden',
             }}
           >
-            <LimitedList>
-              {data
-                ? Object.entries(data.activity)
-                    .sort(([a], [b]) => a.localeCompare(b))
-                    .map(([type, value]) => (
-                      <Stack
-                        key={type}
-                        direction="row"
-                        spacing={1}
-                        sx={{
-                          justifyContent: 'space-between',
-                        }}
-                      >
-                        <Typography variant="body1">
-                          {getActivityName(getActivityFromKey(type))}
-                        </Typography>
-                        <Typography variant="body1">
-                          {formatNumber(value)}
-                        </Typography>
-                      </Stack>
-                    ))
-                : Array.from({ length: 3 }).map((_, index) => (
-                    <Stack
-                      key={index}
-                      direction="row"
-                      spacing={1}
-                      sx={{
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <Skeleton variant="text" width={100} />
-                      <Skeleton variant="text" width={30} />
-                    </Stack>
-                  ))}
-            </LimitedList>
+            {data
+              ? notableActivities(data).map(({ key, label, count }) => (
+                  <Stack
+                    key={key}
+                    direction="row"
+                    spacing={0.5}
+                    sx={{
+                      alignItems: 'center',
+                      color: 'text.secondary',
+                      whiteSpace: 'nowrap',
+                      '& svg': { fontSize: 18 },
+                    }}
+                  >
+                    {label.icon}
+                    <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                      {formatNumber(count)}
+                    </Typography>
+                    <Typography variant="body2">{label.noun}</Typography>
+                  </Stack>
+                ))
+              : Array.from({ length: 3 }).map((_, index) => (
+                  <Skeleton key={index} variant="text" width={120} />
+                ))}
           </Stack>
           <Stack
             direction="row"

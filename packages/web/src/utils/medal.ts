@@ -11,6 +11,7 @@ type RosetteOpts = {
   textColor?: string;
   fontSize?: number;
   fontFamily?: string;
+  id?: string;
 };
 
 export function generateRosetteSVG({
@@ -26,6 +27,7 @@ export function generateRosetteSVG({
   textColor = '#1f3550',
   fontSize = 48,
   fontFamily = 'Inter, ui-sans-serif, system-ui',
+  id = 'scalloped-ring',
 }: RosetteOpts): string {
   const cx = size / 2;
   const cy = size / 2;
@@ -57,7 +59,7 @@ export function generateRosetteSVG({
 <svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
   ${maybeBg}
   <defs>
-    <mask id="scalloped-ring">
+    <mask id="${id}">
       <rect width="100%" height="100%" fill="black"/>
       <!-- visible annulus -->
       <circle cx="${cx}" cy="${cy}" r="${outerR}" fill="white"/>
@@ -71,7 +73,7 @@ export function generateRosetteSVG({
   </defs>
 
   <!-- draw scalloped ring -->
-  <rect width="100%" height="100%" fill="${ringColor}" mask="url(#scalloped-ring)"/>
+  <rect width="100%" height="100%" fill="${ringColor}" mask="url(#${id})"/>
 
   ${maybeText}
 </svg>`;

@@ -1,7 +1,7 @@
 import { format, subMonths } from 'date-fns';
 
 import { PerformanceSummary } from '../api';
-import { getActivityFromKey, getActivityNoun } from '../utils/activity';
+import { describeAction } from '../utils/activity';
 import { formatRangeLabel, inferDurationFromRange } from '../utils/ranges';
 import { capitalizeWords } from '../utils/strings';
 import { getTrendSymbol } from '../utils/trends';
@@ -22,13 +22,7 @@ export const exportPerformanceToCSV = (
 
   const activityHeaders = Array.from(activeActivityTypes)
     .sort()
-    .map((key) => {
-      try {
-        return getActivityNoun(getActivityFromKey(key));
-      } catch {
-        return key;
-      }
-    });
+    .map((key) => describeAction(key).noun);
 
   const currentDate = range.startDate;
   const monthHeaders = [
@@ -54,11 +48,7 @@ export const exportPerformanceToCSV = (
 
     const activityRow = Array.from(activeActivityTypes)
       .sort()
-      .map(
-        (key) =>
-          summary.activity[key as keyof typeof summary.activity]?.toString() ||
-          '0',
-      );
+      .map((key) => summary.activity[key]?.toString() || '0');
 
     const historicalScores = [...summary.history.slice(1, 4)]
       .reverse()

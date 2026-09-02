@@ -1,25 +1,15 @@
-import React, { PropsWithChildren, useMemo } from 'react';
+import { useMemo } from 'react';
 
-import {
-  Box,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableCellProps,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
-import { addDays, addMonths, addWeeks, addYears, format } from 'date-fns';
-import { mix } from 'polished';
+import { Whatshot } from '@mui/icons-material';
+import { Box, Stack, Theme, Typography, useMediaQuery } from '@mui/material';
+import { SparkLineChart } from '@mui/x-charts';
 import { useNavigate } from 'react-router';
 
-import { PerformanceGrade, TrendGrade, usePerformance } from '../api';
+import { PerformanceSummary, usePerformance } from '../api';
+import { LimitedList } from '../common/LimitedList';
 import { QueryHint } from '../common/QueryHint';
 import { RankingText } from '../common/RankingText';
 import { ScreenshotPrinter } from '../common/ScreenshotPrinter';
-import { TrendIcon } from '../common/TrendIcon';
 import { UserAvatar } from '../common/UserAvatar';
 import { UsernameText } from '../common/UsernameText';
 import { Page } from '../page/Page';
@@ -29,56 +19,171 @@ import { PageTitle } from '../page/PageTitle';
 import { NavButton } from '../page/header/NavButton';
 import { NavSpacer } from '../page/header/NavSpacer';
 import { PageHeader } from '../page/header/PageHeader';
-import { getActivityFromKey, getActivityNoun } from '../utils/activity';
 import { useChartValue } from '../utils/charts';
 import { formatNumber } from '../utils/numbers';
 import { refetchQueryOptions } from '../utils/query';
-import {
-  TimeDuration,
-  formatRangeLabel,
-  inferDurationFromRange,
-  unitFromDuration,
-} from '../utils/ranges';
+import { formatRangeLabel, inferDurationFromRange } from '../utils/ranges';
 import { capitalizeWords } from '../utils/strings';
-import { useGradeColors } from './color';
+import { GradeBadge } from './GradeBadge';
+import { notableActivities } from './activities';
+import { getScoreGradeColor } from './color';
+import { filterCompeting } from './competing';
 import { exportPerformanceToCSV } from './export';
 
-const SpaceCell: React.FC = () => (
-  <TableCell>
-    <Box
-      component="span"
-      sx={{
-        width: 1,
-        display: 'contents',
-      }}
-    />
-  </TableCell>
+const ROW_HEIGHT = 56;
+
+const ActivityList: React.FC<{
+  summary: PerformanceSummary;
+  dense?: boolean;
+}> = ({ summary, dense }) => (
+  <LimitedList
+    sx={{
+      flexDirection: 'row',
+      gap: dense ? 1.5 : 2,
+      height: 'auto',
+      flexGrow: 1,
+      minWidth: 0,
+    }}
+  >
+    {notableActivities(summary).map(({ key, label, count }) => (
+      <Stack
+        key={key}
+        direction="row"
+        spacing={0.5}
+        sx={{
+          alignItems: 'center',
+          color: 'text.secondary',
+          whiteSpace: 'nowrap',
+          flexShrink: 0,
+          '& svg': { fontSize: dense ? 16 : 20 },
+        }}
+      >
+        {label.icon}
+        <Typography
+          variant={dense ? 'body2' : 'body1'}
+          sx={{ color: 'text.primary' }}
+        >
+          {formatNumber(count)}
+        </Typography>
+        <Typography variant="body2">{label.noun}</Typography>
+      </Stack>
+    ))}
+  </LimitedList>
 );
 
-const GradeCell: React.FC<
-  PropsWithChildren<
-    {
-      grade: TrendGrade | PerformanceGrade;
-    } & TableCellProps
-  >
-> = ({ grade, children, ...props }) => {
-  const { getScoreGradeColor, getTrendGradeColor } = useGradeColors();
+const rowSx = {
+  px: 1,
+  borderRadius: 1,
+  cursor: 'pointer',
+  '&:hover': { backgroundColor: 'action.hover' },
+};
+
+const CompactRow: React.FC<{ summary: PerformanceSummary }> = ({ summary }) => {
+  const navigate = useNavigate();
+
   return (
-    <TableCell
-      {...props}
-      align="center"
-      sx={{
-        backgroundColor: mix(
-          0.25,
-          '#808080',
-          (grade in PerformanceGrade
-            ? getScoreGradeColor(grade as PerformanceGrade)
-            : getTrendGradeColor(grade as TrendGrade)) ?? 'transparent',
-        ),
-      }}
+    <Stack
+      spacing={0.75}
+      onClick={() => navigate(`/performance/${summary.userId}`)}
+      sx={{ ...rowSx, py: 1 }}
     >
-      {children}
-    </TableCell>
+      <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
+        <Box sx={{ width: 40, flexShrink: 0 }}>
+          <RankingText rank={summary.position} variant="subtitle1">
+            #{summary.position}
+          </RankingText>
+        </Box>
+        <UserAvatar
+          user={{ id: summary.userId, ...summary.head }}
+          size={36}
+          shape="rounded"
+        />
+        <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+          <UsernameText variant="subtitle1" user={summary} />
+        </Box>
+        <GradeBadge grade={summary.scoreGrade} size={32} />
+      </Stack>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+        <ActivityList summary={summary} dense />
+        <Stack
+          direction="row"
+          spacing={0.5}
+          sx={{ flexShrink: 0, alignItems: 'center' }}
+        >
+          <Whatshot fontSize="small" />
+          <Typography variant="subtitle1">
+            {formatNumber(summary.score)}
+          </Typography>
+        </Stack>
+      </Stack>
+    </Stack>
+  );
+};
+
+const WideRow: React.FC<{ summary: PerformanceSummary }> = ({ summary }) => {
+  const navigate = useNavigate();
+  const color = getScoreGradeColor(summary.scoreGrade);
+
+  return (
+    <Stack
+      direction="row"
+      spacing={2}
+      onClick={() => navigate(`/performance/${summary.userId}`)}
+      sx={{ ...rowSx, alignItems: 'center', height: ROW_HEIGHT + 12, px: 1.5 }}
+    >
+      <Box sx={{ width: 56, flexShrink: 0 }}>
+        <RankingText rank={summary.position} variant="h6">
+          #{summary.position}
+        </RankingText>
+      </Box>
+      <UserAvatar
+        user={{ id: summary.userId, ...summary.head }}
+        size={ROW_HEIGHT}
+        shape="rounded"
+      />
+      <Stack sx={{ flexGrow: 1, minWidth: 0 }} spacing={0.5}>
+        <UsernameText variant="subtitle1" user={summary} />
+        <ActivityList summary={summary} />
+      </Stack>
+      <Box sx={{ width: 160, height: ROW_HEIGHT, flexShrink: 0 }}>
+        <SparkLineChart
+          data={[...summary.history].reverse().map((record) => record.score)}
+          height={ROW_HEIGHT}
+          color={color}
+          area
+          sx={{
+            '.MuiLineChart-area': {
+              fillOpacity: 0.5,
+            },
+          }}
+        />
+      </Box>
+      <GradeBadge grade={summary.scoreGrade} />
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{
+          flexShrink: 0,
+          alignItems: 'center',
+          width: 104,
+          justifyContent: 'flex-end',
+        }}
+      >
+        <Whatshot />
+        <Typography variant="h5">{formatNumber(summary.score)}</Typography>
+      </Stack>
+    </Stack>
+  );
+};
+
+const PerformanceRow: React.FC<{ summary: PerformanceSummary }> = ({
+  summary,
+}) => {
+  const compact = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+  return compact ? (
+    <CompactRow summary={summary} />
+  ) : (
+    <WideRow summary={summary} />
   );
 };
 
@@ -92,9 +197,12 @@ export const PerformanceTable: React.FC = () => {
     () => formatRangeLabel(range.startDate, range.endDate, chartDuration),
     [range.startDate, range.endDate, chartDuration],
   );
-  const navigate = useNavigate();
 
-  const { data, isLoading, error } = usePerformance(
+  const {
+    data: board,
+    isLoading,
+    error,
+  } = usePerformance(
     {
       ...range,
       area,
@@ -102,62 +210,13 @@ export const PerformanceTable: React.FC = () => {
     },
     refetchQueryOptions(),
   );
+  const data = useMemo(() => filterCompeting(board), [board]);
+  const omitted = (board?.length ?? 0) - (data?.length ?? 0);
 
-  const handleExport = async () => {
-    if (!data) return;
-    exportPerformanceToCSV(data, area, range);
+  const handleExport = () => {
+    if (!board) return;
+    exportPerformanceToCSV(board, area, range);
   };
-
-  const periods = useMemo(() => {
-    const labels = [];
-    const durationUnit = unitFromDuration(chartDuration);
-    let date = new Date(range.startDate);
-
-    for (let i = 0; i < 4; i++) {
-      switch (chartDuration) {
-        case TimeDuration.Day:
-          labels.push(format(date, 'MMM dd'));
-          break;
-        case TimeDuration.Week:
-          labels.push(format(date, "'W'w MMM"));
-          break;
-        case TimeDuration.Month:
-          labels.push(format(date, 'MMMM'));
-          break;
-        case TimeDuration.Year:
-          labels.push(format(date, 'yyyy'));
-          break;
-        default:
-          labels.push(format(date, 'MMMM'));
-      }
-      // Subtract one period
-      switch (durationUnit) {
-        case 'day':
-          date = addDays(date, -1);
-          break;
-        case 'week':
-          date = addWeeks(date, -1);
-          break;
-        case 'month':
-          date = addMonths(date, -1);
-          break;
-        case 'year':
-          date = addYears(date, -1);
-          break;
-      }
-    }
-    return labels;
-  }, [range.startDate, chartDuration]);
-
-  const activities = useMemo(() => {
-    const activities = new Set<string>();
-    data?.forEach((summary) => {
-      Object.keys(summary.activity).forEach((type) => {
-        activities.add(type);
-      });
-    });
-    return Array.from(activities).sort();
-  }, [data]);
 
   return (
     <Page>
@@ -188,130 +247,28 @@ export const PerformanceTable: React.FC = () => {
               ]}
             />
             <PageBody>
-              <Box
-                sx={{
-                  p: 2,
-                  overflowX: 'auto',
-                  maxWidth: '100%',
-                }}
-              >
+              <Box sx={{ width: '100%', maxWidth: 1200, margin: 'auto', p: 2 }}>
                 <QueryHint data={data} isLoading={isLoading} error={error}>
-                  <Stack
-                    sx={{
-                      p: 2,
-                      width: 'fit-content',
-                    }}
-                    id="performance-table-root"
-                  >
-                    <Typography variant="h6">
-                      {formatRangeLabel(
-                        range.startDate,
-                        range.endDate,
-                        chartDuration,
-                      )}
-                    </Typography>
-                    <Table size="small" sx={{ width: 'fit-content' }}>
-                      <TableHead>
-                        <TableRow>
-                          <SpaceCell />
-                          <SpaceCell />
-                          <TableCell>Name</TableCell>
-                          <SpaceCell />
-                          {activities.sort().map((type) => (
-                            <TableCell key={type}>
-                              {getActivityNoun(getActivityFromKey(type))}
-                            </TableCell>
-                          ))}
-                          <SpaceCell />
-                          {[...periods.slice(1)].reverse().map((period) => (
-                            <TableCell key={period}>{period}</TableCell>
-                          ))}
-                          <SpaceCell />
-                          <TableCell>{periods[0]}</TableCell>
-                          <TableCell>Grade</TableCell>
-                          <TableCell>Trend</TableCell>
-                          <TableCell>Trend</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {data?.map((summary) => (
-                          <TableRow
-                            key={summary.userId}
-                            hover
-                            sx={{
-                              cursor: 'pointer',
-                            }}
-                            onClick={() => {
-                              navigate(`/performance/${summary.userId}`);
-                            }}
-                          >
-                            <TableCell
-                              sx={{
-                                userSelect: 'none',
-                              }}
-                            >
-                              <RankingText
-                                rank={summary.position}
-                                variant="body1"
-                              >
-                                {`#${summary.position}`}
-                              </RankingText>
-                            </TableCell>
-                            <TableCell>
-                              <UserAvatar
-                                user={
-                                  summary
-                                    ? {
-                                        id: summary.userId,
-                                        ...summary.head,
-                                      }
-                                    : undefined
-                                }
-                                size={40}
-                                shape="rounded"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <UsernameText variant="body1" user={summary} />
-                            </TableCell>
-                            <SpaceCell />
-                            {activities.sort().map((type) => (
-                              <TableCell key={type} align="center">
-                                {formatNumber(
-                                  summary.activity[
-                                    type as keyof typeof summary.activity
-                                  ] ?? 0,
-                                )}
-                              </TableCell>
-                            ))}
-                            <SpaceCell />
-                            {[...summary.history.slice(1)]
-                              .reverse()
-                              .map((record, i) => (
-                                <GradeCell
-                                  grade={record.grade}
-                                  key={`${summary.userId}-${i}`}
-                                >
-                                  {record.score}
-                                </GradeCell>
-                              ))}
-                            <SpaceCell />
-                            <GradeCell grade={summary.scoreGrade}>
-                              {formatNumber(summary.score)}
-                            </GradeCell>
-                            <GradeCell grade={summary.scoreGrade}>
-                              {summary.scoreGrade}
-                            </GradeCell>
-                            <GradeCell grade={summary.trendGrade}>
-                              <TrendIcon grade={summary.trendGrade} />
-                            </GradeCell>
-                            <GradeCell grade={summary.trendGrade}>
-                              {summary.trend}
-                            </GradeCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                  <Stack spacing={2} id="performance-table-root" sx={{ p: 1 }}>
+                    <Typography variant="h6">{rangeLabel}</Typography>
+                    <Stack spacing={0}>
+                      {data?.map((summary) => (
+                        <PerformanceRow
+                          key={summary.userId}
+                          summary={summary}
+                        />
+                      ))}
+                    </Stack>
+                    {omitted > 0 && (
+                      <Typography
+                        variant="caption"
+                        sx={{ color: 'text.secondary' }}
+                      >
+                        {omitted === 1
+                          ? '1 contributor not shown'
+                          : `${omitted} contributors not shown`}
+                      </Typography>
+                    )}
                   </Stack>
                 </QueryHint>
               </Box>

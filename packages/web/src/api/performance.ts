@@ -24,7 +24,11 @@ import type {
   ActivitySeriesPoint,
   GetActivityParams,
   GetPerformanceParams,
+  GetPerformanceSeriesParams,
+  GetPerformanceWeightsParams,
+  PerformanceSeriesPoint,
   PerformanceSummary,
+  PerformanceWeights,
 } from './model';
 
 /**
@@ -158,6 +162,330 @@ export function usePerformance<
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
   const queryOptions = getPerformanceQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * Get the score earned over time, for a user or an area.
+ * @summary Performance series
+ */
+export const performanceSeries = (
+  params?: GetPerformanceSeriesParams,
+  signal?: AbortSignal,
+) => {
+  return makeRequest<PerformanceSeriesPoint[]>({
+    url: `/metrics/performance/series`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
+
+export const getPerformanceSeriesQueryKey = (
+  params?: GetPerformanceSeriesParams,
+) => {
+  return [`/metrics/performance/series`, ...(params ? [params] : [])] as const;
+};
+
+export const getPerformanceSeriesQueryOptions = <
+  TData = Awaited<ReturnType<typeof performanceSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof performanceSeries>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getPerformanceSeriesQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof performanceSeries>>
+  > = ({ signal }) => performanceSeries(params, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof performanceSeries>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PerformanceSeriesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof performanceSeries>>
+>;
+export type PerformanceSeriesQueryError = ErrorType<unknown>;
+
+export function usePerformanceSeries<
+  TData = Awaited<ReturnType<typeof performanceSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetPerformanceSeriesParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof performanceSeries>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof performanceSeries>>,
+          TError,
+          Awaited<ReturnType<typeof performanceSeries>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function usePerformanceSeries<
+  TData = Awaited<ReturnType<typeof performanceSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof performanceSeries>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof performanceSeries>>,
+          TError,
+          Awaited<ReturnType<typeof performanceSeries>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function usePerformanceSeries<
+  TData = Awaited<ReturnType<typeof performanceSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof performanceSeries>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+/**
+ * @summary Performance series
+ */
+
+export function usePerformanceSeries<
+  TData = Awaited<ReturnType<typeof performanceSeries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceSeriesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof performanceSeries>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getPerformanceSeriesQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * Get the score each action earns on an area board.
+ * @summary Performance weights
+ */
+export const performanceWeights = (
+  params?: GetPerformanceWeightsParams,
+  signal?: AbortSignal,
+) => {
+  return makeRequest<PerformanceWeights>({
+    url: `/metrics/performance/weights`,
+    method: 'GET',
+    params,
+    signal,
+  });
+};
+
+export const getPerformanceWeightsQueryKey = (
+  params?: GetPerformanceWeightsParams,
+) => {
+  return [`/metrics/performance/weights`, ...(params ? [params] : [])] as const;
+};
+
+export const getPerformanceWeightsQueryOptions = <
+  TData = Awaited<ReturnType<typeof performanceWeights>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceWeightsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof performanceWeights>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getPerformanceWeightsQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof performanceWeights>>
+  > = ({ signal }) => performanceWeights(params, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof performanceWeights>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PerformanceWeightsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof performanceWeights>>
+>;
+export type PerformanceWeightsQueryError = ErrorType<unknown>;
+
+export function usePerformanceWeights<
+  TData = Awaited<ReturnType<typeof performanceWeights>>,
+  TError = ErrorType<unknown>,
+>(
+  params: undefined | GetPerformanceWeightsParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof performanceWeights>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof performanceWeights>>,
+          TError,
+          Awaited<ReturnType<typeof performanceWeights>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function usePerformanceWeights<
+  TData = Awaited<ReturnType<typeof performanceWeights>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceWeightsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof performanceWeights>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof performanceWeights>>,
+          TError,
+          Awaited<ReturnType<typeof performanceWeights>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function usePerformanceWeights<
+  TData = Awaited<ReturnType<typeof performanceWeights>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceWeightsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof performanceWeights>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+/**
+ * @summary Performance weights
+ */
+
+export function usePerformanceWeights<
+  TData = Awaited<ReturnType<typeof performanceWeights>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPerformanceWeightsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof performanceWeights>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getPerformanceWeightsQueryOptions(params, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,

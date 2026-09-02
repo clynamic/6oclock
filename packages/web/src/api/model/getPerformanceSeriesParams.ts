@@ -8,14 +8,12 @@
 import type { TimeScale } from './timeScale';
 import type { UserArea } from './userArea';
 
-export type GetPerformanceParams = {
+export type GetPerformanceSeriesParams = {
   scale?: TimeScale;
   cycle?: TimeScale;
   startDate?: Date;
   endDate?: Date;
   timezone?: string;
   area?: UserArea;
-  activities?: string[];
   userId?: number;
-  head?: boolean;
 };
