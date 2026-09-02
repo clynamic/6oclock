@@ -1,14 +1,26 @@
 import { UserLevel } from 'src/auth/auth.level';
+import { DateRange } from 'src/common';
 
 import {
-  Activity,
+  ADMIN_SECONDS,
+  JANITOR_SECONDS,
+  MODERATOR_SECONDS,
   PerformanceGrade,
   TrendGrade,
   UserArea,
-  getActivityScore,
+  getActionWeight,
+  getBoardWeights,
+  getBoardWork,
+  getMiddleMean,
+  getModActionKey,
+  getModActionSources,
   getPerformanceScoreGrade,
   getPerformanceTrendGrade,
+  getStanding,
   getUserAreaFromLevel,
+  getWindowCoverage,
+  isOnOwnContent,
+  toScore,
 } from './performance-metric.dto';
 
 const areas: Record<UserLevel, UserArea> = {
@@ -23,19 +35,6 @@ const areas: Record<UserLevel, UserArea> = {
   [UserLevel.Admin]: UserArea.Admin,
 };
 
-const scores: Record<Activity, number> = {
-  [Activity.PostCreate]: 0,
-  [Activity.PostDelete]: 1.25,
-  [Activity.PostApprove]: 1,
-  [Activity.PostReplacementCreate]: 0,
-  [Activity.PostReplacementApprove]: 1.1,
-  [Activity.PostReplacementPromote]: 1.1,
-  [Activity.PostReplacementReject]: 1.1,
-  [Activity.FlagHandle]: 1.1,
-  [Activity.TicketCreate]: 0,
-  [Activity.TicketHandle]: 1,
-};
-
 describe('getUserAreaFromLevel', () => {
   it.each(Object.entries(areas))('maps level %s to %s', (level, area) => {
     expect(getUserAreaFromLevel(Number(level))).toBe(area);
@@ -48,40 +47,177 @@ describe('getUserAreaFromLevel', () => {
   it('maps a missing level to the member area', () => {
     expect(getUserAreaFromLevel(undefined)).toBe(UserArea.Member);
   });
+});
 
-  it('gives staff the member area, since staff take none of the actions we score', () => {
-    expect(getUserAreaFromLevel(UserLevel.Staff)).toBe(UserArea.Member);
+describe('board weights', () => {
+  it('gives each area its own table', () => {
+    expect(getBoardWeights(UserArea.Janitor)).toBe(JANITOR_SECONDS);
+    expect(getBoardWeights(UserArea.Moderator)).toBe(MODERATOR_SECONDS);
+    expect(getBoardWeights(UserArea.Admin)).toBe(ADMIN_SECONDS);
+  });
+
+  it('scores a member on nothing', () => {
+    expect(getBoardWeights(UserArea.Member)).toEqual({});
+  });
+
+  it('puts shared staff work on every table at the same price', () => {
+    const janitor = getActionWeight(UserArea.Janitor, 'staff_note_create');
+    expect(janitor).toBeGreaterThan(0);
+    expect(getActionWeight(UserArea.Moderator, 'staff_note_create')).toBe(
+      janitor,
+    );
+    expect(getActionWeight(UserArea.Admin, 'staff_note_create')).toBe(janitor);
+  });
+
+  it('scores an action it has never heard of at zero', () => {
+    expect(getActionWeight(UserArea.Moderator, 'mascot_create')).toBe(0);
   });
 });
 
-describe('getActivityScore', () => {
-  it.each(Object.entries(scores))('scores %s at %s', (activity, score) => {
-    expect(getActivityScore(activity as Activity)).toBe(score);
+describe('getBoardWork', () => {
+  it('names the work that puts someone on a board, and leaves staff actions out of it', () => {
+    expect(getBoardWork(UserArea.Janitor)).toContain('approved');
+    expect(getBoardWork(UserArea.Janitor)).not.toContain('staff_note_create');
+    expect(getBoardWork(UserArea.Moderator)).toContain(
+      'ticket_update_approved',
+    );
+    expect(getBoardWork(UserArea.Moderator)).not.toContain(
+      'artist_user_linked',
+    );
+    expect(getBoardWork(UserArea.Member)).toEqual([]);
   });
+});
 
-  it('scores an activity it has never heard of at zero', () => {
-    expect(getActivityScore('post_undelete' as Activity)).toBe(0);
+describe('isOnOwnContent', () => {
+  it('spots an action whose target is the actor', () => {
+    expect(isOnOwnContent(5, { user_id: 5 })).toBe(true);
+    expect(isOnOwnContent(5, { user_id: '5' })).toBe(true);
+    expect(isOnOwnContent(5, { user_id: 6 })).toBe(false);
+    expect(isOnOwnContent(5, { ticket_id: 5 })).toBe(false);
+    expect(isOnOwnContent(5, undefined)).toBe(false);
   });
+});
 
-  it('weighs a deletion above an approval', () => {
-    expect(getActivityScore(Activity.PostDelete)).toBeGreaterThan(
-      getActivityScore(Activity.PostApprove),
+describe('getModActionKey', () => {
+  it('splits a ticket update by the status it set', () => {
+    expect(getModActionKey('ticket_update', { status: 'approved' })).toBe(
+      'ticket_update_approved',
+    );
+    expect(getModActionKey('ticket_update', { status: 'partial' })).toBe(
+      'ticket_update_partial',
     );
   });
 
-  it('scores creating a post or a ticket at nothing', () => {
-    expect(getActivityScore(Activity.PostCreate)).toBe(0);
-    expect(getActivityScore(Activity.TicketCreate)).toBe(0);
-    expect(getActivityScore(Activity.PostReplacementCreate)).toBe(0);
+  it('leaves a legacy ticket update without a status unscored', () => {
+    const key = getModActionKey('ticket_update', {});
+    expect(getActionWeight(UserArea.Moderator, key)).toBe(0);
+  });
+
+  it('keeps every other action as its own key', () => {
+    expect(getModActionKey('user_ban', { user_id: 1 })).toBe('user_ban');
+  });
+
+  it('maps a split key back to the rows it came from', () => {
+    expect(getModActionSources('ticket_update_approved')).toEqual([
+      'ticket_update',
+    ]);
+    expect(getModActionSources('user_ban')).toEqual(['user_ban']);
+    expect(getModActionSources('aibur_approved')).toEqual([
+      'tag_alias_update',
+      'tag_implication_update',
+    ]);
+  });
+
+  it('reads an alias or implication decision off its status change', () => {
+    const approved =
+      'changed status from "pending" to "queued", set approver_id to "1"';
+    expect(getModActionKey('tag_alias_update', { change_desc: approved })).toBe(
+      'aibur_approved',
+    );
+    expect(
+      getModActionKey('tag_implication_update', {
+        change_desc: 'changed status from "pending" to "deleted"',
+      }),
+    ).toBe('aibur_rejected');
+    expect(
+      getModActionKey('tag_alias_update', {
+        change_desc: 'changed status from "active" to "deleted"',
+      }),
+    ).toBe('aibur_retired');
+  });
+
+  it('leaves the importer transitions unscored', () => {
+    const key = getModActionKey('tag_alias_update', {
+      change_desc: 'changed status from "queued" to "processing"',
+    });
+    expect(getActionWeight(UserArea.Admin, key)).toBe(0);
+  });
+});
+
+describe('toScore', () => {
+  it('scores one approval as one point, so the number reads like a count', () => {
+    expect(toScore(6)).toBe(1);
+    expect(toScore(200)).toBe(33);
+    expect(toScore(0)).toBe(0);
+  });
+});
+
+describe('getWindowCoverage', () => {
+  const window = new DateRange({
+    startDate: new Date('2025-06-01T00:00:00Z'),
+    endDate: new Date('2025-06-05T00:00:00Z'),
+  });
+
+  it('reads a finished window as whole', () => {
+    expect(getWindowCoverage(window, new Date('2025-07-01T00:00:00Z'))).toBe(1);
+  });
+
+  it('reads an open window by the share of it that has passed', () => {
+    expect(getWindowCoverage(window, new Date('2025-06-02T00:00:00Z'))).toBe(
+      0.25,
+    );
+  });
+
+  it('reads a window that has not started as empty', () => {
+    expect(getWindowCoverage(window, new Date('2025-05-01T00:00:00Z'))).toBe(0);
+  });
+});
+
+describe('getMiddleMean', () => {
+  it('averages the middle half of the board and ignores both tails', () => {
+    expect(getMiddleMean([1000, 40, 30, 20, 10, 1])).toBe(25);
+    expect(getMiddleMean([40, 30, 20, 10])).toBe(25);
+    expect(getMiddleMean([])).toBe(0);
+  });
+
+  it('does not move when the top or the bottom changes', () => {
+    expect(getMiddleMean([1000, 40, 30, 20, 10, 1])).toBe(
+      getMiddleMean([50, 40, 30, 20, 10, 9]),
+    );
+  });
+
+  it('reads a lone member as themselves', () => {
+    expect(getMiddleMean([7])).toBe(7);
+  });
+});
+
+describe('getStanding', () => {
+  it('reads a typical member as one hundred', () => {
+    expect(getStanding([1000, 40, 30, 20, 10, 1], 25)).toBe(100);
+    expect(getStanding([1000, 40, 30, 20, 10, 1], 50)).toBe(200);
+    expect(getStanding([1000, 40, 30, 20, 10, 1], 5)).toBe(20);
+  });
+
+  it('reads a lone member as one hundred', () => {
+    expect(getStanding([7], 7)).toBe(100);
   });
 });
 
 describe('getPerformanceScoreGrade', () => {
   it.each([
-    [-1, PerformanceGrade.F],
     [0, PerformanceGrade.F],
-    [4.99, PerformanceGrade.F],
-    [5, PerformanceGrade.E],
+    [9.99, PerformanceGrade.F],
+    [10, PerformanceGrade.E],
     [19.99, PerformanceGrade.E],
     [20, PerformanceGrade.D],
     [49.99, PerformanceGrade.D],
@@ -94,19 +230,17 @@ describe('getPerformanceScoreGrade', () => {
     [150, PerformanceGrade.S],
     [199.99, PerformanceGrade.S],
     [200, PerformanceGrade.S2],
-    [250, PerformanceGrade.S3],
-    [300, PerformanceGrade.S4],
-    [350, PerformanceGrade.S5],
-    [400, PerformanceGrade.S6],
-    [10000, PerformanceGrade.S6],
-  ])('grades a score of %s as %s', (score, grade) => {
-    expect(getPerformanceScoreGrade(score)).toBe(grade);
-  });
-
-  it('opens each band on its threshold, closing the one below', () => {
-    expect(getPerformanceScoreGrade(5)).not.toBe(
-      getPerformanceScoreGrade(4.99),
-    );
+    [399.99, PerformanceGrade.S2],
+    [400, PerformanceGrade.S3],
+    [799.99, PerformanceGrade.S3],
+    [800, PerformanceGrade.S4],
+    [1599.99, PerformanceGrade.S4],
+    [1600, PerformanceGrade.S5],
+    [3199.99, PerformanceGrade.S5],
+    [3200, PerformanceGrade.S6],
+    [100000, PerformanceGrade.S6],
+  ])('grades %s percent of the median as %s', (percent, grade) => {
+    expect(getPerformanceScoreGrade(percent)).toBe(grade);
   });
 });
 

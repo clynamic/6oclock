@@ -5,6 +5,7 @@ import { PostEventAction, TicketStatus } from 'src/api';
 import { CacheManager } from 'src/app/browser.module';
 import { PartialDateRange, TimeScale } from 'src/common';
 import { FlagLifecycleEntity } from 'src/flag/lifecycle/flag-lifecycle.entity';
+import { ModActionEntity } from 'src/mod-action/mod-action.entity';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
 import { PostReplacementEntity } from 'src/post-replacement/post-replacement.entity';
 import { PostVersionEntity } from 'src/post-version/post-version.entity';
@@ -16,6 +17,7 @@ import { FindManyOptions, FindOptionsWhere, IsNull, Not } from 'typeorm';
 import {
   Activity,
   ActivitySummaryQuery,
+  PerformanceGrade,
   UserArea,
 } from './performance-metric.dto';
 import { PerformanceMetricService } from './performance-metric.service';
@@ -59,6 +61,8 @@ describe('PerformanceMetricService', () => {
   let postReplacementFind: jest.Mock;
   let ticketFind: jest.Mock;
   let flagLifecycleFind: jest.Mock;
+  let modActionFind: jest.Mock;
+  let userFind: jest.Mock;
   let userFindOne: jest.Mock;
 
   beforeEach(async () => {
@@ -67,6 +71,10 @@ describe('PerformanceMetricService', () => {
     postReplacementFind = jest.fn().mockResolvedValue([]);
     ticketFind = jest.fn().mockResolvedValue([]);
     flagLifecycleFind = jest.fn().mockResolvedValue([]);
+    modActionFind = jest.fn().mockResolvedValue([]);
+    userFind = jest
+      .fn()
+      .mockResolvedValue([500, 501, 502, 600, 601].map((id) => ({ id })));
     userFindOne = jest.fn().mockResolvedValue(null);
 
     const moduleRef = await Test.createTestingModule({
@@ -76,7 +84,7 @@ describe('PerformanceMetricService', () => {
         PerformanceMetricService,
         {
           provide: getRepositoryToken(UserEntity),
-          useValue: { findOne: userFindOne },
+          useValue: { find: userFind, findOne: userFindOne },
         },
         {
           provide: getRepositoryToken(PostVersionEntity),
@@ -97,6 +105,10 @@ describe('PerformanceMetricService', () => {
         {
           provide: getRepositoryToken(FlagLifecycleEntity),
           useValue: { find: flagLifecycleFind },
+        },
+        {
+          provide: getRepositoryToken(ModActionEntity),
+          useValue: { find: modActionFind },
         },
         {
           provide: SystemUserService,
@@ -373,43 +385,112 @@ describe('PerformanceMetricService', () => {
 
     it('ranks by score and gives every user a position', async () => {
       postEventFind.mockResolvedValue([
-        ...approvals(500, 4),
-        ...approvals(501, 1),
+        ...approvals(500, 40),
+        ...approvals(501, 10),
       ]);
 
       const summaries = await service.performance(
         range('2025-02-01T00:00:00Z', '2025-02-04T00:00:00Z'),
-        { activities: [Activity.PostApprove] },
+        { area: UserArea.Janitor },
       );
 
       expect(summaries.map((summary) => summary.userId)).toEqual([500, 501]);
       expect(summaries.map((summary) => summary.position)).toEqual([1, 2]);
     });
 
-    it('scores against the cohort average, so the average scores one hundred', async () => {
+    it('scores the work itself, one point per approval, whoever else is on the board', async () => {
       postEventFind.mockResolvedValue([
-        ...approvals(500, 3),
-        ...approvals(501, 1),
+        ...approvals(500, 30),
+        ...approvals(501, 10),
       ]);
 
       const summaries = await service.performance(
         range('2025-03-01T00:00:00Z', '2025-03-04T00:00:00Z'),
-        { activities: [Activity.PostApprove] },
+        { area: UserArea.Janitor },
       );
 
-      expect(summaries[0]!.score).toBe(150);
-      expect(summaries[1]!.score).toBe(50);
+      expect(summaries[0]!.score).toBe(30);
+      expect(summaries[1]!.score).toBe(10);
+    });
+
+    it('grades against the middle of the board, so a typical person is an A', async () => {
+      postEventFind.mockResolvedValue([
+        ...approvals(500, 30),
+        ...approvals(501, 20),
+        ...approvals(502, 10),
+      ]);
+
+      const summaries = await service.performance(
+        range('2025-03-10T00:00:00Z', '2025-03-14T00:00:00Z'),
+        { area: UserArea.Janitor },
+      );
+
+      expect(summaries.map((summary) => summary.scoreGrade)).toEqual([
+        PerformanceGrade.S,
+        PerformanceGrade.A,
+        PerformanceGrade.C,
+      ]);
+    });
+
+    it('lets the top change without moving anyone else, since the middle holds', async () => {
+      const board = (top: number) => [
+        ...approvals(500, top),
+        ...approvals(501, 60),
+        ...approvals(502, 50),
+        ...approvals(503, 40),
+        ...approvals(504, 30),
+        ...approvals(505, 20),
+        ...approvals(506, 10),
+        ...approvals(507, 5),
+      ];
+      postEventFind.mockResolvedValue(board(3000));
+      const withHero = await service.performance(
+        range('2025-03-20T00:00:00Z', '2025-03-24T00:00:00Z'),
+        { area: UserArea.Janitor },
+      );
+      postEventFind.mockResolvedValue(board(70));
+      const without = await service.performance(
+        range('2025-03-25T00:00:00Z', '2025-03-29T00:00:00Z'),
+        { area: UserArea.Janitor },
+      );
+
+      const letters = (rows: typeof withHero) =>
+        rows.filter((row) => row.userId !== 500).map((row) => row.scoreGrade);
+      expect(withHero[0]!.scoreGrade).toBe(PerformanceGrade.S6);
+      expect(letters(withHero)).toEqual(letters(without));
+    });
+
+    it('grades a single user against the whole board, not against themselves', async () => {
+      postEventFind.mockResolvedValue([
+        ...approvals(500, 3000),
+        ...approvals(501, 60),
+        ...approvals(502, 50),
+        ...approvals(503, 40),
+        ...approvals(504, 30),
+      ]);
+
+      const [alone] = await service.performance(
+        range('2025-04-10T00:00:00Z', '2025-04-14T00:00:00Z'),
+        { userId: 500, area: UserArea.Janitor },
+      );
+      const board = await service.performance(
+        range('2025-04-15T00:00:00Z', '2025-04-19T00:00:00Z'),
+        { area: UserArea.Janitor },
+      );
+
+      expect(alone!.scoreGrade).toBe(PerformanceGrade.S6);
+      expect(alone!.scoreGrade).toBe(board[0]!.scoreGrade);
     });
 
     it('keeps the cohort position when only one user was asked for', async () => {
       postEventFind.mockResolvedValue([
-        ...approvals(500, 4),
-        ...approvals(501, 1),
+        ...approvals(500, 40),
+        ...approvals(501, 10),
       ]);
 
       const summaries = await service.performance(
         range('2025-04-01T00:00:00Z', '2025-04-04T00:00:00Z'),
-        { userId: 501, activities: [Activity.PostApprove] },
+        { userId: 501, area: UserArea.Janitor },
       );
 
       expect(summaries).toHaveLength(1);
@@ -417,11 +498,11 @@ describe('PerformanceMetricService', () => {
     });
 
     it('gives a lone user no position at all', async () => {
-      postEventFind.mockResolvedValue(approvals(500, 4));
+      postEventFind.mockResolvedValue(approvals(500, 40));
 
       const summaries = await service.performance(
         range('2025-05-01T00:00:00Z', '2025-05-04T00:00:00Z'),
-        { activities: [Activity.PostApprove] },
+        { area: UserArea.Janitor },
       );
 
       expect(summaries[0]!.position).toBe(0);
@@ -429,73 +510,327 @@ describe('PerformanceMetricService', () => {
 
     it('carries four windows of history, the asked-for one first', async () => {
       postEventFind
-        .mockResolvedValueOnce([...approvals(500, 4), ...approvals(501, 1)])
-        .mockResolvedValueOnce([...approvals(500, 1), ...approvals(501, 1)])
-        .mockResolvedValueOnce([...approvals(500, 1), ...approvals(501, 1)])
-        .mockResolvedValueOnce([...approvals(500, 1), ...approvals(501, 1)]);
+        .mockResolvedValueOnce([...approvals(500, 40), ...approvals(501, 10)])
+        .mockResolvedValueOnce([...approvals(500, 10), ...approvals(501, 10)])
+        .mockResolvedValueOnce([...approvals(500, 10), ...approvals(501, 10)])
+        .mockResolvedValueOnce([...approvals(500, 10), ...approvals(501, 10)]);
 
       const summaries = await service.performance(
         range('2025-06-01T00:00:00Z', '2025-06-04T00:00:00Z'),
-        { activities: [Activity.PostApprove] },
+        { area: UserArea.Janitor },
       );
 
       expect(summaries[0]!.history.map((record) => record.score)).toEqual([
-        160, 100, 100, 100,
+        40, 10, 10, 10,
       ]);
       expect(summaries[0]!.history[0]!.score).toBe(summaries[0]!.score);
     });
 
     it('reads the trend against the windows behind it', async () => {
       postEventFind
-        .mockResolvedValueOnce([...approvals(500, 4), ...approvals(501, 1)])
-        .mockResolvedValueOnce([...approvals(500, 1), ...approvals(501, 1)])
-        .mockResolvedValueOnce([...approvals(500, 1), ...approvals(501, 1)])
-        .mockResolvedValueOnce([...approvals(500, 1), ...approvals(501, 1)]);
+        .mockResolvedValueOnce([...approvals(500, 40), ...approvals(501, 10)])
+        .mockResolvedValueOnce([...approvals(500, 10), ...approvals(501, 10)])
+        .mockResolvedValueOnce([...approvals(500, 10), ...approvals(501, 10)])
+        .mockResolvedValueOnce([...approvals(500, 10), ...approvals(501, 10)]);
 
       const summaries = await service.performance(
-        range('2025-06-10T00:00:00Z', '2025-06-14T00:00:00Z'),
-        { activities: [Activity.PostApprove] },
+        range('2025-06-10T00:00:00Z', '2025-06-13T00:00:00Z'),
+        { area: UserArea.Janitor },
       );
 
-      expect(summaries[0]!.trend).toBe(60);
+      expect(summaries[0]!.trend).toBe(300);
     });
 
-    it('counts the days a user was active, not the days in the window', async () => {
+    it('puts an open window on pace before reading its trend', async () => {
+      jest.useFakeTimers({ now: new Date('2025-06-12T00:00:00Z') });
+      try {
+        postEventFind
+          .mockResolvedValueOnce([...approvals(500, 40), ...approvals(501, 10)])
+          .mockResolvedValueOnce([...approvals(500, 10), ...approvals(501, 10)])
+          .mockResolvedValueOnce([...approvals(500, 10), ...approvals(501, 10)])
+          .mockResolvedValueOnce([
+            ...approvals(500, 10),
+            ...approvals(501, 10),
+          ]);
+
+        const summaries = await service.performance(
+          range('2025-06-10T00:00:00Z', '2025-06-14T00:00:00Z'),
+          { area: UserArea.Janitor },
+        );
+
+        expect(summaries[0]!.score).toBe(40);
+        expect(summaries[0]!.trend).toBe(700);
+      } finally {
+        jest.useRealTimers();
+      }
+    });
+
+    it('lists the days a user was active, not the days in the window', async () => {
+      const onDay = (day: string, from: number, count: number) =>
+        Array.from(
+          { length: count },
+          (_, index) =>
+            new PostEventEntity({
+              id: from + index,
+              postId: from + index,
+              creatorId: 500,
+              action: PostEventAction.approved,
+              createdAt: new Date(
+                `${day}T${String(index).padStart(2, '0')}:00:00Z`,
+              ),
+            }),
+        );
       postEventFind.mockResolvedValue([
-        new PostEventEntity({
-          id: 1,
-          postId: 1,
-          creatorId: 500,
-          action: PostEventAction.approved,
-          createdAt: new Date('2025-07-02T01:00:00Z'),
-        }),
-        new PostEventEntity({
-          id: 2,
-          postId: 2,
-          creatorId: 500,
-          action: PostEventAction.approved,
-          createdAt: new Date('2025-07-02T23:00:00Z'),
-        }),
-        new PostEventEntity({
-          id: 3,
-          postId: 3,
-          creatorId: 500,
-          action: PostEventAction.approved,
-          createdAt: new Date('2025-07-03T01:00:00Z'),
-        }),
+        ...onDay('2025-07-02', 1, 10),
+        ...onDay('2025-07-03', 11, 10),
       ]);
 
       const summaries = await service.performance(
         range('2025-07-01T00:00:00Z', '2025-07-05T00:00:00Z'),
-        { activities: [Activity.PostApprove] },
+        { area: UserArea.Janitor },
       );
 
-      expect(summaries[0]!.days).toBe(2);
-      expect(summaries[0]!.activity.postApprove).toBe(3);
+      expect(summaries[0]!.attendance).toEqual([
+        new Date('2025-07-02T00:00:00Z'),
+        new Date('2025-07-03T00:00:00Z'),
+      ]);
+      expect(summaries[0]!.activity['approved']).toBe(20);
+    });
+
+    it('puts nobody on the janitor board for staff notes alone', async () => {
+      postEventFind.mockResolvedValue(approvals(500, 20));
+      modActionFind.mockResolvedValue([
+        new ModActionEntity({
+          id: 9,
+          creatorId: 777,
+          action: 'staff_note_create' as never,
+          createdAt: new Date('2025-08-02T00:00:00Z'),
+          values: { id: 1, user_id: 7, body: 'note' },
+        }),
+      ]);
+
+      const summaries = await service.performance(
+        range('2025-08-01T00:00:00Z', '2025-08-04T00:00:00Z'),
+        { area: UserArea.Janitor },
+      );
+
+      expect(summaries.map((summary) => summary.userId)).toEqual([500]);
+    });
+
+    it('folds an artist link into the takedown it was filed for', async () => {
+      modActionFind.mockResolvedValue([
+        new ModActionEntity({
+          id: 1,
+          creatorId: 600,
+          action: 'artist_user_linked' as never,
+          createdAt: new Date('2025-08-02T00:00:00Z'),
+          values: { artist_page: 'a', user_id: 7 },
+        }),
+        new ModActionEntity({
+          id: 2,
+          creatorId: 600,
+          action: 'takedown_process' as never,
+          createdAt: new Date('2025-08-02T00:03:00Z'),
+          values: { takedown_id: 1 },
+        }),
+        new ModActionEntity({
+          id: 3,
+          creatorId: 600,
+          action: 'artist_user_linked' as never,
+          createdAt: new Date('2025-08-02T05:00:00Z'),
+          values: { artist_page: 'b', user_id: 8 },
+        }),
+      ]);
+
+      const summaries = await service.performance(
+        range('2025-08-01T00:00:00Z', '2025-08-04T00:00:00Z'),
+        { area: UserArea.Admin },
+      );
+
+      expect(summaries[0]!.activity).toEqual({
+        takedown_process: 1,
+        artist_user_linked: 1,
+      });
+    });
+
+    it('counts a burst of alias approvals as one decision', async () => {
+      const approved = (id: number, seconds: number) =>
+        new ModActionEntity({
+          id,
+          creatorId: 600,
+          action: 'tag_alias_update' as never,
+          createdAt: new Date(
+            `2025-08-02T00:00:${String(seconds).padStart(2, '0')}Z`,
+          ),
+          values: {
+            alias_id: id,
+            change_desc:
+              'changed status from "pending" to "queued", set approver_id to "600"',
+          },
+        });
+      modActionFind.mockResolvedValue([
+        approved(1, 0),
+        approved(2, 1),
+        approved(3, 2),
+        approved(4, 40),
+      ]);
+
+      const summaries = await service.performance(
+        range('2025-08-01T00:00:00Z', '2025-08-04T00:00:00Z'),
+        { area: UserArea.Admin },
+      );
+
+      expect(summaries[0]!.activity).toEqual({ aibur_approved: 2 });
+    });
+
+    it('ignores someone hiding their own forum post, since that is not moderation', async () => {
+      modActionFind.mockResolvedValue([
+        new ModActionEntity({
+          id: 1,
+          creatorId: 800,
+          action: 'forum_post_hide' as never,
+          createdAt: new Date('2025-08-02T00:00:00Z'),
+          values: { forum_post_id: 1, forum_topic_id: 1, user_id: 800 },
+        }),
+        new ModActionEntity({
+          id: 2,
+          creatorId: 600,
+          action: 'forum_post_hide' as never,
+          createdAt: new Date('2025-08-02T00:00:00Z'),
+          values: { forum_post_id: 2, forum_topic_id: 1, user_id: 800 },
+        }),
+        new ModActionEntity({
+          id: 3,
+          creatorId: 600,
+          action: 'ticket_update' as never,
+          createdAt: new Date('2025-08-02T01:00:00Z'),
+          values: { ticket_id: 1, status: 'approved' },
+        }),
+      ]);
+
+      const summaries = await service.performance(
+        range('2025-08-01T00:00:00Z', '2025-08-04T00:00:00Z'),
+        { area: UserArea.Moderator },
+      );
+
+      expect(summaries.map((summary) => summary.userId)).toEqual([600]);
+    });
+
+    it('never reads the users table, since a board is defined by the work done', async () => {
+      postEventFind.mockResolvedValue(approvals(500, 20));
+
+      await service.performance(
+        range('2025-08-05T00:00:00Z', '2025-08-08T00:00:00Z'),
+        { area: UserArea.Janitor },
+      );
+
+      expect(userFind).not.toHaveBeenCalled();
+      expect(userFindOne).not.toHaveBeenCalled();
+    });
+
+    it('scores a moderator on the ticket update that closed the ticket', async () => {
+      modActionFind.mockResolvedValue([
+        new ModActionEntity({
+          id: 1,
+          creatorId: 600,
+          action: 'ticket_update' as never,
+          createdAt: new Date('2025-08-02T00:00:00Z'),
+          values: { ticket_id: 1, status: 'approved' },
+        }),
+        new ModActionEntity({
+          id: 2,
+          creatorId: 600,
+          action: 'ticket_claim' as never,
+          createdAt: new Date('2025-08-02T00:00:00Z'),
+          values: { ticket_id: 1 },
+        }),
+        new ModActionEntity({
+          id: 3,
+          creatorId: 601,
+          action: 'ticket_update' as never,
+          createdAt: new Date('2025-08-02T00:00:00Z'),
+          values: { ticket_id: 2, status: 'partial' },
+        }),
+      ]);
+
+      const summaries = await service.performance(
+        range('2025-08-01T00:00:00Z', '2025-08-04T00:00:00Z'),
+        { area: UserArea.Moderator },
+      );
+
+      const byUser = Object.fromEntries(
+        summaries.map((summary) => [summary.userId, summary.activity]),
+      );
+      expect(byUser[600]).toEqual({ ticket_update_approved: 1 });
+      expect(byUser[601]).toEqual({ ticket_update_partial: 1 });
+      expect(postEventFind).not.toHaveBeenCalled();
+    });
+
+    it('counts a ban once, dropping the feedback the ban writes for itself', async () => {
+      modActionFind.mockResolvedValue([
+        new ModActionEntity({
+          id: 1,
+          creatorId: 600,
+          action: 'user_feedback_create' as never,
+          createdAt: new Date('2025-08-02T00:00:00.000Z'),
+          values: {
+            user_id: 7,
+            reason: 'Banned permanently.',
+            type: 'negative',
+          },
+        }),
+        new ModActionEntity({
+          id: 2,
+          creatorId: 600,
+          action: 'user_ban' as never,
+          createdAt: new Date('2025-08-02T00:00:00.400Z'),
+          values: { user_id: 7, duration: -1, reason: 'spam' },
+        }),
+        new ModActionEntity({
+          id: 3,
+          creatorId: 600,
+          action: 'user_feedback_create' as never,
+          createdAt: new Date('2025-08-02T01:00:00Z'),
+          values: { user_id: 8, reason: 'helpful', type: 'positive' },
+        }),
+      ]);
+
+      const summaries = await service.performance(
+        range('2025-08-01T00:00:00Z', '2025-08-04T00:00:00Z'),
+        { area: UserArea.Moderator },
+      );
+
+      expect(summaries[0]!.activity).toEqual({
+        user_ban: 1,
+        user_feedback_create: 1,
+      });
+    });
+
+    it('reads a staff note from mod actions onto the janitor board', async () => {
+      postEventFind.mockResolvedValue(approvals(500, 20));
+      modActionFind.mockResolvedValue([
+        new ModActionEntity({
+          id: 9,
+          creatorId: 500,
+          action: 'staff_note_create' as never,
+          createdAt: new Date('2025-08-02T00:00:00Z'),
+          values: { id: 1, user_id: 7, body: 'note' },
+        }),
+      ]);
+
+      const summaries = await service.performance(
+        range('2025-08-01T00:00:00Z', '2025-08-04T00:00:00Z'),
+        { area: UserArea.Janitor },
+      );
+
+      expect(summaries[0]!.activity).toEqual({
+        approved: 20,
+        staff_note_create: 1,
+      });
     });
 
     it('measures a member on nothing, so the board comes back empty', async () => {
-      postEventFind.mockResolvedValue(approvals(500, 4));
+      postEventFind.mockResolvedValue(approvals(500, 40));
       postVersionFind.mockResolvedValue([
         new PostVersionEntity({
           id: 1,
@@ -526,6 +861,71 @@ describe('PerformanceMetricService', () => {
       );
 
       expect(summaries).toEqual([]);
+    });
+  });
+
+  describe('weights', () => {
+    it('prices each action of an area in score, not seconds', () => {
+      const { weights } = service.weights({ area: UserArea.Janitor });
+
+      expect(weights['approved']).toBe(1);
+      expect(weights['deleted']).toBeCloseTo(17 / 6);
+    });
+
+    it('prices nothing for a member, since members take no scored action', () => {
+      expect(service.weights({ area: UserArea.Member }).weights).toEqual({});
+    });
+  });
+
+  describe('series', () => {
+    const events = (
+      creatorId: number,
+      action: PostEventAction,
+      date: string,
+      count: number,
+    ): PostEventEntity[] =>
+      Array.from(
+        { length: count },
+        (_, index) =>
+          new PostEventEntity({
+            id: creatorId * 1000 + index,
+            postId: index,
+            creatorId,
+            action,
+            createdAt: new Date(date),
+          }),
+      );
+
+    it('spreads a user score over the days it was earned, weighted like the board', async () => {
+      userFindOne.mockResolvedValue({ id: 500, levelString: 'Janitor' });
+      postEventFind.mockResolvedValue([
+        ...events(500, PostEventAction.approved, '2025-09-02T10:00:00Z', 3),
+        ...events(500, PostEventAction.deleted, '2025-09-03T10:00:00Z', 6),
+        ...events(501, PostEventAction.approved, '2025-09-03T10:00:00Z', 9),
+      ]);
+
+      const points = await service.series(
+        range('2025-09-01T00:00:00Z', '2025-09-04T00:00:00Z'),
+        { userId: 500 },
+      );
+
+      expect(points.map((point) => point.score)).toEqual([0, 3, 17]);
+      expect(points[2]!.scores['deleted']).toBe(17);
+      expect(points[2]!.scores['approved']).toBe(0);
+    });
+
+    it('sums the whole area when no user is named', async () => {
+      postEventFind.mockResolvedValue([
+        ...events(500, PostEventAction.approved, '2025-09-12T10:00:00Z', 3),
+        ...events(501, PostEventAction.approved, '2025-09-12T10:00:00Z', 2),
+      ]);
+
+      const points = await service.series(
+        range('2025-09-12T00:00:00Z', '2025-09-13T00:00:00Z'),
+        { area: UserArea.Janitor },
+      );
+
+      expect(points[0]!.score).toBe(5);
     });
   });
 });

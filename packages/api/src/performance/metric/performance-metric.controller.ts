@@ -18,8 +18,12 @@ import { UserHeadService } from 'src/user/head/user-head.service';
 import {
   ActivitySeriesPoint,
   ActivitySummaryQuery,
+  PerformanceSeriesPoint,
+  PerformanceSeriesQuery,
   PerformanceSummary,
   PerformanceSummaryQuery,
+  PerformanceWeights,
+  PerformanceWeightsQuery,
 } from './performance-metric.dto';
 import { PerformanceMetricService } from './performance-metric.service';
 
@@ -73,6 +77,37 @@ export class PerformanceMetricController {
     }
 
     return summaries;
+  }
+
+  @Get('series')
+  @ApiOperation({
+    summary: 'Performance series',
+    description: 'Get the score earned over time, for a user or an area.',
+    operationId: 'getPerformanceSeries',
+  })
+  @ApiResponse({
+    status: 200,
+    type: [PerformanceSeriesPoint],
+  })
+  async series(
+    @Query() range?: PartialDateRange,
+    @Query() query?: PerformanceSeriesQuery,
+  ): Promise<PerformanceSeriesPoint[]> {
+    return this.performanceMetricService.series(range, query);
+  }
+
+  @Get('weights')
+  @ApiOperation({
+    summary: 'Performance weights',
+    description: 'Get the score each action earns on an area board.',
+    operationId: 'getPerformanceWeights',
+  })
+  @ApiResponse({
+    status: 200,
+    type: PerformanceWeights,
+  })
+  weights(@Query() query?: PerformanceWeightsQuery): PerformanceWeights {
+    return this.performanceMetricService.weights(query);
   }
 
   @Get('activity')
