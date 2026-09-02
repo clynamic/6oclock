@@ -8,32 +8,48 @@ import {
   DateRange,
   PartialDateRange,
   convertKeysToCamelCase,
+  generateSeriesPoints,
   generateSeriesRecordPoints,
   getClosestTimeScale,
   getDurationKeyForScale,
 } from 'src/common';
 import { FlagLifecycleEntity } from 'src/flag/lifecycle/flag-lifecycle.entity';
+import { ModActionEntity } from 'src/mod-action/mod-action.entity';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
 import { PostReplacementEntity } from 'src/post-replacement/post-replacement.entity';
 import { PostVersionEntity } from 'src/post-version/post-version.entity';
 import { TicketEntity } from 'src/ticket/ticket.entity';
 import { SystemUserService } from 'src/user/system/system-user.service';
 import { UserEntity } from 'src/user/user.entity';
-import { IsNull, Not, Repository } from 'typeorm';
+import { In, IsNull, Not, Repository } from 'typeorm';
 
 import {
   Activity,
   ActivitySeriesPoint,
-  ActivitySummary,
   ActivitySummaryQuery,
+  BURSTS,
+  COMPANIONS,
   PerformanceRecord,
+  PerformanceSeriesPoint,
+  PerformanceSeriesQuery,
   PerformanceSummary,
   PerformanceSummaryQuery,
+  PerformanceWeights,
+  PerformanceWeightsQuery,
+  SCORE_UNIT_SECONDS,
   UserArea,
-  getActivityScore,
+  getBoardWeights,
+  getBoardWork,
+  getModActionKey,
+  getModActionSources,
   getPerformanceScoreGrade,
   getPerformanceTrendGrade,
+  getStanding,
   getUserAreaFromLevel,
+  getWindowCoverage,
+  isOnOwnContent,
+  isPostEventAction,
+  toScore,
 } from './performance-metric.dto';
 
 @Injectable()
@@ -51,6 +67,8 @@ export class PerformanceMetricService {
     private readonly postEventRepository: Repository<PostEventEntity>,
     @InjectRepository(FlagLifecycleEntity)
     private readonly flagLifecycleRepository: Repository<FlagLifecycleEntity>,
+    @InjectRepository(ModActionEntity)
+    private readonly modActionRepository: Repository<ModActionEntity>,
     private readonly systemUser: SystemUserService,
   ) {}
 
@@ -267,17 +285,119 @@ export class PerformanceMetricService {
     return items;
   }
 
+  private async findBoardActivities(
+    area: UserArea,
+    keys: string[],
+    range: DateRange,
+    userId?: number,
+    only?: number,
+  ): Promise<Record<number, Record<string, Date[]>>> {
+    const items: Record<number, Record<string, Date[]>> = {};
+
+    const storeItem = (key: string, actorId: number, date: Date) => {
+      if (userId !== actorId && this.systemUser.isSystem(actorId)) return;
+      items[actorId] ??= {};
+      items[actorId]![key] ??= [];
+      items[actorId]![key]!.push(date);
+    };
+
+    if (keys.length === 0) return items;
+    if (area === UserArea.Member) return items;
+
+    const eventKeys = keys.filter(isPostEventAction);
+    const actionKeys = keys.filter((key) => !isPostEventAction(key));
+
+    if (eventKeys.length > 0) {
+      const events = await this.postEventRepository.find({
+        where: {
+          ...range.where(),
+          action: In(eventKeys),
+          creatorId: only,
+        },
+        select: ['creatorId', 'action', 'createdAt'],
+      });
+      for (const event of events) {
+        storeItem(event.action, event.creatorId, event.createdAt);
+      }
+    }
+
+    if (actionKeys.length > 0) {
+      const sources = new Set(actionKeys.flatMap(getModActionSources));
+      const companions = COMPANIONS.filter((companion) =>
+        companion.riders.some((rider) => actionKeys.includes(rider)),
+      );
+      for (const companion of companions) sources.add(companion.anchor);
+      const actions = await this.modActionRepository.find({
+        where: {
+          createdAt: range.find(),
+          action: In([...sources]),
+          creatorId: only,
+        },
+        select: ['creatorId', 'action', 'createdAt', 'values'],
+      });
+      const anchors = new Map(
+        companions.map((companion) => [
+          companion,
+          actions.filter((action) => action.action === companion.anchor),
+        ]),
+      );
+      const ridesAlong = (action: ModActionEntity): boolean =>
+        companions.some(
+          (companion) =>
+            companion.riders.includes(action.action) &&
+            anchors
+              .get(companion)!
+              .some(
+                (anchor) =>
+                  anchor.creatorId === action.creatorId &&
+                  (!companion.sameTarget ||
+                    Number(anchor.values['user_id']) ===
+                      Number(action.values['user_id'])) &&
+                  Math.abs(
+                    anchor.createdAt.getTime() - action.createdAt.getTime(),
+                  ) <= companion.windowMs,
+              ),
+        );
+      const lastSeen = new Map<string, number>();
+      const inBurst = (key: string, actorId: number, date: Date): boolean => {
+        const burst = BURSTS.find((candidate) => candidate.keys.includes(key));
+        if (!burst) return false;
+        const slot = `${actorId}:${key}`;
+        const previous = lastSeen.get(slot);
+        lastSeen.set(slot, date.getTime());
+        return (
+          previous !== undefined && date.getTime() - previous <= burst.windowMs
+        );
+      };
+      const ordered = [...actions].sort(
+        (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+      );
+      for (const action of ordered) {
+        const key = getModActionKey(action.action, action.values);
+        if (!actionKeys.includes(key)) continue;
+        if (ridesAlong(action)) continue;
+        if (isOnOwnContent(action.creatorId, action.values)) continue;
+        if (inBurst(key, action.creatorId, action.createdAt)) continue;
+        storeItem(key, action.creatorId, action.createdAt);
+      }
+    }
+
+    const work = getBoardWork(area);
+    for (const actorId of Object.keys(items)) {
+      if (Number(actorId) === userId) continue;
+      const done = Object.keys(items[Number(actorId)]!);
+      if (!done.some((key) => work.includes(key))) {
+        delete items[Number(actorId)];
+      }
+    }
+
+    return items;
+  }
+
   @Cacheable({
     prefix: 'performance',
     ttl: 30 * 60 * 1000,
-    dependencies: [
-      UserEntity,
-      PostVersionEntity,
-      PostReplacementEntity,
-      TicketEntity,
-      PostEventEntity,
-      FlagLifecycleEntity,
-    ],
+    dependencies: [UserEntity, PostEventEntity, ModActionEntity],
   })
   async performance(
     range?: PartialDateRange,
@@ -285,44 +405,12 @@ export class PerformanceMetricService {
   ): Promise<PerformanceSummary[]> {
     range = DateRange.fill(range);
 
-    let allKeys: Activity[] = [];
+    const area = await this.resolveArea(query);
 
-    if (query?.activities?.length) {
-      allKeys = query.activities;
-    } else {
-      let area: UserArea = UserArea.Member;
-      if (query?.area) {
-        area = query.area;
-      } else if (query?.userId) {
-        const user = await this.userRepository.findOne({
-          where: { id: query.userId },
-        });
-
-        area = getUserAreaFromLevel(getUserLevelFromString(user?.levelString));
-      }
-
-      switch (area) {
-        case UserArea.Admin:
-          allKeys = [Activity.TicketHandle];
-          break;
-        case UserArea.Moderator:
-          allKeys = [Activity.TicketHandle];
-          break;
-        case UserArea.Janitor:
-          allKeys = [
-            Activity.PostApprove,
-            Activity.PostReplacementApprove,
-            Activity.PostReplacementReject,
-            Activity.PostReplacementPromote,
-            Activity.PostDelete,
-            Activity.FlagHandle,
-          ];
-          break;
-        case UserArea.Member:
-          allKeys = [];
-          break;
-      }
-    }
+    const weights = getBoardWeights(area);
+    const allKeys = (
+      query?.activities?.length ? query.activities : Object.keys(weights)
+    ).filter((key) => key in weights);
 
     const data = await Promise.all(
       Array.from({ length: 4 }, async (_, i) => {
@@ -334,28 +422,18 @@ export class PerformanceMetricService {
           endDate: sub(range.endDate!, { [duration]: i }),
         });
 
-        return this.findActivities(allKeys, shiftedRange, undefined).then(
-          (rawData) =>
-            Object.fromEntries(
-              Object.entries(rawData).map(([userId, activities]) => [
-                Number(userId),
-                Object.fromEntries(
-                  Object.entries(activities).map(([key, dates]) => [
-                    key as Activity,
-                    dates,
-                  ]),
-                ) as Record<Activity, Date[]>,
-              ]),
-            ) as Record<number, Record<Activity, Date[]>>,
+        return this.findBoardActivities(
+          area,
+          allKeys,
+          shiftedRange,
+          query?.userId,
         );
       }),
     );
 
     if (query?.userId) {
       data.forEach((record) => {
-        if (!record[query.userId!]) {
-          record[query.userId!] = {} as Record<Activity, Date[]>;
-        }
+        record[query.userId!] ??= {};
       });
     }
 
@@ -364,78 +442,81 @@ export class PerformanceMetricService {
         Object.fromEntries(
           Object.entries(e).map(([userId, activities]) => [
             Number(userId),
-            Object.keys(activities).length > 0
-              ? Object.entries(activities).reduce(
-                  (acc, [key, value]) =>
-                    acc + value.length * getActivityScore(key as Activity),
-                  0,
-                )
-              : 0,
+            Object.entries(activities).reduce(
+              (acc, [key, dates]) => acc + dates.length * (weights[key] ?? 0),
+              0,
+            ),
           ]),
         ) as Record<number, number>,
     );
 
-    const activities: Record<number, ActivitySummary> = Object.fromEntries(
+    const activities: Record<
+      number,
+      Record<string, number>
+    > = Object.fromEntries(
       Object.entries(data[0]!).map(([userId, activities]) => [
         Number(userId),
-        new ActivitySummary({
-          ...convertKeysToCamelCase(
-            Object.fromEntries(
-              Object.entries(activities).map(([key, value]) => [
-                key,
-                value.length,
-              ]),
-            ) as Record<Activity, number>,
-          ),
-        }),
-      ]),
-    ) as Record<number, ActivitySummary>;
-
-    const days = Object.fromEntries(
-      Object.entries(data[0]!).map(([userId, activities]) => [
-        Number(userId),
-        new Set(
-          Object.values(activities).flatMap((dates) =>
-            dates.map((date) => startOfDay(date, range.in()).getTime()),
-          ),
-        ).size,
+        Object.fromEntries(
+          Object.entries(activities).map(([key, dates]) => [key, dates.length]),
+        ),
       ]),
     );
 
-    const averageScores = scores.map((score) => {
-      const values = Object.values(score);
-      return values.length > 0
-        ? values.reduce((sum, value) => sum + value, 0) / values.length
-        : 0;
+    const attendance = Object.fromEntries(
+      Object.entries(data[0]!).map(([userId, activities]) => [
+        Number(userId),
+        [
+          ...new Set(
+            Object.values(activities).flatMap((dates) =>
+              dates.map((date) => startOfDay(date, range.in()).getTime()),
+            ),
+          ),
+        ]
+          .sort((a, b) => a - b)
+          .map((time) => new Date(time)),
+      ]),
+    ) as Record<number, Date[]>;
+
+    const points = scores.map(
+      (e) =>
+        Object.fromEntries(
+          Object.entries(e).map(([userId, seconds]) => [
+            userId,
+            toScore(seconds),
+          ]),
+        ) as Record<number, number>,
+    );
+
+    const standings = points.map((e) => {
+      const values = Object.values(e);
+      return Object.fromEntries(
+        Object.entries(e).map(([userId, value]) => [
+          userId,
+          getStanding(values, value),
+        ]),
+      ) as Record<number, number>;
     });
 
-    const relativeScores = scores.map(
-      (e, i) =>
-        Object.fromEntries(
-          Object.entries(e).map(([userId, value]) => [
-            userId,
-            averageScores[i]! > 0
-              ? Math.round((value / averageScores[i]!) * 100)
-              : 0,
-          ]),
-        ) as Record<number, number>,
-    );
+    const coverage = getWindowCoverage(range as DateRange);
 
     const trendScores = Object.fromEntries(
-      Object.entries(relativeScores[0]!).map(([userId, value]) => [
-        Number(userId),
-        value -
-          Math.round(
-            Object.values(relativeScores)
-              .slice(1)
-              .reduce((acc, e) => acc + (e[+userId] ?? 0), 0) /
-              (relativeScores.length - 1),
-          ),
-      ]),
+      Object.entries(points[0]!).map(([userId, value]) => {
+        const pace = coverage > 0 ? value / coverage : value;
+        const prior = points.slice(1);
+        const baseline =
+          prior.reduce((acc, e) => acc + (e[+userId] ?? 0), 0) / prior.length;
+        const trend =
+          baseline > 0
+            ? Math.round(((pace - baseline) / baseline) * 100)
+            : pace > 0
+              ? 100
+              : 0;
+        return [Number(userId), trend];
+      }),
     ) as Record<number, number>;
 
     const result: { userId: number; score: number }[] = Object.entries(
-      relativeScores[0]!,
+      points[0]!,
     )
       .map(([userId, value]) => ({
         userId: Number(userId),
@@ -450,23 +531,98 @@ export class PerformanceMetricService {
             userId: e.userId,
             position: result.length > 1 ? i + 1 : 0,
             score: e.score,
-            scoreGrade: getPerformanceScoreGrade(e.score),
+            scoreGrade: getPerformanceScoreGrade(standings[0]![e.userId]!),
             trend: trendScores[e.userId]!,
             trendGrade: getPerformanceTrendGrade(trendScores[e.userId]!),
-            history: relativeScores.map(
-              (d) =>
+            history: points.map(
+              (d, j) =>
                 new PerformanceRecord({
                   score: d[e.userId] ?? 0,
-                  grade: getPerformanceScoreGrade(d[e.userId] ?? 0),
+                  grade: getPerformanceScoreGrade(standings[j]![e.userId] ?? 0),
                 }),
             ),
             activity: activities[e.userId]!,
-            days: days[e.userId]!,
+            attendance: attendance[e.userId]!,
           }),
       )
       .filter((e) =>
         query?.userId ? e.userId === Number(query.userId) : true,
       );
+  }
+
+  private async resolveArea(query?: {
+    area?: UserArea;
+    userId?: number;
+  }): Promise<UserArea> {
+    if (query?.area) return query.area;
+    if (query?.userId) {
+      const user = await this.userRepository.findOne({
+        where: { id: query.userId },
+      });
+      return getUserAreaFromLevel(getUserLevelFromString(user?.levelString));
+    }
+    return UserArea.Member;
+  }
+
+  @Cacheable({
+    prefix: 'performance',
+    ttl: 30 * 60 * 1000,
+    dependencies: [UserEntity, PostEventEntity, ModActionEntity],
+  })
+  async series(
+    range?: PartialDateRange,
+    query?: PerformanceSeriesQuery,
+  ): Promise<PerformanceSeriesPoint[]> {
+    const filled = DateRange.fill(range);
+    const area = await this.resolveArea(query);
+    const weights = getBoardWeights(area);
+
+    const data = await this.findBoardActivities(
+      area,
+      Object.keys(weights),
+      filled,
+      query?.userId,
+      query?.userId,
+    );
+    const records = query?.userId
+      ? [data[query.userId] ?? {}]
+      : Object.values(data);
+    const items = records.flatMap((activities) =>
+      Object.entries(activities).flatMap(([key, dates]) =>
+        dates.map((date) => ({ date, key })),
+      ),
+    );
+
+    return generateSeriesPoints(
+      items.map((e) => e.key),
+      items.map((e) => e.date),
+      filled,
+    ).map((e) => {
+      const scores = Object.fromEntries(
+        Object.keys(weights).map((key) => [key, 0]),
+      );
+      for (const key of e.value) {
+        scores[key]! += (weights[key] ?? 0) / SCORE_UNIT_SECONDS;
+      }
+      return new PerformanceSeriesPoint({
+        date: e.date,
+        score: Object.values(scores).reduce((acc, score) => acc + score, 0),
+        scores,
+      });
+    });
+  }
+
+  weights(query?: PerformanceWeightsQuery): PerformanceWeights {
+    const area = query?.area ?? UserArea.Member;
+    return new PerformanceWeights({
+      area,
+      weights: Object.fromEntries(
+        Object.entries(getBoardWeights(area)).map(([key, seconds]) => [
+          key,
+          seconds / SCORE_UNIT_SECONDS,
+        ]),
+      ),
+    });
   }
 
   @Cacheable({

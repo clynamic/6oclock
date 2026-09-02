@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FlagLifecycleEntity } from 'src/flag/lifecycle/flag-lifecycle.entity';
+import { ModActionEntity } from 'src/mod-action/mod-action.entity';
 import { PostEventEntity } from 'src/post-event/post-event.entity';
 import { PostReplacementEntity } from 'src/post-replacement/post-replacement.entity';
 import { PostVersionEntity } from 'src/post-version/post-version.entity';
@@ -21,6 +22,7 @@ import { PerformanceMetricService } from './performance-metric.service';
       TicketEntity,
       PostEventEntity,
       FlagLifecycleEntity,
+      ModActionEntity,
     ]),
     UserHeadModule,
     SystemUserModule,
