@@ -1,6 +1,7 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('job_logs')
+@Index('IDX_job_logs_job_id_id', ['jobId', 'id'])
 export class JobLogEntity {
   constructor(partial?: Partial<JobLogEntity>) {
     Object.assign(this, partial);
@@ -10,7 +11,6 @@ export class JobLogEntity {
   id: string;
 
   @Column({ type: 'uuid' })
-  @Index('IDX_job_logs_job_id')
   jobId: string;
 
   @Column({ type: 'timestamptz' })
