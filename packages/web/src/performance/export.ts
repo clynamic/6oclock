@@ -1,3 +1,4 @@
+import { stringify } from 'csv-stringify/browser/esm/sync';
 import { format, subMonths } from 'date-fns';
 
 import { PerformanceSummary } from '../api';
@@ -73,9 +74,7 @@ export const exportPerformanceToCSV = (
     return finalRow;
   });
 
-  const csvData = [headers, ...rows]
-    .map((row) => row.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(','))
-    .join('\n');
+  const csvData = stringify([headers, ...rows], { quoted: true });
 
   const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);

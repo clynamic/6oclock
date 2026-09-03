@@ -21,7 +21,6 @@ const summary = (partial?: Partial<PerformanceSummary>): PerformanceSummary =>
     trend: 0,
     history: [],
     activity: {},
-    days: 30,
     ...partial,
   }) as PerformanceSummary;
 
@@ -257,7 +256,7 @@ describe('exportPerformanceToCSV', () => {
       range,
     );
 
-    expect(written.split('\n')).toHaveLength(3);
+    expect(written.trimEnd().split('\n')).toHaveLength(3);
   });
 
   describe('handing the file to the browser', () => {
