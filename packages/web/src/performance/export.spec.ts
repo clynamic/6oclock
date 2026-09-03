@@ -287,15 +287,14 @@ describe('exportPerformanceToCSV', () => {
     });
   });
 
-  describe('characterised, not specified', () => {
-    it('does not escape a quote in a name, so the row splits early', () => {
-      exportPerformanceToCSV(
-        [summary({ head: { id: 500, name: 'some"one' } } as never)],
-        'janitor',
-        range,
-      );
+  it('doubles a quote inside a cell, so the row stays whole', () => {
+    exportPerformanceToCSV(
+      [summary({ head: { id: 500, name: 'some"one' } } as never)],
+      'janitor',
+      range,
+    );
 
-      expect(written).toContain('"some"one"');
-    });
+    expect(written).toContain('"some""one"');
+    expect(written).not.toContain('"some"one"');
   });
 });

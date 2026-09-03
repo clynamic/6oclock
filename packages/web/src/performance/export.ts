@@ -74,7 +74,7 @@ export const exportPerformanceToCSV = (
   });
 
   const csvData = [headers, ...rows]
-    .map((row) => row.map((cell) => `"${cell}"`).join(','))
+    .map((row) => row.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(','))
     .join('\n');
 
   const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
