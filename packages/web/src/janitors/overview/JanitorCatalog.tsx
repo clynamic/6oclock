@@ -54,12 +54,7 @@ export const janitorDashboardCatalog: DashboardCatalog = {
         xl: { x: 0, y: 0, w: 4, h: 5 },
       },
     ),
-    items: [
-      ItemType.post_versions,
-      ItemType.post_events,
-      ItemType.flags,
-      ItemType.permits,
-    ],
+    items: [ItemType.post_versions, ItemType.post_events, ItemType.flags],
     card: { title: 'Status' },
   },
   postTurnaround: {
@@ -79,12 +74,7 @@ export const janitorDashboardCatalog: DashboardCatalog = {
         xl: { x: 4, y: 0, w: 7, h: 6 },
       },
     ),
-    items: [
-      ItemType.post_versions,
-      ItemType.post_events,
-      ItemType.flags,
-      ItemType.permits,
-    ],
+    items: [ItemType.post_versions, ItemType.post_events, ItemType.flags],
     card: { title: 'Turnaround' },
   },
   postUploaders: {
