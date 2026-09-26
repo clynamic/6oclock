@@ -373,6 +373,8 @@ export class PerformanceSummary {
   history: PerformanceRecord[];
   @ApiProperty({ type: 'object', additionalProperties: { type: 'number' } })
   activity: Record<string, number>;
+  @ApiProperty({ type: 'object', additionalProperties: { type: 'number' } })
+  activityScores: Record<string, number>;
   attendance: Date[];
 }
 

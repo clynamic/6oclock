@@ -8,6 +8,7 @@
 import type { PerformanceGrade } from './performanceGrade';
 import type { PerformanceRecord } from './performanceRecord';
 import type { PerformanceSummaryActivity } from './performanceSummaryActivity';
+import type { PerformanceSummaryActivityScores } from './performanceSummaryActivityScores';
 import type { TrendGrade } from './trendGrade';
 import type { UserHead } from './userHead';
 
@@ -15,6 +16,7 @@ export interface PerformanceSummary {
   scoreGrade: PerformanceGrade;
   trendGrade: TrendGrade;
   activity: PerformanceSummaryActivity;
+  activityScores: PerformanceSummaryActivityScores;
   userId: number;
   head?: UserHead;
   position: number;

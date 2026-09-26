@@ -462,6 +462,21 @@ export class PerformanceMetricService {
       ]),
     );
 
+    const activityScores: Record<
+      number,
+      Record<string, number>
+    > = Object.fromEntries(
+      Object.entries(data[0]!).map(([userId, activities]) => [
+        Number(userId),
+        Object.fromEntries(
+          Object.entries(activities).map(([key, dates]) => [
+            key,
+            toScore(dates.length * (weights[key] ?? 0)),
+          ]),
+        ),
+      ]),
+    );
+
     const attendance = Object.fromEntries(
       Object.entries(data[0]!).map(([userId, activities]) => [
         Number(userId),
@@ -542,6 +557,7 @@ export class PerformanceMetricService {
                 }),
             ),
             activity: activities[e.userId]!,
+            activityScores: activityScores[e.userId]!,
             attendance: attendance[e.userId]!,
           }),
       )

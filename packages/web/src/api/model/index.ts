@@ -82,6 +82,7 @@ export * from './performanceSeriesPoint';
 export * from './performanceSeriesPointScores';
 export * from './performanceSummary';
 export * from './performanceSummaryActivity';
+export * from './performanceSummaryActivityScores';
 export * from './performanceWeights';
 export * from './performanceWeightsWeights';
 export * from './postReplacementHandledPoint';

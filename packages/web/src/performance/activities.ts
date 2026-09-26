@@ -9,9 +9,10 @@ export const notableActivities = (summary: PerformanceSummary) => {
       key,
       label: describeAction(key),
       count,
+      score: summary.activityScores[key] ?? 0,
     }))
     .filter(({ count }) => count > 0)
-    .sort((a, b) => b.count - a.count);
-  const floor = (counts[0]?.count ?? 0) * ACTIVITY_FLOOR;
-  return counts.filter(({ count }) => count >= floor);
+    .sort((a, b) => b.score - a.score);
+  const floor = (counts[0]?.score ?? 0) * ACTIVITY_FLOOR;
+  return counts.filter(({ score }) => score >= floor);
 };
