@@ -58,8 +58,10 @@ export class ManifestAvailability implements ConvertKeysToCamelCase<
   feedbacks?: number;
   postVersions?: number;
   postReplacements?: number;
+  postEvents?: number;
   modActions?: number;
   bulkUpdateRequests?: number;
   tagAliases?: number;
   tagImplications?: number;
+  permits?: number;
 }

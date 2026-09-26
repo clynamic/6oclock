@@ -2,7 +2,12 @@ import { BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { startOfDay } from 'date-fns';
 import { Cacheable, withInvalidation } from 'src/app/browser.module';
-import { CursorParams, DateRange, TimeScale } from 'src/common';
+import {
+  CursorParams,
+  DateRange,
+  TimeScale,
+  convertKeysToCamelCase,
+} from 'src/common';
 import { ItemType } from 'src/label/label.entity';
 import {
   Between,
@@ -152,9 +157,7 @@ export class ManifestService {
       currentTime,
     );
 
-    return new ManifestAvailability({
-      ...availability,
-    });
+    return new ManifestAvailability(convertKeysToCamelCase(availability));
   }
 
   async saveResults(results: OrderResults): Promise<Order> {
