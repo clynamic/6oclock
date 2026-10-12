@@ -33,6 +33,7 @@ import { useChangeEffect } from '../../utils/hooks';
 import {
   TimeDuration,
   addPeriods,
+  anchorOfPeriod,
   formatRangeLabel,
   inferDurationFromRange,
   startOfPeriod,
@@ -80,7 +81,9 @@ export const NavDate: React.FC = () => {
     [currentDuration],
   );
 
-  const [currentDate, setCurrentDate] = useState(startDate);
+  const [currentDate, setCurrentDate] = useState(() =>
+    anchorOfPeriod(startDate, unitFromDuration(chartDuration), now),
+  );
 
   const [view, setView] = useState<CalendarView>('day');
 
@@ -103,13 +106,17 @@ export const NavDate: React.FC = () => {
 
   useChangeEffect(() => setView(calendarViews.at(-1)!), [calendarViews]);
 
-  const resetCurrentState = useCallback(() => {
-    setCurrentDate(startDate);
+  const resetCurrentState = () => {
+    setCurrentDate(
+      anchorOfPeriod(startDate, unitFromDuration(chartDuration), now),
+    );
     setCurrentDuration(chartDuration);
-  }, [startDate, chartDuration]);
+  };
 
   useChangeEffect(() => {
-    setCurrentDate(startDate);
+    setCurrentDate(
+      anchorOfPeriod(startDate, unitFromDuration(chartDuration), now),
+    );
     setCurrentDuration(chartDuration);
   }, [startDate, endDate, chartDuration]);
 
@@ -227,7 +234,9 @@ export const NavDate: React.FC = () => {
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateCalendar
               value={currentDate}
-              onChange={(date) => setCurrentDate(date as Date)}
+              onChange={(date) =>
+                setCurrentDate(anchorOfPeriod(date as Date, durationUnit, now))
+              }
               view={view}
               views={calendarViews}
               onViewChange={setView}

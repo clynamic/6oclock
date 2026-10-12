@@ -142,6 +142,9 @@ export const isInPeriod = (
   return !isBefore(date, start) && isBefore(date, end);
 };
 
+export const anchorOfPeriod = (date: Date, unit: TimeUnit, now: Date): Date =>
+  isInPeriod(now, date, unit) ? now : startOfPeriod(date, unit);
+
 export const subPeriods = (
   date: Date,
   unit: TimeUnit,

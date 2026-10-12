@@ -4,6 +4,7 @@ import { TimeScale } from '../api';
 import {
   TimeDuration,
   addPeriods,
+  anchorOfPeriod,
   formatRangeLabel,
   inferDurationFromRange,
   inferScaleFromRange,
@@ -172,6 +173,22 @@ describe('walking a period', () => {
         'month',
       ),
     ).toBe(true);
+  });
+});
+
+describe('anchorOfPeriod', () => {
+  const now = at('2026-10-12T09:00:00Z');
+
+  it('anchors on now when the period holds it', () => {
+    expect(anchorOfPeriod(at('2026-10-01T00:00:00Z'), 'month', now)).toEqual(
+      now,
+    );
+  });
+
+  it('anchors on the period start when now lies outside it', () => {
+    expect(anchorOfPeriod(at('2026-09-12T00:00:00Z'), 'month', now)).toEqual(
+      at('2026-09-01T00:00:00Z'),
+    );
   });
 });
 
