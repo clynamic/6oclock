@@ -54,7 +54,7 @@ export const POROUS_ITEM_TYPES: ItemType[] = [
 @Entity('labels')
 export class LabelEntity {
   constructor(partial?: Partial<LabelEntity>) {
-    Object.assign(this, partial);
+    Object.assign(this, { refreshedAt: new Date(), ...partial });
   }
 
   @PrimaryColumn({ type: 'text' })
