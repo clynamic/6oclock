@@ -53,19 +53,18 @@ export const ProfilePage: React.FC = () => {
 
   const catalog = useMemo<DashboardCatalog>(
     () =>
-      chartIds
+      (isLoading ? ['userHead'] : chartIds)
         .filter((chartId) => profileCatalog[chartId])
         .reduce<DashboardCatalog>((acc, chartId) => {
           acc[chartId] = profileCatalog[chartId];
           return acc;
         }, {}),
-    [chartIds],
+    [chartIds, isLoading],
   );
 
   return (
     <DashboardProvider
       catalog={catalog}
-      isLoading={isLoading}
       isError={isError}
       data={{
         version: 1,
