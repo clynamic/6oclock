@@ -33,6 +33,9 @@ export class JobBoss implements OnModuleDestroy {
 
   async start(): Promise<void> {
     if (this.started) return;
+    this.instance.on('error', (err) =>
+      this.logger.error({ msg: 'pg-boss error', err }),
+    );
     await this.instance.start();
     await this.verifySchema();
     setActiveCheck(async (job) => {
