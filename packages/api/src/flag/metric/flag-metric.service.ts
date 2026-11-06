@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { max } from 'date-fns';
+import { add, max } from 'date-fns';
 import { Cacheable } from 'src/app/browser.module';
 import {
   DateRange,
   PartialDateRange,
   SeriesCountPoint,
-  TimeScale,
-  expandInto,
   generateSeriesLastTileCountPoints,
   generateSeriesRecordPoints,
 } from 'src/common';
@@ -84,10 +82,10 @@ export class FlagMetricService {
         WHERE created_at < $1
       ),
       hour_aggregates AS (
-        SELECT date_trunc('hour', created_at) AS hour, SUM(change) AS change
+        SELECT date_bin('1 hour', created_at, $1::timestamptz) AS hour, SUM(change) AS change
         FROM transitions
         WHERE created_at >= $1 AND created_at < $2
-        GROUP BY date_trunc('hour', created_at)
+        GROUP BY date_bin('1 hour', created_at, $1::timestamptz)
       ),
       hour_series AS (
         SELECT generate_series(
@@ -119,7 +117,13 @@ export class FlagMetricService {
     ])) as Array<{ time: Date; count: string }>;
 
     return generateSeriesLastTileCountPoints(
-      result.map((row) => new DateRange(expandInto(row.time, TimeScale.Hour))),
+      result.map(
+        (row) =>
+          new DateRange({
+            startDate: row.time,
+            endDate: add(row.time, { hours: 1 }),
+          }),
+      ),
       result.map((row) => parseInt(row.count, 10)),
       range,
     );

@@ -85,6 +85,21 @@ describe('FlagMetricService against Postgres', () => {
       expect(series.map((point) => point.value)).toEqual([0, 1, 1, 1, 1]);
     });
 
+    it('counts hours from a range start off the top of the hour', async () => {
+      await event(16, PostEventAction.flag_created, '2024-09-14T19:45:00Z');
+
+      const series = await service.pendingSeries(
+        new PartialDateRange({
+          startDate: at('2024-09-14T18:30:00Z'),
+          endDate: at('2024-09-14T22:30:00Z'),
+          scale: TimeScale.Hour,
+          timezone: 'Asia/Kolkata',
+        }),
+      );
+
+      expect(series.map((point) => point.value)).toEqual([0, 1, 1, 1]);
+    });
+
     it('clears a flag when it is removed', async () => {
       await event(2, PostEventAction.flag_created, '2024-03-01T01:00:00Z');
       await event(2, PostEventAction.flag_removed, '2024-03-01T03:00:00Z');

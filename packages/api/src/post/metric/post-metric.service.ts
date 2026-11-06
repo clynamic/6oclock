@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { startOfMonth, sub } from 'date-fns';
+import { add, startOfMonth, sub } from 'date-fns';
 import { Cacheable } from 'src/app/browser.module';
 import {
   DateRange,
   PartialDateRange,
   SeriesCountPoint,
-  TimeScale,
-  expandInto,
   generateSeriesLastTileCountPoints,
 } from 'src/common';
 import { PermitEntity } from 'src/permit/permit.entity';
@@ -96,11 +94,11 @@ export class PostMetricService {
           AND (exited_at IS NULL OR exited_at >= $1)
       ),
       deltas AS (
-        SELECT date_trunc('hour', entered_at) AS hour, 1 AS change
+        SELECT date_bin('1 hour', entered_at, $1::timestamptz) AS hour, 1 AS change
         FROM post_review_episodes
         WHERE entered_at >= greatest($1, $3) AND entered_at < $2
         UNION ALL
-        SELECT date_trunc('hour', exited_at) AS hour, -1 AS change
+        SELECT date_bin('1 hour', exited_at, $1::timestamptz) AS hour, -1 AS change
         FROM post_review_episodes
         WHERE entered_at >= $3 AND exited_at >= $1 AND exited_at < $2
       ),
@@ -129,7 +127,13 @@ export class PostMetricService {
     ])) as Array<{ time: Date; count: string }>;
 
     return generateSeriesLastTileCountPoints(
-      result.map((row) => new DateRange(expandInto(row.time, TimeScale.Hour))),
+      result.map(
+        (row) =>
+          new DateRange({
+            startDate: row.time,
+            endDate: add(row.time, { hours: 1 }),
+          }),
+      ),
       result.map((row) => parseInt(row.count, 10)),
       range,
     );

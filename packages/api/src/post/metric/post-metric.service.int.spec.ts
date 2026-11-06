@@ -190,15 +190,36 @@ describe('PostMetricService against Postgres', () => {
       expect(series.map((point) => point.value)).toEqual([0, 0, 0, 0, 0, 0]);
     });
 
-    it('places an entry inside an hour at the top of that hour', async () => {
-      await episode(9, '2024-09-15T01:30:00Z');
+    it.each([
+      {
+        timezone: 'UTC',
+        entered: '2024-09-15T01:30:00Z',
+        start: '2024-09-15T00:00:00Z',
+        end: '2024-09-15T04:00:00Z',
+      },
+      {
+        timezone: 'Asia/Kolkata',
+        entered: '2024-09-14T19:45:00Z',
+        start: '2024-09-14T18:30:00Z',
+        end: '2024-09-14T22:30:00Z',
+      },
+    ])(
+      'places an entry inside an hour at the start of that hour in $timezone',
+      async ({ timezone, entered, start, end }) => {
+        await episode(9, entered);
 
-      const series = await service.pendingSeries(
-        hourly('2024-09-15T00:00:00Z', '2024-09-15T04:00:00Z'),
-      );
+        const series = await service.pendingSeries(
+          new PartialDateRange({
+            startDate: at(start),
+            endDate: at(end),
+            scale: TimeScale.Hour,
+            timezone,
+          }),
+        );
 
-      expect(series.map((point) => point.value)).toEqual([0, 1, 1, 1]);
-    });
+        expect(series.map((point) => point.value)).toEqual([0, 1, 1, 1]);
+      },
+    );
 
     it('counts a second spell separately from the first', async () => {
       await episode(
