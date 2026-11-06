@@ -137,18 +137,59 @@ describe('UploadMetricService', () => {
       expect(series.map((point) => point.value)).toEqual([7]);
     });
 
-    it('keeps an hourly tile in its own bucket at hour scale', async () => {
-      tileFind.mockResolvedValue([
-        new UploadTilesEntity({ time: at('2024-02-01T00:00:00Z'), count: 3 }),
-        new UploadTilesEntity({ time: at('2024-02-01T01:00:00Z'), count: 4 }),
-      ]);
+    it.each([
+      {
+        scale: TimeScale.Hour,
+        timezone: 'UTC',
+        tiles: [
+          { time: '2024-02-01T00:00:00Z', count: 3 },
+          { time: '2024-02-01T01:00:00Z', count: 4 },
+        ],
+        start: '2024-02-01T00:00:00Z',
+        end: '2024-02-01T02:00:00Z',
+        expected: [3, 4],
+      },
+      {
+        scale: TimeScale.Hour,
+        timezone: 'Asia/Kolkata',
+        tiles: [
+          { time: '2024-09-14T19:00:00Z', count: 3 },
+          { time: '2024-09-14T20:00:00Z', count: 4 },
+        ],
+        start: '2024-09-14T18:30:00Z',
+        end: '2024-09-14T22:30:00Z',
+        expected: [3, 4, 0, 0],
+      },
+      {
+        scale: TimeScale.Minute,
+        timezone: 'UTC',
+        tiles: [{ time: '2024-09-14T19:00:00Z', count: 3 }],
+        start: '2024-09-14T19:00:00Z',
+        end: '2024-09-14T19:03:00Z',
+        expected: [3, 0, 0],
+      },
+    ])(
+      'keeps an hourly tile in its own bucket at $scale scale in $timezone',
+      async ({ scale, timezone, tiles, start, end, expected }) => {
+        tileFind.mockResolvedValue(
+          tiles.map(
+            ({ time, count }) =>
+              new UploadTilesEntity({ time: at(time), count }),
+          ),
+        );
 
-      const series = await service.count(
-        hourly('2024-02-01T00:00:00Z', '2024-02-01T02:00:00Z'),
-      );
+        const series = await service.count(
+          new PartialDateRange({
+            startDate: at(start),
+            endDate: at(end),
+            scale,
+            timezone,
+          }),
+        );
 
-      expect(series.map((point) => point.value)).toEqual([3, 4]);
-    });
+        expect(series.map((point) => point.value)).toEqual(expected);
+      },
+    );
 
     it('goes back to the tiles on every call, since its cache is off', async () => {
       const range = hourly('2024-03-01T00:00:00Z', '2024-03-01T04:00:00Z');

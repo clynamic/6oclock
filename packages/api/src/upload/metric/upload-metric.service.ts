@@ -6,9 +6,7 @@ import {
   PaginationParams,
   PartialDateRange,
   SeriesCountPoint,
-  TimeScale,
   convertKeysToCamelCase,
-  expandInto,
   generateSeriesCountPoints,
   generateSeriesTileCountPoints,
 } from 'src/common';
@@ -46,7 +44,7 @@ export class UploadMetricService {
     });
 
     return generateSeriesTileCountPoints(
-      tiles.map((tile) => new DateRange(expandInto(tile.time, TimeScale.Hour))),
+      tiles.map((tile) => tile.time),
       tiles.map((tile) => tile.count),
       range,
     );
